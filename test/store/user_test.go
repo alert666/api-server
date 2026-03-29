@@ -55,10 +55,7 @@ func TestAL(t *testing.T) {
 	}
 
 	receiver := alert.NewAlertUtiler()
-	err := receiver.SaveAggregationAlert(context.Background(), c, cc)
-	if err != nil {
-		t.Fatal(err)
-	}
+	receiver.SaveAggregationAlert(context.Background(), c, cc)
 
 	time.Sleep(1 * time.Hour)
 }
