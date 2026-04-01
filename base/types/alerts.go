@@ -35,7 +35,7 @@ type Alert struct {
 }
 
 // 辅助函数：将业务 Alert 转换为 DB Model
-func ConvertToModel(a *Alert, channelID int) (*model.AlertHistory, error) {
+func ConvertToModel(tenantKey string, a *Alert, channelID int) (*model.AlertHistory, error) {
 	labelByte, err := json.Marshal(a.Labels)
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func ConvertToModel(a *Alert, channelID int) (*model.AlertHistory, error) {
 	return &model.AlertHistory{
 		Fingerprint:    a.Fingerprint,
 		StartsAt:       a.StartsAt,
-		Cluster:        a.Labels["cluster"],
+		Cluster:        a.Labels[tenantKey], // 获取告警数据里 tenantKey 对应的值, 用于存储到数据库中区分租户
 		EndsAt:         a.EndsAt,
 		Status:         a.Status,
 		Alertname:      a.Labels["alertname"],

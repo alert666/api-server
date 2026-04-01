@@ -22,16 +22,18 @@ type AlertsServicer interface {
 }
 
 type alertsService struct {
-	aggregation bool
 	cache       store.CacheStorer
 	feishuImpl  feishu.Feishuer
+	tenantKey   string
+	dbTenantKey string
 }
 
 func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer) AlertsServicer {
 	return &alertsService{
 		cache:       cache,
-		aggregation: conf.GetAlertAggregation(),
 		feishuImpl:  feishuImpl,
+		tenantKey:   conf.GetAlertTenantKey(),
+		dbTenantKey: constant.AlertDBTenantKey,
 	}
 }
 
@@ -58,6 +60,7 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 		AlertReceiveReq: req,
 	}
 
+	log.WithRequestID(ctx).Info("告警分组完成, 开始发送告警", zap.Int("firingAlerts", len(firingAlerts)), zap.Int("resolvedAlerts", len(resolvedAlerts)))
 	var sendResult *types.NotifySendResult
 	switch alertChannel.Type {
 	case model.ChannelTypeFeishuApp:
@@ -166,7 +169,7 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 		}
 	}()
 
-	log.WithRequestID(ctx).Debug("告警数据开始持久化")
+	log.WithRequestID(ctx).Info("告警数据开始持久化")
 
 	var (
 		alerts = notifyReq.AlertReceiveReq.Alerts
@@ -174,7 +177,12 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 		queryArgs [][]interface{}
 	)
 
-	for _, a := range alerts {
+	// 告警数据里 tenantKey 对应的值, 用于后续查询数据库时区分租户, 这里默认取第一条告警数据的 tenantKey 值作为本次查询的值, 因为同一批次的告警数据应该是同一个租户的
+	var tenantValue string
+	for i, a := range alerts {
+		if i == 0 {
+			tenantValue = a.Labels[receiver.tenantKey]
+		}
 		queryArgs = append(queryArgs, []interface{}{
 			a.Fingerprint,
 			a.StartsAt.Truncate(time.Millisecond),
@@ -184,10 +192,13 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 	timeoutCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
+	// TODO 租户逻辑
 	var existingHistories []*model.AlertHistory
+	tenantWhere := fmt.Sprintf("%s = ?", receiver.dbTenantKey)
 	err := al.WithContext(timeoutCtx).
 		UnderlyingDB().
 		Preload("AlertSendRecord").
+		Where(tenantWhere, tenantValue).
 		Where("(fingerprint, starts_at) IN ?", queryArgs).
 		Find(&existingHistories).Error
 	if err != nil {
@@ -213,7 +224,7 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 		allUpdateAlerts      []*model.AlertHistory
 	)
 
-	log.WithRequestID(ctx).Debug("处理 firing 状态告警")
+	log.WithRequestID(ctx).Debug("告警记录处理完成, 开始批量持久化")
 
 	var sharedAggRecord []*model.AlertSendRecord
 	batches := []map[string]*types.Alert{firingAlertsMap, resolvedAlertsMap}
@@ -389,7 +400,7 @@ func (receiver *alertsService) processAlerts(ctx context.Context, req *processAl
 
 		// !exist 创建 AlertSendRecord 记录
 		if !exist {
-			alertHistory, err := types.ConvertToModel(alert, req.notifyReq.AlertChannel.ID)
+			alertHistory, err := types.ConvertToModel(receiver.tenantKey, alert, req.notifyReq.AlertChannel.ID)
 			if err != nil {
 				log.WithRequestID(ctx).Error("转换告警模型失败", zap.Error(err), zap.Any("data", alertHistory))
 				continue

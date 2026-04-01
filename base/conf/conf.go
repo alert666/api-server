@@ -260,6 +260,10 @@ func GetRedisKeyPrefix() (string, error) {
 	return prefix, nil
 }
 
-func GetAlertAggregation() bool {
-	return viper.GetBool("alert.aggregation")
+// GetAlertTenantKey 获取租户标签的键
+func GetAlertTenantKey() string {
+	if tenantKey := viper.GetString("alert.tenantKey"); tenantKey != "" {
+		return tenantKey
+	}
+	return "cluster"
 }

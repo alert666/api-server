@@ -22,4 +22,5 @@ const (
 	AlertStatusFiring       = "firing"
 	AlertChannelTopicUpdate = "alert:channel:update"
 	AlertChannelTopicDelete = "alert:channel:delete"
+	AlertDBTenantKey        = "cluster"
 )
