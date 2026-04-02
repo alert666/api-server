@@ -5,7 +5,9 @@ type IDRequest struct {
 }
 
 type Pagination struct {
-	Page     int `form:"page" json:"page" binding:"omitempty,min=1"`
+	// Page 从 1 开始, 表示第几页
+	Page int `form:"page" json:"page" binding:"omitempty,min=1"`
+	// PageSize 最大值 100，默认值 20, 表示每页多少条数据
 	PageSize int `form:"pageSize" json:"pageSize" binding:"omitempty,min=1,max=100"`
 }
 
