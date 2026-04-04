@@ -6,4 +6,5 @@ var ServerProviderSet = wire.NewSet(
 	NewHttpServer,
 	wire.Bind(new(ServerInterface), new(*Server)),
 	NewServer,
+	NewCleanDuplicateFiringer,
 )

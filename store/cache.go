@@ -18,34 +18,21 @@ var (
 	NeverExpires time.Duration = 0
 )
 
-type CacheStorer interface {
-	DelKey(ctx context.Context, cacheType CacheType, cacheKey any) error
-	CacheSeter
-	CacheStringer
-	CacheSuber
-}
-
-type CacheSeter interface {
-	GetSet(ctx context.Context, cacheType CacheType, cacheKey any) ([]string, error)
-	SetSet(ctx context.Context, cacheType CacheType, cacheKey any, cacheValue []any, expireTime *time.Duration) error
-}
-
-type CacheStringer interface {
-	SetObject(ctx context.Context, cacheType CacheType, cacheKey any, value any, expiration time.Duration) error
-	GetObject(ctx context.Context, cacheType CacheType, cacheKey any, target any) (bool, error)
-}
-
-type CacheSuber interface {
-	Publish(ctx context.Context, channel string, msg string) error
-	Subscribe(ctx context.Context, channel string, handler func(msg string))
-}
-
 type CacheType string
 
 const (
 	RoleType  CacheType = "role"
 	AlertType CacheType = "alert"
+	LockType  CacheType = "lock"
 )
+
+type CacheStorer interface {
+	DelKey(ctx context.Context, cacheType CacheType, cacheKey any) error
+	CacheSeter
+	CacheStringer
+	CacheSuber
+	CacheLocker
+}
 
 type CacheStore struct {
 	client     *redis.Client
@@ -72,19 +59,26 @@ func NewCacheStore(redisClient *redis.Client) (*CacheStore, func(), error) {
 	}, closeup, nil
 }
 
-// NormalizeCacheKey 将常用类型的 cacheKey 转换为 string
-// cacheKey 的值有可能是 int 等
-func (c *CacheStore) NormalizeCacheKey(cacheKey any) (string, error) {
-	switch v := cacheKey.(type) {
-	case string:
-		return v, nil
-	case int:
-		return strconv.Itoa(v), nil
-	case int64:
-		return strconv.FormatInt(v, 10), nil
-	default:
-		return "", fmt.Errorf("unsupported cacheKey type: %v", cacheKey)
+type CacheLocker interface {
+	SetNX(ctx context.Context, cacheType CacheType, cacheKey any, value any, expiration time.Duration) (bool, error)
+}
+
+// SetNX 封装 Redis 的 SET IF NOT EXISTS 逻辑，用于分布式锁
+// 返回值 bool: true 表示获取锁成功，false 表示锁已被占用
+func (c *CacheStore) SetNX(ctx context.Context, cacheType CacheType, cacheKey any, value any, expiration time.Duration) (bool, error) {
+	key, err := c.NormalizeCacheKey(cacheKey)
+	if err != nil {
+		return false, err
 	}
+	saveKey := c.buildCacheKey(cacheType, key)
+
+	// 使用 Redis 的 SetNX 命令
+	return c.client.SetNX(ctx, saveKey, value, expiration).Result()
+}
+
+type CacheSeter interface {
+	GetSet(ctx context.Context, cacheType CacheType, cacheKey any) ([]string, error)
+	SetSet(ctx context.Context, cacheType CacheType, cacheKey any, cacheValue []any, expireTime *time.Duration) error
 }
 
 func (c *CacheStore) GetSet(ctx context.Context, cacheType CacheType, cacheKey any) ([]string, error) {
@@ -124,12 +118,18 @@ func (c *CacheStore) SetSet(ctx context.Context, cacheType CacheType, cacheKey a
 		if _, err := pipe.Exec(ctx); err != nil {
 			return fmt.Errorf("redis setSet error: %w", err)
 		}
+		return nil
 	}
 
 	if err := c.client.SAdd(ctx, saveKey, cacheValue...).Err(); err != nil {
 		return fmt.Errorf("redis setSet error: %w", err)
 	}
 	return nil
+}
+
+type CacheStringer interface {
+	SetObject(ctx context.Context, cacheType CacheType, cacheKey any, value any, expiration time.Duration) error
+	GetObject(ctx context.Context, cacheType CacheType, cacheKey any, target any) (bool, error)
 }
 
 // SetObject 序列化对象并存入 Redis
@@ -171,16 +171,9 @@ func (c *CacheStore) GetObject(ctx context.Context, cacheType CacheType, cacheKe
 	return true, nil
 }
 
-func (c *CacheStore) DelKey(ctx context.Context, cacheType CacheType, cacheKey any) error {
-	key, err := c.NormalizeCacheKey(cacheKey)
-	if err != nil {
-		return err
-	}
-	delKey := c.buildCacheKey(cacheType, key)
-	if err := c.client.Del(ctx, delKey).Err(); err != nil {
-		return fmt.Errorf("redis delKey error: %w", err)
-	}
-	return nil
+type CacheSuber interface {
+	Publish(ctx context.Context, channel string, msg string) error
+	Subscribe(ctx context.Context, channel string, handler func(msg string))
 }
 
 func (c *CacheStore) Publish(ctx context.Context, channel string, msg string) error {
@@ -214,6 +207,33 @@ func (c *CacheStore) Subscribe(ctx context.Context, channel string, handler func
 			}
 		}
 	}(ch)
+}
+
+// NormalizeCacheKey 将常用类型的 cacheKey 转换为 string
+// cacheKey 的值有可能是 int 等
+func (c *CacheStore) NormalizeCacheKey(cacheKey any) (string, error) {
+	switch v := cacheKey.(type) {
+	case string:
+		return v, nil
+	case int:
+		return strconv.Itoa(v), nil
+	case int64:
+		return strconv.FormatInt(v, 10), nil
+	default:
+		return "", fmt.Errorf("unsupported cacheKey type: %v", cacheKey)
+	}
+}
+
+func (c *CacheStore) DelKey(ctx context.Context, cacheType CacheType, cacheKey any) error {
+	key, err := c.NormalizeCacheKey(cacheKey)
+	if err != nil {
+		return err
+	}
+	delKey := c.buildCacheKey(cacheType, key)
+	if err := c.client.Del(ctx, delKey).Err(); err != nil {
+		return fmt.Errorf("redis delKey error: %w", err)
+	}
+	return nil
 }
 
 // 新增辅助方法用于构建缓存key，提高可读性和可测试性

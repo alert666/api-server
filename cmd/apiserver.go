@@ -77,7 +77,7 @@ func runApp(_ *cobra.Command, _ []string) error {
 
 	v1.NewStore()
 
-	if err = app.Init(ctx); err != nil {
+	if err = app.Initer.Init(ctx); err != nil {
 		return fmt.Errorf("init application faild: %w", err)
 	}
 

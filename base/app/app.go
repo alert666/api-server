@@ -14,6 +14,7 @@ import (
 	"github.com/qinquanliuxiang666/alertmanager/base/server"
 	"github.com/qinquanliuxiang666/alertmanager/model"
 	"github.com/qinquanliuxiang666/alertmanager/pkg/feishu"
+	v1 "github.com/qinquanliuxiang666/alertmanager/service/v1"
 	"github.com/qinquanliuxiang666/alertmanager/store"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -40,7 +41,7 @@ func WithInit(redis store.CacheStorer, feishu feishu.Feishuer) Options {
 type Application struct {
 	servers []server.ServerInterface
 	wg      *sync.WaitGroup
-	Initer
+	Initer  Initer
 }
 
 // Initer 初始化接口
@@ -158,10 +159,11 @@ func newApp(options ...Options) *Application {
 	return app
 }
 
-func NewApplication(e *gin.Engine, redis store.CacheStorer, feishu feishu.Feishuer) *Application {
+func NewApplication(e *gin.Engine, redis store.CacheStorer, feishu feishu.Feishuer, cleanDuplicateFiringer v1.CleanDuplicateFiringer) *Application {
 	return newApp(
 		WithServer(
 			server.NewServer(e),
+			server.NewCleanDuplicateFiringer(cleanDuplicateFiringer),
 		),
 		WithInit(redis, feishu),
 	)

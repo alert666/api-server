@@ -80,7 +80,8 @@ func InitApplication() (*app.Application, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	application := app.NewApplication(engine, cacheStore, feishuer)
+	cleanDuplicateFiringer := v1.NewCleanDuplicateFiringer(cacheStore)
+	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer)
 	return application, func() {
 		cleanup2()
 		cleanup()

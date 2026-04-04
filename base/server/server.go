@@ -13,6 +13,8 @@ import (
 	"github.com/qinquanliuxiang666/alertmanager/base/router"
 	apitypes "github.com/qinquanliuxiang666/alertmanager/base/types"
 	"github.com/qinquanliuxiang666/alertmanager/controller"
+	v1 "github.com/qinquanliuxiang666/alertmanager/service/v1"
+	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
 )
 
@@ -86,4 +88,48 @@ func NewHttpServer(r router.RouterInterface) (*gin.Engine, error) {
 	}
 	constant.ApiData = apiData
 	return engine, nil
+}
+
+type CronJobNew struct {
+	c                      *cron.Cron
+	stopChan               chan struct{}
+	shutdown               time.Duration
+	CleanDuplicateFiringer v1.CleanDuplicateFiringer
+}
+
+func NewCleanDuplicateFiringer(cleanDuplicateFiringer v1.CleanDuplicateFiringer) *CronJobNew {
+	return &CronJobNew{
+		shutdown:               defaultShutdownTimeout,
+		CleanDuplicateFiringer: cleanDuplicateFiringer,
+	}
+}
+func (receiver *CronJobNew) Start() error {
+	receiver.stopChan = make(chan struct{})
+	c := cron.New(cron.WithChain(
+		cron.SkipIfStillRunning(cron.DefaultLogger),
+	))
+	_, err := c.AddFunc("*/10 * * * *", func() {
+		zap.L().Info("[CronJob] 开始执行重复告警清理任务...")
+		receiver.CleanDuplicateFiringer.CleanDuplicateFiringAlertsTask()
+	})
+	if err != nil {
+		zap.L().Fatal("注册定时任务失败", zap.Error(err))
+		return err
+	}
+	c.Start()
+	zap.L().Info("定时任务调度器已启动，每 10 分钟执行一次清理")
+	receiver.c = c
+	<-receiver.stopChan
+	return nil
+}
+
+func (receiver *CronJobNew) Stop() error {
+	zap.L().Info("正在停止定时任务调度器...")
+	if receiver.c != nil {
+		stopCtx := receiver.c.Stop()
+		<-stopCtx.Done()
+	}
+	close(receiver.stopChan)
+	zap.L().Info("定时任务调度器已安全停止")
+	return nil
 }

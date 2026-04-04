@@ -9,6 +9,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
+      "showLog": false,
       "program": "${workspaceFolder}/cmd/apiserver/main.go",
       "args": ["-c", "${workspaceFolder}/config.yaml"],
       "output": "${workspaceFolder}/.vscode/__debug_api_server.exe",

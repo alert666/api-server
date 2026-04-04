@@ -23,4 +23,5 @@ const (
 	AlertChannelTopicUpdate = "alert:channel:update"
 	AlertChannelTopicDelete = "alert:channel:delete"
 	AlertDBTenantKey        = "cluster"
+	AlertCleanCacheLockKey  = "clean_duplicate_alerts"
 )

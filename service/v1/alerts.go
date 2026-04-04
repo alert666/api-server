@@ -21,6 +21,10 @@ type AlertsServicer interface {
 	SendAlert(ctx context.Context, req *types.AlertReceiveReq) error
 }
 
+type CleanDuplicateFiringer interface {
+	CleanDuplicateFiringAlertsTask()
+}
+
 type alertsService struct {
 	cache       store.CacheStorer
 	feishuImpl  feishu.Feishuer
@@ -34,6 +38,12 @@ func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer) Aler
 		feishuImpl:  feishuImpl,
 		tenantKey:   conf.GetAlertTenantKey(),
 		dbTenantKey: constant.AlertDBTenantKey,
+	}
+}
+
+func NewCleanDuplicateFiringer(cache store.CacheStorer) CleanDuplicateFiringer {
+	return &alertsService{
+		cache: cache,
 	}
 }
 
@@ -419,21 +429,103 @@ func (receiver *alertsService) processAlerts(ctx context.Context, req *processAl
 	}
 }
 
-// TODO 处理相同指纹但是有多个触发时间正在告警的记录
-// 将最早的告警记录的 EndsAt 和 Status 字段更新
-func (receiver *alertsService) DisableBefoceAlertHistory(ctx context.Context, cluster string) map[string][]*model.AlertHistory {
+// CleanDuplicateFiringAlertsTask 定时清理任务：处理相同指纹但有多个 firing 状态的记录
+func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
+	defer func() {
+		if r := recover(); r != nil {
+			stack := debug.Stack()
+			zap.L().Error("cleanDuplicateFiringAlertsTask panic recovered",
+				zap.Any("panic", r),
+				zap.String("stack", string(stack)), // 这行会告诉你具体是代码哪一行崩了
+			)
+		}
+	}()
+	lockDuration := 5 * time.Minute
+	ctx, cancle := context.WithTimeout(context.TODO(), 2*time.Minute)
+	defer cancle()
+
 	al := store.AlertHistory.WithContext(ctx)
 
-	alertHistorys, err := al.Where(store.AlertHistory.Cluster.Eq(cluster)).Where(store.AlertHistory.EndsAt.IsNull()).Find()
+	ok, err := receiver.cache.SetNX(ctx, store.LockType, constant.AlertCleanCacheLockKey, time.Now().Unix(), lockDuration)
 	if err != nil {
-		zap.L().Error("查询旧的 alertHistory 失败", zap.Error(err))
-		return nil
-	}
-	alertHistoryMap := make(map[string][]*model.AlertHistory, len(alertHistorys))
-	for i := range alertHistorys {
-		fp := alertHistorys[i].Fingerprint
-		alertHistoryMap[fp] = append(alertHistoryMap[fp], alertHistorys[i])
+		zap.L().Error("[定时任务] Redis 锁异常", zap.Error(err))
+		return
 	}
 
-	return alertHistoryMap
+	// 没抢到锁，说明其他副本正在执行，直接退出
+	if !ok {
+		zap.L().Debug("[定时任务] 任务正在其他节点运行，本次跳过")
+		return
+	}
+
+	// 1. 查询所有正在告警（ends_at 为空）且状态为 firing 的记录
+	// 按照 StartsAt 降序排列，确保后续切片中索引 0 是最新的
+	alertHistories, err := al.Where(
+		store.AlertHistory.EndsAt.IsNull(),
+		store.AlertHistory.Status.Eq("firing"),
+	).Order(store.AlertHistory.StartsAt.Desc()).Find()
+
+	if err != nil {
+		zap.L().Error("[定时任务] 查询 firing 状态告警失败", zap.Error(err))
+		return
+	}
+
+	if len(alertHistories) == 0 {
+		return
+	}
+
+	// 2. 按 Cluster + Fingerprint 复合 Key 进行内存分组
+	groupMap := make(map[string][]*model.AlertHistory)
+	for i := range alertHistories {
+		key := fmt.Sprintf("%s:%s", alertHistories[i].Cluster, alertHistories[i].Fingerprint)
+		groupMap[key] = append(groupMap[key], alertHistories[i])
+	}
+
+	var idsToResolve []int
+	now := time.Now()
+
+	// 3. 筛选重复记录（保留每组最新的一条，其余标记为待清理）
+	for key, records := range groupMap {
+		if len(records) > 1 {
+			// 从索引 1 开始全是旧记录（因为查询时用了 Desc 排序）
+			for i := 1; i < len(records); i++ {
+				idsToResolve = append(idsToResolve, records[i].ID)
+
+				zap.L().Warn("[定时任务] 发现重复 Firing 记录",
+					zap.String("key", key),
+					zap.Int("old_id", records[i].ID),
+					zap.Time("old_starts_at", records[i].StartsAt),
+					zap.Time("latest_starts_at", records[0].StartsAt),
+				)
+			}
+		}
+	}
+
+	// 4. 执行批量更新逻辑
+	if len(idsToResolve) > 0 {
+		// 分批处理，每批 500 条，防止单条 SQL 过大
+		for i := 0; i < len(idsToResolve); i += 500 {
+			end := i + 500
+			if end > len(idsToResolve) {
+				end = len(idsToResolve)
+			}
+
+			batchIDs := idsToResolve[i:end]
+			_, err := al.Where(store.AlertHistory.ID.In(batchIDs...)).
+				Updates(model.AlertHistory{
+					Status: "resolved",
+					EndsAt: &now,
+				})
+
+			if err != nil {
+				zap.L().Error("[定时任务] 批量清理重复告警失败",
+					zap.Error(err),
+					zap.Int("batch_size", len(batchIDs)),
+				)
+				// 继续处理下一批，不中断任务
+				continue
+			}
+		}
+		zap.L().Info("[定时任务] 重复告警清理任务完成", zap.Int("total_resolved", len(idsToResolve)))
+	}
 }
