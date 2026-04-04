@@ -8,8 +8,12 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
+
+	"github.com/qinquanliuxiang666/alertmanager/pkg/feishu"
+	"gopkg.in/yaml.v2"
 )
 
 // AlertmanagerPayload 对应你提供的 JSON 结构
@@ -164,4 +168,40 @@ func TestAlert(t *testing.T) {
 
 	fmt.Printf("\n所有告警已生成到目录: %s/\n", outputDir)
 
+}
+
+func TestString(t *testing.T) {
+	// 使用反引号 ` 来包裹原始字符串，避免在定义阶段产生转义冲突
+	rawURL := `https://gr.qqlx.net/explore?left={\"datasource\":\"vm\",\"queries\":[{\"expr\":%22container_memory_working_set_bytes%7Bimage%21%3D%5C%22%5C%22%2C+image%21~%5C%22pause%5C%22%2C+pod%3D~%5C%22.%2B%5C%22%7D+%2F+1024+%2F+1024+%3E+300%5Cn%22,\"refId\":\"A\"}],\"range\":{\"from\":\"1775302540000\",\"to\":\"now\"}}`
+
+	// 将所有的 \ 替换为空字符串
+	cleanURL := strings.ReplaceAll(rawURL, "\\", "")
+
+	fmt.Println("清理后的 URL:")
+	fmt.Println(cleanURL)
+}
+
+func TestTemplate(t *testing.T) {
+	// 使用反引号定义的字符串，注意里面的缩进必须全部是空格
+	data := `
+template_id: "AAqK947a7l70i"
+template_version_name: "1.0.10"
+template_variable:
+  alertName: "[聚合3条告警] ContainerMemoryUsageHigh"
+  alertCluster: "local"
+  alertLevel: "critical"
+  alertStartTime: "2026-04-04 19:24:00"
+  alertEndTime: 告警未恢复
+  alertUser: "<at id=28c4bfgf></at>"
+  disableSelect: false
+  alertDescribe: "1. Pod cilium-tb5wt (命名空间: kube-system) 的容器内存使用量已超过 300MB (当前值: 380.97 MB)\n2. Pod kube-apiserver-node0 (命名空间: kube-system) 的容器内存使用量已超过 300MB (当前值: 440.84 MB)\n3. Pod cilium-ck9db (命名空间: kube-system) 的容器内存使用量已超过 300MB (当前值: 382.69 MB)\n"
+  grafanaAddress: "{\"pc_url\":\"https://gr.qqlx.net/explore?left={\\\"datasource\\\":\\\"vm\\\",\\\"queries\\\":[{\\\"expr\\\":%22container_memory_working_set_bytes%7Bimage%21%3D%5C%22%5C%22%2C+image%21~%5C%22pause%5C%22%2C+pod%3D~%5C%22.%2B%5C%22%7D+%2F+1024+%2F+1024+%3E+300%5Cn%22,\\\"refId\\\":\\\"A\\\"}],\\\"range\\\":{\\\"from\\\":\\\"1775302540000\\\",\\\"to\\\":\\\"now\\\"}}\",\"android_url\":\"\",\"ios_url\":\"\",\"url\":\"\"}"`
+
+	req := &feishu.FeishuCardDataContent{}
+
+	// 确保使用的是 gopkg.in/yaml.v3 库
+	if err := yaml.Unmarshal([]byte(data), &req); err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%+v\n", req)
 }

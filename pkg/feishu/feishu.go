@@ -226,7 +226,7 @@ func (receiver *FeiShu) CloseCli(alertChannelName string) {
 func (receiver *FeiShu) renderAndSend(ctx context.Context, larkCli *lark.Client, conf *model.FeishuAppConfig, data interface{}, tpl string, color string) error {
 	log.WithRequestID(ctx).Debug("飞书发送告警", zap.Any("data", data))
 	// 1. 渲染模板
-	content, err := RenderingAlertContent().Build(data, tpl)
+	content, err := RenderingAlertContent().Build(ctx, data, tpl)
 	if err != nil {
 		return err
 	}
@@ -302,6 +302,13 @@ func RenderingAlertContent() *FeishuCardDataContent {
 	return &FeishuCardDataContent{}
 }
 
+type FeishuCardLink struct {
+	PcUrl      string `yaml:"pc_url"`
+	AndroidUrl string `yaml:"android_url"`
+	IosUrl     string `yaml:"ios_url"`
+	Url        string `yaml:"url"`
+}
+
 var funcMap = template.FuncMap{
 	"timeFormat": func(t time.Time) string {
 		var cstZone = time.FixedZone("CST", 8*3600)
@@ -317,9 +324,22 @@ var funcMap = template.FuncMap{
 		var cstZone = time.FixedZone("CST", 8*3600)
 		return endTime.In(cstZone).Format("2006-01-02 15:04:05")
 	},
+	"newViewLink": func(link string) string {
+		m := map[string]string{
+			"pc_url":      link,
+			"android_url": "",
+			"ios_url":     "",
+			"url":         link,
+		}
+		b, err := json.Marshal(m)
+		if err != nil {
+			return "{}"
+		}
+		return string(b)
+	},
 }
 
-func (receiver *FeishuCardDataContent) Build(alert any, alertTpl string) (*FeiShuContent, error) {
+func (receiver *FeishuCardDataContent) Build(ctx context.Context, alert any, alertTpl string) (*FeiShuContent, error) {
 	tmpl, err := template.New("alert").Funcs(funcMap).Parse(alertTpl)
 	if err != nil {
 		return nil, fmt.Errorf("构建告警模版失败, %s", err)
@@ -328,6 +348,8 @@ func (receiver *FeishuCardDataContent) Build(alert any, alertTpl string) (*FeiSh
 	if err := tmpl.Execute(&buf, alert); err != nil {
 		return nil, fmt.Errorf("渲染告警模版失败, %s", err)
 	}
+
+	log.WithRequestID(ctx).Debug("告警模板", zap.String("data", buf.String()))
 
 	if err := yaml.Unmarshal([]byte(buf.Bytes()), &receiver); err != nil {
 		return nil, fmt.Errorf("序列化 FeishuCardDataContent 失败, %s", err)

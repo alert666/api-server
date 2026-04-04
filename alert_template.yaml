@@ -1,0 +1,88 @@
+# 聚合模板
+{{- if .Alerts -}}
+{{- $first := index .Alerts 0 -}}
+{{- $count := len .Alerts -}}
+{{- /* 先在开头计算好所有变量 */ -}}
+{{- $fullDesc := "" -}}
+{{- range $i, $v := .Alerts -}}
+  {{- if lt $i 3 -}}
+    {{- $line := printf "%d. %s\n" (add $i 1) (index $v.Annotations "description") -}}
+    {{- $fullDesc = printf "%s%s" $fullDesc $line -}}
+  {{- end -}}
+{{- end -}}
+{{- if gt $count 3 -}}
+  {{- $footer := printf "---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。" $count -}}
+  {{- $fullDesc = printf "%s%s" $fullDesc $footer -}}
+{{- end -}}
+
+{{- /* YAML 输出结构 */ -}}
+template_id: "AAqK947a7l70i"
+template_version_name: "1.0.10"
+template_variable:
+  alertName: {{ if gt $count 1 }}{{ printf "[聚合%d条告警] %s" $count (index $first.Labels "alertname") | printf "%q" }}{{ else }}{{ index $first.Labels "alertname" | printf "%q" }}{{ end }}
+  alertCluster: {{ index $first.Labels "cluster" | printf "%q" }}
+  alertLevel: {{ index $first.Labels "severity" | printf "%q" }}
+  alertStartTime: {{ timeFormat $first.StartsAt | printf "%q" }}
+  alertEndTime: {{ getEndTime $first.EndsAt "告警未恢复" | printf "%q" }}
+  alertUser: "<at id=28c4bfgf></at>"
+  disableSelect: false
+  alertDescribe: {{ $fullDesc | printf "%q" }}
+  {{- /* ⚠️ 注意：grafanaLink 必须保持原始 JSON 对象格式，不要加 printf "%q" */}}
+  grafanaLink: {{ newViewLink $first.GeneratorURL }}
+{{- end -}}
+# {{- if .Alerts -}}
+# {{- $first := index .Alerts 0 -}}
+# {{- $count := len .Alerts -}}
+# {{- /* 先在开头计算好所有变量，不产生任何渲染输出 */ -}}
+# {{- $fullDesc := "" -}}
+# {{- range $i, $v := .Alerts -}}
+#   {{- if lt $i 3 -}}
+#     {{- $line := printf "%d. %s\n" (add $i 1) (index $v.Annotations "description") -}}
+#     {{- $fullDesc = printf "%s%s" $fullDesc $line -}}
+#   {{- end -}}
+# {{- end -}}
+# {{- if gt $count 3 -}}
+#   {{- $footer := printf "---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。" $count -}}
+#   {{- $fullDesc = printf "%s%s" $fullDesc $footer -}}
+# {{- end -}}
+# {{- /* 下面才是真正的 YAML 结构输出 */ -}}
+# template_id: "AAqK947a7l70i"
+# template_version_name: "1.0.10"
+# template_variable:
+#   alertName: {{ if gt $count 1 }}{{ printf "[聚合%d条告警] %s" $count (index $first.Labels "alertname") | printf "%q" }}{{ else }}{{ printf "%q" (index $first.Labels "alertname") }}{{ end }}
+#   alertCluster: {{ printf "%q" (index $first.Labels "cluster") }}
+#   alertLevel: {{ printf "%q" (index $first.Labels "severity") }}
+#   alertStartTime: {{ printf "%q" (timeFormat $first.StartsAt) }}
+#   alertEndTime: {{ getEndTime $first.EndsAt "告警未恢复"  }}
+#   alertUser: "<at id=28c4bfgf></at>"
+#   disableSelect: false
+#   alertDescribe: {{ printf "%q" $fullDesc }}
+#   grafanaLink: {{ newViewLink $first.GeneratorURL }}
+# {{- end -}}
+---
+# 非聚合模板
+template_id: "AAqK947a7l70i"
+template_version_name: "1.0.10"
+template_variable:
+  alertName: {{ index .Labels "alertname" | printf "%q" }}
+  alertDescribe: {{ index .Annotations "description" | printf "&nbsp;&nbsp;&nbsp;&nbsp;%s" | printf "%q" }}
+  alertCluster: {{ index .Labels "cluster" | printf "%q" }}
+  alertLevel: {{ index .Labels "severity" | printf "%q" }}
+  alertStartTime: {{ timeFormat .StartsAt | printf "%q" }}
+  alertEndTime: {{ getEndTime .EndsAt "告警未恢复" | printf "%q" }}
+  alertUser: "<at id=28c4bfgf></at>"
+  disableSelect: false
+  {{- /* ⚠️ 注意：grafanaLink 必须保持原始 JSON 对象格式，不要加 printf "%q" */}}
+  grafanaLink: {{ newViewLink .GeneratorURL }}
+# template_id: "AAqK947a7l70i"
+# template_version_name: "1.0.10"
+# template_variable:
+#   alertName: {{ printf "%q" (index .Labels "alertname") }}
+#   alertDescribe: {{ index .Annotations "description" | printf "&nbsp;&nbsp;&nbsp;&nbsp;%s" | printf "%q" }}
+#   alertCluster: {{ printf "%q" (index .Labels "cluster") }}
+#   alertLevel: {{ printf "%q" (index .Labels "severity") }}
+#   alertStartTime: {{ printf "%q" (timeFormat .StartsAt) }}
+#   alertEndTime: {{ getEndTime .EndsAt "告警未恢复"  }}
+#   alertUser: "<at id=28c4bfgf></at>"
+#   disableSelect: false
+#   grafanaLink: {{ newViewLink .GeneratorURL }}

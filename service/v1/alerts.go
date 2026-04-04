@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"regexp"
 	"runtime/debug"
+	"strings"
 	"time"
 
 	"github.com/qinquanliuxiang666/alertmanager/base/conf"
@@ -72,7 +73,7 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	notifyReq.AlertChannel = alertChannel
 	notifyReq.AlertReceiveReq = req
 
-	log.WithRequestID(ctx).Info("通过告警通道发送告警", zap.Any("notifyReq", notifyReq))
+	log.WithRequestID(ctx).Info("通过告警通道发送告警", zap.Any("firingAlertArry", notifyReq.AlertArry.FiringAlertArry), zap.Any("resolvedAlertArry", notifyReq.AlertArry.ResolvedAlertArry))
 	var sendResult *types.NotifySendResult
 	switch alertChannel.Type {
 	case model.ChannelTypeFeishuApp:
@@ -134,7 +135,7 @@ func (receiver *alertsService) getChannel(ctx context.Context, channelName strin
 // aggregatedAlarmGrouping 聚合告警分组
 // 如果通知为聚合告警时, 需要将告警分配 firing 和 resolved 两组, 分别发送
 func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tenantValue string, alerts []*types.Alert) (*types.NotifyReq, error) {
-	log.WithRequestID(ctx).Debug("aggregatedAlarmGrouping", zap.String("tenantValue", tenantValue))
+	log.WithRequestID(ctx).Debug("聚合告警分组", zap.String("tenantValue", tenantValue))
 	alertLen := len(alerts)
 	if alertLen == 0 {
 		return nil, fmt.Errorf("alerts 为空, 告警分组失败")
@@ -191,6 +192,7 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 
 	for i := range alerts {
 		key := helper.GetAlertMapKey(alerts[i].Fingerprint, alerts[i].StartsAt)
+		alerts[i].GeneratorURL = strings.ReplaceAll(alerts[i].GeneratorURL, "\\", "")
 		// 在这里处理静默.如果静默保存到静默map里.然后更新数据了
 		// --- 处理 Firing 状态 ---
 		if alerts[i].Status == constant.AlertStatusFiring {
@@ -242,7 +244,7 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 			stack := debug.Stack()
 			zap.L().Error("saveAlerts panic recovered",
 				zap.Any("panic", r),
-				zap.String("stack", string(stack)), // 这行会告诉你具体是代码哪一行崩了
+				zap.String("stack", string(stack)),
 			)
 		}
 	}()
@@ -281,12 +283,6 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 	// --- 单独处理静默告警 ---
 	silenceCreate, silenceUpdate := receiver.processSilencedAlerts(notifyReq)
 	allUpdateAlerts = append(allUpdateAlerts, silenceUpdate...)
-	log.WithRequestID(ctx).Debug("合并告警",
-		zap.Any("allCreateSendRecords", allCreateSendRecords),
-		zap.Any("allCreateSendRecords", allCreateSendRecords),
-		zap.Any("allUpdateAlerts", allUpdateAlerts),
-		zap.Any("sharedAggRecord", sharedAggRecord),
-	)
 
 	log.WithRequestID(ctx).Debug("告警记录处理完成, 开始批量持久化")
 	// 批量创建带有发送流水的告警 (Firing/Resolved)
