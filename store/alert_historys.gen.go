@@ -29,22 +29,22 @@ func newAlertHistory(db *gorm.DB, opts ...gen.DOOption) alertHistory {
 	tableName := _alertHistory.alertHistoryDo.TableName()
 	_alertHistory.ALL = field.NewAsterisk(tableName)
 	_alertHistory.ID = field.NewInt(tableName, "id")
-	_alertHistory.Cluster = field.NewString(tableName, "cluster")
 	_alertHistory.CreatedAt = field.NewTime(tableName, "created_at")
 	_alertHistory.Fingerprint = field.NewString(tableName, "fingerprint")
 	_alertHistory.StartsAt = field.NewTime(tableName, "starts_at")
-	_alertHistory.EndsAt = field.NewTime(tableName, "ends_at")
+	_alertHistory.Cluster = field.NewString(tableName, "cluster")
 	_alertHistory.Status = field.NewString(tableName, "status")
+	_alertHistory.EndsAt = field.NewTime(tableName, "ends_at")
+	_alertHistory.AlertChannelID = field.NewInt(tableName, "alert_channel_id")
+	_alertHistory.AlertSendRecordID = field.NewInt(tableName, "alert_send_record_id")
+	_alertHistory.AlertSilenceID = field.NewInt(tableName, "alert_silence_id")
 	_alertHistory.Alertname = field.NewString(tableName, "alertname")
 	_alertHistory.Severity = field.NewString(tableName, "severity")
 	_alertHistory.Instance = field.NewString(tableName, "instance")
 	_alertHistory.Labels = field.NewField(tableName, "labels")
 	_alertHistory.Annotations = field.NewField(tableName, "annotations")
-	_alertHistory.AlertChannelID = field.NewInt(tableName, "alert_channel_id")
-	_alertHistory.AlertSendRecordID = field.NewInt(tableName, "alert_send_record_id")
 	_alertHistory.SendCount = field.NewInt(tableName, "send_count")
 	_alertHistory.IsSilenced = field.NewBool(tableName, "is_silenced")
-	_alertHistory.AlertSilenceID = field.NewInt(tableName, "alert_silence_id")
 	_alertHistory.AlertChannel = alertHistoryBelongsToAlertChannel{
 		db: db.Session(&gorm.Session{}),
 
@@ -107,22 +107,22 @@ type alertHistory struct {
 
 	ALL               field.Asterisk
 	ID                field.Int    // 主键ID
-	Cluster           field.String // 租户
 	CreatedAt         field.Time   // 本条记录存入数据库的时间
 	Fingerprint       field.String // 指纹
 	StartsAt          field.Time   // 开始时间
-	EndsAt            field.Time   // 告警恢复时间(未恢复则为NULL)
-	Status            field.String // 告警状态(如: firing, resolved)
-	Alertname         field.String // 告警名称
-	Severity          field.String // 告警级别(如: critical, warning, info)
-	Instance          field.String // 告警发生的实例(如IP或主机名)
-	Labels            field.Field  // 告警标签集合
-	Annotations       field.Field  // 告警详情/注解
-	AlertChannelID    field.Int    // 关联的告警发送通道ID
-	AlertSendRecordID field.Int    // 关联的告警发送记录ID
-	SendCount         field.Int    // 告警发送次数
-	IsSilenced        field.Bool   // 是否被静默
-	AlertSilenceID    field.Int    // 关联的静默规则ID
+	Cluster           field.String // 租户
+	Status            field.String // 告警状态
+	EndsAt            field.Time   // 告警恢复时间
+	AlertChannelID    field.Int    // 关联通道ID
+	AlertSendRecordID field.Int    // 关联发送记录ID
+	AlertSilenceID    field.Int    // 关联静默规则ID
+	Alertname         field.String
+	Severity          field.String
+	Instance          field.String
+	Labels            field.Field
+	Annotations       field.Field
+	SendCount         field.Int
+	IsSilenced        field.Bool
 	AlertChannel      alertHistoryBelongsToAlertChannel
 
 	AlertSendRecord alertHistoryBelongsToAlertSendRecord
@@ -145,22 +145,22 @@ func (a alertHistory) As(alias string) *alertHistory {
 func (a *alertHistory) updateTableName(table string) *alertHistory {
 	a.ALL = field.NewAsterisk(table)
 	a.ID = field.NewInt(table, "id")
-	a.Cluster = field.NewString(table, "cluster")
 	a.CreatedAt = field.NewTime(table, "created_at")
 	a.Fingerprint = field.NewString(table, "fingerprint")
 	a.StartsAt = field.NewTime(table, "starts_at")
-	a.EndsAt = field.NewTime(table, "ends_at")
+	a.Cluster = field.NewString(table, "cluster")
 	a.Status = field.NewString(table, "status")
+	a.EndsAt = field.NewTime(table, "ends_at")
+	a.AlertChannelID = field.NewInt(table, "alert_channel_id")
+	a.AlertSendRecordID = field.NewInt(table, "alert_send_record_id")
+	a.AlertSilenceID = field.NewInt(table, "alert_silence_id")
 	a.Alertname = field.NewString(table, "alertname")
 	a.Severity = field.NewString(table, "severity")
 	a.Instance = field.NewString(table, "instance")
 	a.Labels = field.NewField(table, "labels")
 	a.Annotations = field.NewField(table, "annotations")
-	a.AlertChannelID = field.NewInt(table, "alert_channel_id")
-	a.AlertSendRecordID = field.NewInt(table, "alert_send_record_id")
 	a.SendCount = field.NewInt(table, "send_count")
 	a.IsSilenced = field.NewBool(table, "is_silenced")
-	a.AlertSilenceID = field.NewInt(table, "alert_silence_id")
 
 	a.fillFieldMap()
 
@@ -179,22 +179,22 @@ func (a *alertHistory) GetFieldByName(fieldName string) (field.OrderExpr, bool) 
 func (a *alertHistory) fillFieldMap() {
 	a.fieldMap = make(map[string]field.Expr, 20)
 	a.fieldMap["id"] = a.ID
-	a.fieldMap["cluster"] = a.Cluster
 	a.fieldMap["created_at"] = a.CreatedAt
 	a.fieldMap["fingerprint"] = a.Fingerprint
 	a.fieldMap["starts_at"] = a.StartsAt
-	a.fieldMap["ends_at"] = a.EndsAt
+	a.fieldMap["cluster"] = a.Cluster
 	a.fieldMap["status"] = a.Status
+	a.fieldMap["ends_at"] = a.EndsAt
+	a.fieldMap["alert_channel_id"] = a.AlertChannelID
+	a.fieldMap["alert_send_record_id"] = a.AlertSendRecordID
+	a.fieldMap["alert_silence_id"] = a.AlertSilenceID
 	a.fieldMap["alertname"] = a.Alertname
 	a.fieldMap["severity"] = a.Severity
 	a.fieldMap["instance"] = a.Instance
 	a.fieldMap["labels"] = a.Labels
 	a.fieldMap["annotations"] = a.Annotations
-	a.fieldMap["alert_channel_id"] = a.AlertChannelID
-	a.fieldMap["alert_send_record_id"] = a.AlertSendRecordID
 	a.fieldMap["send_count"] = a.SendCount
 	a.fieldMap["is_silenced"] = a.IsSilenced
-	a.fieldMap["alert_silence_id"] = a.AlertSilenceID
 
 }
 

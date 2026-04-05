@@ -33,12 +33,12 @@ func newAlertSilence(db *gorm.DB, opts ...gen.DOOption) alertSilence {
 	_alertSilence.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_alertSilence.DeletedAt = field.NewField(tableName, "deleted_at")
 	_alertSilence.Cluster = field.NewString(tableName, "cluster")
-	_alertSilence.Matchers = field.NewField(tableName, "matchers")
-	_alertSilence.StartsAt = field.NewTime(tableName, "starts_at")
+	_alertSilence.Status = field.NewInt(tableName, "status")
 	_alertSilence.EndsAt = field.NewTime(tableName, "ends_at")
+	_alertSilence.StartsAt = field.NewTime(tableName, "starts_at")
+	_alertSilence.Matchers = field.NewField(tableName, "matchers")
 	_alertSilence.CreatedBy = field.NewString(tableName, "created_by")
 	_alertSilence.Comment = field.NewString(tableName, "comment")
-	_alertSilence.Status = field.NewInt(tableName, "status")
 
 	_alertSilence.fillFieldMap()
 
@@ -54,12 +54,12 @@ type alertSilence struct {
 	UpdatedAt field.Time
 	DeletedAt field.Field
 	Cluster   field.String // 所属集群/租户
-	Matchers  field.Field  // 匹配器集合 [{name:x, value:y, type:z}]
-	StartsAt  field.Time   // 开始时间
+	Status    field.Int    // 状态 0:禁用 1: 启用
 	EndsAt    field.Time   // 结束时间
+	StartsAt  field.Time   // 开始时间
+	Matchers  field.Field  // 匹配器集合
 	CreatedBy field.String
 	Comment   field.String // 静默原因
-	Status    field.Int    // 状态 0:禁用 1: 启用
 
 	fieldMap map[string]field.Expr
 }
@@ -81,12 +81,12 @@ func (a *alertSilence) updateTableName(table string) *alertSilence {
 	a.UpdatedAt = field.NewTime(table, "updated_at")
 	a.DeletedAt = field.NewField(table, "deleted_at")
 	a.Cluster = field.NewString(table, "cluster")
-	a.Matchers = field.NewField(table, "matchers")
-	a.StartsAt = field.NewTime(table, "starts_at")
+	a.Status = field.NewInt(table, "status")
 	a.EndsAt = field.NewTime(table, "ends_at")
+	a.StartsAt = field.NewTime(table, "starts_at")
+	a.Matchers = field.NewField(table, "matchers")
 	a.CreatedBy = field.NewString(table, "created_by")
 	a.Comment = field.NewString(table, "comment")
-	a.Status = field.NewInt(table, "status")
 
 	a.fillFieldMap()
 
@@ -109,12 +109,12 @@ func (a *alertSilence) fillFieldMap() {
 	a.fieldMap["updated_at"] = a.UpdatedAt
 	a.fieldMap["deleted_at"] = a.DeletedAt
 	a.fieldMap["cluster"] = a.Cluster
-	a.fieldMap["matchers"] = a.Matchers
-	a.fieldMap["starts_at"] = a.StartsAt
+	a.fieldMap["status"] = a.Status
 	a.fieldMap["ends_at"] = a.EndsAt
+	a.fieldMap["starts_at"] = a.StartsAt
+	a.fieldMap["matchers"] = a.Matchers
 	a.fieldMap["created_by"] = a.CreatedBy
 	a.fieldMap["comment"] = a.Comment
-	a.fieldMap["status"] = a.Status
 }
 
 func (a alertSilence) clone(db *gorm.DB) alertSilence {

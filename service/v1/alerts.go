@@ -162,6 +162,9 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 			alerts[i].StartsAt.Truncate(time.Millisecond),
 		})
 	}
+	if len(queryArgs) == 0 {
+		return nil, fmt.Errorf("查询已存在告警时查询条件为空")
+	}
 	err := aHistory.WithContext(ctx).
 		UnderlyingDB().
 		Preload("AlertSendRecord").
@@ -177,8 +180,8 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 		UnderlyingDB().
 		Where(tenantWhere, tenantValue).
 		Where(aSilence.Status.Eq(model.SilenceEnabled)).
-		Where(aSilence.StartsAt.Lte(now)).
 		Where(aSilence.EndsAt.Gte(now)).
+		Where(aSilence.StartsAt.Lte(now)).
 		Find(&activeSilences).Error
 	if err != nil {
 		zap.L().Error("查询静默规则失败", zap.Error(err))
