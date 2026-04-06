@@ -1,15 +1,19 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/qinquanliuxiang666/alertmanager/cmd"
 )
 
 // @title           Swagger API
 // @version         1.0
 // @description     api-server api docs.
-// @host      10.0.0.10:8080
+// @host      0.0.0.0:8080
 func main() {
 	if err := cmd.NewCmd().Execute(); err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
 	}
 }

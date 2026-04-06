@@ -484,7 +484,7 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 
 	al := store.AlertHistory.WithContext(ctx)
 
-	ok, err := receiver.cache.SetNX(ctx, store.LockType, constant.AlertCleanCacheLockKey, time.Now().Unix(), lockDuration)
+	ok, err := receiver.cache.SetNX(ctx, store.LockType, constant.AlertCleanDuplicateHistoryLockKey, time.Now().Unix(), lockDuration)
 	if err != nil {
 		zap.L().Error("[定时任务] Redis 锁异常", zap.Error(err))
 		return

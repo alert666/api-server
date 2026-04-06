@@ -31,6 +31,7 @@ type Router struct {
 	alertTemplate controller.AlertTemplateController
 	alertChannel  controller.AlertChannelController
 	alertHistory  controller.AlertHistoryController
+	alertSilence  controller.AlertSilenceController
 }
 
 func NewRouter(
@@ -42,6 +43,7 @@ func NewRouter(
 	alertTemplate controller.AlertTemplateController,
 	alertChannel controller.AlertChannelController,
 	alertHistory controller.AlertHistoryController,
+	alertSilence controller.AlertSilenceController,
 ) *Router {
 	return &Router{
 		userRouter:    userRouter,
@@ -52,6 +54,7 @@ func NewRouter(
 		alertTemplate: alertTemplate,
 		alertChannel:  alertChannel,
 		alertHistory:  alertHistory,
+		alertSilence:  alertSilence,
 	}
 }
 
@@ -93,6 +96,7 @@ func (r *Router) RegisterRouter(engine *gin.Engine) {
 	r.registerAlertTemplateRouter(apiGroup)
 	r.registerAlertChannelRouter(apiGroup)
 	r.registerHistoryRouter(apiGroup)
+	r.registerAlertSilenceRouter(apiGroup)
 }
 
 func (r *Router) registerUserRouter(apiGroup *gin.RouterGroup) {
@@ -165,6 +169,17 @@ func (r *Router) registerAlertChannelRouter(apiGroup *gin.RouterGroup) {
 		baseGroup.DELETE("/:id", r.alertChannel.DeleteAlertChannel)
 		baseGroup.GET("/:id", r.alertChannel.QueryAlertChannel)
 		baseGroup.GET("", r.alertChannel.ListAlertChannel)
+	}
+}
+
+func (r *Router) registerAlertSilenceRouter(apiGroup *gin.RouterGroup) {
+	baseGroup := apiGroup.Group("/alertSilence")
+	{
+		baseGroup.Use(r.middleware.Auth(), r.middleware.AuthZ())
+		baseGroup.POST("", r.alertSilence.CreateAlertSilence)
+		baseGroup.DELETE("/:id", r.alertSilence.DeleteAlertSilence)
+		baseGroup.GET("/:id", r.alertSilence.QueryAlertSilence)
+		baseGroup.GET("", r.alertSilence.ListAlertSilence)
 	}
 }
 

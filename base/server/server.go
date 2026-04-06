@@ -90,20 +90,23 @@ func NewHttpServer(r router.RouterInterface) (*gin.Engine, error) {
 	return engine, nil
 }
 
-type CronJobNew struct {
+type CronJob struct {
 	c                      *cron.Cron
 	stopChan               chan struct{}
 	shutdown               time.Duration
 	CleanDuplicateFiringer v1.CleanDuplicateFiringer
+	CleanExpiredSilencer   v1.CleanExpiredSilencer
 }
 
-func NewCleanDuplicateFiringer(cleanDuplicateFiringer v1.CleanDuplicateFiringer) *CronJobNew {
-	return &CronJobNew{
+func NewCronJob(cleanDuplicateFiringer v1.CleanDuplicateFiringer, cleanExpiredSilencer v1.CleanExpiredSilencer) *CronJob {
+	return &CronJob{
 		shutdown:               defaultShutdownTimeout,
 		CleanDuplicateFiringer: cleanDuplicateFiringer,
+		CleanExpiredSilencer:   cleanExpiredSilencer,
 	}
 }
-func (receiver *CronJobNew) Start() error {
+
+func (receiver *CronJob) Start() error {
 	receiver.stopChan = make(chan struct{})
 	c := cron.New(cron.WithChain(
 		cron.SkipIfStillRunning(cron.DefaultLogger),
@@ -113,9 +116,21 @@ func (receiver *CronJobNew) Start() error {
 		receiver.CleanDuplicateFiringer.CleanDuplicateFiringAlertsTask()
 	})
 	if err != nil {
-		zap.L().Fatal("注册定时任务失败", zap.Error(err))
+		zap.L().Error("注册告警清理定时任务失败", zap.Error(err))
 		return err
 	}
+	zap.L().Info("注册告警清理定时任务成功")
+
+	_, err = c.AddFunc("*/10 * * * *", func() {
+		zap.L().Info("[CronJob] 开始执行重复告警静默清理任务...")
+		receiver.CleanExpiredSilencer.CleanExpiredSilencesTask()
+	})
+	if err != nil {
+		zap.L().Error("注册定时任务告警静默失败", zap.Error(err))
+		return err
+	}
+	zap.L().Info("注册告警静默清理定时任务成功")
+
 	c.Start()
 	zap.L().Info("定时任务调度器已启动，每 10 分钟执行一次清理")
 	receiver.c = c
@@ -123,7 +138,7 @@ func (receiver *CronJobNew) Start() error {
 	return nil
 }
 
-func (receiver *CronJobNew) Stop() error {
+func (receiver *CronJob) Stop() error {
 	zap.L().Info("正在停止定时任务调度器...")
 	if receiver.c != nil {
 		stopCtx := receiver.c.Stop()

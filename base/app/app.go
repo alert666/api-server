@@ -159,11 +159,17 @@ func newApp(options ...Options) *Application {
 	return app
 }
 
-func NewApplication(e *gin.Engine, redis store.CacheStorer, feishu feishu.Feishuer, cleanDuplicateFiringer v1.CleanDuplicateFiringer) *Application {
+func NewApplication(
+	e *gin.Engine,
+	redis store.CacheStorer,
+	feishu feishu.Feishuer,
+	cleanDuplicateFiringer v1.CleanDuplicateFiringer,
+	cleanExpiredSilencer v1.CleanExpiredSilencer,
+) *Application {
 	return newApp(
 		WithServer(
 			server.NewServer(e),
-			server.NewCleanDuplicateFiringer(cleanDuplicateFiringer),
+			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer),
 		),
 		WithInit(redis, feishu),
 	)

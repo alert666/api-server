@@ -57,7 +57,7 @@ func (receiver *alertChannelController) UpdateAlertChannel(c *gin.Context) {
 // @Produce json
 // @Param data body types.IDRequest true "删除请求参数"
 // @Success 200 {object} types.Response "删除成功"
-// @Router /api/v1/AlertChannel/:id [delete]
+// @Router /api/v1/alertChannel/:id [delete]
 func (receiver *alertChannelController) DeleteAlertChannel(c *gin.Context) {
 	ResponseOnlySuccess(c, receiver.alertChannelService.DeleteChannel, bindTypeUri)
 }
@@ -70,7 +70,7 @@ func (receiver *alertChannelController) DeleteAlertChannel(c *gin.Context) {
 // @Produce json
 // @Param data body types.IDRequest true "查询请求参数"
 // @Success 200 {object} types.Response{data=model.AlertChannel} "查询成功"
-// @Router /api/v1/AlertChannel/:id [get]
+// @Router /api/v1/alertChannel/:id [get]
 func (receiver *alertChannelController) QueryAlertChannel(c *gin.Context) {
 	ResponseWithData(c, receiver.alertChannelService.QueryChannel, bindTypeUri)
 }
@@ -80,8 +80,9 @@ func (receiver *alertChannelController) QueryAlertChannel(c *gin.Context) {
 // @Tags AlerChannel 管理
 // @Accept json
 // @Produce json
+// @Param data body types.AlertChannelListRequest true "查询请求参数"
 // @Success 200 {object} types.Response{data=types.AlertChannelListResponse} "查询成功"
-// @Router /api/v1/AlertChannel [get]
+// @Router /api/v1/alertChannel [get]
 func (receiver *alertChannelController) ListAlertChannel(c *gin.Context) {
 	ResponseWithData(c, receiver.alertChannelService.ListChannel, bindTypeUri, bindTypeQuery)
 }

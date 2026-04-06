@@ -73,7 +73,9 @@ func InitApplication() (*app.Application, func(), error) {
 	alertChannelController := controller.NewAlertChannelController(alertChannelServicer)
 	alertHistoryServicer := v1.NewHistoryServicer(cacheStore)
 	alertHistoryController := controller.NewAlertHistoryController(alertHistoryServicer)
-	routerRouter := router.NewRouter(userController, roleController, apiController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController)
+	alertSilenceServicer := v1.NewAlertSilenceServicer()
+	alertSilenceController := controller.NewAlertSilenceController(alertSilenceServicer)
+	routerRouter := router.NewRouter(userController, roleController, apiController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController)
 	engine, err := server.NewHttpServer(routerRouter)
 	if err != nil {
 		cleanup2()
@@ -81,7 +83,8 @@ func InitApplication() (*app.Application, func(), error) {
 		return nil, nil, err
 	}
 	cleanDuplicateFiringer := v1.NewCleanDuplicateFiringer(cacheStore)
-	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer)
+	cleanExpiredSilencer := v1.NewCleanExpiredSilencer(cacheStore)
+	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer)
 	return application, func() {
 		cleanup2()
 		cleanup()

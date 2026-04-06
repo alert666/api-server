@@ -13,5 +13,7 @@ var ServiceProviderSet = wire.NewSet(
 	v1.NewAlertTemplateServicer,
 	v1.NewChannelServicer,
 	v1.NewHistoryServicer,
+	v1.NewAlertSilenceServicer,
 	v1.NewCleanDuplicateFiringer,
+	v1.NewCleanExpiredSilencer,
 )
