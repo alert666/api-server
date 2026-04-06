@@ -145,7 +145,10 @@ func (c *CacheStore) SetObject(ctx context.Context, cacheType CacheType, cacheKe
 		return fmt.Errorf("setObject marshal object error: %w", err)
 	}
 
-	return c.client.Set(ctx, saveKey, data, expiration).Err()
+	if err := c.client.Set(ctx, saveKey, data, expiration).Err(); err != nil {
+		return fmt.Errorf("cache setObject failed, %w", err)
+	}
+	return nil
 }
 
 // GetObject 获取并反序列化对象
@@ -161,7 +164,7 @@ func (c *CacheStore) GetObject(ctx context.Context, cacheType CacheType, cacheKe
 		if errors.Is(err, redis.Nil) {
 			return false, nil
 		}
-		return false, fmt.Errorf("get object error: %w", err)
+		return false, fmt.Errorf("cache get object error: %w", err)
 	}
 
 	if err := json.Unmarshal(data, target); err != nil {
@@ -231,7 +234,7 @@ func (c *CacheStore) DelKey(ctx context.Context, cacheType CacheType, cacheKey a
 	}
 	delKey := c.buildCacheKey(cacheType, key)
 	if err := c.client.Del(ctx, delKey).Err(); err != nil {
-		return fmt.Errorf("redis delKey error: %w", err)
+		return fmt.Errorf("cache delKey error: %w", err)
 	}
 	return nil
 }

@@ -169,13 +169,11 @@ func (receiver *alertChannelService) ListChannel(ctx context.Context, req *types
 	}
 
 	if req.PageSize == 0 || req.Page == 0 {
-		if alertChannels, err = sql.Find(); err != nil {
-			return nil, err
-		}
-	} else {
-		if alertChannels, err = sql.Limit(req.PageSize).Offset((req.Page - 1) * req.PageSize).Find(); err != nil {
-			return nil, err
-		}
+		return nil, fmt.Errorf("pageSize 和 page 不能为0")
 	}
+	if alertChannels, err = sql.Limit(req.PageSize).Offset((req.Page - 1) * req.PageSize).Find(); err != nil {
+		return nil, err
+	}
+
 	return types.NewAlertChannelListResponse(alertChannels, total, req.PageSize, req.Page), nil
 }

@@ -15,13 +15,14 @@ var RequestIDContextKey = requestIDContextKey{}
 var ApiData apitypes.ServerApiData
 
 const (
-	FlagConfigPath          = "config-path"
-	EmptyRoleSentinel       = "__empty__"
-	OAuth2ProviderList      = "oauth2:provider:list"
-	AlertStatusResolved     = "resolved"
-	AlertStatusFiring       = "firing"
-	AlertChannelTopicUpdate = "alert:channel:update"
-	AlertChannelTopicDelete = "alert:channel:delete"
-	AlertDBTenantKey        = "cluster"
-	AlertCleanCacheLockKey  = "clean_duplicate_alerts"
+	FlagConfigPath                    = "config-path"
+	EmptyRoleSentinel                 = "__empty__"
+	OAuth2ProviderList                = "oauth2:provider:list"
+	AlertStatusResolved               = "resolved"
+	AlertStatusFiring                 = "firing"
+	AlertChannelTopicUpdate           = "alert:channel:update"
+	AlertChannelTopicDelete           = "alert:channel:delete"
+	AlertDBTenantKey                  = "cluster"
+	AlertCleanDuplicateHistoryLockKey = "alert:clean:duplicate:history"
+	AlertCleanExpiredSilencesLockKey  = "alert:clean:expired:silences"
 )

@@ -17,7 +17,7 @@ type AlertHistory struct {
 	Status            string           `gorm:"column:status;type:varchar(32);not null;index:idx_status_cluster,priority:1;comment:告警状态" json:"status"`
 	EndsAt            *time.Time       `gorm:"column:ends_at;type:datetime;index:idx_ends_at;comment:告警恢复时间" json:"endsAt"`
 	AlertChannelID    int              `gorm:"column:alert_channel_id;not null;index:idx_channel_id;comment:关联通道ID" json:"alertChannelId"`
-	AlertSendRecordID *int             `gorm:"column:alert_send_record_id;index:idx_send_record_id;comment:关联发送记录ID" json:"alertSendRecordID"`
+	AlertSendRecordID *int             `gorm:"column:alert_send_record_id;index:idx_send_record_id;comment:关联发送记录ID和分组ID" json:"alertSendRecordID"`
 	AlertSilenceID    int              `gorm:"column:alert_silence_id;index:idx_history_silence_id;comment:关联静默规则ID" json:"alertSilenceID"`
 	Alertname         string           `gorm:"column:alertname;type:varchar(255);not null" json:"alertname"`
 	Severity          string           `gorm:"column:severity;type:varchar(32)" json:"severity"`
@@ -30,29 +30,6 @@ type AlertHistory struct {
 	AlertSendRecord   *AlertSendRecord `gorm:"foreignKey:AlertSendRecordID" json:"alertSendRecord"`
 	AlertSilence      *AlertSilence    `gorm:"foreignKey:AlertSilenceID" json:"alertSilence"`
 }
-
-// type AlertHistory struct {
-// 	ID                int              `gorm:"column:id;primaryKey;autoIncrement;comment:主键ID" json:"id"`
-// 	CreatedAt         time.Time        `gorm:"column:created_at;type:datetime;autoCreateTime;comment:本条记录存入数据库的时间" json:"createdAt"`
-// 	Cluster           string           `gorm:"column:cluster;type:varchar(128);not null;default:default;uniqueIndex:idx_cluster_fp_starts,priority:1;index:idx_cluster_status,priority:1;comment:租户" json:"cluster"`
-// 	Fingerprint       string           `gorm:"column:fingerprint;type:varchar(128);not null;uniqueIndex:idx_cluster_fp_starts,priority:2;comment:指纹" json:"fingerprint"`
-// 	StartsAt          time.Time        `gorm:"column:starts_at;type:datetime(3);precision:3;not null;uniqueIndex:idx_cluster_fp_starts,priority:3;comment:开始时间" json:"startsAt"`
-// 	Status            string           `gorm:"column:status;type:varchar(32);not null;index:idx_cluster_status,priority:2;comment:告警状态" json:"status"`
-// 	EndsAt            *time.Time       `gorm:"column:ends_at;type:datetime;index:idx_ends_at;comment:告警恢复时间" json:"endsAt"`
-// 	AlertChannelID    int              `gorm:"column:alert_channel_id;not null;index:idx_channel_id;comment:关联通道ID" json:"alertChannelId"`
-// 	AlertSendRecordID *int             `gorm:"column:alert_send_record_id;index:idx_send_record_id;comment:关联发送记录ID" json:"alertSendRecordID"`
-// 	Alertname         string           `gorm:"column:alertname;type:varchar(255);not null" json:"alertname"`
-// 	Severity          string           `gorm:"column:severity;type:varchar(32)" json:"severity"`
-// 	Instance          string           `gorm:"column:instance;type:varchar(255)" json:"instance"`
-// 	Labels            datatypes.JSON   `gorm:"column:labels;type:json" json:"labels"`
-// 	Annotations       datatypes.JSON   `gorm:"column:annotations;type:json" json:"annotations"`
-// 	SendCount         int              `gorm:"column:send_count;type:int;size:3" json:"sendCount"`
-// 	IsSilenced        bool             `gorm:"column:is_silenced;default:false" json:"isSilenced"`
-// 	AlertSilenceID    int              `gorm:"column:alert_silence_id" json:"alertSilenceID"`
-// 	AlertChannel      *AlertChannel    `gorm:"foreignKey:AlertChannelID" json:"alertChannel"`
-// 	AlertSendRecord   *AlertSendRecord `gorm:"foreignKey:AlertSendRecordID" json:"alertSendRecord"`
-// 	AlertSilence      *AlertSilence    `gorm:"foreignKey:AlertSilenceID" json:"alertSilence"`
-// }
 
 func (*AlertHistory) TableName() string {
 	return "alert_historys"
