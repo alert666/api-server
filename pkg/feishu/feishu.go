@@ -309,38 +309,8 @@ type FeishuCardLink struct {
 	Url        string `yaml:"url"`
 }
 
-var funcMap = template.FuncMap{
-	"timeFormat": func(t time.Time) string {
-		var cstZone = time.FixedZone("CST", 8*3600)
-		return t.In(cstZone).Format("2006-01-02 15:04:05")
-	},
-	"add": func(a, b int) int {
-		return a + b
-	},
-	"getEndTime": func(endTime *time.Time, msg string) string {
-		if endTime == nil || endTime.IsZero() {
-			return msg
-		}
-		var cstZone = time.FixedZone("CST", 8*3600)
-		return endTime.In(cstZone).Format("2006-01-02 15:04:05")
-	},
-	"newViewLink": func(link string) string {
-		m := map[string]string{
-			"pc_url":      link,
-			"android_url": "",
-			"ios_url":     "",
-			"url":         link,
-		}
-		b, err := json.Marshal(m)
-		if err != nil {
-			return "{}"
-		}
-		return string(b)
-	},
-}
-
 func (receiver *FeishuCardDataContent) Build(ctx context.Context, alert any, alertTpl string) (*FeiShuContent, error) {
-	tmpl, err := template.New("alert").Funcs(funcMap).Parse(alertTpl)
+	tmpl, err := template.New("alert").Funcs(helper.FuncMap).Parse(alertTpl)
 	if err != nil {
 		return nil, fmt.Errorf("构建告警模版失败, %s", err)
 	}

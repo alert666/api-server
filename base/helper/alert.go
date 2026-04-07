@@ -3,6 +3,8 @@ package helper
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
+	"text/template"
 	"time"
 
 	"github.com/qinquanliuxiang666/alertmanager/model"
@@ -58,4 +60,57 @@ func VerificationAlertConfig(channelName string, channelType model.ChannelType, 
 
 func GetAlertMapKey(fingerprint string, startAt time.Time) string {
 	return fmt.Sprintf("%s-%d", fingerprint, startAt.UnixNano())
+}
+
+var FuncMap = template.FuncMap{
+	"timeFormat": func(t time.Time) string {
+		var cstZone = time.FixedZone("CST", 8*3600)
+		return t.In(cstZone).Format("2006-01-02 15:04:05")
+	},
+	"add": func(a, b int) int {
+		return a + b
+	},
+	"getEndTime": func(endTime *time.Time, msg string) string {
+		if endTime == nil || endTime.IsZero() {
+			return msg
+		}
+		var cstZone = time.FixedZone("CST", 8*3600)
+		return endTime.In(cstZone).Format("2006-01-02 15:04:05")
+	},
+	// 当告警源为 prometheus 时，生成 Grafana Explore 链接
+	"getGrafanaExploreLink": func(grafanaAddr, genURL, datasource string) string {
+		if genURL == "" {
+			return grafanaAddr + "/explore"
+		}
+
+		u, err := url.Parse(genURL)
+		if err != nil {
+			return grafanaAddr
+		}
+
+		promQL := u.Query().Get("g0.expr")
+		if promQL == "" {
+			return grafanaAddr + "/explore"
+		}
+		stateJSON := fmt.Sprintf(
+			`{"datasource":%q,"queries":[{"expr":%q,"refId":"A"}],"range":{"from":"now-1h","to":"now"}}`,
+			datasource,
+			promQL,
+		)
+		return grafanaAddr + "/explore?left=" + url.QueryEscape(stateJSON)
+	},
+	// 当告警Channel为飞书的时候, 设置飞书卡片按钮跳转链接
+	"newViewLink": func(link string) string {
+		m := map[string]string{
+			"pc_url":      link,
+			"android_url": "",
+			"ios_url":     "",
+			"url":         link,
+		}
+		b, err := json.Marshal(m)
+		if err != nil {
+			return "{}"
+		}
+		return string(b)
+	},
 }
