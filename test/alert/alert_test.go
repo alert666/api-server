@@ -1,19 +1,21 @@
 package alert_test
 
 import (
+	"context"
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/qinquanliuxiang666/alertmanager/base/types"
 	"github.com/qinquanliuxiang666/alertmanager/pkg/feishu"
-	"gopkg.in/yaml.v2"
 )
 
 // AlertmanagerPayload 对应你提供的 JSON 结构
@@ -183,25 +185,91 @@ func TestString(t *testing.T) {
 
 func TestTemplate(t *testing.T) {
 	// 使用反引号定义的字符串，注意里面的缩进必须全部是空格
-	data := `
+	tpl := `
+{{- if .Alerts -}}
+{{- $first := index .Alerts 0 -}}
+{{- $count := len .Alerts -}}
+{{- /* 先在开头计算好所有变量 */ -}}
+{{- $fullDesc := "" -}}
+{{- range $i, $v := .Alerts -}}
+  {{- if lt $i 3 -}}
+    {{- $line := printf "%d. %s\n" (add $i 1) (index $v.Annotations "description") -}}
+    {{- $fullDesc = printf "%s%s" $fullDesc $line -}}
+  {{- end -}}
+{{- end -}}
+{{- if gt $count 3 -}}
+  {{- $footer := printf "---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。" $count -}}
+  {{- $fullDesc = printf "%s%s" $fullDesc $footer -}}
+{{- end -}}
+
+{{- /* YAML 输出结构 */ -}}
 template_id: "AAqK947a7l70i"
 template_version_name: "1.0.10"
 template_variable:
-  alertName: "[聚合3条告警] ContainerMemoryUsageHigh"
-  alertCluster: "local"
-  alertLevel: "critical"
-  alertStartTime: "2026-04-04 19:24:00"
-  alertEndTime: 告警未恢复
+  alertName: {{ if gt $count 1 }}{{ printf "[聚合%d条告警] %s" $count (index $first.Labels "alertname") | printf "%q" }}{{ else }}{{ index $first.Labels "alertname" | printf "%q" }}{{ end }}
+  alertCluster: {{ index $first.Labels "cluster" | printf "%q" }}
+  alertLevel: {{ index $first.Labels "severity" | printf "%q" }}
+  alertStartTime: {{ timeFormat $first.StartsAt | printf "%q" }}
+  alertEndTime: {{ getEndTime $first.EndsAt "告警未恢复" | printf "%q" }}
   alertUser: "<at id=28c4bfgf></at>"
   disableSelect: false
-  alertDescribe: "1. Pod cilium-tb5wt (命名空间: kube-system) 的容器内存使用量已超过 300MB (当前值: 380.97 MB)\n2. Pod kube-apiserver-node0 (命名空间: kube-system) 的容器内存使用量已超过 300MB (当前值: 440.84 MB)\n3. Pod cilium-ck9db (命名空间: kube-system) 的容器内存使用量已超过 300MB (当前值: 382.69 MB)\n"
-  grafanaAddress: "{\"pc_url\":\"https://gr.qqlx.net/explore?left={\\\"datasource\\\":\\\"vm\\\",\\\"queries\\\":[{\\\"expr\\\":%22container_memory_working_set_bytes%7Bimage%21%3D%5C%22%5C%22%2C+image%21~%5C%22pause%5C%22%2C+pod%3D~%5C%22.%2B%5C%22%7D+%2F+1024+%2F+1024+%3E+300%5Cn%22,\\\"refId\\\":\\\"A\\\"}],\\\"range\\\":{\\\"from\\\":\\\"1775302540000\\\",\\\"to\\\":\\\"now\\\"}}\",\"android_url\":\"\",\"ios_url\":\"\",\"url\":\"\"}"`
+  alertDescribe: {{ $fullDesc | printf "%q" }}
+  {{- /* ⚠️ 注意：grafanaLink 必须保持原始 JSON 对象格式，不要加 printf "%q" */}}
+  grafanaLink: {{ newViewLink (getGrafanaExploreLink "https://kp-grafana.prod.karmada.suanleme.local" $first.GeneratorURL "thanos" ) }}
+{{- end -}}`
+
+	data := `{"receiver":"prometheusalert","status":"firing","alerts":[{"status":"firing","labels":{"alertname":"4583PodNotRunning","area":"guangdong","belong":"idc","component":"kube-state-metrics","container":"kube-rbac-proxy-main","index":"01","instance":"172.20.91.44:8443","job":"kube-state-metrics","namespace":"jb8ppchug27a2uhoyre7efcfbok2w0ct-4583","phase":"Pending","pod":"deployment-4583-dhnhlbyg-56469f6fc8-7vxqv","prometheus":"monitoring/k8s","provider":"guangdong","range":"cluster","severity":"critical","type":"prod","uid":"f4203d26-ba2b-4133-9de8-b80d07e5f058"},"annotations":{"description":"Pod deployment-4583-dhnhlbyg-56469f6fc8-7vxqv in namespace test is in Pending state.","summary":"Pod not running in test namespace"},"startsAt":"2026-04-01T02:15:46.098Z","endsAt":"0001-01-01T00:00:00Z","generatorURL":"http://prometheus-k8s-0:9090/graph?g0.expr=kube_pod_status_phase%7Bnamespace%3D%22jb8ppchug27a2uhoyre7efcfbok2w0ct-4583%22%2Cphase%21~%22Running%7CSucceeded%22%7D+%3D%3D+1\u0026g0.tab=1","fingerprint":"060c3ec7f26a12a2"},{"status":"firing","labels":{"alertname":"4583PodNotRunning","area":"guangdong","belong":"idc","component":"kube-state-metrics","container":"kube-rbac-proxy-main","index":"01","instance":"172.20.91.44:8443","job":"kube-state-metrics","namespace":"jb8ppchug27a2uhoyre7efcfbok2w0ct-4583","phase":"Pending","pod":"deployment-4583-dhnhlbyg-56469f6fc8-cgldb","prometheus":"monitoring/k8s","provider":"guangdong","range":"cluster","severity":"critical","type":"prod","uid":"1f68e381-b918-45e2-9e71-60af28a62b1f"},"annotations":{"description":"Pod deployment-4583-dhnhlbyg-56469f6fc8-cgldb in namespace test is in Pending state.","summary":"Pod not running in test namespace"},"startsAt":"2026-04-01T02:15:16.098Z","endsAt":"0001-01-01T00:00:00Z","generatorURL":"http://prometheus-k8s-0:9090/graph?g0.expr=kube_pod_status_phase%7Bnamespace%3D%22jb8ppchug27a2uhoyre7efcfbok2w0ct-4583%22%2Cphase%21~%22Running%7CSucceeded%22%7D+%3D%3D+1\u0026g0.tab=1","fingerprint":"2965023e26da6136"},{"status":"firing","labels":{"alertname":"4583PodNotRunning","area":"guangdong","belong":"idc","component":"kube-state-metrics","container":"kube-rbac-proxy-main","index":"01","instance":"172.20.91.44:8443","job":"kube-state-metrics","namespace":"jb8ppchug27a2uhoyre7efcfbok2w0ct-4583","phase":"Pending","pod":"deployment-4583-dhnhlbyg-56469f6fc8-w7njg","prometheus":"monitoring/k8s","provider":"guangdong","range":"cluster","severity":"critical","type":"prod","uid":"189f785d-22f7-4656-8e2e-044e0e35c664"},"annotations":{"description":"Pod deployment-4583-dhnhlbyg-56469f6fc8-w7njg in namespace test is in Pending state.","summary":"Pod not running in test namespace"},"startsAt":"2026-04-01T02:15:46.098Z","endsAt":"0001-01-01T00:00:00Z","generatorURL":"http://prometheus-k8s-0:9090/graph?g0.expr=kube_pod_status_phase%7Bnamespace%3D%22jb8ppchug27a2uhoyre7efcfbok2w0ct-4583%22%2Cphase%21~%22Running%7CSucceeded%22%7D+%3D%3D+1\u0026g0.tab=1","fingerprint":"6a0200d57d18060d"}],"groupLabels":{"alertname":"4583PodNotRunning","namespace":"jb8ppchug27a2uhoyre7efcfbok2w0ct-4583"},"commonLabels":{"alertname":"4583PodNotRunning","area":"guangdong","belong":"idc","component":"kube-state-metrics","container":"kube-rbac-proxy-main","index":"01","instance":"172.20.91.44:8443","job":"kube-state-metrics","namespace":"jb8ppchug27a2uhoyre7efcfbok2w0ct-4583","phase":"Pending","prometheus":"monitoring/k8s","provider":"guangdong","range":"cluster","severity":"critical","type":"prod"},"commonAnnotations":{"summary":"Pod not running in test namespace"},"externalURL":"http://alertmanager-main-0:9093","version":"4","groupKey":"{}/{severity=\"critical\"}:{alertname=\"4583PodNotRunning\", namespace=\"jb8ppchug27a2uhoyre7efcfbok2w0ct-4583\"}","truncatedAlerts":0}
+`
 
 	req := &feishu.FeishuCardDataContent{}
-
-	// 确保使用的是 gopkg.in/yaml.v3 库
-	if err := yaml.Unmarshal([]byte(data), &req); err != nil {
+	var payload *types.AlertReceiveReq
+	if err := json.Unmarshal([]byte(data), &payload); err != nil {
 		t.Fatal(err)
 	}
-	fmt.Printf("%+v\n", req)
+
+	content, err := req.Build(context.TODO(), payload, tpl)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	by, err := json.Marshal(&content)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(string(by))
+}
+
+func TestParserUrl(t *testing.T) {
+	// 1. 定义匿名函数逻辑
+	generateGrafanaURL := func(grafanaAddr, genURL, datasource string) string {
+		if genURL == "" {
+			return grafanaAddr + "/explore"
+		}
+
+		u, err := url.Parse(genURL)
+		if err != nil {
+			return grafanaAddr
+		}
+
+		promQL := u.Query().Get("g0.expr")
+		if promQL == "" {
+			return grafanaAddr + "/explore"
+		}
+		stateJSON := fmt.Sprintf(
+			`{"datasource":%q,"queries":[{"expr":%q,"refId":"A"}],"range":{"from":"now-1h","to":"now"}}`,
+			datasource,
+			promQL,
+		)
+		// 3. 拼接并返回
+		return grafanaAddr + "/explore?left=" + url.QueryEscape(stateJSON)
+	}
+
+	// 2. 测试调用
+	grafanaBase := "https://kp-grafana.prod.karmada.suanleme.local"
+	prometheusGenURL := `http://prometheus-k8s-0:9090/graph?g0.expr=kube_pod_status_phase%7Bnamespace%3D%22jb8ppchug27a2uhoyre7efcfbok2w0ct-4583%22%2Cphase%21~%22Running%7CSucceeded%22%7D+%3D%3D+1&g0.tab=1`
+
+	finalURL := generateGrafanaURL(grafanaBase, prometheusGenURL, "thanos")
+
+	fmt.Println("生成的地址:")
+	fmt.Println(finalURL)
 }
