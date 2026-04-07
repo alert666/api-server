@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/qinquanliuxiang666/alertmanager/model"
@@ -34,6 +35,76 @@ type Alert struct {
 	Fingerprint  string            `json:"fingerprint"`
 	IsSilenced   bool              `json:"isSilenced"`
 	SilenceID    int               `json:"silenceID"`
+}
+
+// NewTestAlertReceiveReq 测试模板使用的告警数据
+func NewTestAlertReceiveReq() *AlertReceiveReq {
+	now := time.Now()
+	promHost := "http://prometheus.monitoring.svc:9090"
+	promQL := "(node_filesystem_avail_bytes%7Bmountpoint%3D%22%2F%22%7D+%2F+node_filesystem_size_bytes%7Bmountpoint%3D%22%2F%22%7D%29+*+100+%3C+10"
+
+	return &AlertReceiveReq{
+		ChannelName: "feishu",
+		Receiver:    "feishu-receiver",
+		Status:      "firing",
+		Version:     "4",
+		ExternalURL: "http://alertmanager.qqlx.net",
+		GroupKey:    "{}/{}:{alertname=\"NodeDiskUsageHigh\", cluster=\"local\"}",
+		GroupLabels: map[string]string{
+			"alertname": "NodeDiskUsageHigh",
+			"cluster":   "local",
+		},
+		CommonLabels: map[string]string{
+			"alertgroup": "HostDiskAlerts",
+			"alertname":  "NodeDiskUsageHigh",
+			"cluster":    "local",
+			"severity":   "critical",
+			"team":       "infrastructure",
+		},
+		CommonAnnotations: map[string]string{},
+		TruncatedAlerts:   0,
+		Alerts: []*Alert{
+			{
+				Status:      "firing",
+				Fingerprint: "20035b789c29547a",
+				StartsAt:    now.Add(-10 * time.Minute), // 10分钟前开始
+				EndsAt:      nil,                        // 正在告警，设为 nil
+				// 标准 Prometheus 格式：/graph?g0.expr=...&g0.tab=1
+				GeneratorURL: fmt.Sprintf("%s/graph?g0.expr=%s&g0.tab=1", promHost, promQL),
+				Labels: map[string]string{
+					"alertname":  "NodeDiskUsageHigh",
+					"cluster":    "local",
+					"instance":   "10.0.0.10:9100",
+					"severity":   "critical",
+					"device":     "/dev/sda2",
+					"mountpoint": "/",
+				},
+				Annotations: map[string]string{
+					"summary":     "节点磁盘使用率过高 (10.0.0.10:9100)",
+					"description": "节点 10.0.0.10 的根分区使用率已超过 90% (当前值: 91.42%)",
+				},
+			},
+			{
+				Status:       "firing",
+				Fingerprint:  "87044fca2101f4c3",
+				StartsAt:     now.Add(-5 * time.Minute), // 5分钟前开始
+				EndsAt:       nil,
+				GeneratorURL: fmt.Sprintf("%s/graph?g0.expr=%s&g0.tab=1", promHost, promQL),
+				Labels: map[string]string{
+					"alertname":  "NodeDiskUsageHigh",
+					"cluster":    "local",
+					"instance":   "10.0.0.11:9100",
+					"severity":   "critical",
+					"device":     "/dev/sda2",
+					"mountpoint": "/",
+				},
+				Annotations: map[string]string{
+					"summary":     "节点磁盘使用率过高 (10.0.0.11:9100)",
+					"description": "节点 10.0.0.11 的根分区使用率已超过 90% (当前值: 92.60%)",
+				},
+			},
+		},
+	}
 }
 
 // 辅助函数：将业务 Alert 转换为 DB Model

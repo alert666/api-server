@@ -14,7 +14,6 @@
   {{- $footer := printf "---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。" $count -}}
   {{- $fullDesc = printf "%s%s" $fullDesc $footer -}}
 {{- end -}}
-
 {{- /* YAML 输出结构 */ -}}
 template_id: "AAqK947a7l70i"
 template_version_name: "1.0.10"
@@ -42,5 +41,4 @@ template_variable:
   alertEndTime: {{ getEndTime .EndsAt "告警未恢复" | printf "%q" }}
   alertUser: "<at id=28c4bfgf></at>"
   disableSelect: false
-  {{- /* ⚠️ 注意：grafanaLink 必须保持原始 JSON 对象格式，不要加 printf "%q" */}}
-  grafanaLink: {{ newViewLink .GeneratorURL }}
+  grafanaLink: {{ newViewLink (getGrafanaExploreLink "https://kp-grafana.prod.karmada.suanleme.local" $first.GeneratorURL "thanos" ) }}

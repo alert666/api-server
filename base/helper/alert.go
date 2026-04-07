@@ -1,13 +1,19 @@
 package helper
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/url"
 	"text/template"
 	"time"
 
+	"github.com/qinquanliuxiang666/alertmanager/base/log"
+	"github.com/qinquanliuxiang666/alertmanager/base/types"
 	"github.com/qinquanliuxiang666/alertmanager/model"
+	"go.uber.org/zap"
+	"gopkg.in/yaml.v2"
 )
 
 func VerificationAlertFeishuConfig(channel *model.AlertChannel) (appid, appSecret string, err error) {
@@ -113,4 +119,39 @@ var FuncMap = template.FuncMap{
 		}
 		return string(b)
 	},
+}
+
+func ValidateYamlTemplate(ctx context.Context, aggregation bool, alertTpl string) error {
+	req := types.NewTestAlertReceiveReq()
+	tmpl, err := template.New("test").Funcs(FuncMap).Parse(alertTpl)
+	if err != nil {
+		return fmt.Errorf("构建告警模版失败, %s", err)
+	}
+
+	validateFunc := func(data any) error {
+		var buf bytes.Buffer
+		if err := tmpl.Execute(&buf, data); err != nil {
+			return fmt.Errorf("渲染告警模版失败, %s", err)
+		}
+
+		log.WithRequestID(ctx).Debug("测试告警模板", zap.String("data", buf.String()))
+
+		var testObj map[string]any
+		if err := yaml.Unmarshal([]byte(buf.Bytes()), &testObj); err != nil {
+			return fmt.Errorf("序列化 testObj 失败, %s", err)
+		}
+
+		return nil
+	}
+
+	if aggregation {
+		return validateFunc(req)
+	}
+
+	for _, v := range req.Alerts {
+		if err := validateFunc(v); err != nil {
+			return err
+		}
+	}
+	return nil
 }

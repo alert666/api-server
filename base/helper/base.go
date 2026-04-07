@@ -1,13 +1,11 @@
 package helper
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"slices"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
 	"github.com/qinquanliuxiang666/alertmanager/model"
 )
 
@@ -55,14 +53,6 @@ func RemoveDuplicates[T comparable](slice []T) []T {
 	}
 
 	return result
-}
-
-// GetRequestIDFromContext 从上下文中获取请求 ID
-func GetRequestIDFromContext(ctx context.Context) string {
-	if reqID, ok := ctx.Value(constant.RequestIDContextKey).(string); ok {
-		return reqID
-	}
-	return ""
 }
 
 // ValidateRoleIds 校验请求的角色 ID 列表是否都存在于数据库中的角色列表中

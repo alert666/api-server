@@ -60,6 +60,19 @@ func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, re
 		Template:            string(templateBy),
 		AggregationTemplate: string(aggTemplateBy),
 	}
+
+	if req.AggregationTemplate != "" {
+		if err := helper.ValidateYamlTemplate(ctx, true, saveObj.AggregationTemplate); err != nil {
+			return fmt.Errorf("测试聚合模板失败, %s", err)
+		}
+	}
+
+	if req.Template != "" {
+		if err := helper.ValidateYamlTemplate(ctx, false, saveObj.Template); err != nil {
+			return fmt.Errorf("测试非聚合模板失败, %s", err)
+		}
+	}
+
 	return aTemlpate.WithContext(ctx).Create(saveObj)
 }
 
@@ -93,6 +106,18 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 			return err
 		}
 		return aTemlpate.WithContext(ctx).Save(obj)
+	}
+
+	if req.AggregationTemplate != "" {
+		if err := helper.ValidateYamlTemplate(ctx, true, obj.AggregationTemplate); err != nil {
+			return fmt.Errorf("测试聚合模板失败, %s", err)
+		}
+	}
+
+	if req.Template != "" {
+		if err := helper.ValidateYamlTemplate(ctx, false, obj.Template); err != nil {
+			return fmt.Errorf("测试聚合模板失败, %s", err)
+		}
 	}
 
 	return store.Q.Transaction(func(tx *store.Query) error {

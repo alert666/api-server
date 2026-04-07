@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/qinquanliuxiang666/alertmanager/base/conf"
-	"github.com/qinquanliuxiang666/alertmanager/base/helper"
+	"github.com/qinquanliuxiang666/alertmanager/base/constant"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -71,9 +71,17 @@ func NewLogger() {
 }
 
 func WithRequestID(ctx context.Context) *zap.Logger {
-	return zap.L().With(zap.String("request-id", helper.GetRequestIDFromContext(ctx)))
+	return zap.L().With(zap.String("request-id", getRequestIDFromContext(ctx)))
 }
 
 func WithBody(ctx context.Context, body any) *zap.Logger {
 	return WithRequestID(ctx).With(zap.Any("body", body))
+}
+
+// getRequestIDFromContext 从上下文中获取请求 ID
+func getRequestIDFromContext(ctx context.Context) string {
+	if reqID, ok := ctx.Value(constant.RequestIDContextKey).(string); ok {
+		return reqID
+	}
+	return ""
 }
