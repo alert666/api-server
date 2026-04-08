@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/qinquanliuxiang666/alertmanager/model"
-	"github.com/qinquanliuxiang666/alertmanager/store"
+	"github.com/alert666/api-server/model"
+	"github.com/alert666/api-server/store"
 )
 
 func TestCreateTable(t *testing.T) {

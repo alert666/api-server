@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/helper"
-	"github.com/qinquanliuxiang666/alertmanager/base/types"
-	"github.com/qinquanliuxiang666/alertmanager/model"
-	"github.com/qinquanliuxiang666/alertmanager/store"
+	"github.com/alert666/api-server/base/helper"
+	"github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/model"
+	"github.com/alert666/api-server/store"
 )
 
 type AlertHistoryServicer interface {

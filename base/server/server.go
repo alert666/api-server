@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/qinquanliuxiang666/alertmanager/base/conf"
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
-	"github.com/qinquanliuxiang666/alertmanager/base/router"
-	apitypes "github.com/qinquanliuxiang666/alertmanager/base/types"
-	"github.com/qinquanliuxiang666/alertmanager/controller"
-	v1 "github.com/qinquanliuxiang666/alertmanager/service/v1"
+	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/router"
+	apitypes "github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/controller"
+	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
 )

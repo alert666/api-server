@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/qinquanliuxiang666/alertmanager/cmd"
+	"github.com/alert666/api-server/cmd"
 )
 
 // @title           Swagger API

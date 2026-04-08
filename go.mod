@@ -1,4 +1,4 @@
-module github.com/qinquanliuxiang666/alertmanager
+module github.com/alert666/api-server
 
 go 1.24.0
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/qinquanliuxiang666/alertmanager/base/conf"
-	"github.com/qinquanliuxiang666/alertmanager/base/data"
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/data"
+	"github.com/alert666/api-server/model"
 	"gorm.io/gen"
 )
 

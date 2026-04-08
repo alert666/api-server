@@ -180,7 +180,7 @@ cd ui
 # 静态资源会拷贝到 /data/html/apiserver 目录下
 make deploy
 
-git clone -b main https://github.com/qinquanliuxiang666/alertmanager.git
+git clone -b main https://github.com/alert666/api-server.git
 cd api-server/deploy
 # 初始化配置文件, 需要修改配置文件中的数据库信息
 mv config-example.yaml config.yaml

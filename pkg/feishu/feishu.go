@@ -20,12 +20,12 @@ import (
 	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher/callback"
-	"github.com/qinquanliuxiang666/alertmanager/base/conf"
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
-	"github.com/qinquanliuxiang666/alertmanager/base/helper"
-	"github.com/qinquanliuxiang666/alertmanager/base/log"
-	"github.com/qinquanliuxiang666/alertmanager/base/types"
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/helper"
+	"github.com/alert666/api-server/base/log"
+	"github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/model"
 )
 
 var feishuStruct = &FeiShu{

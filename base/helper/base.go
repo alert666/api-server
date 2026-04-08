@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/model"
 )
 
 func InArray[T comparable](arr []T, val T) bool {

@@ -14,8 +14,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/types"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/feishu"
+	"github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/pkg/feishu"
 )
 
 // AlertmanagerPayload 对应你提供的 JSON 结构

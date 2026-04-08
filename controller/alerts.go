@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	v1 "github.com/qinquanliuxiang666/alertmanager/service/v1"
+	v1 "github.com/alert666/api-server/service/v1"
 )
 
 type AlertManagerController interface {

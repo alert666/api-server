@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/conf"
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
+	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/constant"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

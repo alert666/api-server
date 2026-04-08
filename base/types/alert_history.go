@@ -3,7 +3,7 @@ package types
 import (
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/model"
 )
 
 type AlertHistoryListRequest struct {

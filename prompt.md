@@ -6,8 +6,8 @@ package v1
 import (
 	"context"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/types"
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/model"
 )
 
 type AlertTemplateServicer interface {
@@ -136,14 +136,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/conf"
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
-	"github.com/qinquanliuxiang666/alertmanager/base/helper"
-	"github.com/qinquanliuxiang666/alertmanager/base/log"
-	"github.com/qinquanliuxiang666/alertmanager/base/types"
-	"github.com/qinquanliuxiang666/alertmanager/model"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/feishu"
-	"github.com/qinquanliuxiang666/alertmanager/store"
+	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/helper"
+	"github.com/alert666/api-server/base/log"
+	"github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/model"
+	"github.com/alert666/api-server/pkg/feishu"
+	"github.com/alert666/api-server/store"
 	"go.uber.org/zap"
 )
 

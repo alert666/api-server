@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/model"
 	"gorm.io/datatypes"
 )
 

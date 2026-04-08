@@ -17,7 +17,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/model"
 )
 
 func newAlertChannel(db *gorm.DB, opts ...gen.DOOption) alertChannel {

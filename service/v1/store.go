@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/qinquanliuxiang666/alertmanager/store"
+	"github.com/alert666/api-server/store"
 )
 
 var (

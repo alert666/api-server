@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/conf"
+	"github.com/alert666/api-server/base/conf"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )

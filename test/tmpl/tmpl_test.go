@@ -8,7 +8,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/types"
+	"github.com/alert666/api-server/base/types"
 	"sigs.k8s.io/yaml"
 )
 

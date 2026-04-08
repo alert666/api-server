@@ -7,19 +7,19 @@
 package cmd
 
 import (
-	"github.com/qinquanliuxiang666/alertmanager/base/app"
-	"github.com/qinquanliuxiang666/alertmanager/base/data"
-	"github.com/qinquanliuxiang666/alertmanager/base/middleware"
-	"github.com/qinquanliuxiang666/alertmanager/base/router"
-	"github.com/qinquanliuxiang666/alertmanager/base/server"
-	"github.com/qinquanliuxiang666/alertmanager/controller"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/casbin"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/feishu"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/jwt"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/local_cache"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/oauth"
-	"github.com/qinquanliuxiang666/alertmanager/service/v1"
-	"github.com/qinquanliuxiang666/alertmanager/store"
+	"github.com/alert666/api-server/base/app"
+	"github.com/alert666/api-server/base/data"
+	"github.com/alert666/api-server/base/middleware"
+	"github.com/alert666/api-server/base/router"
+	"github.com/alert666/api-server/base/server"
+	"github.com/alert666/api-server/controller"
+	"github.com/alert666/api-server/pkg/casbin"
+	"github.com/alert666/api-server/pkg/feishu"
+	"github.com/alert666/api-server/pkg/jwt"
+	"github.com/alert666/api-server/pkg/local_cache"
+	"github.com/alert666/api-server/pkg/oauth"
+	"github.com/alert666/api-server/service/v1"
+	"github.com/alert666/api-server/store"
 )
 
 // Injectors from wire.go:

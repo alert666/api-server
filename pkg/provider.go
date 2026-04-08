@@ -2,11 +2,11 @@ package pkg
 
 import (
 	"github.com/google/wire"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/casbin"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/feishu"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/jwt"
-	localcache "github.com/qinquanliuxiang666/alertmanager/pkg/local_cache"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/oauth"
+	"github.com/alert666/api-server/pkg/casbin"
+	"github.com/alert666/api-server/pkg/feishu"
+	"github.com/alert666/api-server/pkg/jwt"
+	localcache "github.com/alert666/api-server/pkg/local_cache"
+	"github.com/alert666/api-server/pkg/oauth"
 )
 
 var PkgProviderSet = wire.NewSet(

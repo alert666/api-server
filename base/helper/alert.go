@@ -9,9 +9,9 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/log"
-	"github.com/qinquanliuxiang666/alertmanager/base/types"
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/base/log"
+	"github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/model"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 )

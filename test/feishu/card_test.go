@@ -10,7 +10,7 @@ import (
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher/callback"
 	larkws "github.com/larksuite/oapi-sdk-go/v3/ws"
-	"github.com/qinquanliuxiang666/alertmanager/base/helper"
+	"github.com/alert666/api-server/base/helper"
 )
 
 func TestCard(t *testing.T) {

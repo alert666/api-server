@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/conf"
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
-	"github.com/qinquanliuxiang666/alertmanager/base/data"
-	"github.com/qinquanliuxiang666/alertmanager/base/log"
-	"github.com/qinquanliuxiang666/alertmanager/store"
+	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/data"
+	"github.com/alert666/api-server/base/log"
+	"github.com/alert666/api-server/store"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )

@@ -6,15 +6,15 @@ package cmd
 
 import (
 	"github.com/google/wire"
-	"github.com/qinquanliuxiang666/alertmanager/base/app"
-	"github.com/qinquanliuxiang666/alertmanager/base/data"
-	"github.com/qinquanliuxiang666/alertmanager/base/middleware"
-	"github.com/qinquanliuxiang666/alertmanager/base/router"
-	"github.com/qinquanliuxiang666/alertmanager/base/server"
-	"github.com/qinquanliuxiang666/alertmanager/controller"
-	"github.com/qinquanliuxiang666/alertmanager/pkg"
-	"github.com/qinquanliuxiang666/alertmanager/service"
-	"github.com/qinquanliuxiang666/alertmanager/store"
+	"github.com/alert666/api-server/base/app"
+	"github.com/alert666/api-server/base/data"
+	"github.com/alert666/api-server/base/middleware"
+	"github.com/alert666/api-server/base/router"
+	"github.com/alert666/api-server/base/server"
+	"github.com/alert666/api-server/controller"
+	"github.com/alert666/api-server/pkg"
+	"github.com/alert666/api-server/service"
+	"github.com/alert666/api-server/store"
 )
 
 func InitApplication() (*app.Application, func(), error) {

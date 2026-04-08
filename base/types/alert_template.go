@@ -1,6 +1,6 @@
 package types
 
-import "github.com/qinquanliuxiang666/alertmanager/model"
+import "github.com/alert666/api-server/model"
 
 type AlertTemplateCreateRequest struct {
 	Name                string `json:"name" binding:"required"`

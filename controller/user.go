@@ -9,8 +9,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
-	v1 "github.com/qinquanliuxiang666/alertmanager/service/v1"
+	"github.com/alert666/api-server/base/constant"
+	v1 "github.com/alert666/api-server/service/v1"
 )
 
 type UserController interface {

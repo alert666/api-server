@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/casbin/casbin/v2"
-	"github.com/qinquanliuxiang666/alertmanager/model"
+	"github.com/alert666/api-server/model"
 )
 
 // AuthChecker 授权检查接口

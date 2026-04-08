@@ -9,9 +9,9 @@ import (
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
 	"github.com/go-sql-driver/mysql"
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
-	"github.com/qinquanliuxiang666/alertmanager/base/log"
-	"github.com/qinquanliuxiang666/alertmanager/base/types"
+	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/log"
+	"github.com/alert666/api-server/base/types"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )

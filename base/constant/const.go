@@ -1,6 +1,6 @@
 package constant
 
-import apitypes "github.com/qinquanliuxiang666/alertmanager/base/types"
+import apitypes "github.com/alert666/api-server/base/types"
 
 type userContextKey struct{}
 

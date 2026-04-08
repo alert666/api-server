@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
+	"github.com/alert666/api-server/base/constant"
 
 	gocache "github.com/patrickmn/go-cache"
-	"github.com/qinquanliuxiang666/alertmanager/pkg/oauth"
+	"github.com/alert666/api-server/pkg/oauth"
 )
 
 type Cacher interface {

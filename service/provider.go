@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/google/wire"
-	v1 "github.com/qinquanliuxiang666/alertmanager/service/v1"
+	v1 "github.com/alert666/api-server/service/v1"
 )
 
 var ServiceProviderSet = wire.NewSet(

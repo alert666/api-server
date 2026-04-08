@@ -7,8 +7,8 @@ import (
 	"time"
 
 	jwtv5 "github.com/golang-jwt/jwt/v5"
-	"github.com/qinquanliuxiang666/alertmanager/base/conf"
-	"github.com/qinquanliuxiang666/alertmanager/base/constant"
+	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/constant"
 )
 
 type JwtInterface interface {
