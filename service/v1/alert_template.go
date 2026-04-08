@@ -99,15 +99,6 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 	obj.AggregationTemplate = string(aggTemplateBy)
 	obj.Description = req.Description
 
-	var acObj *model.AlertChannel
-	acObj, err = aChannel.WithContext(ctx).Where(aChannel.AlertTemplateID.Eq(int(req.ID))).First()
-	if err != nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return err
-		}
-		return aTemlpate.WithContext(ctx).Save(obj)
-	}
-
 	if req.AggregationTemplate != "" {
 		if err := helper.ValidateYamlTemplate(ctx, true, obj.AggregationTemplate); err != nil {
 			return fmt.Errorf("测试聚合模板失败, %s", err)
@@ -118,6 +109,16 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 		if err := helper.ValidateYamlTemplate(ctx, false, obj.Template); err != nil {
 			return fmt.Errorf("测试聚合模板失败, %s", err)
 		}
+	}
+
+	var acObj *model.AlertChannel
+	acObj, err = aChannel.WithContext(ctx).Where(aChannel.AlertTemplateID.Eq(int(req.ID))).First()
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return err
+		}
+		// 如果 channel 不存在, 直接更新 template 即可
+		return aTemlpate.WithContext(ctx).Save(obj)
 	}
 
 	return store.Q.Transaction(func(tx *store.Query) error {
