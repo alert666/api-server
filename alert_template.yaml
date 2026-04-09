@@ -2,39 +2,26 @@
 {{- if .Alerts -}}
 {{- $first := index .Alerts 0 -}}
 {{- $count := len .Alerts -}}
-{{- /* 先在开头计算好所有变量 */ -}}
-{{- $fullDesc := "" -}}
-{{- range $i, $v := .Alerts -}}
-  {{- if lt $i 3 -}}
-    {{- $line := printf "%d. %s\n" (add $i 1) (index $v.Annotations "description") -}}
-    {{- $fullDesc = printf "%s%s" $fullDesc $line -}}
-  {{- end -}}
-{{- end -}}
-{{- if gt $count 3 -}}
-  {{- $footer := printf "---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。" $count -}}
-  {{- $fullDesc = printf "%s%s" $fullDesc $footer -}}
-{{- end -}}
-{{- /* YAML 输出结构 */ -}}
 template_id: "AAqK947a7l70i"
-template_version_name: "1.0.10"
+template_version_name: "1.0.11"
 template_variable:
   alertName: {{ if gt $count 1 }}{{ printf "[聚合%d条告警] %s" $count (index $first.Labels "alertname") | printf "%q" }}{{ else }}{{ index $first.Labels "alertname" | printf "%q" }}{{ end }}
-  alertCluster: {{ index $first.Labels "area" | printf "%q" }}
+  alertCluster: {{ index $first.Labels "cluster" | printf "%q" }}
   alertLevel: {{ index $first.Labels "severity" | printf "%q" }}
   alertStartTime: {{ timeFormat $first.StartsAt | printf "%q" }}
   alertEndTime: {{ getEndTime $first.EndsAt "告警未恢复" | printf "%q" }}
   alertUser: "<at id=28c4bfgf></at>"
   disableSelect: false
-  alertDescribe: {{ $fullDesc | printf "%q" }}
-  grafanaLink: {{ newViewLink (getGrafanaExploreLink "https://kp-grafana.prod.karmada.suanleme.local" $first.GeneratorURL "thanos" ) }}
+  alertDescribe: {{ getDescript .Alerts | printf "%q" }}
+  grafanaLink: {{ newViewLink $first.GeneratorURL }}
 {{- end -}}
 ---
 # 非聚合模板
 template_id: "AAqK947a7l70i"
-template_version_name: "1.0.10"
+template_version_name: "1.0.11"
 template_variable:
   alertName: {{ index .Labels "alertname" | printf "%q" }}
-  alertDescribe: {{ index .Annotations "description" | printf "&nbsp;&nbsp;&nbsp;&nbsp;%s" | printf "%q" }}
+  alertDescribe: {{ getDescript . | printf "%q" }}
   alertCluster: {{ index .Labels "area" | printf "%q" }}
   alertLevel: {{ index .Labels "severity" | printf "%q" }}
   alertStartTime: {{ timeFormat .StartsAt | printf "%q" }}

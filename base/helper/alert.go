@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strings"
 	"text/template"
 	"time"
 
@@ -118,6 +119,35 @@ var FuncMap = template.FuncMap{
 			return "{}"
 		}
 		return string(b)
+	},
+	"getDescript": func(data any) string {
+		switch d := data.(type) {
+		case *types.Alert:
+			return d.Annotations["description"]
+		case []*types.Alert:
+			count := len(d)
+			if count == 0 {
+				return ""
+			}
+
+			var sb strings.Builder
+			for i, v := range d {
+				if i < 3 {
+					sb.WriteString(fmt.Sprintf("%d. %s\n", i+1, v.Annotations["description"]))
+				} else {
+					break
+				}
+			}
+
+			if count > 3 {
+				sb.WriteString(fmt.Sprintf("---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。", count))
+			}
+
+			return sb.String()
+
+		default:
+			return ""
+		}
 	},
 }
 

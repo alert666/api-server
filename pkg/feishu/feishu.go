@@ -16,16 +16,16 @@ import (
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 
-	lark "github.com/larksuite/oapi-sdk-go/v3"
-	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
-	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
-	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher/callback"
 	"github.com/alert666/api-server/base/conf"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
+	lark "github.com/larksuite/oapi-sdk-go/v3"
+	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
+	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
+	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher/callback"
 )
 
 var feishuStruct = &FeiShu{
@@ -224,7 +224,7 @@ func (receiver *FeiShu) CloseCli(alertChannelName string) {
 }
 
 func (receiver *FeiShu) renderAndSend(ctx context.Context, larkCli *lark.Client, conf *model.FeishuAppConfig, data interface{}, tpl string, color string) error {
-	log.WithRequestID(ctx).Debug("飞书发送告警", zap.Any("data", data))
+	log.WithRequestID(ctx).Debug("发送飞书发送告警")
 	// 1. 渲染模板
 	content, err := RenderingAlertContent().Build(ctx, data, tpl)
 	if err != nil {
@@ -357,6 +357,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 			newReq.Alerts = alertArry.FiringAlertArry
 			firingErr = receiver.renderAndSend(ctx, larkCli, feishuAppConf, newReq, alertChannel.AlertTemplate.AggregationTemplate, "red")
 			if firingErr != nil {
+				err = firingErr
 				log.WithRequestID(ctx).Error("聚合发送告警卡片失败", zap.Error(firingErr))
 			}
 		}
@@ -365,6 +366,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 			newReq := notifyReq.AlertReceiveReq.DeepCopy()
 			newReq.Alerts = alertArry.ResolvedAlertArry
 			if resolvedErr = receiver.renderAndSend(ctx, larkCli, feishuAppConf, newReq, alertChannel.AlertTemplate.AggregationTemplate, "green"); resolvedErr != nil {
+				err = resolvedErr
 				log.WithRequestID(ctx).Error("聚合发送恢复卡片失败", zap.Error(resolvedErr))
 			}
 		}
@@ -375,14 +377,13 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 				ResolvedErr: resolvedErr,
 			},
 			SingleSendResult: nil,
-		}, nil
+		}, err
 	}
 
 	if *notifyReq.AlertChannel.AggregationStatus == model.AggregationDisabled {
 		log.WithRequestID(ctx).Debug("非聚合发送告警")
 		// 非聚合发送
-		normalSendResult, err := receiver.
-			singleSend(ctx, larkCli, feishuAppConf, alertChannel, alertArry)
+		normalSendResult, err := receiver.singleSend(ctx, larkCli, feishuAppConf, alertChannel, alertArry)
 		if err != nil {
 			return nil, err
 		}
@@ -396,8 +397,10 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 }
 
 func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, conf *model.FeishuAppConfig, alertChannel *model.AlertChannel, alertArry *types.AlertArry) ([]*types.SingleSendResult, error) {
-	var errs []error
-	var results []*types.SingleSendResult
+	var (
+		errs    []error
+		results []*types.SingleSendResult
+	)
 
 	process := func(v *types.Alert) {
 		color := "red"
@@ -413,10 +416,13 @@ func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, co
 
 		if err != nil {
 			log.WithRequestID(ctx).Error("发送单条飞书卡片失败", zap.Error(err))
-			if len(errs) < 4 { // 限制错误收集数量
+			// 限制错误收集数量
+			if len(errs) < 4 {
 				errs = append(errs, err)
 			}
 		}
+		// 防止飞书限流
+		time.Sleep(time.Microsecond * 200)
 	}
 
 	for _, v := range alertArry.FiringAlertArry {
