@@ -6,12 +6,12 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/gin-contrib/requestid"
-	"github.com/gin-gonic/gin"
-	"github.com/go-sql-driver/mysql"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
+	"github.com/gin-contrib/requestid"
+	"github.com/gin-gonic/gin"
+	"github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -124,7 +124,9 @@ func responseError(req any, c *gin.Context, err error) {
 	code, err := getErr(err)
 	c.JSON(code, types.NewResponseWithOpts(code, types.WithError(err.Error())))
 	c.Error(err)
-	log.WithRequestID(c.Request.Context()).Debug("打印 body", zap.Any("body", req))
+	if c.Request.URL.Path != "/api/v1/alerts" && c.Request.Method != "POST" {
+		log.WithRequestID(c.Request.Context()).Debug("打印 body", zap.Any("body", req))
+	}
 }
 
 func responseSuccess(c *gin.Context, data any) {

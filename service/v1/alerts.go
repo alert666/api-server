@@ -73,7 +73,6 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	notifyReq.AlertChannel = alertChannel
 	notifyReq.AlertReceiveReq = req
 
-	log.WithRequestID(ctx).Info("通过告警通道发送告警", zap.Any("firingAlertArry", notifyReq.AlertArry.FiringAlertArry), zap.Any("resolvedAlertArry", notifyReq.AlertArry.ResolvedAlertArry))
 	var sendResult *types.NotifySendResult
 	switch alertChannel.Type {
 	case model.ChannelTypeFeishuApp:
@@ -132,10 +131,10 @@ func (receiver *alertsService) getChannel(ctx context.Context, channelName strin
 	return &channel, nil
 }
 
-// aggregatedAlarmGrouping 聚合告警分组
-// 如果通知为聚合告警时, 需要将告警分配 firing 和 resolved 两组, 分别发送
+// aggregatedAlarmGrouping 告警分组
+// 需要将告警分配 firing 和 resolved 两组, 分别发送
 func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tenantValue string, alerts []*types.Alert) (*types.NotifyReq, error) {
-	log.WithRequestID(ctx).Debug("聚合告警分组", zap.String("tenantValue", tenantValue))
+	log.WithRequestID(ctx).Debug("告警分组", zap.String("tenantValue", tenantValue))
 	alertLen := len(alerts)
 	if alertLen == 0 {
 		return nil, fmt.Errorf("alerts 为空, 告警分组失败")
@@ -568,6 +567,8 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 	}
 }
 
+// isSilenced 查询告警是否为静默
+// TODO 增加告警指纹静默逻辑
 func (receiver *alertsService) isSilenced(alert *types.Alert, silences []*model.AlertSilence) (bool, int) {
 	if len(silences) == 0 {
 		return false, 0

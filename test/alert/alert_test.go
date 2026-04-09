@@ -273,3 +273,64 @@ func TestParserUrl(t *testing.T) {
 	fmt.Println("生成的地址:")
 	fmt.Println(finalURL)
 }
+
+var testData = `{"ChannelName":"feishu","receiver":"prometheusalert","status":"resolved","alerts":[{"status":"resolved","labels":{"alertname":"DaemonSet滚动更新卡住","area":"chengde","belong":"idc","component":"daemonset","container":"kube-rbac-proxy-main","daemonset":"pod-mgr-igde-p-1-worker-10","failure_type":"rollout_stuck","impact_level":"high","index":"01","instance":"172.20.5.178:8443","job":"kube-state-metrics","namespace":"system","prometheus":"monitoring/k8s","provider":"chengde","range":"cluster","severity":"warning","type":"prod"},"annotations":{"description":"【Kubernetes守护进程集更新异常】\n命名空间: system\nDaemonSet名称: pod-mgr-igde-p-1-worker-10\n集群: \n\n当前状态:\n- 期望调度Pod数: 1\n- 实际调度Pod数: 1\n- 错误调度Pod数: 0\n- 已更新Pod数: 1\n- 可用Pod数: 0","runbook_url":"https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubedaemonsetrolloutstuck","summary":"DaemonSetpod-mgr-igde-p-1-worker-10 更新停滞 (命名空间: system)"},"startsAt":"2026-04-09T12:58:46.012Z","endsAt":"2026-04-09T13:14:16.012Z","generatorURL":"http://prometheus-k8s-0:9090/graph?g0.expr=...","fingerprint":"28c89c4f51cb8e24","isSilenced":false,"silenceID":0},{"status":"resolved","labels":{"alertname":"DaemonSet滚动更新卡住","area":"chengde","belong":"idc","component":"daemonset","container":"kube-rbac-proxy-main","daemonset":"pod-shutdown-operator","failure_type":"rollout_stuck","impact_level":"high","index":"01","instance":"172.20.5.178:8443","job":"kube-state-metrics","namespace":"system","prometheus":"monitoring/k8s","provider":"chengde","range":"cluster","severity":"warning","type":"prod"},"annotations":{"description":"【Kubernetes守护进程集更新异常】\n命名空间: system\nDaemonSet名称: pod-shutdown-operator\n集群: \n\n当前状态:\n- 期望调度Pod数: 4\n- 实际调度Pod数: 4\n- 错误调度Pod数: 0\n- 已更新Pod数: 4\n- 可用Pod数: 3","runbook_url":"https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubedaemonsetrolloutstuck","summary":"DaemonSet pod-shutdown-operator 更新停滞 (命名空间: system)"},"startsAt":"2026-04-09T12:59:16.012Z","endsAt":"2026-04-09T13:14:16.012Z","generatorURL":"http://prometheus-k8s-0:9090/graph?g0.expr=...","fingerprint":"f083a4a194dcd965","isSilenced":false,"silenceID":0}],"groupLabels":{"alertname":"DaemonSet滚动更新卡住","instance":"172.20.5.178:8443","namespace":"system"},"commonLabels":{"alertname":"DaemonSet滚动更新卡住","area":"chengde","belong":"idc","component":"daemonset","container":"kube-rbac-proxy-main","failure_type":"rollout_stuck","impact_level":"high","index":"01","instance":"172.20.5.178:8443","job":"kube-state-metrics","namespace":"system","prometheus":"monitoring/k8s","provider":"chengde","range":"cluster","severity":"warning","type":"prod"},"commonAnnotations":{"runbook_url":"https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubedaemonsetrolloutstuck"},"externalURL":"http://alertmanager-main-0:9093","version":"4","groupKey":"{}:{alertname=\"DaemonSet滚动更新卡住\", instance=\"172.20.5.178:8443\", namespace=\"system\"}","truncatedAlerts":0}`
+
+func TestGetAlertDescript(t *testing.T) {
+	var req types.AlertReceiveReq
+	if err := json.Unmarshal([]byte(testData), &req); err != nil {
+		t.Fatal(err)
+	}
+
+	// 等价于模板中的逻辑
+	func1 := func(data any) string {
+		switch d := data.(type) {
+		case *types.Alert:
+			// 单条告警，直接返回 description
+			return d.Annotations["description"]
+
+		case []*types.Alert:
+			count := len(d)
+			if count == 0 {
+				return ""
+			}
+
+			var sb strings.Builder
+			for i, v := range d {
+				if i < 3 {
+					// 对应模板: {{- $line := printf "%d. %s\n" (add $i 1) (index $v.Annotations "description") -}}
+					sb.WriteString(fmt.Sprintf("%d. %s\n", i+1, v.Annotations["description"]))
+				} else {
+					// 超过 3 条就可以提前结束循环了，优化性能
+					break
+				}
+			}
+
+			// 对应模板: {{- if gt $count 3 -}} ...
+			if count > 3 {
+				sb.WriteString(fmt.Sprintf("---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。", count))
+			}
+
+			return sb.String()
+
+		default:
+			return ""
+		}
+	}
+
+	// 1. 测试聚合告警逻辑 (传入[]*types.Alert)
+	fmt.Println("========== 聚合告警测试 ==========")
+	aggResult := func1(req.Alerts)
+	fmt.Println(aggResult)
+
+	// 2. 测试单条告警逻辑 (传入 *types.Alert)
+	fmt.Println("========== 单条告警测试 ==========")
+	singleResult := func1(req.Alerts[0])
+	fmt.Println(singleResult)
+
+	// 3. 模拟超过 3 条告警的测试
+	fmt.Println("========== 超过3条聚合告警测试 ==========")
+	mockLargeAlerts := append(req.Alerts, req.Alerts...) // 复制一份，变成 4 条
+	largeAggResult := func1(mockLargeAlerts)
+	fmt.Println(largeAggResult)
+}
