@@ -64,6 +64,9 @@ func (s *alertHistoryService) buildHistoryFilter(query store.IAlertHistoryDo, re
 	if req.Cluster != "" {
 		query = query.Where(aHistory.Cluster.Eq(req.Cluster))
 	}
+	if req.Status != "" {
+		query = query.Where(aHistory.Status.Eq(req.Status))
+	}
 	if req.StartsAt != nil {
 		query = query.Where(aHistory.StartsAt.Gt(*req.StartsAt))
 	}
