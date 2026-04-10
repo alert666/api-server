@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	v1 "github.com/alert666/api-server/service/v1"
+	"github.com/gin-gonic/gin"
 )
 
 type AlertHistoryController interface {
@@ -41,5 +41,5 @@ func (recevicer *alertHistoryController) QueryAlertHistory(c *gin.Context) {
 // @Success 200 {object} types.Response{data=types.AlertHistoryListResponse} "查询成功"
 // @Router /api/v1/alertHistory [get]
 func (receiver *alertHistoryController) ListAlertHistory(c *gin.Context) {
-	ResponseWithData(c, receiver.alertHistoryService.ListHistory, bindTypeUri, bindTypeQuery)
+	ResponseWithData(c, receiver.alertHistoryService.ListHistory, bindTypeQuery)
 }
