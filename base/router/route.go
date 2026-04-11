@@ -6,12 +6,12 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/requestid"
 
-	ginzap "github.com/gin-contrib/zap"
-	"github.com/gin-gonic/gin"
-	_ "github.com/joho/godotenv/autoload"
 	"github.com/alert666/api-server/base/middleware"
 	"github.com/alert666/api-server/controller"
 	_ "github.com/alert666/api-server/docs"
+	ginzap "github.com/gin-contrib/zap"
+	"github.com/gin-gonic/gin"
+	_ "github.com/joho/godotenv/autoload"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
@@ -189,6 +189,7 @@ func (r *Router) registerHistoryRouter(apiGroup *gin.RouterGroup) {
 		baseGroup.Use(r.middleware.Auth(), r.middleware.AuthZ())
 		baseGroup.GET("/:id", r.alertHistory.QueryAlertHistory)
 		baseGroup.GET("", r.alertHistory.ListAlertHistory)
+		baseGroup.PUT("/:id", r.alertHistory.UpdateAlertHistory)
 	}
 }
 

@@ -8,6 +8,7 @@ import (
 type AlertHistoryController interface {
 	QueryAlertHistory(c *gin.Context)
 	ListAlertHistory(c *gin.Context)
+	UpdateAlertHistory(c *gin.Context)
 }
 
 type alertHistoryController struct {
@@ -42,4 +43,15 @@ func (recevicer *alertHistoryController) QueryAlertHistory(c *gin.Context) {
 // @Router /api/v1/alertHistory [get]
 func (receiver *alertHistoryController) ListAlertHistory(c *gin.Context) {
 	ResponseWithData(c, receiver.alertHistoryService.ListHistory, bindTypeQuery)
+}
+
+// @Summary 更新 AlertHistory 状态
+// @Description 更新 AlertHistory 状态
+// @Tags AlertHistory 管理
+// @Accept json
+// @Produce json
+// @Success 200 {object} types.Response{data=types.AlertHistoryUpdateRequest} "更新成功"
+// @Router /api/v1/alertHistory [put]
+func (receiver *alertHistoryController) UpdateAlertHistory(c *gin.Context) {
+	ResponseOnlySuccess(c, receiver.alertHistoryService.UpdateHistory, bindTypeJson, bindTypeUri)
 }

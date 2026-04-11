@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/types"
@@ -13,6 +14,7 @@ import (
 
 type AlertHistoryServicer interface {
 	QueryHistory(ctx context.Context, req *types.IDRequest) (*model.AlertHistory, error)
+	UpdateHistory(ctx context.Context, req *types.AlertHistoryUpdateRequest) error
 	ListHistory(ctx context.Context, req *types.AlertHistoryListRequest) (*types.AlertHistoryListResponse, error)
 }
 
@@ -101,4 +103,20 @@ func (s *alertHistoryService) buildHistoryFilter(query store.IAlertHistoryDo, re
 		query.ReplaceDB(db)
 	}
 	return query
+}
+
+func (receiver *alertHistoryService) UpdateHistory(ctx context.Context, req *types.AlertHistoryUpdateRequest) error {
+	now := time.Now()
+	info, err := aHistory.WithContext(ctx).Where(aHistory.ID.Eq(int(req.ID))).Updates(model.AlertHistory{
+		Status: req.Status,
+		EndsAt: &now,
+	})
+	if err != nil {
+		return fmt.Errorf("更新 alertHistory 失败, %w", err)
+	}
+
+	if info.RowsAffected == 0 {
+		return fmt.Errorf("更新失败：告警记录(ID:%d)不存在", req.ID)
+	}
+	return nil
 }
