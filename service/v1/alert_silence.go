@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/pkg/jwt"
 
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
@@ -21,13 +22,22 @@ type AlertSilenceServicer interface {
 	ListSilence(ctx context.Context, req *types.AlertSilenceListRequest) (*types.AlertSilenceListResponse, error)
 }
 
-type alertSilenceService struct{}
+type alertSilenceService struct {
+	jwt jwt.JwtInterface
+}
 
-func NewAlertSilenceServicer() AlertSilenceServicer {
-	return &alertSilenceService{}
+func NewAlertSilenceServicer(jwt jwt.JwtInterface) AlertSilenceServicer {
+	return &alertSilenceService{
+		jwt: jwt,
+	}
 }
 
 func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *types.AlertSilenceCreateRequest) error {
+	mc, err := recevicer.jwt.GetUser(ctx)
+	if err != nil {
+		return err
+	}
+
 	obj, err := req.TOMolelAlertSilence()
 	if err != nil {
 		return fmt.Errorf("转换对象失败, %s", err)
@@ -43,6 +53,7 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 		return fmt.Errorf("已存在相同的活跃静默规则")
 	}
 
+	obj.CreatedBy = mc.UserName
 	return aSilence.WithContext(ctx).Create(obj)
 }
 

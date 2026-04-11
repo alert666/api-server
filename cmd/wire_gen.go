@@ -73,7 +73,7 @@ func InitApplication() (*app.Application, func(), error) {
 	alertChannelController := controller.NewAlertChannelController(alertChannelServicer)
 	alertHistoryServicer := v1.NewHistoryServicer(cacheStore)
 	alertHistoryController := controller.NewAlertHistoryController(alertHistoryServicer)
-	alertSilenceServicer := v1.NewAlertSilenceServicer()
+	alertSilenceServicer := v1.NewAlertSilenceServicer(generateToken)
 	alertSilenceController := controller.NewAlertSilenceController(alertSilenceServicer)
 	routerRouter := router.NewRouter(userController, roleController, apiController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController)
 	engine, err := server.NewHttpServer(routerRouter)
