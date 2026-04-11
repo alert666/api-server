@@ -33,6 +33,8 @@ func newAlertSilence(db *gorm.DB, opts ...gen.DOOption) alertSilence {
 	_alertSilence.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_alertSilence.DeletedAt = field.NewField(tableName, "deleted_at")
 	_alertSilence.Cluster = field.NewString(tableName, "cluster")
+	_alertSilence.Type = field.NewInt(tableName, "type")
+	_alertSilence.Fingerprint = field.NewString(tableName, "fingerprint")
 	_alertSilence.Status = field.NewInt(tableName, "status")
 	_alertSilence.EndsAt = field.NewTime(tableName, "ends_at")
 	_alertSilence.StartsAt = field.NewTime(tableName, "starts_at")
@@ -48,18 +50,20 @@ func newAlertSilence(db *gorm.DB, opts ...gen.DOOption) alertSilence {
 type alertSilence struct {
 	alertSilenceDo
 
-	ALL       field.Asterisk
-	ID        field.Int
-	CreatedAt field.Time
-	UpdatedAt field.Time
-	DeletedAt field.Field
-	Cluster   field.String // 所属集群/租户
-	Status    field.Int    // 状态 0:禁用 1: 启用
-	EndsAt    field.Time   // 结束时间
-	StartsAt  field.Time   // 开始时间
-	Matchers  field.Field  // 匹配器集合
-	CreatedBy field.String
-	Comment   field.String // 静默原因
+	ALL         field.Asterisk
+	ID          field.Int
+	CreatedAt   field.Time
+	UpdatedAt   field.Time
+	DeletedAt   field.Field
+	Cluster     field.String // 所属集群/租户
+	Type        field.Int    // 1:指纹静默, 2:标签静默
+	Fingerprint field.String // 精确匹配的指纹
+	Status      field.Int    // 状态 0:禁用 1: 启用 2:过期
+	EndsAt      field.Time   // 结束时间
+	StartsAt    field.Time   // 开始时间
+	Matchers    field.Field  // 匹配器集合
+	CreatedBy   field.String
+	Comment     field.String // 静默原因
 
 	fieldMap map[string]field.Expr
 }
@@ -81,6 +85,8 @@ func (a *alertSilence) updateTableName(table string) *alertSilence {
 	a.UpdatedAt = field.NewTime(table, "updated_at")
 	a.DeletedAt = field.NewField(table, "deleted_at")
 	a.Cluster = field.NewString(table, "cluster")
+	a.Type = field.NewInt(table, "type")
+	a.Fingerprint = field.NewString(table, "fingerprint")
 	a.Status = field.NewInt(table, "status")
 	a.EndsAt = field.NewTime(table, "ends_at")
 	a.StartsAt = field.NewTime(table, "starts_at")
@@ -103,12 +109,14 @@ func (a *alertSilence) GetFieldByName(fieldName string) (field.OrderExpr, bool) 
 }
 
 func (a *alertSilence) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 11)
+	a.fieldMap = make(map[string]field.Expr, 13)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["created_at"] = a.CreatedAt
 	a.fieldMap["updated_at"] = a.UpdatedAt
 	a.fieldMap["deleted_at"] = a.DeletedAt
 	a.fieldMap["cluster"] = a.Cluster
+	a.fieldMap["type"] = a.Type
+	a.fieldMap["fingerprint"] = a.Fingerprint
 	a.fieldMap["status"] = a.Status
 	a.fieldMap["ends_at"] = a.EndsAt
 	a.fieldMap["starts_at"] = a.StartsAt

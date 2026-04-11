@@ -114,7 +114,7 @@ type alertHistory struct {
 	Status            field.String // 告警状态
 	EndsAt            field.Time   // 告警恢复时间
 	AlertChannelID    field.Int    // 关联通道ID
-	AlertSendRecordID field.Int    // 关联发送记录ID
+	AlertSendRecordID field.Int    // 关联发送记录ID和分组ID
 	AlertSilenceID    field.Int    // 关联静默规则ID
 	Alertname         field.String
 	Severity          field.String

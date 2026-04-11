@@ -6,6 +6,11 @@ import (
 	"github.com/alert666/api-server/model"
 )
 
+type AlertHistoryUpdateRequest struct {
+	*IDRequest
+	Status string `json:"status" binding:"required,eq=resolved"`
+}
+
 type AlertHistoryListRequest struct {
 	*Pagination
 	Cluster     string     `form:"cluster"`
