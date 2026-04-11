@@ -49,6 +49,8 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 			return nil, fmt.Errorf("invalid sort field: %s", req.Sort)
 		}
 		query = query.Order(helper.Sort(sort, req.Direction))
+	} else {
+		query = query.Order(aHistory.StartsAt.Desc())
 	}
 
 	if req.PageSize == 0 || req.Page == 0 {
@@ -66,7 +68,7 @@ func (s *alertHistoryService) buildHistoryFilter(query store.IAlertHistoryDo, re
 	if req.Cluster != "" {
 		query = query.Where(aHistory.Cluster.Eq(req.Cluster))
 	}
-	if req.Status != "" && req.Status != "all" {
+	if req.Status != "" {
 		query = query.Where(aHistory.Status.Eq(req.Status))
 	}
 	if req.StartsAt != nil {

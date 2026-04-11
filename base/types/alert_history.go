@@ -16,7 +16,7 @@ type AlertHistoryListRequest struct {
 	Cluster           string     `form:"cluster"`
 	Fingerprint       string     `form:"fingerprint"`
 	AlertName         string     `form:"alertName"`
-	Status            string     `form:"status" binding:"oneof=resolved firing all"`
+	Status            string     `form:"status" binding:"omitempty,oneof=resolved firing"`
 	Severity          string     `form:"severity"`
 	Instance          string     `form:"instance"`
 	StartsAt          *time.Time `form:"startsAt"`
