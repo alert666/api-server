@@ -13,17 +13,18 @@ type AlertHistoryUpdateRequest struct {
 
 type AlertHistoryListRequest struct {
 	*Pagination
-	Cluster     string     `form:"cluster"`
-	Fingerprint string     `form:"fingerprint"`
-	AlertName   string     `form:"alertName"`
-	Status      string     `form:"status" binding:"oneof=resolved firing"`
-	Severity    string     `form:"severity"`
-	Instance    string     `form:"instance"`
-	StartsAt    *time.Time `form:"startsAt"`
-	EndsAt      *time.Time `form:"endsAt"`
-	Labels      []string   `form:"labels"`
-	Sort        string     `form:"sort" binding:"omitempty,oneof=alertname fingerprint starts_at ends_at severity instance"`
-	Direction   string     `form:"direction" binding:"omitempty,oneof=asc desc"`
+	Cluster           string     `form:"cluster"`
+	Fingerprint       string     `form:"fingerprint"`
+	AlertName         string     `form:"alertName"`
+	Status            string     `form:"status" binding:"oneof=resolved firing all"`
+	Severity          string     `form:"severity"`
+	Instance          string     `form:"instance"`
+	StartsAt          *time.Time `form:"startsAt"`
+	EndsAt            *time.Time `form:"endsAt"`
+	Labels            []string   `form:"labels"`
+	AlertSendRecordId int        `form:"alertSendRecordId"`
+	Sort              string     `form:"sort" binding:"omitempty,oneof=alertname fingerprint starts_at ends_at severity instance"`
+	Direction         string     `form:"direction" binding:"omitempty,oneof=asc desc"`
 }
 
 type AlertHistoryListResponse struct {

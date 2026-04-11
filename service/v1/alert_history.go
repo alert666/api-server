@@ -66,7 +66,7 @@ func (s *alertHistoryService) buildHistoryFilter(query store.IAlertHistoryDo, re
 	if req.Cluster != "" {
 		query = query.Where(aHistory.Cluster.Eq(req.Cluster))
 	}
-	if req.Status != "" {
+	if req.Status != "" && req.Status != "all" {
 		query = query.Where(aHistory.Status.Eq(req.Status))
 	}
 	if req.StartsAt != nil {
@@ -86,6 +86,9 @@ func (s *alertHistoryService) buildHistoryFilter(query store.IAlertHistoryDo, re
 	}
 	if req.Instance != "" {
 		query = query.Where(aHistory.Instance.Eq(req.Instance))
+	}
+	if req.AlertSendRecordId != 0 {
+		query = query.Where(aHistory.AlertSendRecordID.Eq(req.AlertSendRecordId))
 	}
 
 	if len(req.Labels) > 0 {
