@@ -15,7 +15,9 @@ import (
 	"time"
 
 	"github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/pkg/feishu"
+	v1 "github.com/alert666/api-server/service/v1"
 )
 
 // AlertmanagerPayload 对应你提供的 JSON 结构
@@ -333,4 +335,83 @@ func TestGetAlertDescript(t *testing.T) {
 	mockLargeAlerts := append(req.Alerts, req.Alerts...) // 复制一份，变成 4 条
 	largeAggResult := func1(mockLargeAlerts)
 	fmt.Println(largeAggResult)
+}
+
+func TestIsSilenced(t *testing.T) {
+	var req *types.AlertReceiveReq
+	json.Unmarshal([]byte(testData), &req)
+
+	enable := 1
+	now := time.Now()
+	silences := make([]*model.AlertSilence, 0)
+
+	silences = append(silences, &model.AlertSilence{
+		ID:          1,
+		Cluster:     "chengde",
+		Type:        1,
+		Fingerprint: "28c89c4f51cb8e24",
+		Status:      &enable,
+		EndsAt:      now.Add(100 * time.Hour),
+		StartsAt:    now.Add(-100 * time.Hour),
+	})
+
+	// matcher := &model.Matcher{
+	// 	Name:  "alertname",
+	// 	Type:  "=",
+	// 	Value: "DaemonSet滚动更新卡住",
+	// }
+	// matchers := make([]*model.Matcher, 0)
+	// matchers = append(matchers, matcher)
+
+	// matchersBy, err := json.Marshal(&matchers)
+	// if err != nil {
+	// 	t.Fatal(err)
+	// }
+
+	// silences = append(silences, &model.AlertSilence{
+	// 	ID:          2,
+	// 	Cluster:     "chengde",
+	// 	Type:        2,
+	// 	Fingerprint: "28c89c4f51cb8e24",
+	// 	Status:      &enable,
+	// 	EndsAt:      now.Add(100 * time.Hour),
+	// 	StartsAt:    now.Add(-100 * time.Hour),
+	// 	Matchers:    matchersBy,
+	// })
+
+	matcher1 := &model.Matcher{
+		Name:  "alertname",
+		Type:  "!=",
+		Value: "DaemonSet滚动更新卡住",
+	}
+	matchers1 := make([]*model.Matcher, 0)
+	matchers1 = append(matchers1, matcher1)
+
+	matchersBy1, err := json.Marshal(&matchers1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	silences = append(silences, &model.AlertSilence{
+		ID:          3,
+		Cluster:     "chengde",
+		Type:        2,
+		Fingerprint: "28c89c4f51cb8e24",
+		Status:      &enable,
+		EndsAt:      now.Add(100 * time.Hour),
+		StartsAt:    now.Add(-100 * time.Hour),
+		Matchers:    matchersBy1,
+	})
+
+	alertsServicer := v1.NewAlertsServicer(nil, nil)
+
+	for _, v := range req.Alerts {
+		silience, id := alertsServicer.IsSilenced(context.Background(), v, silences)
+
+		fmt.Println("☀️------------------------------------☀️")
+		fmt.Println("silience", silience)
+		fmt.Println("id", id)
+		fmt.Println("🌙------------------------------------🌙")
+	}
+
 }

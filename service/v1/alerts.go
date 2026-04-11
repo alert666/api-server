@@ -22,6 +22,7 @@ import (
 
 type AlertsServicer interface {
 	SendAlert(ctx context.Context, req *types.AlertReceiveReq) error
+	IsSilenced(ctx context.Context, alert *types.Alert, activeSilences []*model.AlertSilence) (bool, int)
 }
 
 type CleanDuplicateFiringer interface {
@@ -202,7 +203,7 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 			alerts[i].EndsAt = nil
 
 			// 校验静默
-			isSilenced, silenceID := receiver.isSilenced(alerts[i], activeSilences)
+			isSilenced, silenceID := receiver.IsSilenced(ctx, alerts[i], activeSilences)
 			if isSilenced {
 				alerts[i].IsSilenced = true
 				alerts[i].SilenceID = silenceID
@@ -250,8 +251,6 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 			)
 		}
 	}()
-
-	log.WithRequestID(ctx).Debug("告警数据开始持久化")
 
 	timeoutCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
@@ -567,68 +566,87 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 	}
 }
 
-// isSilenced 查询告警是否为静默
-// TODO 增加告警指纹静默逻辑
-func (receiver *alertsService) isSilenced(alert *types.Alert, silences []*model.AlertSilence) (bool, int) {
-	if len(silences) == 0 {
+// IsSilenced 查询告警是否为静默
+func (receiver *alertsService) IsSilenced(ctx context.Context, alert *types.Alert, activeSilences []*model.AlertSilence) (bool, int) {
+	if len(activeSilences) == 0 {
 		return false, 0
 	}
 
-	alertLabels := alert.Labels
-
-	for _, silence := range silences {
-		var matchers []model.Matcher
-		if err := json.Unmarshal(silence.Matchers, &matchers); err != nil {
-			continue
-		}
-		// 时间窗口判断 (告警开始时间必须在静默期内)
-		if alert.StartsAt.Before(silence.StartsAt) || alert.StartsAt.After(silence.EndsAt) {
+	for _, s := range activeSilences {
+		// 1. 基础时间窗口过滤 (如果 SQL 已经过滤很准了，这里其实很快)
+		if alert.StartsAt.Before(s.StartsAt) || alert.StartsAt.After(s.EndsAt) {
 			continue
 		}
 
-		allMatch := true
-		for _, m := range matchers {
-			val, ok := alertLabels[m.Name]
-			if !ok {
-				allMatch = false
-				break
+		// 2. 根据 Type 进行单次逻辑判断
+		switch s.Type {
+		case model.SilenceTypeIdentity:
+			// --- 优先级最高：指纹匹配 ---
+			// 无需 Unmarshal，无需正则，直接比对字符串
+			if s.Fingerprint == alert.Fingerprint {
+				log.WithRequestID(ctx).Info("命中指纹静默", zap.String("fp", alert.Fingerprint))
+				return true, s.ID
 			}
 
-			switch m.Type {
-			case "=":
-				if val != m.Value {
-					allMatch = false
-				}
-			case "!=":
-				if val == m.Value {
-					allMatch = false
-				}
-			case "=~":
-				// 注意：在生产环境下，建议提前在外部 Compile 好正则，此处直接使用对象
-				matched, _ := regexp.MatchString("^("+m.Value+")$", val)
-				if !matched {
-					allMatch = false
-				}
-			case "!~":
-				matched, _ := regexp.MatchString("^("+m.Value+")$", val)
-				if matched {
-					allMatch = false
-				}
-			default:
-				allMatch = false
+		case model.SilenceTypeLabel:
+			// --- 优先级次之：标签匹配 ---
+			// 只有指纹没对上时，才会走到这里进行较重的逻辑
+			if receiver.matchLabels(ctx, alert, s) {
+				log.WithRequestID(ctx).Info("命中标签静默", zap.Int("silenceID", s.ID))
+				return true, s.ID
 			}
-
-			if !allMatch {
-				break
-			}
-		}
-
-		// 如果匹配器全部匹配，则返回成功及其静默规则 ID
-		if allMatch {
-			return true, silence.ID
 		}
 	}
+
 	return false, 0
+}
+
+// matchLabels 仅处理标签逻辑
+func (receiver *alertsService) matchLabels(ctx context.Context, alert *types.Alert, silence *model.AlertSilence) bool {
+	var matchers []model.Matcher
+	if err := json.Unmarshal(silence.Matchers, &matchers); err != nil {
+		log.WithRequestID(ctx).Error("序列化 matchers 失败", zap.Error(err))
+		return false
+	}
+
+	for _, m := range matchers {
+		alertVal, ok := alert.Labels[m.Name]
+		if !ok {
+			return false
+		}
+
+		switch m.Type {
+		case "=":
+			if alertVal != m.Value {
+				return false
+			}
+		case "!=":
+			if alertVal == m.Value {
+				return false
+			}
+		case "=~":
+			matched, err := regexp.MatchString("^("+m.Value+")$", alertVal)
+			if err != nil {
+				log.WithRequestID(ctx).Error("静默 =~ 正则匹配失败", zap.Error(err))
+				return false
+			}
+			if !matched {
+				return false
+			}
+		case "!~":
+			matched, err := regexp.MatchString("^("+m.Value+")$", alertVal)
+			if err != nil {
+				log.WithRequestID(ctx).Error("静默 !~ 正则匹配失败", zap.Error(err))
+				return false
+			}
+			if matched {
+				return false
+			}
+		default:
+			return false
+		}
+	}
+	return true
 }
 
 func (receiver *alertsService) processSilencedAlerts(notifyReq *types.NotifyReq) (createAlerts, updateAlerts []*model.AlertHistory) {

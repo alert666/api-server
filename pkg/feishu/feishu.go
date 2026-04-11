@@ -319,8 +319,6 @@ func (receiver *FeishuCardDataContent) Build(ctx context.Context, alert any, ale
 		return nil, fmt.Errorf("渲染告警模版失败, %s", err)
 	}
 
-	log.WithRequestID(ctx).Debug("告警模板", zap.String("data", buf.String()))
-
 	if err := yaml.Unmarshal([]byte(buf.Bytes()), &receiver); err != nil {
 		return nil, fmt.Errorf("序列化 FeishuCardDataContent 失败, %s", err)
 	}
@@ -381,7 +379,6 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 	}
 
 	if *notifyReq.AlertChannel.AggregationStatus == model.AggregationDisabled {
-		log.WithRequestID(ctx).Debug("非聚合发送告警")
 		// 非聚合发送
 		normalSendResult, err := receiver.singleSend(ctx, larkCli, feishuAppConf, alertChannel, alertArry)
 		if err != nil {

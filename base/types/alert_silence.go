@@ -8,13 +8,15 @@ import (
 )
 
 type AlertSilenceCreateRequest struct {
-	Cluster   string          `json:"cluster" binding:"required,max=64"`
-	Status    *int            `json:"status" binding:"required,oneof=0 1"`
-	StartsAt  time.Time       `json:"startsAt" binding:"required"`
-	EndsAt    time.Time       `json:"endsAt" binding:"required,gtfield=StartsAt"`
-	Matchers  []model.Matcher `json:"matchers" binding:"required,gt=0"`
-	CreatedBy string          `json:"createdBy" binding:"required"`
-	Comment   string          `json:"comment" binding:"required,max=255"`
+	Cluster     string          `json:"cluster" binding:"required,max=64"`
+	Type        int             `json:"type"  binding:"required,oneof=1 2"`
+	Status      *int            `json:"status" binding:"required,oneof=0 1"`
+	StartsAt    time.Time       `json:"startsAt" binding:"required"`
+	Fingerprint string          `json:"fingerprint" binding:"required_without=Matchers"`
+	EndsAt      time.Time       `json:"endsAt" binding:"required"`
+	Matchers    []model.Matcher `json:"matchers" binding:"required_without=Fingerprint"`
+	CreatedBy   string          `json:"createdBy" binding:"required"`
+	Comment     string          `json:"comment" binding:"required,max=255"`
 }
 
 func (receiver *AlertSilenceCreateRequest) TOMolelAlertSilence() (*model.AlertSilence, error) {
@@ -24,13 +26,15 @@ func (receiver *AlertSilenceCreateRequest) TOMolelAlertSilence() (*model.AlertSi
 	}
 
 	return &model.AlertSilence{
-		Cluster:   receiver.Cluster,
-		Status:    receiver.Status,
-		StartsAt:  receiver.StartsAt,
-		EndsAt:    receiver.EndsAt,
-		CreatedBy: receiver.CreatedBy,
-		Comment:   receiver.Comment,
-		Matchers:  mBytes,
+		Cluster:     receiver.Cluster,
+		Type:        receiver.Type,
+		Status:      receiver.Status,
+		StartsAt:    receiver.StartsAt,
+		EndsAt:      receiver.EndsAt,
+		CreatedBy:   receiver.CreatedBy,
+		Comment:     receiver.Comment,
+		Fingerprint: receiver.Fingerprint,
+		Matchers:    mBytes,
 	}, nil
 }
 
