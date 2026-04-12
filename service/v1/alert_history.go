@@ -74,10 +74,12 @@ func (s *alertHistoryService) buildHistoryFilter(tenant string, query store.IAle
 		query = query.Where(aHistory.Status.Eq(req.Status))
 	}
 	if req.StartsAt != nil {
-		query = query.Where(aHistory.StartsAt.Gt(*req.StartsAt))
+		s := time.Unix(*req.StartsAt, 0)
+		query = query.Where(aHistory.StartsAt.Gte(s))
 	}
 	if req.EndsAt != nil {
-		query = query.Where(aHistory.EndsAt.Gt(*req.EndsAt))
+		e := time.Unix(*req.EndsAt, 0)
+		query = query.Where(aHistory.EndsAt.Lte(e))
 	}
 	if req.AlertName != "" {
 		query = query.Where(aHistory.Alertname.Like(req.AlertName + "%"))
