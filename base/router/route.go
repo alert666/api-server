@@ -26,6 +26,7 @@ type Router struct {
 	userRouter    controller.UserController
 	roleRouter    controller.RoleController
 	apiRouter     controller.ApiController
+	clusterRouter controller.ClusterController
 	middleware    middleware.MiddlewareInterface
 	alert         controller.AlertManagerController
 	alertTemplate controller.AlertTemplateController
@@ -38,6 +39,7 @@ func NewRouter(
 	userRouter controller.UserController,
 	roleRouter controller.RoleController,
 	apiRouter controller.ApiController,
+	clusterRouter controller.ClusterController,
 	alertmanager controller.AlertManagerController,
 	middleware middleware.MiddlewareInterface,
 	alertTemplate controller.AlertTemplateController,
@@ -49,6 +51,7 @@ func NewRouter(
 		userRouter:    userRouter,
 		roleRouter:    roleRouter,
 		apiRouter:     apiRouter,
+		clusterRouter: clusterRouter,
 		middleware:    middleware,
 		alert:         alertmanager,
 		alertTemplate: alertTemplate,
@@ -67,15 +70,18 @@ func (r *Router) RegisterRouter(engine *gin.Engine) {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
-	engine.Use(ginzap.GinzapWithConfig(zap.L(), &ginzap.Config{
-		Context: ginzap.Fn(func(c *gin.Context) []zapcore.Field {
-			fields := []zapcore.Field{}
-			if requestID := requestid.Get(c); requestID != "" {
-				fields = append(fields, zap.String("request-id", requestID))
-			}
-			return fields
+	engine.Use(
+		ginzap.GinzapWithConfig(zap.L(), &ginzap.Config{
+			Context: ginzap.Fn(func(c *gin.Context) []zapcore.Field {
+				fields := []zapcore.Field{}
+				if requestID := requestid.Get(c); requestID != "" {
+					fields = append(fields, zap.String("request-id", requestID))
+				}
+				return fields
+			}),
 		}),
-	}))
+		r.middleware.TenantMiddleware(),
+	)
 
 	engine.Use(ginzap.RecoveryWithZap(zap.L(), true))
 	engine.Use(requestid.New())
@@ -92,6 +98,7 @@ func (r *Router) RegisterRouter(engine *gin.Engine) {
 	r.registerUserRouter(apiGroup)
 	r.registerRoleRouter(apiGroup)
 	r.registerApiRouter(apiGroup)
+	r.registerClusterRouter(apiGroup)
 	r.registerAlertmanagerRouter(apiGroup)
 	r.registerAlertTemplateRouter(apiGroup)
 	r.registerAlertChannelRouter(apiGroup)
@@ -138,6 +145,19 @@ func (r *Router) registerApiRouter(apiGroup *gin.RouterGroup) {
 		baseGroup.DELETE("/:id", r.apiRouter.DeleteApi)
 		baseGroup.GET("/:id", r.apiRouter.QueryApi)
 		baseGroup.GET("", r.apiRouter.ListApi)
+	}
+}
+
+func (r *Router) registerClusterRouter(apiGroup *gin.RouterGroup) {
+	baseGroup := apiGroup.Group("/tenant")
+	{
+		baseGroup.Use(r.middleware.Auth(), r.middleware.AuthZ())
+		baseGroup.POST("", r.clusterRouter.CreateCluster)
+		baseGroup.PUT("/:id", r.clusterRouter.UpdateCluster)
+		baseGroup.DELETE("/:id", r.clusterRouter.DeleteCluster)
+		baseGroup.GET("/:id", r.clusterRouter.QueryCluster)
+		baseGroup.GET("", r.clusterRouter.ListCluster)
+		baseGroup.GET("/options", r.clusterRouter.GetClusterOption)
 	}
 }
 

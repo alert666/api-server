@@ -10,6 +10,7 @@ var (
 	a         = store.Api
 	c         = store.CasbinRule
 	oauth2    = store.Oauth2User
+	tenant    = store.Tenant
 	aHistory  = store.AlertHistory
 	aChannel  = store.AlertChannel
 	aTemlpate = store.AlertTemplate
@@ -23,6 +24,7 @@ func NewStore() {
 	a = store.Api
 	c = store.CasbinRule
 	oauth2 = store.Oauth2User
+	tenant = store.Tenant
 	aHistory = store.AlertHistory
 	aChannel = store.AlertChannel
 	aTemlpate = store.AlertTemplate

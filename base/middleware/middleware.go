@@ -1,17 +1,18 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
 	apitypes "github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/pkg/casbin"
 	"github.com/alert666/api-server/pkg/jwt"
 	"github.com/alert666/api-server/store"
+	"github.com/gin-gonic/gin"
 )
 
 type MiddlewareInterface interface {
 	Auth() gin.HandlerFunc
 	AuthZ() gin.HandlerFunc
 	Session() gin.HandlerFunc
+	TenantMiddleware() gin.HandlerFunc
 }
 
 type Middleware struct {

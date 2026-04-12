@@ -22,7 +22,3 @@ type Role struct {
 func (receiver *Role) TableName() string {
 	return "roles"
 }
-
-func (receiver *Role) AssociationModelName() string {
-	return "Roles"
-}
