@@ -18,8 +18,27 @@ func main() {
 		panic(err)
 	}
 	defer clear()
-	db.AutoMigrate(model.AlertHistory{}, model.AlertChannel{}, model.AlertTemplate{}, model.AlertSendRecord{}, &model.AlertSilence{})
+	db.AutoMigrate(
+		model.Tenant{},
+		model.AlertHistory{},
+		model.AlertChannel{},
+		model.AlertTemplate{},
+		model.AlertSendRecord{},
+		model.AlertSilence{},
+	)
 	g.UseDB(db)
-	g.ApplyBasic(model.User{}, model.Role{}, model.Api{}, model.CasbinRule{}, model.Oauth2User{}, model.AlertHistory{}, model.AlertChannel{}, model.AlertTemplate{}, model.AlertSendRecord{}, model.AlertSilence{})
+	g.ApplyBasic(
+		model.Tenant{},
+		model.User{},
+		model.Role{},
+		model.Api{},
+		model.CasbinRule{},
+		model.Oauth2User{},
+		model.AlertHistory{},
+		model.AlertChannel{},
+		model.AlertTemplate{},
+		model.AlertSendRecord{},
+		model.AlertSilence{},
+	)
 	g.Execute()
 }

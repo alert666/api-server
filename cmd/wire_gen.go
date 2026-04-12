@@ -62,6 +62,8 @@ func InitApplication() (*app.Application, func(), error) {
 	roleController := controller.NewRoleController(roleServicer)
 	apiServicer := v1.NewApiServicer()
 	apiController := controller.NewApiController(apiServicer)
+	tenantServicer := v1.NewTenantServicer(cacheStore)
+	clusterController := controller.NewClusterController(tenantServicer)
 	feishuer := feishu.NewFeiShu()
 	alertsServicer := v1.NewAlertsServicer(cacheStore, feishuer)
 	alertManagerController := controller.NewAlertManagerController(alertsServicer)
@@ -75,7 +77,7 @@ func InitApplication() (*app.Application, func(), error) {
 	alertHistoryController := controller.NewAlertHistoryController(alertHistoryServicer)
 	alertSilenceServicer := v1.NewAlertSilenceServicer(generateToken)
 	alertSilenceController := controller.NewAlertSilenceController(alertSilenceServicer)
-	routerRouter := router.NewRouter(userController, roleController, apiController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController)
+	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController)
 	engine, err := server.NewHttpServer(routerRouter)
 	if err != nil {
 		cleanup2()

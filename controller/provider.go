@@ -6,6 +6,7 @@ var ControllerProviderSet = wire.NewSet(
 	NewUserController,
 	NewRoleController,
 	NewApiController,
+	NewClusterController,
 	NewAlertManagerController,
 	NewAlertTemplateController,
 	NewAlertChannelController,

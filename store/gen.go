@@ -26,6 +26,7 @@ var (
 	CasbinRule      *casbinRule
 	Oauth2User      *oauth2User
 	Role            *role
+	Tenant          *tenant
 	User            *user
 )
 
@@ -40,6 +41,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	CasbinRule = &Q.CasbinRule
 	Oauth2User = &Q.Oauth2User
 	Role = &Q.Role
+	Tenant = &Q.Tenant
 	User = &Q.User
 }
 
@@ -55,6 +57,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		CasbinRule:      newCasbinRule(db, opts...),
 		Oauth2User:      newOauth2User(db, opts...),
 		Role:            newRole(db, opts...),
+		Tenant:          newTenant(db, opts...),
 		User:            newUser(db, opts...),
 	}
 }
@@ -71,6 +74,7 @@ type Query struct {
 	CasbinRule      casbinRule
 	Oauth2User      oauth2User
 	Role            role
+	Tenant          tenant
 	User            user
 }
 
@@ -88,6 +92,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		CasbinRule:      q.CasbinRule.clone(db),
 		Oauth2User:      q.Oauth2User.clone(db),
 		Role:            q.Role.clone(db),
+		Tenant:          q.Tenant.clone(db),
 		User:            q.User.clone(db),
 	}
 }
@@ -112,6 +117,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		CasbinRule:      q.CasbinRule.replaceDB(db),
 		Oauth2User:      q.Oauth2User.replaceDB(db),
 		Role:            q.Role.replaceDB(db),
+		Tenant:          q.Tenant.replaceDB(db),
 		User:            q.User.replaceDB(db),
 	}
 }
@@ -126,6 +132,7 @@ type queryCtx struct {
 	CasbinRule      ICasbinRuleDo
 	Oauth2User      IOauth2UserDo
 	Role            IRoleDo
+	Tenant          ITenantDo
 	User            IUserDo
 }
 
@@ -140,6 +147,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		CasbinRule:      q.CasbinRule.WithContext(ctx),
 		Oauth2User:      q.Oauth2User.WithContext(ctx),
 		Role:            q.Role.WithContext(ctx),
+		Tenant:          q.Tenant.WithContext(ctx),
 		User:            q.User.WithContext(ctx),
 	}
 }

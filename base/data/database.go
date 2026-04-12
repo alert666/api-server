@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/spf13/viper"
 	"github.com/alert666/api-server/base/conf"
 	"github.com/alert666/api-server/store"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
