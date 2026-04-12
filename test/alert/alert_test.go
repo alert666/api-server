@@ -417,14 +417,30 @@ func TestIsSilenced(t *testing.T) {
 }
 
 func TestGetData(t *testing.T) {
+	cst, err := time.LoadLocation("Asia/Shanghai")
+	time.Local = cst
 	s := "2026-04-06T20:30:00+08:00"
 	e := "2026-06-30T22:30:00+08:00"
 
 	st, _ := time.Parse(time.RFC3339, s)
 	en, _ := time.Parse(time.RFC3339, e)
 
+	t1 := "2026-04-07 17:26:33.566"
+	t2 := "2026-04-07 17:44:04"
+
+	t1t, err := time.ParseInLocation(time.DateTime, t1, cst)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t2t, err := time.ParseInLocation(time.DateTime, t2, cst)
+	if err != nil {
+		t.Fatal(err)
+	}
 	fmt.Println("☀️------------------------------------☀️")
 	fmt.Println(st.Unix())
 	fmt.Println(en.Unix())
+	fmt.Println(t1t.Unix())
+	fmt.Println(t2t.Unix())
 	fmt.Println("🌙------------------------------------🌙")
 }

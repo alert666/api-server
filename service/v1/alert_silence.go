@@ -97,17 +97,20 @@ func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *type
 		query = query.Where(aSilence.Status.Eq(*req.Status))
 	}
 
-	if req.EndsAt < req.StartsAt {
-		return nil, fmt.Errorf("endsAt 必须大于 startsAt")
-	} else {
-		if req.EndsAt > 0 {
-			endsAt := time.Unix(req.EndsAt, 0)
-			query = query.Where(aSilence.EndsAt.Lte(endsAt))
+	if req.StartsAt != nil && req.EndsAt != nil {
+		if *req.EndsAt <= *req.StartsAt {
+			return nil, fmt.Errorf("endsAt 必须大于 startsAt")
 		}
-		if req.StartsAt > 0 {
-			startsAt := time.Unix(req.StartsAt, 0)
-			query = query.Where(aSilence.StartsAt.Gte(startsAt))
-		}
+	}
+
+	if req.StartsAt != nil {
+		startsAt := time.Unix(*req.StartsAt, 0)
+		query = query.Where(aSilence.StartsAt.Gte(startsAt))
+	}
+
+	if req.EndsAt != nil {
+		endsAt := time.Unix(*req.EndsAt, 0)
+		query = query.Where(aSilence.EndsAt.Lte(endsAt))
 	}
 
 	if len(req.Matchers) > 0 {

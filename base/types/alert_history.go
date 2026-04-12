@@ -1,8 +1,6 @@
 package types
 
 import (
-	"time"
-
 	"github.com/alert666/api-server/model"
 )
 
@@ -13,17 +11,17 @@ type AlertHistoryUpdateRequest struct {
 
 type AlertHistoryListRequest struct {
 	*Pagination
-	Fingerprint       string     `form:"fingerprint"`
-	AlertName         string     `form:"alertName"`
-	Status            string     `form:"status" binding:"omitempty,oneof=resolved firing"`
-	Severity          string     `form:"severity"`
-	Instance          string     `form:"instance"`
-	StartsAt          *time.Time `form:"startsAt"`
-	EndsAt            *time.Time `form:"endsAt"`
-	Labels            []string   `form:"labels"`
-	AlertSendRecordId int        `form:"alertSendRecordId"`
-	Sort              string     `form:"sort" binding:"omitempty,oneof=id alertname fingerprint starts_at ends_at severity instance"`
-	Direction         string     `form:"direction" binding:"omitempty,oneof=asc desc"`
+	Fingerprint       string   `form:"fingerprint"`
+	AlertName         string   `form:"alertName"`
+	Status            string   `form:"status" binding:"omitempty,oneof=resolved firing"`
+	Severity          string   `form:"severity"`
+	Instance          string   `form:"instance"`
+	StartsAt          *int64   `form:"startsAt"`
+	EndsAt            *int64   `form:"endsAt"`
+	Labels            []string `form:"labels"`
+	AlertSendRecordId int      `form:"alertSendRecordId"`
+	Sort              string   `form:"sort" binding:"omitempty,oneof=id alertname fingerprint starts_at ends_at severity instance"`
+	Direction         string   `form:"direction" binding:"omitempty,oneof=asc desc"`
 }
 
 type AlertHistoryListResponse struct {
