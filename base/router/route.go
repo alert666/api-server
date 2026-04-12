@@ -62,15 +62,17 @@ func NewRouter(
 }
 
 func (r *Router) RegisterRouter(engine *gin.Engine) {
-	engine.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}))
 	engine.Use(
+		cors.New(cors.Config{
+			AllowAllOrigins:  true,
+			AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+			ExposeHeaders:    []string{"Content-Length"},
+			AllowCredentials: true,
+			MaxAge:           12 * time.Hour,
+		}),
+		requestid.New(),
+		ginzap.RecoveryWithZap(zap.L(), true),
 		ginzap.GinzapWithConfig(zap.L(), &ginzap.Config{
 			Context: ginzap.Fn(func(c *gin.Context) []zapcore.Field {
 				fields := []zapcore.Field{}
@@ -82,9 +84,6 @@ func (r *Router) RegisterRouter(engine *gin.Engine) {
 		}),
 		r.middleware.TenantMiddleware(),
 	)
-
-	engine.Use(ginzap.RecoveryWithZap(zap.L(), true))
-	engine.Use(requestid.New())
 
 	apiGroup := engine.Group("/api/v1")
 	apiGroup.GET("/healthz", func(c *gin.Context) {

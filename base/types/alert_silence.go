@@ -8,7 +8,6 @@ import (
 )
 
 type AlertSilenceCreateRequest struct {
-	Cluster     string          `json:"cluster" binding:"required,max=64"`
 	Type        int             `json:"type"  binding:"required,oneof=1 2"`
 	Status      *int            `json:"status" binding:"required,oneof=0 1"`
 	StartsAt    time.Time       `json:"startsAt" binding:"required"`
@@ -26,7 +25,6 @@ func (receiver *AlertSilenceCreateRequest) TOMolelAlertSilence() (*model.AlertSi
 	}
 
 	return &model.AlertSilence{
-		Cluster:     receiver.Cluster,
 		Type:        receiver.Type,
 		Status:      receiver.Status,
 		StartsAt:    receiver.StartsAt,
@@ -40,10 +38,9 @@ func (receiver *AlertSilenceCreateRequest) TOMolelAlertSilence() (*model.AlertSi
 
 type AlertSilenceListRequest struct {
 	*Pagination
-	Cluster   string          `form:"cluster" binding:"omitempty,max=64"`
 	Status    *int            `form:"status" binding:"required,oneof=0 1"`
-	StartsAt  time.Time       `form:"startsAt" binding:"required"`
-	EndsAt    time.Time       `form:"endsAt" binding:"required,gtfield=StartsAt"`
+	StartsAt  int64           `form:"startsAt"`
+	EndsAt    int64           `form:"endsAt" binding:"gtfield=StartsAt"`
 	Matchers  []model.Matcher `form:"matchers" binding:"omitempty,gt=0"`
 	CreatedBy string          `form:"createdBy" binding:"omitempty"`
 	Sort      string          `form:"sort" binding:"omitempty,oneof=id name created_at updated_at"`

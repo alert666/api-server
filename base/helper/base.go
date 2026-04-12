@@ -1,11 +1,13 @@
 package helper
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"slices"
 
+	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/model"
 )
 
@@ -109,4 +111,12 @@ func ValidateRoleApis(reqApis []int64, apis []*model.Api) error {
 		return fmt.Errorf("apis not found: %v", notFound)
 	}
 	return nil
+}
+
+func GetTenant(ctx context.Context) string {
+	tenant, ok := ctx.Value(constant.TenantIDContextKey).(string)
+	if ok {
+		return tenant
+	}
+	return ""
 }

@@ -136,16 +136,8 @@ func (receiver *TenantService) ListTenant(ctx context.Context, req *types.Tenant
 	if Tenants, err = query.Limit(req.PageSize).Offset((req.Page - 1) * req.PageSize).Find(); err != nil {
 		return nil, err
 	}
-	return &types.TenantListResponse{
-		ListResponse: &types.ListResponse{
-			Pagination: &types.Pagination{
-				Page:     req.Page,
-				PageSize: req.PageSize,
-			},
-			Total: total,
-		},
-		List: Tenants,
-	}, nil
+
+	return types.NewTenantListResponse(Tenants, total, req.PageSize, req.Page), nil
 }
 
 func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]*types.TenantOption, error) {

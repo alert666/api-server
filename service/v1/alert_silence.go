@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/pkg/jwt"
 
 	"github.com/alert666/api-server/base/types"
@@ -52,25 +53,34 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 	if count > 0 {
 		return fmt.Errorf("已存在相同的活跃静默规则")
 	}
-
+	tenant := helper.GetTenant(ctx)
+	obj.Cluster = tenant
 	obj.CreatedBy = mc.UserName
 	return aSilence.WithContext(ctx).Create(obj)
 }
 
 func (recevicer *alertSilenceService) DeleteSilence(ctx context.Context, req *types.IDRequest) error {
-	obj, err := aSilence.WithContext(ctx).Where(aSilence.ID.Eq(int(req.ID))).First()
+	tenant := helper.GetTenant(ctx)
+	// 直接执行带条件的删除
+	info, err := aSilence.WithContext(ctx).
+		Where(aSilence.ID.Eq(int(req.ID))).
+		Where(aSilence.Cluster.Eq(tenant)).
+		Delete()
+
 	if err != nil {
 		return err
 	}
 
-	if _, err := aSilence.WithContext(ctx).Delete(obj); err != nil {
-		return err
+	// 如果没有行受影响，说明 ID 不存在或者不属于该租户
+	if info.RowsAffected == 0 {
+		return fmt.Errorf("ID %d alertSilence 不存在或者 tenant 不匹配", req.ID)
 	}
 	return nil
 }
 
 func (recevicer *alertSilenceService) QuerySilence(ctx context.Context, req *types.IDRequest) (*model.AlertSilence, error) {
-	return aSilence.WithContext(ctx).Where(aSilence.ID.Eq(int(req.ID))).First()
+	tenant := helper.GetTenant(ctx)
+	return aSilence.WithContext(ctx).Where(aSilence.ID.Eq(int(req.ID))).Where(aSilence.Cluster.Eq(tenant)).First()
 }
 
 func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *types.AlertSilenceListRequest) (*types.AlertSilenceListResponse, error) {
@@ -79,19 +89,27 @@ func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *type
 		total         int64
 		query         = aSilence.WithContext(ctx).UnderlyingDB()
 	)
-
-	if req.Cluster != "" {
-		query = query.Where(aSilence.Cluster.Eq(req.Cluster))
+	tenant := helper.GetTenant(ctx)
+	if tenant != "" {
+		query = query.Where(aSilence.Cluster.Eq(tenant))
 	}
 	if req.Status != nil {
 		query = query.Where(aSilence.Status.Eq(*req.Status))
 	}
-	if !req.EndsAt.IsZero() {
-		query = query.Where(aSilence.EndsAt.Lte(req.EndsAt))
+
+	if req.EndsAt < req.StartsAt {
+		return nil, fmt.Errorf("endsAt 必须大于 startsAt")
+	} else {
+		if req.EndsAt > 0 {
+			endsAt := time.Unix(req.EndsAt, 0)
+			query = query.Where(aSilence.EndsAt.Lte(endsAt))
+		}
+		if req.StartsAt > 0 {
+			startsAt := time.Unix(req.StartsAt, 0)
+			query = query.Where(aSilence.StartsAt.Gte(startsAt))
+		}
 	}
-	if !req.StartsAt.IsZero() {
-		query = query.Where(aSilence.StartsAt.Gte(req.StartsAt))
-	}
+
 	if len(req.Matchers) > 0 {
 		mBytes, err := json.Marshal(req.Matchers)
 		if err != nil {

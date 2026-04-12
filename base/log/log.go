@@ -27,6 +27,8 @@ func NewLogger() {
 		golog.Printf("failed to load location %s: %v, use local time instead", timeZone, err)
 		cst = time.Local
 	}
+	// 修改全局时区
+	time.Local = cst
 
 	config := zapcore.EncoderConfig{
 		TimeKey:        "time",
@@ -72,10 +74,6 @@ func NewLogger() {
 
 func WithRequestID(ctx context.Context) *zap.Logger {
 	return zap.L().With(zap.String("request-id", getRequestIDFromContext(ctx)))
-}
-
-func WithBody(ctx context.Context, body any) *zap.Logger {
-	return WithRequestID(ctx).With(zap.Any("body", body))
 }
 
 // getRequestIDFromContext 从上下文中获取请求 ID

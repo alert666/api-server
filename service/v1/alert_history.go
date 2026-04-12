@@ -37,7 +37,9 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 		query              = aHistory.WithContext(ctx)
 		err                error
 	)
-	query = recevicer.buildHistoryFilter(query, req)
+	tenant := helper.GetTenant(ctx)
+
+	query = recevicer.buildHistoryFilter(tenant, query, req)
 
 	if total, err = query.Count(); err != nil {
 		return nil, err
@@ -64,9 +66,9 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 }
 
 // 提取过滤逻辑，提高可读性
-func (s *alertHistoryService) buildHistoryFilter(query store.IAlertHistoryDo, req *types.AlertHistoryListRequest) store.IAlertHistoryDo {
-	if req.Cluster != "" {
-		query = query.Where(aHistory.Cluster.Eq(req.Cluster))
+func (s *alertHistoryService) buildHistoryFilter(tenant string, query store.IAlertHistoryDo, req *types.AlertHistoryListRequest) store.IAlertHistoryDo {
+	if tenant != "" {
+		query = query.Where(aHistory.Cluster.Eq(tenant))
 	}
 	if req.Status != "" {
 		query = query.Where(aHistory.Status.Eq(req.Status))

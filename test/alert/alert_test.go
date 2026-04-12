@@ -415,3 +415,16 @@ func TestIsSilenced(t *testing.T) {
 	}
 
 }
+
+func TestGetData(t *testing.T) {
+	s := "2026-04-06T20:30:00+08:00"
+	e := "2026-06-30T22:30:00+08:00"
+
+	st, _ := time.Parse(time.RFC3339, s)
+	en, _ := time.Parse(time.RFC3339, e)
+
+	fmt.Println("☀️------------------------------------☀️")
+	fmt.Println(st.Unix())
+	fmt.Println(en.Unix())
+	fmt.Println("🌙------------------------------------🌙")
+}
