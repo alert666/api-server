@@ -67,7 +67,7 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 
 // 提取过滤逻辑，提高可读性
 func (s *alertHistoryService) buildHistoryFilter(tenant string, query store.IAlertHistoryDo, req *types.AlertHistoryListRequest) store.IAlertHistoryDo {
-	if tenant != "" {
+	if tenant != "" && tenant == "all" {
 		query = query.Where(aHistory.Cluster.Eq(tenant))
 	}
 	if req.Status != "" {
