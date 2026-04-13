@@ -90,7 +90,7 @@ func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *type
 		query         = aSilence.WithContext(ctx).UnderlyingDB()
 	)
 	tenant := helper.GetTenant(ctx)
-	if tenant != "" {
+	if tenant != "" && tenant != "all" {
 		query = query.Where(aSilence.Cluster.Eq(tenant))
 	}
 	if req.Status != nil {
