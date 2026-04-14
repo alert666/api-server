@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
@@ -16,6 +17,7 @@ type AlertHistoryServicer interface {
 	QueryHistory(ctx context.Context, req *types.IDRequest) (*model.AlertHistory, error)
 	UpdateHistory(ctx context.Context, req *types.AlertHistoryUpdateRequest) error
 	ListHistory(ctx context.Context, req *types.AlertHistoryListRequest) (*types.AlertHistoryListResponse, error)
+	GetTenantFiringCounts(ctx context.Context) ([]*types.TenantCount, error)
 }
 
 type alertHistoryService struct {
@@ -27,7 +29,11 @@ func NewHistoryServicer(cache store.CacheStorer) AlertHistoryServicer {
 }
 
 func (recevicer *alertHistoryService) QueryHistory(ctx context.Context, req *types.IDRequest) (*model.AlertHistory, error) {
-	return aHistory.WithContext(ctx).Where(aHistory.ID.Eq(int(req.ID))).First()
+	tenant, err := helper.GetTenant(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return aHistory.WithContext(ctx).Where(aHistory.ID.Eq(int(req.ID))).Where(aHistory.Cluster.Eq(tenant)).First()
 }
 
 func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *types.AlertHistoryListRequest) (*types.AlertHistoryListResponse, error) {
@@ -37,7 +43,10 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 		query              = aHistory.WithContext(ctx)
 		err                error
 	)
-	tenant := helper.GetTenant(ctx)
+	tenant, err := helper.GetTenant(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	query = recevicer.buildHistoryFilter(tenant, query, req)
 
@@ -67,7 +76,7 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 
 // 提取过滤逻辑，提高可读性
 func (s *alertHistoryService) buildHistoryFilter(tenant string, query store.IAlertHistoryDo, req *types.AlertHistoryListRequest) store.IAlertHistoryDo {
-	if tenant != "" && tenant != "all" {
+	if tenant != "" {
 		query = query.Where(aHistory.Cluster.Eq(tenant))
 	}
 	if req.Status != "" {
@@ -128,4 +137,21 @@ func (receiver *alertHistoryService) UpdateHistory(ctx context.Context, req *typ
 		return fmt.Errorf("更新失败：告警记录(ID:%d)不存在", req.ID)
 	}
 	return nil
+}
+
+func (receiver *alertHistoryService) GetTenantFiringCounts(ctx context.Context) ([]*types.TenantCount, error) {
+	var results []*types.TenantCount
+
+	// SQL: SELECT cluster, count(*) as count FROM alert_historys WHERE status = 'firing' GROUP BY cluster
+	err := aHistory.WithContext(ctx).
+		Select(aHistory.Cluster, aHistory.ID.Count().As("count")).
+		Where(aHistory.Status.Eq(constant.AlertStatusFiring)).
+		Group(aHistory.Cluster).
+		Scan(&results)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }

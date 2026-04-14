@@ -41,3 +41,8 @@ func NewAlertHistoryListResponse(alertHistorys []*model.AlertHistory, total int6
 		List: alertHistorys,
 	}
 }
+
+type TenantCount struct {
+	Cluster string `json:"cluster"`
+	Count   int64  `json:"count"`
+}

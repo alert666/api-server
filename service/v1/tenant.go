@@ -31,7 +31,7 @@ func NewTenantServicer(cacheImpl store.CacheStorer) TenantServicer {
 }
 
 func (receiver *TenantService) CreateTenant(ctx context.Context, req *types.TenantCreateRequest) error {
-	count, err := tenant.WithContext(ctx).Where(tenant.Name.Eq(req.Name)).Count()
+	count, err := tenantStore.WithContext(ctx).Where(tenantStore.Name.Eq(req.Name)).Count()
 	if err != nil {
 		return err
 	}
@@ -64,7 +64,7 @@ func (receiver *TenantService) CreateTenant(ctx context.Context, req *types.Tena
 }
 
 func (receiver *TenantService) UpdateTenant(ctx context.Context, req *types.TenantUpdateRequest) error {
-	info, err := tenant.WithContext(ctx).Where(tenant.ID.Eq(req.ID)).Update(tenant.Description, req.Description)
+	info, err := tenantStore.WithContext(ctx).Where(tenantStore.ID.Eq(req.ID)).Update(tenantStore.Description, req.Description)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func (receiver *TenantService) UpdateTenant(ctx context.Context, req *types.Tena
 
 func (receiver *TenantService) DeleteTenant(ctx context.Context, req *types.IDRequest) error {
 	return store.Q.Transaction(func(tx *store.Query) error {
-		info, err := tx.Tenant.WithContext(ctx).Where(tenant.ID.Eq(req.ID)).Delete()
+		info, err := tx.Tenant.WithContext(ctx).Where(tenantStore.ID.Eq(req.ID)).Delete()
 		if err != nil {
 			return err
 		}
@@ -103,18 +103,18 @@ func (receiver *TenantService) DeleteTenant(ctx context.Context, req *types.IDRe
 }
 
 func (receiver *TenantService) QueryTenant(ctx context.Context, req *types.IDRequest) (*model.Tenant, error) {
-	return tenant.WithContext(ctx).Where(tenant.ID.Eq(req.ID)).First()
+	return tenantStore.WithContext(ctx).Where(tenantStore.ID.Eq(req.ID)).First()
 }
 
 func (receiver *TenantService) ListTenant(ctx context.Context, req *types.TenantListRequest) (*types.TenantListResponse, error) {
 	var (
 		Tenants []*model.Tenant
 		total   int64
-		query   = tenant.WithContext(ctx)
+		query   = tenantStore.WithContext(ctx)
 		err     error
 	)
 	if req.Name != "" {
-		query.Where(tenant.Name.Like("%" + req.Name + "%"))
+		query.Where(tenantStore.Name.Like("%" + req.Name + "%"))
 	}
 
 	if total, err = query.Count(); err != nil {
@@ -122,7 +122,7 @@ func (receiver *TenantService) ListTenant(ctx context.Context, req *types.Tenant
 	}
 
 	if req.Sort != "" && req.Direction != "" {
-		sort, ok := tenant.GetFieldByName(req.Sort)
+		sort, ok := tenantStore.GetFieldByName(req.Sort)
 		if !ok {
 			return nil, fmt.Errorf("invalid sort field: %s", req.Sort)
 		}
@@ -148,7 +148,7 @@ func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]*types.Te
 	}
 
 	if !exits || len(res) == 0 {
-		storeObjs, err := tenant.WithContext(ctx).Find()
+		storeObjs, err := tenantStore.WithContext(ctx).Find()
 		if err != nil {
 			return nil, err
 		}

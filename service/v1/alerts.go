@@ -74,6 +74,7 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	notifyReq.AlertChannel = alertChannel
 	notifyReq.AlertReceiveReq = req
 
+	// TODO 发送告警生成 sendRecordID, 在发送卡片消息的时候直接可以发送 组ID
 	var sendResult *types.NotifySendResult
 	switch alertChannel.Type {
 	case model.ChannelTypeFeishuApp:
@@ -85,10 +86,10 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 		return fmt.Errorf("不支持的发送类型")
 	}
 
-	log.WithRequestID(ctx).Info("持久化告警数据", zap.String("channelName", alertChannel.Name))
+	log.WithRequestID(ctx).Info("持久化告警数据", zap.String("tenant", tenantValue))
 	if sendResult != nil {
 		asyncCtx := context.WithoutCancel(ctx)
-		go receiver.saveAlerts(asyncCtx, notifyReq, sendResult)
+		go receiver.saveAlerts(asyncCtx, tenantValue, notifyReq, sendResult)
 	}
 	return nil
 }
@@ -135,7 +136,7 @@ func (receiver *alertsService) getChannel(ctx context.Context, channelName strin
 // aggregatedAlarmGrouping 告警分组
 // 需要将告警分配 firing 和 resolved 两组, 分别发送
 func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tenantValue string, alerts []*types.Alert) (*types.NotifyReq, error) {
-	log.WithRequestID(ctx).Debug("告警分组", zap.String("tenantValue", tenantValue))
+	log.WithRequestID(ctx).Info("告警分组", zap.String("tenant", tenantValue))
 	alertLen := len(alerts)
 	if alertLen == 0 {
 		return nil, fmt.Errorf("alerts 为空, 告警分组失败")
@@ -175,6 +176,7 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 		return nil, err
 	}
 
+	// TODO 从 Redis 中获取
 	// 查询静默规则
 	err = aSilence.WithContext(ctx).
 		UnderlyingDB().
@@ -241,11 +243,12 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 }
 
 // saveAlerts 将告警记录持久化到数据库
-func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.NotifyReq, sendResult *types.NotifySendResult) {
+func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, notifyReq *types.NotifyReq, sendResult *types.NotifySendResult) {
 	defer func() {
 		if r := recover(); r != nil {
 			stack := debug.Stack()
-			zap.L().Error("saveAlerts panic recovered",
+			log.WithRequestID(ctx).Error("saveAlerts panic recovered",
+				zap.String("tenant", tenant),
 				zap.Any("panic", r),
 				zap.String("stack", string(stack)),
 			)
@@ -285,32 +288,28 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 	silenceCreate, silenceUpdate := receiver.processSilencedAlerts(notifyReq)
 	allUpdateAlerts = append(allUpdateAlerts, silenceUpdate...)
 
-	log.WithRequestID(ctx).Debug("告警记录处理完成, 开始批量持久化")
 	// 批量创建带有发送流水的告警 (Firing/Resolved)
 	if len(allCreateSendRecords) > 0 {
-		zap.L().Debug("批量创建告警历史记录")
 		if err := aSend.WithContext(ctx).Create(allCreateSendRecords...); err != nil {
-			log.WithRequestID(ctx).Error("批量创建告警历史记录失败", zap.Error(err))
+			log.WithRequestID(ctx).Error("批量创建告警历史记录失败", zap.String("tenant", tenant), zap.Error(err))
 		}
 	}
 
 	// 批量创建静默告警 (只有 History)
 	if len(silenceCreate) > 0 {
-		zap.L().Debug("批量创建静默告警历史")
 		if err := aHistory.WithContext(ctx).Create(silenceCreate...); err != nil {
-			log.WithRequestID(ctx).Error("批量创建静默告警历史失败", zap.Error(err))
+			log.WithRequestID(ctx).Error("批量创建静默告警历史失败", zap.String("tenant", tenant), zap.Error(err))
 		}
 	}
 
 	// 更新发送记录 (ErrorMessage 等)
 	if len(allUpdateSendRecords) > 0 {
-		zap.L().Debug("更新告警发送记录")
 		for _, updateSendRecord := range allUpdateSendRecords {
 			upObj := model.AlertSendRecord{
 				ErrorMessage: updateSendRecord.ErrorMessage,
 			}
 			if _, err := aSend.WithContext(timeoutCtx).Where(aSend.ID.Eq(updateSendRecord.ID)).Updates(upObj); err != nil {
-				log.WithRequestID(ctx).Error("批量更新告警发送记录失败", zap.Error(err))
+				log.WithRequestID(ctx).Error("批量更新告警发送记录失败", zap.String("tenant", tenant), zap.Error(err))
 				continue
 			}
 		}
@@ -327,11 +326,13 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, notifyReq *types.
 				"alert_silence_id": updateAlert.AlertSilenceID,
 			}
 			if _, err := aHistory.WithContext(timeoutCtx).Where(aHistory.ID.Eq(updateAlert.ID)).Updates(upMap); err != nil {
-				log.WithRequestID(ctx).Error("批量更新告警历史记录失败", zap.Error(err))
+				log.WithRequestID(ctx).Error("批量更新告警历史记录失败", zap.String("tenant", tenant), zap.Error(err))
 				continue
 			}
 		}
 	}
+
+	log.WithRequestID(ctx).Info("告警记录持久化完成", zap.String("tenant", tenant))
 }
 
 type processAlertsReq struct {
