@@ -21,20 +21,26 @@ type AlertSilenceServicer interface {
 	DeleteSilence(ctx context.Context, req *types.IDRequest) error
 	QuerySilence(ctx context.Context, req *types.IDRequest) (*model.AlertSilence, error)
 	ListSilence(ctx context.Context, req *types.AlertSilenceListRequest) (*types.AlertSilenceListResponse, error)
+	GetTenantSilenceCounts(ctx context.Context) ([]*types.TenantCount, error)
 }
 
 type alertSilenceService struct {
-	jwt jwt.JwtInterface
+	jwtImpl jwt.JwtInterface
 }
 
 func NewAlertSilenceServicer(jwt jwt.JwtInterface) AlertSilenceServicer {
 	return &alertSilenceService{
-		jwt: jwt,
+		jwtImpl: jwt,
 	}
 }
 
 func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *types.AlertSilenceCreateRequest) error {
-	mc, err := recevicer.jwt.GetUser(ctx)
+	tenant, err := helper.GetTenant(ctx)
+	if err != nil {
+		return err
+	}
+
+	mc, err := recevicer.jwtImpl.GetUser(ctx)
 	if err != nil {
 		return err
 	}
@@ -53,14 +59,18 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 	if count > 0 {
 		return fmt.Errorf("已存在相同的活跃静默规则")
 	}
-	tenant := helper.GetTenant(ctx)
+
 	obj.Cluster = tenant
 	obj.CreatedBy = mc.UserName
 	return aSilence.WithContext(ctx).Create(obj)
 }
 
 func (recevicer *alertSilenceService) DeleteSilence(ctx context.Context, req *types.IDRequest) error {
-	tenant := helper.GetTenant(ctx)
+	tenant, err := helper.GetTenant(ctx)
+	if err != nil {
+		return err
+	}
+
 	// 直接执行带条件的删除
 	info, err := aSilence.WithContext(ctx).
 		Where(aSilence.ID.Eq(int(req.ID))).
@@ -79,7 +89,10 @@ func (recevicer *alertSilenceService) DeleteSilence(ctx context.Context, req *ty
 }
 
 func (recevicer *alertSilenceService) QuerySilence(ctx context.Context, req *types.IDRequest) (*model.AlertSilence, error) {
-	tenant := helper.GetTenant(ctx)
+	tenant, err := helper.GetTenant(ctx)
+	if err != nil {
+		return nil, err
+	}
 	return aSilence.WithContext(ctx).Where(aSilence.ID.Eq(int(req.ID))).Where(aSilence.Cluster.Eq(tenant)).First()
 }
 
@@ -89,10 +102,14 @@ func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *type
 		total         int64
 		query         = aSilence.WithContext(ctx).UnderlyingDB()
 	)
-	tenant := helper.GetTenant(ctx)
-	if tenant != "" && tenant != "all" {
+	tenant, err := helper.GetTenant(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if tenant != "" {
 		query = query.Where(aSilence.Cluster.Eq(tenant))
 	}
+
 	if req.Status != nil {
 		query = query.Where(aSilence.Status.Eq(*req.Status))
 	}
@@ -143,6 +160,23 @@ func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *type
 	}
 
 	return types.NewAlertSilenceListResponse(AlertSilences, total, req.PageSize, req.Page), nil
+}
+
+func (recevicer *alertSilenceService) GetTenantSilenceCounts(ctx context.Context) ([]*types.TenantCount, error) {
+	var results []*types.TenantCount
+
+	// SQL: SELECT cluster, count(*) as count FROM alert_silences WHERE status = 1 GROUP BY cluster
+	err := aSilence.WithContext(ctx).
+		Select(aSilence.Cluster, aSilence.ID.Count().As("count")).
+		Where(aSilence.Status.Eq(model.SilenceEnabled)).
+		Group(aSilence.Cluster).
+		Scan(&results)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
 }
 
 type CleanExpiredSilencer interface {

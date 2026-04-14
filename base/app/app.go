@@ -8,7 +8,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/server"
@@ -16,6 +15,7 @@ import (
 	"github.com/alert666/api-server/pkg/feishu"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/alert666/api-server/store"
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -72,6 +72,7 @@ func (receiver *Init) Init(ctx context.Context) error {
 			zap.L().Error("同步 AlertChannel 到 Redis 失败", zap.String("name", v.Name), zap.Error(err))
 			continue
 		}
+		zap.L().Info("同步 AlertChannel 到 Redis 成功", zap.Any("channels", alertChannels))
 
 		// B. 解析配置
 		var alertConfig map[string]string
@@ -102,8 +103,6 @@ func (receiver *Init) Init(ctx context.Context) error {
 			zap.L().Debug("跳过非 SDK 类型的渠道初始化", zap.String("type", string(v.Type)))
 		}
 	}
-
-	zap.L().Info("告警渠道同步至 Redis 完成", zap.Int("count", len(alertChannels)))
 
 	receiver.cace.Subscribe(ctx, constant.AlertChannelTopicDelete, func(msg string) {
 		cctx, cannelFc := context.WithTimeout(context.Background(), time.Second*10)

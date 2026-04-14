@@ -199,6 +199,7 @@ func (r *Router) registerAlertSilenceRouter(apiGroup *gin.RouterGroup) {
 		baseGroup.DELETE("/:id", r.alertSilence.DeleteAlertSilence)
 		baseGroup.GET("/:id", r.alertSilence.QueryAlertSilence)
 		baseGroup.GET("", r.alertSilence.ListAlertSilence)
+		baseGroup.GET("enableCount", r.alertSilence.GetTenantSilenceCounts)
 	}
 }
 
@@ -208,6 +209,7 @@ func (r *Router) registerHistoryRouter(apiGroup *gin.RouterGroup) {
 		baseGroup.Use(r.middleware.Auth(), r.middleware.AuthZ())
 		baseGroup.GET("/:id", r.alertHistory.QueryAlertHistory)
 		baseGroup.GET("", r.alertHistory.ListAlertHistory)
+		baseGroup.GET("/firingCount", r.alertHistory.GetTenantFiringCounts)
 		baseGroup.PUT("/:id", r.alertHistory.UpdateAlertHistory)
 	}
 }

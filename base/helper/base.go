@@ -113,10 +113,10 @@ func ValidateRoleApis(reqApis []int64, apis []*model.Api) error {
 	return nil
 }
 
-func GetTenant(ctx context.Context) string {
+func GetTenant(ctx context.Context) (tenant string, err error) {
 	tenant, ok := ctx.Value(constant.TenantIDContextKey).(string)
 	if ok {
-		return tenant
+		return tenant, nil
 	}
-	return ""
+	return "", fmt.Errorf("tenant 不能为空")
 }
