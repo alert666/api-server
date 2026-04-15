@@ -33,7 +33,15 @@ func (recevicer *alertHistoryService) QueryHistory(ctx context.Context, req *typ
 	if err != nil {
 		return nil, err
 	}
-	return aHistory.WithContext(ctx).Preload(aHistory.AlertChannel).Preload(aHistory.AlertSendRecord).Where(aHistory.ID.Eq(int(req.ID))).Where(aHistory.Cluster.Eq(tenant)).First()
+	return aHistory.
+		WithContext(ctx).
+		Preload(aHistory.AlertSilence).
+		// Preload(aHistory.AlertChannel).
+		// Preload(aHistory.AlertChannel.AlertTemplate).
+		Preload(aHistory.AlertSendRecord).
+		Where(aHistory.ID.Eq(int(req.ID))).
+		Where(aHistory.Cluster.Eq(tenant)).
+		First()
 }
 
 func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *types.AlertHistoryListRequest) (*types.AlertHistoryListResponse, error) {

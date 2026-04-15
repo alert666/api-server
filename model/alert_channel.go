@@ -30,17 +30,17 @@ const (
 
 // AlertChannel 告警渠道表
 type AlertChannel struct {
-	ID                int            `gorm:"primarykey;comment:主键ID"`
+	ID                int            `gorm:"primarykey;comment:主键ID" json:"id"`
 	CreatedAt         time.Time      `gorm:"column:created_at" json:"createdAt,omitempty"`
 	UpdatedAt         time.Time      `gorm:"column:updated_at" json:"updatedAt,omitempty"`
 	DeletedAt         gorm.DeletedAt `gorm:"column:deleted_at;index" json:"-"`
-	Name              string         `gorm:"column:name;type:varchar(100);not null;uniqueIndex;comment:告警渠道名称(如: SRE团队钉钉群)"`
-	Type              ChannelType    `gorm:"column:type;type:varchar(50);not null;index;comment:渠道类型(feishuApp/feishuBoot/webhook)"`
-	Status            *int           `gorm:"column:status;type:tinyint;not null;default:1;index;comment:状态(0-停用, 1-启用)"`
-	AggregationStatus *int           `gorm:"column:aggregation_status;type:tinyint;not null;index;comment:状态(0-停用, 1-启用)"`
-	Config            datatypes.JSON `gorm:"column:config;type:json;not null;comment:渠道动态配置(JSON格式)"`
-	Description       string         `gorm:"column:description;type:varchar(255);comment:描述与备注"`
-	AlertTemplateID   int            `gorm:"column:alert_template_id;index;comment:绑定的告警模板ID"`
+	Name              string         `gorm:"column:name;type:varchar(100);not null;uniqueIndex;comment:告警渠道名称(如: SRE团队钉钉群)" json:"name"`
+	Type              ChannelType    `gorm:"column:type;type:varchar(50);not null;index;comment:渠道类型(feishuApp/feishuBoot/webhook)" json:"type"`
+	Status            *int           `gorm:"column:status;type:tinyint;not null;default:1;index;comment:状态(0-停用, 1-启用)" json:"status"`
+	AggregationStatus *int           `gorm:"column:aggregation_status;type:tinyint;not null;index;comment:状态(0-停用, 1-启用)" json:"aggregationStatus"`
+	Config            datatypes.JSON `gorm:"column:config;type:json;not null;comment:渠道动态配置(JSON格式)" json:"config"`
+	Description       string         `gorm:"column:description;type:varchar(255);comment:描述与备注" json:"description"`
+	AlertTemplateID   int            `gorm:"column:alert_template_id;index;comment:绑定的告警模板ID" json:"alertTemplateID"`
 	AlertTemplate     *AlertTemplate `gorm:"foreignKey:AlertTemplateID" json:"alert_template,omitempty"`
 }
 
