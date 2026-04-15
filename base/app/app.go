@@ -11,6 +11,7 @@ import (
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/server"
+	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/pkg/feishu"
 	v1 "github.com/alert666/api-server/service/v1"
@@ -31,8 +32,8 @@ func WithServer(server ...server.ServerInterface) Options {
 func WithInit(redis store.CacheStorer, feishu feishu.Feishuer) Options {
 	return func(app *Application) {
 		app.Initer = &Init{
-			cace:   redis,
-			feishu: feishu,
+			caceImpl:   redis,
+			feishuImpl: feishu,
 		}
 	}
 }
@@ -51,12 +52,12 @@ type Initer interface {
 
 // Init Initer 的实现
 type Init struct {
-	cace   store.CacheStorer
-	feishu feishu.Feishuer
+	caceImpl   store.CacheStorer
+	feishuImpl feishu.Feishuer
 }
 
 func (receiver *Init) Init(ctx context.Context) error {
-	// 1. 从数据库获取全量数据（包含关联的模板）
+	// 1. 从数据库获取全量数据（包含关联的模板）, 缓存到 cache
 	alertChannels, err := store.AlertChannel.
 		Preload(store.AlertChannel.AlertTemplate).
 		Where(store.AlertChannel.Status.Eq(int(model.StatusEnabled))).
@@ -64,24 +65,20 @@ func (receiver *Init) Init(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("获取全量 alertChannel 失败: %w", err)
 	}
-
-	// 2. 遍历处理
 	for _, v := range alertChannels {
-		err := receiver.cace.SetObject(ctx, store.AlertType, v.Name, v, store.NeverExpires)
+		err := receiver.caceImpl.SetObject(ctx, store.AlertType, v.Name, v, store.NeverExpires)
 		if err != nil {
 			zap.L().Error("同步 AlertChannel 到 Redis 失败", zap.String("name", v.Name), zap.Error(err))
 			continue
 		}
 		zap.L().Info("同步 AlertChannel 到 Redis 成功", zap.Any("channels", alertChannels))
 
-		// B. 解析配置
 		var alertConfig map[string]string
 		if err := json.Unmarshal(v.Config, &alertConfig); err != nil {
 			zap.L().Error("序列化 AlertChannel 配置失败", zap.String("name", v.Name), zap.Error(err))
 			continue
 		}
 
-		// C. 初始化具体的告警客户端 (如飞书)
 		switch v.Type {
 		case model.ChannelTypeFeishuApp:
 			appID := alertConfig["app_id"]
@@ -93,24 +90,45 @@ func (receiver *Init) Init(ctx context.Context) error {
 			}
 
 			// 初始化飞书 SDK 客户端到内存
-			receiver.feishu.Init(v.Name, appID, appSecret)
+			receiver.feishuImpl.Init(v.Name, appID, appSecret)
 			zap.L().Info("飞书客户端初始化成功", zap.String("channel", v.Name))
 
 		case model.ChannelTypeFeishuBoot:
 			// 如果有机器人逻辑可以在此扩展
 
 		default:
-			zap.L().Debug("跳过非 SDK 类型的渠道初始化", zap.String("type", string(v.Type)))
+			zap.L().Info("跳过非 SDK 类型的渠道初始化", zap.String("type", string(v.Type)))
 		}
 	}
 
-	receiver.cace.Subscribe(ctx, constant.AlertChannelTopicDelete, func(msg string) {
+	// 2. 缓存 tenants
+	zap.L().Info("缓存全量 tenants")
+	storeTenants, err := store.Tenant.WithContext(ctx).Find()
+	if err != nil {
+		return fmt.Errorf("获取全量 tenant 失败: %w", err)
+	}
+
+	res := make([]*types.TenantOption, 0, len(storeTenants))
+	for _, storeObj := range storeTenants {
+		res = append(res, &types.TenantOption{
+			Label: storeObj.Name,
+			Value: storeObj.Name,
+		})
+	}
+
+	if err := receiver.caceImpl.SetObject(ctx, store.TenantType, constant.TenantOptionsCacheKey, res, store.NeverExpires); err != nil {
+		zap.L().Error("缓存 tenants 失败", zap.Error(err))
+	}
+
+	// 3. 订阅 alertChannel 删除事件
+	zap.L().Info("订阅 alertChannel 删除事件")
+	receiver.caceImpl.Subscribe(ctx, constant.AlertChannelTopicDelete, func(msg string) {
 		cctx, cannelFc := context.WithTimeout(context.Background(), time.Second*10)
 		defer cannelFc()
 		_, err := store.AlertChannel.WithContext(cctx).Where(store.AlertChannel.Name.Eq(msg)).First()
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				receiver.feishu.CloseCli(msg)
+				receiver.feishuImpl.CloseCli(msg)
 				return
 			}
 			zap.L().Error(fmt.Sprintf("订阅 alertChannel 删除事件, 查询 name = %s 的alertChannel 失败", msg), zap.Error(err))
@@ -119,7 +137,9 @@ func (receiver *Init) Init(ctx context.Context) error {
 		zap.S().Errorf("订阅 alertChannel 删除事件, 数据库存在记录 name = %s 的 alertChannel 删除失败", msg)
 	})
 
-	receiver.cace.Subscribe(ctx, constant.AlertChannelTopicUpdate, func(msg string) {
+	// 4. 订阅 alertChannel 更新事件
+	zap.L().Info("订阅 alertChannel 更新事件")
+	receiver.caceImpl.Subscribe(ctx, constant.AlertChannelTopicUpdate, func(msg string) {
 		cctx, cannelFc := context.WithTimeout(context.Background(), time.Second*10)
 		defer cannelFc()
 		channel, err := store.AlertChannel.WithContext(cctx).Where(store.AlertChannel.Name.Eq(msg)).First()
@@ -129,7 +149,7 @@ func (receiver *Init) Init(ctx context.Context) error {
 		}
 
 		if *channel.Status == model.StatusDisabled {
-			receiver.feishu.CloseCli(channel.Name)
+			receiver.feishuImpl.CloseCli(channel.Name)
 			return
 		}
 
@@ -140,7 +160,7 @@ func (receiver *Init) Init(ctx context.Context) error {
 				zap.S().Error(err)
 				return
 			}
-			receiver.feishu.UpdateCli(msg, appid, appSecret)
+			receiver.feishuImpl.UpdateCli(msg, appid, appSecret)
 			return
 		}
 	})
