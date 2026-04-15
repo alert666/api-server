@@ -64,16 +64,31 @@ func (receiver *TenantService) CreateTenant(ctx context.Context, req *types.Tena
 }
 
 func (receiver *TenantService) UpdateTenant(ctx context.Context, req *types.TenantUpdateRequest) error {
-	info, err := tenantStore.WithContext(ctx).Where(tenantStore.ID.Eq(req.ID)).Update(tenantStore.Description, req.Description)
-	if err != nil {
-		return err
-	}
+	return store.Q.Transaction(func(tx *store.Query) error {
+		info, err := tenantStore.WithContext(ctx).Where(tenantStore.ID.Eq(req.ID)).Update(tenantStore.Description, req.Description)
+		if err != nil {
+			return err
+		}
 
-	if info.RowsAffected == 0 {
-		return fmt.Errorf("记录不存在, 更新失败")
-	}
+		if info.RowsAffected == 0 {
+			return fmt.Errorf("记录不存在, 更新失败")
+		}
 
-	return nil
+		storeObjs, err := tenantStore.WithContext(ctx).Find()
+		if err != nil {
+			return err
+		}
+		res := make([]*types.TenantOption, 0, len(storeObjs))
+		for _, storeObj := range storeObjs {
+			res = append(res, &types.TenantOption{
+				Label: storeObj.Name,
+				Value: storeObj.Name,
+			})
+		}
+
+		return receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.TenantOptionsCacheKey, res, store.NeverExpires)
+	})
+
 }
 
 func (receiver *TenantService) DeleteTenant(ctx context.Context, req *types.IDRequest) error {
