@@ -41,7 +41,7 @@ type AlertChannel struct {
 	Config            datatypes.JSON `gorm:"column:config;type:json;not null;comment:渠道动态配置(JSON格式)" json:"config"`
 	Description       string         `gorm:"column:description;type:varchar(255);comment:描述与备注" json:"description"`
 	AlertTemplateID   int            `gorm:"column:alert_template_id;index;comment:绑定的告警模板ID" json:"alertTemplateID"`
-	AlertTemplate     *AlertTemplate `gorm:"foreignKey:AlertTemplateID" json:"alert_template,omitempty"`
+	AlertTemplate     *AlertTemplate `gorm:"foreignKey:AlertTemplateID" json:"alertTemplate,omitempty"`
 }
 
 // TableName 指定表名
