@@ -41,7 +41,7 @@ type AlertSilenceListRequest struct {
 	*Pagination
 	Status    *int            `form:"status" binding:"required,oneof=0 1"`
 	StartsAt  *int64          `form:"startsAt"`
-	EndsAt    *int64          `form:"endsAt" binding:"gtfield=StartsAt"`
+	EndsAt    *int64          `form:"endsAt" binding:"omitempty,gtfield=StartsAt"`
 	Matchers  []model.Matcher `form:"matchers" binding:"omitempty,gt=0"`
 	CreatedBy string          `form:"createdBy" binding:"omitempty"`
 	Sort      string          `form:"sort" binding:"omitempty,oneof=id name created_at updated_at"`
