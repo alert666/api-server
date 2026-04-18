@@ -468,30 +468,37 @@ func (receiver *alertsService) processAlerts(ctx context.Context, req *processAl
 
 // CleanDuplicateFiringAlertsTask 定时清理任务：处理相同指纹但有多个 firing 状态的记录
 func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
+	start := time.Now()
 	defer func() {
 		if r := recover(); r != nil {
 			stack := debug.Stack()
 			zap.L().Error("cleanDuplicateFiringAlertsTask panic recovered",
 				zap.Any("panic", r),
-				zap.String("stack", string(stack)), // 这行会告诉你具体是代码哪一行崩了
+				zap.String("stack", string(stack)),
 			)
+			return
 		}
+
+		elapsed := time.Since(start).Milliseconds()
+		zap.L().Info("CleanInhibitAlert 执行结束",
+			zap.Int64("duration_ms", elapsed),
+		)
 	}()
 	lockDuration := 5 * time.Minute
-	ctx, cancle := context.WithTimeout(context.TODO(), 2*time.Minute)
+	ctx, cancle := context.WithTimeout(context.TODO(), 290*time.Second)
 	defer cancle()
 
 	al := store.AlertHistory.WithContext(ctx)
 
 	ok, err := receiver.cache.SetNX(ctx, store.LockType, constant.AlertCleanDuplicateHistoryLockKey, time.Now().Unix(), lockDuration)
 	if err != nil {
-		zap.L().Error("[定时任务] Redis 锁异常", zap.Error(err))
+		zap.L().Error("[定时任务] cleanDuplicateFiringAlertsTask Redis 锁异常", zap.Error(err))
 		return
 	}
 
 	// 没抢到锁，说明其他副本正在执行，直接退出
 	if !ok {
-		zap.L().Debug("[定时任务] 任务正在其他节点运行，本次跳过")
+		zap.L().Debug("[定时任务] cleanDuplicateFiringAlertsTask 任务正在其他节点运行，本次跳过")
 		return
 	}
 

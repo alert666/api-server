@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"runtime/debug"
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
@@ -195,17 +196,32 @@ func NewCleanExpiredSilencer(cache store.CacheStorer) CleanExpiredSilencer {
 
 // CleanExpiredSilencesTask 定时任务：清理过期的静默规则
 func (recevicer *CleanExpiredSilence) CleanExpiredSilencesTask() {
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	start := time.Now()
+	defer func() {
+		if r := recover(); r != nil {
+			stack := debug.Stack()
+			zap.L().Error("CleanExpiredSilencesTask panic recovered",
+				zap.Any("panic", r),
+				zap.String("stack", string(stack)),
+			)
+			return
+		}
+		elapsed := time.Since(start).Milliseconds()
+		zap.L().Info("CleanExpiredSilencesTask 执行结束",
+			zap.Int64("duration_ms", elapsed),
+		)
+	}()
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
 	defer cancel()
 
-	lockExpiration := 5 * time.Minute
+	lockExpiration := 58 * time.Second
 	ok, err := recevicer.cache.SetNX(ctx, store.LockType, constant.AlertCleanExpiredSilencesLockKey, time.Now().Unix(), lockExpiration)
 	if err != nil {
-		zap.L().Error("[定时任务] Redis 分布式锁异常", zap.Error(err))
+		zap.L().Error("[定时任务] CleanExpiredSilencesTask Redis 分布式锁异常", zap.Error(err))
 		return
 	}
 	if !ok {
-		zap.L().Debug("[定时任务] 清理过期静默规则任务正在其他节点运行，本次跳过")
+		zap.L().Debug("[定时任务] CleanExpiredSilencesTask 清理过期静默规则任务正在其他节点运行，本次跳过")
 		return
 	}
 	zap.L().Info("[定时任务] 成功获取锁，开始清理过期静默规则")

@@ -211,3 +211,17 @@ root@qqlx:~# docker logs apiserver  | grep '8611cf16-493b-4e0f-8367-fb9b8647c5a1
 链路信息
 
 ![链路信息](docs/img/error-tempo.png)
+
+## alertmanager 抑制配置注意事项
+
+alertmanager 已经实现了抑制的逻辑, 所以告警的抑制使用 alertmanager 来实现, 本服务不实现抑制的功能.
+
+alertmanager 告警抑制引发的问题:
+
+当 alertmanager 配置抑制之后, A 告警 抑制 B 告警, 当 B 发送一次告警之后触发了 A 告警, 这个时候 B 告警会被抑制. 当 A 告警恢复之后, B 告警的恢复告警也会被抑制, 这会导致数据库数据中 B 告警的实际告警状态与 alertmanager 中 B( alertmanager中B已经恢复了) 的状态不一致的问题.
+
+解决方案:
+
+1. 将 alertmanager 所有的抑制规则配置到本服务中, 通过定时任务的方式定时去轮询抑制规则.
+
+2. 查询 target_matchers 中配置的 lable, 如果数据库中有活跃的告警那么获取到 []A, 那么查询 source_matchers 中的 lable, 如果存在已经恢复并且开始时间大于 [] A的记录, 那么判断 equal 的配置, 如果匹配到抑制, 那么就将 []A 修改为恢复.

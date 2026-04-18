@@ -184,11 +184,12 @@ func NewApplication(
 	feishu feishu.Feishuer,
 	cleanDuplicateFiringer v1.CleanDuplicateFiringer,
 	cleanExpiredSilencer v1.CleanExpiredSilencer,
+	cleanInhibitAlert v1.AlertInhibiter,
 ) *Application {
 	return newApp(
 		WithServer(
 			server.NewServer(e),
-			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer),
+			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert),
 		),
 		WithInit(redis, feishu),
 	)

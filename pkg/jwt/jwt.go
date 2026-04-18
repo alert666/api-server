@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/alert666/api-server/base/conf"
 	"github.com/alert666/api-server/base/constant"
+	jwtv5 "github.com/golang-jwt/jwt/v5"
 )
 
 type JwtInterface interface {

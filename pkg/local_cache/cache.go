@@ -6,8 +6,8 @@ import (
 
 	"github.com/alert666/api-server/base/constant"
 
-	gocache "github.com/patrickmn/go-cache"
 	"github.com/alert666/api-server/pkg/oauth"
+	gocache "github.com/patrickmn/go-cache"
 )
 
 type Cacher interface {
