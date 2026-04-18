@@ -13,6 +13,7 @@ import (
 	"github.com/alert666/api-server/base/router"
 	"github.com/alert666/api-server/base/server"
 	"github.com/alert666/api-server/controller"
+	"github.com/alert666/api-server/pkg/alertinhibit"
 	"github.com/alert666/api-server/pkg/casbin"
 	"github.com/alert666/api-server/pkg/feishu"
 	"github.com/alert666/api-server/pkg/jwt"
@@ -86,7 +87,14 @@ func InitApplication() (*app.Application, func(), error) {
 	}
 	cleanDuplicateFiringer := v1.NewCleanDuplicateFiringer(cacheStore)
 	cleanExpiredSilencer := v1.NewCleanExpiredSilencer(cacheStore)
-	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer)
+	v, err := alertinhibit.NewMatchers()
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	alertInhibiter := v1.NewalertInhibit(v, cacheStore)
+	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter)
 	return application, func() {
 		cleanup2()
 		cleanup()

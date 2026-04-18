@@ -28,4 +28,5 @@ const (
 	AlertDBTenantKey                  = "cluster"
 	AlertCleanDuplicateHistoryLockKey = "alert:clean:duplicate:history"
 	AlertCleanExpiredSilencesLockKey  = "alert:clean:expired:silences"
+	AlertCleanInhibitLockKey          = "alert:clean:expired:inhibit"
 )

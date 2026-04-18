@@ -26,7 +26,7 @@ type AlertSilence struct {
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;index" json:"-"`
 	Cluster     string         `gorm:"column:cluster;type:varchar(128);not null;index:idx_cluster_status_ends_starts,priority:1;comment:所属集群/租户" json:"cluster"`
 	Type        int            `gorm:"column:type;comment:1:指纹静默, 2:标签静默" json:"type"`
-	Fingerprint string         `gorm:"index;comment:精确匹配的指纹"`
+	Fingerprint string         `gorm:"index;comment:精确匹配的指纹" json:"fingerprint"`
 	Status      *int           `gorm:"column:status;type:tinyint;default:1;index:idx_cluster_status_ends_starts,priority:2;comment:状态 0:禁用 1: 启用 2:过期" json:"status"`
 	EndsAt      time.Time      `gorm:"column:ends_at;not null;index:idx_cluster_status_ends_starts,priority:3;comment:结束时间" json:"endsAt"`
 	StartsAt    time.Time      `gorm:"column:starts_at;not null;index:idx_cluster_status_ends_starts,priority:4;comment:开始时间" json:"startsAt"`

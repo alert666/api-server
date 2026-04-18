@@ -14,10 +14,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/data"
+	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
+	"github.com/alert666/api-server/pkg/alertinhibit"
 	"github.com/alert666/api-server/pkg/feishu"
 	v1 "github.com/alert666/api-server/service/v1"
+	"github.com/alert666/api-server/store"
 )
 
 // AlertmanagerPayload 对应你提供的 JSON 结构
@@ -443,4 +448,47 @@ func TestGetData(t *testing.T) {
 	fmt.Println(t1t.Unix())
 	fmt.Println(t2t.Unix())
 	fmt.Println("🌙------------------------------------🌙")
+}
+
+func AllMatchersMatch(matchers []*model.Matcher, alertLabels map[string]string) bool {
+	for _, m := range matchers {
+		val := alertLabels[m.Name]
+		if !m.Matches(val) {
+			return false
+		}
+	}
+	return true
+}
+
+func TestAlertInhibitRulesConfig(t *testing.T) {
+	err := conf.LoadConfig("../../config.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	log.NewLogger()
+
+	client, err := data.NewRDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	cacheStore, cleanup, err := store.NewCacheStore(client)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer cleanup()
+
+	_, cleanup2, err := data.NewDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer cleanup2()
+
+	v1.NewStore()
+	matchers, err := alertinhibit.NewMatchers()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	inhibitImpl := v1.NewalertInhibit(matchers, cacheStore)
+	inhibitImpl.CleanInhibitAlert()
 }
