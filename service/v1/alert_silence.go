@@ -185,12 +185,12 @@ type CleanExpiredSilencer interface {
 }
 
 type CleanExpiredSilence struct {
-	cache store.CacheLocker
+	cacheImpl store.CacheStorer
 }
 
 func NewCleanExpiredSilencer(cache store.CacheStorer) CleanExpiredSilencer {
 	return &CleanExpiredSilence{
-		cache: cache,
+		cacheImpl: cache,
 	}
 }
 
@@ -211,15 +211,16 @@ func (recevicer *CleanExpiredSilence) CleanExpiredSilencesTask() {
 			zap.Int64("duration_ms", elapsed),
 		)
 	}()
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 58*time.Second)
 	defer cancel()
 
-	lockExpiration := 58 * time.Second
-	ok, err := recevicer.cache.SetNX(ctx, store.LockType, constant.AlertCleanExpiredSilencesLockKey, time.Now().Unix(), lockExpiration)
+	ok, err := recevicer.cacheImpl.SetNX(ctx, store.LockType, constant.AlertCleanExpiredSilencesLockKey, time.Now().Unix(), 58*time.Second)
 	if err != nil {
 		zap.L().Error("[定时任务] CleanExpiredSilencesTask Redis 分布式锁异常", zap.Error(err))
 		return
 	}
+	defer recevicer.cacheImpl.DelKey(ctx, store.LockType, constant.AlertCleanExpiredSilencesLockKey)
+
 	if !ok {
 		zap.L().Debug("[定时任务] CleanExpiredSilencesTask 清理过期静默规则任务正在其他节点运行，本次跳过")
 		return

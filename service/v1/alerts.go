@@ -30,7 +30,7 @@ type CleanDuplicateFiringer interface {
 }
 
 type alertsService struct {
-	cache       store.CacheStorer
+	cacheImpl   store.CacheStorer
 	feishuImpl  feishu.Feishuer
 	tenantKey   string
 	dbTenantKey string
@@ -38,7 +38,7 @@ type alertsService struct {
 
 func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer) AlertsServicer {
 	return &alertsService{
-		cache:       cache,
+		cacheImpl:   cache,
 		feishuImpl:  feishuImpl,
 		tenantKey:   conf.GetAlertTenantKey(),
 		dbTenantKey: constant.AlertDBTenantKey,
@@ -47,7 +47,7 @@ func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer) Aler
 
 func NewCleanDuplicateFiringer(cache store.CacheStorer) CleanDuplicateFiringer {
 	return &alertsService{
-		cache: cache,
+		cacheImpl: cache,
 	}
 }
 
@@ -97,7 +97,7 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 // getChannel 获取告警发送方式
 func (receiver *alertsService) getChannel(ctx context.Context, channelName string) (*model.AlertChannel, error) {
 	var channel model.AlertChannel
-	found, err := receiver.cache.GetObject(ctx, store.AlertType, channelName, &channel)
+	found, err := receiver.cacheImpl.GetObject(ctx, store.AlertType, channelName, &channel)
 	if err != nil {
 		zap.L().Error("从缓存获取渠道失败", zap.String("name", channelName), zap.Error(err))
 		return nil, err
@@ -121,7 +121,7 @@ func (receiver *alertsService) getChannel(ctx context.Context, channelName strin
 			// 缓存客户端
 			receiver.feishuImpl.Init(channel.Name, appid, appSecret)
 			// 缓存 redis
-			if err := receiver.cache.SetObject(ctx, store.AlertType, channel.Name, channel, store.NeverExpires); err != nil {
+			if err := receiver.cacheImpl.SetObject(ctx, store.AlertType, channel.Name, channel, store.NeverExpires); err != nil {
 				return nil, err
 			}
 			return channel, nil
@@ -490,11 +490,12 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 
 	al := store.AlertHistory.WithContext(ctx)
 
-	ok, err := receiver.cache.SetNX(ctx, store.LockType, constant.AlertCleanDuplicateHistoryLockKey, time.Now().Unix(), lockDuration)
+	ok, err := receiver.cacheImpl.SetNX(ctx, store.LockType, constant.AlertCleanDuplicateHistoryLockKey, time.Now().Unix(), lockDuration)
 	if err != nil {
 		zap.L().Error("[定时任务] cleanDuplicateFiringAlertsTask Redis 锁异常", zap.Error(err))
 		return
 	}
+	defer receiver.cacheImpl.DelKey(ctx, store.LockType, constant.AlertCleanDuplicateHistoryLockKey)
 
 	// 没抢到锁，说明其他副本正在执行，直接退出
 	if !ok {
@@ -535,7 +536,7 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 			for i := 1; i < len(records); i++ {
 				idsToResolve = append(idsToResolve, records[i].ID)
 
-				zap.L().Warn("[定时任务] 发现重复 Firing 记录",
+				zap.L().Debug("[定时任务] 发现重复 Firing 记录",
 					zap.String("key", key),
 					zap.Int("old_id", records[i].ID),
 					zap.Time("old_starts_at", records[i].StartsAt),
