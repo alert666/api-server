@@ -18,6 +18,7 @@ type Api struct {
 	Name        string         `gorm:"column:name" json:"name,omitempty"`
 	Path        string         `gorm:"column:path" json:"path,omitempty"`
 	Method      string         `gorm:"column:method" json:"method,omitempty"`
+	Effect      string         `gorm:"column:effect;comment:访问接口的策略:allow或deny;size:5" json:"effect"`
 	Description string         `gorm:"column:description" json:"description,omitempty"`
 	Roles       []*Role        `gorm:"many2many:role_apis" json:"roles,omitempty"`
 }

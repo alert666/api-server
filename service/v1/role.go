@@ -64,6 +64,7 @@ func (receiver *roleService) CreateRole(ctx context.Context, req *types.RoleCrea
 			V0:    helper.String(req.Name),
 			V1:    helper.String(api.Path),
 			V2:    helper.String(api.Method),
+			V3:    helper.String(api.Effect),
 		})
 	}
 
@@ -135,6 +136,7 @@ func (receiver *roleService) UpdateRole(ctx context.Context, req *types.RoleUpda
 			V0:    helper.String(role.Name),
 			V1:    helper.String(api.Path),
 			V2:    helper.String(api.Method),
+			V3:    helper.String(api.Effect),
 		})
 	}
 

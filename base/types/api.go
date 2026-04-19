@@ -6,6 +6,7 @@ type ApiCreateRequest struct {
 	Name        string `json:"name" binding:"required"`
 	Path        string `json:"path" binding:"required,uri"`
 	Method      string `json:"method" binding:"required,oneof=GET POST PUT DELETE *"`
+	Effect      string `json:"effect" binding:"required,oneof=allow deny"`
 	Description string `json:"description"`
 }
 
@@ -45,6 +46,7 @@ func NewApi(req *ApiCreateRequest) *model.Api {
 		Path:        req.Path,
 		Method:      req.Method,
 		Description: req.Description,
+		Effect:      req.Effect,
 	}
 }
 
