@@ -4,11 +4,11 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/gin-contrib/requestid"
-	"github.com/gin-gonic/gin"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/pkg/jwt"
 	"github.com/alert666/api-server/store"
+	"github.com/gin-contrib/requestid"
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
