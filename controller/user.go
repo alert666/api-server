@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/alert666/api-server/base/bind"
+	"github.com/alert666/api-server/base/constant"
+	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/alert666/api-server/base/constant"
-	v1 "github.com/alert666/api-server/service/v1"
 )
 
 type UserController interface {
@@ -49,7 +50,7 @@ func NewUserController(userServicer v1.UserServicer) UserController {
 // @Success 200 {object} types.Response{data=types.UserLoginResponse} "登录成功"
 // @Router /api/v1/users/login [post]
 func (receiver *UserControllerImpl) UserLoginController(c *gin.Context) {
-	ResponseWithData(c, receiver.userServicer.Login, bindTypeJson)
+	bind.ResponseWithData(c, receiver.userServicer.Login, bind.BindTypeJson)
 }
 
 // UserLogoutController 用户注销
@@ -61,7 +62,7 @@ func (receiver *UserControllerImpl) UserLoginController(c *gin.Context) {
 // @Success 200 {object} types.Response "注销成功"
 // @Router /api/v1/user/logout [post]
 func (receiver *UserControllerImpl) UserLogoutController(c *gin.Context) {
-	ResponseNoBind(c, receiver.userServicer.Logout)
+	bind.ResponseNoBind(c, receiver.userServicer.Logout)
 }
 
 // UserCreateController 用户创建
@@ -74,7 +75,7 @@ func (receiver *UserControllerImpl) UserLogoutController(c *gin.Context) {
 // @Success 200 {object} types.Response "创建成功"
 // @Router /api/v1/user/register [post]
 func (receiver *UserControllerImpl) UserCreateController(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.userServicer.CreateUser, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.userServicer.CreateUser, bind.BindTypeJson)
 }
 
 // UserUpdateByAdminController 用户更新
@@ -87,7 +88,7 @@ func (receiver *UserControllerImpl) UserCreateController(c *gin.Context) {
 // @Success 200 {object} types.Response "更新成功"
 // @Router /api/v1/user/:id [put]
 func (receiver *UserControllerImpl) UserUpdateByAdminController(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.userServicer.UpdateUserByAdmin, bindTypeUri, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.userServicer.UpdateUserByAdmin, bind.BindTypeUri, bind.BindTypeJson)
 }
 
 // UserUpdateBySelfController 用户更新自己的信息
@@ -100,7 +101,7 @@ func (receiver *UserControllerImpl) UserUpdateByAdminController(c *gin.Context) 
 // @Success 200 {object} types.Response "更新成功"
 // @Router /api/v1/user/self [put]
 func (receiver *UserControllerImpl) UserUpdateBySelfController(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.userServicer.UpdateUserBySelf, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.userServicer.UpdateUserBySelf, bind.BindTypeJson)
 }
 
 // UserDeleteController 用户删除
@@ -113,7 +114,7 @@ func (receiver *UserControllerImpl) UserUpdateBySelfController(c *gin.Context) {
 // @Success 200 {object} types.Response "删除成功"
 // @Router /api/v1/user/:id [delete]
 func (receiver *UserControllerImpl) UserDeleteController(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.userServicer.DeleteUser, bindTypeUri)
+	bind.ResponseOnlySuccess(c, receiver.userServicer.DeleteUser, bind.BindTypeUri)
 }
 
 // UserQueryController 用户查询
@@ -126,7 +127,7 @@ func (receiver *UserControllerImpl) UserDeleteController(c *gin.Context) {
 // @Success 200 {object} types.Response{data=model.User} "查询成功"
 // @Router /api/v1/user/:id [get]
 func (receiver *UserControllerImpl) UserQueryController(c *gin.Context) {
-	ResponseWithData(c, receiver.userServicer.QueryUser, bindTypeUri)
+	bind.ResponseWithData(c, receiver.userServicer.QueryUser, bind.BindTypeUri)
 }
 
 // UserInfoController 用户获取自己的信息
@@ -138,7 +139,7 @@ func (receiver *UserControllerImpl) UserQueryController(c *gin.Context) {
 // @Success 200 {object} types.Response{data=model.User} "查询成功"
 // @Router /api/v1/user/info [get]
 func (receiver *UserControllerImpl) UserInfoController(c *gin.Context) {
-	ResponseWithDataNoBind(c, receiver.userServicer.Info)
+	bind.ResponseWithDataNoBind(c, receiver.userServicer.Info)
 }
 
 // UserListController 用户列表
@@ -151,7 +152,7 @@ func (receiver *UserControllerImpl) UserInfoController(c *gin.Context) {
 // @Success 200 {object} types.Response{data=types.UserListResponse} "登录成功"
 // @Router /api/v1/user/ [get]
 func (receiver *UserControllerImpl) UserListController(c *gin.Context) {
-	ResponseWithData(c, receiver.userServicer.ListUser, bindTypeQuery)
+	bind.ResponseWithData(c, receiver.userServicer.ListUser, bind.BindTypeQuery)
 }
 
 // OAuth2LoginController OAuth 登录
@@ -172,12 +173,12 @@ func (receiver *UserControllerImpl) OAuth2LoginController(c *gin.Context) {
 	}
 
 	if err := session.Save(); err != nil {
-		responseError(nil, c, fmt.Errorf("save session failed: %w", err))
+		bind.ResponseError(nil, c, fmt.Errorf("save session failed: %w", err))
 		return
 	}
 	url, err := receiver.userServicer.OAuth2Login(provider, state)
 	if err != nil {
-		responseError(nil, c, err)
+		bind.ResponseError(nil, c, err)
 		return
 	}
 	c.Redirect(http.StatusFound, url)
@@ -198,11 +199,11 @@ func (receiver *UserControllerImpl) OAuth2CallbackController(c *gin.Context) {
 	providerSession := session.Get("provider")
 	state := c.Query("state")
 	if state == "" {
-		responseError(nil, c, errors.New("state is empty"))
+		bind.ResponseError(nil, c, errors.New("state is empty"))
 		return
 	}
 	if state != stateSession {
-		responseError(nil, c, errors.New("state invalid"))
+		bind.ResponseError(nil, c, errors.New("state invalid"))
 		return
 	}
 	var providerStr string
@@ -212,12 +213,12 @@ func (receiver *UserControllerImpl) OAuth2CallbackController(c *gin.Context) {
 		}
 	}
 	if providerStr == "" {
-		responseError(nil, c, errors.New("provider is empty"))
+		bind.ResponseError(nil, c, errors.New("provider is empty"))
 		return
 	}
 	ctx := context.WithValue(c.Request.Context(), constant.ProviderContextKey, providerStr)
 	c.Request = c.Request.WithContext(ctx)
-	ResponseWithData(c, receiver.userServicer.OAuth2Callback, bindTypeQuery)
+	bind.ResponseWithData(c, receiver.userServicer.OAuth2Callback, bind.BindTypeQuery)
 }
 
 // OAuth2ProviderController OAuth2 提供商列表
@@ -229,7 +230,7 @@ func (receiver *UserControllerImpl) OAuth2CallbackController(c *gin.Context) {
 // @Success 200 {object} types.Response{data=[]string} "获取成功"
 // @Router /api/v1/oauth2/provider [get]
 func (receiver *UserControllerImpl) OAuth2ProviderController(c *gin.Context) {
-	ResponseWithDataNoBind(c, receiver.userServicer.OAuth2Provider)
+	bind.ResponseWithDataNoBind(c, receiver.userServicer.OAuth2Provider)
 }
 
 // OAuth2ActivateController OAuth2 激活
@@ -246,12 +247,12 @@ func (receiver *UserControllerImpl) OAuth2ActivateController(c *gin.Context) {
 	stateSession := session.Get("state")
 	state := c.Query("state")
 	if state == "" {
-		responseError(nil, c, errors.New("state is empty"))
+		bind.ResponseError(nil, c, errors.New("state is empty"))
 		return
 	}
 	if state != stateSession {
-		responseError(nil, c, errors.New("state invalid"))
+		bind.ResponseError(nil, c, errors.New("state invalid"))
 		return
 	}
-	ResponseWithData(c, receiver.userServicer.OAuth2Activate, bindTypeUri, bindTypeJson)
+	bind.ResponseWithData(c, receiver.userServicer.OAuth2Activate, bind.BindTypeUri, bind.BindTypeJson)
 }

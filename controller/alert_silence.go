@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/alert666/api-server/base/bind"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/gin-gonic/gin"
 )
@@ -33,7 +34,7 @@ func NewAlertSilenceController(alertSilenceService v1.AlertSilenceServicer) Aler
 // @Success 200 {object} types.Response "创建成功"
 // @Router /api/v1/alertSilence [post]
 func (receiver *alertSilenceController) CreateAlertSilence(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.alertSilenceImpl.CreateSilence, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.alertSilenceImpl.CreateSilence, bind.BindTypeJson)
 }
 
 // DeleteApi 删除 AlerSilence
@@ -46,7 +47,7 @@ func (receiver *alertSilenceController) CreateAlertSilence(c *gin.Context) {
 // @Success 200 {object} types.Response "删除成功"
 // @Router /api/v1/alertSilence/:id [delete]
 func (receiver *alertSilenceController) DeleteAlertSilence(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.alertSilenceImpl.DeleteSilence, bindTypeUri)
+	bind.ResponseOnlySuccess(c, receiver.alertSilenceImpl.DeleteSilence, bind.BindTypeUri)
 }
 
 // QueryApi 查询 AlerSilence
@@ -59,7 +60,7 @@ func (receiver *alertSilenceController) DeleteAlertSilence(c *gin.Context) {
 // @Success 200 {object} types.Response{data=model.AlertSilence} "查询成功"
 // @Router /api/v1/alertSilence/:id [get]
 func (receiver *alertSilenceController) QueryAlertSilence(c *gin.Context) {
-	ResponseWithData(c, receiver.alertSilenceImpl.QuerySilence, bindTypeUri)
+	bind.ResponseWithData(c, receiver.alertSilenceImpl.QuerySilence, bind.BindTypeUri)
 }
 
 // @Summary 获取所有 AlerSilence
@@ -71,7 +72,7 @@ func (receiver *alertSilenceController) QueryAlertSilence(c *gin.Context) {
 // @Success 200 {object} types.Response{data=types.AlertSilenceListResponse} "查询成功"
 // @Router /api/v1/alertSilence [get]
 func (receiver *alertSilenceController) ListAlertSilence(c *gin.Context) {
-	ResponseWithData(c, receiver.alertSilenceImpl.ListSilence, bindTypeQuery)
+	bind.ResponseWithData(c, receiver.alertSilenceImpl.ListSilence, bind.BindTypeQuery)
 }
 
 // @Summary 获取各个租户活跃 AlerSilence 的数量
@@ -82,5 +83,5 @@ func (receiver *alertSilenceController) ListAlertSilence(c *gin.Context) {
 // @Success 200 {object} types.Response{data=[]types.TenantCount} "查询成功"
 // @Router /api/v1/alertSilence/enableCount [get]
 func (receiver *alertSilenceController) GetTenantSilenceCounts(c *gin.Context) {
-	ResponseWithDataNoBind(c, receiver.alertSilenceImpl.GetTenantSilenceCounts)
+	bind.ResponseWithDataNoBind(c, receiver.alertSilenceImpl.GetTenantSilenceCounts)
 }

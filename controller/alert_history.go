@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/alert666/api-server/base/bind"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/gin-gonic/gin"
 )
@@ -32,7 +33,7 @@ func NewAlertHistoryController(alertHistoryService v1.AlertHistoryServicer) Aler
 // @Success 200 {object} types.Response "创建成功"
 // @Router /api/v1/alertHistory/:id [get]
 func (recevicer *alertHistoryController) QueryAlertHistory(c *gin.Context) {
-	ResponseWithData(c, recevicer.alertHistoryService.QueryHistory, bindTypeUri)
+	bind.ResponseWithData(c, recevicer.alertHistoryService.QueryHistory, bind.BindTypeUri)
 }
 
 // @Summary 获取所有 AlertHistory
@@ -43,7 +44,7 @@ func (recevicer *alertHistoryController) QueryAlertHistory(c *gin.Context) {
 // @Success 200 {object} types.Response{data=types.AlertHistoryListResponse} "查询成功"
 // @Router /api/v1/alertHistory [get]
 func (receiver *alertHistoryController) ListAlertHistory(c *gin.Context) {
-	ResponseWithData(c, receiver.alertHistoryService.ListHistory, bindTypeQuery)
+	bind.ResponseWithData(c, receiver.alertHistoryService.ListHistory, bind.BindTypeQuery)
 }
 
 // @Summary 更新 AlertHistory 状态
@@ -54,7 +55,7 @@ func (receiver *alertHistoryController) ListAlertHistory(c *gin.Context) {
 // @Success 200 {object} types.Response{data=types.AlertHistoryUpdateRequest} "更新成功"
 // @Router /api/v1/alertHistory [put]
 func (receiver *alertHistoryController) UpdateAlertHistory(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.alertHistoryService.UpdateHistory, bindTypeJson, bindTypeUri)
+	bind.ResponseOnlySuccess(c, receiver.alertHistoryService.UpdateHistory, bind.BindTypeJson, bind.BindTypeUri)
 }
 
 // @Summary 获取 AlertHistory 告警状态数量
@@ -65,5 +66,5 @@ func (receiver *alertHistoryController) UpdateAlertHistory(c *gin.Context) {
 // @Success 200 {object} types.Response{data=[]types.TenantFiringCount} "更新成功"
 // @Router /api/v1/alertHistory/firingCount [get]
 func (receiver *alertHistoryController) GetTenantFiringCounts(c *gin.Context) {
-	ResponseWithDataNoBind(c, receiver.alertHistoryService.GetTenantFiringCounts)
+	bind.ResponseWithDataNoBind(c, receiver.alertHistoryService.GetTenantFiringCounts)
 }

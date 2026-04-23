@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alert666/api-server/base/bind"
 	"github.com/alert666/api-server/base/conf"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/router"
 	apitypes "github.com/alert666/api-server/base/types"
-	"github.com/alert666/api-server/controller"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
@@ -63,7 +63,7 @@ func NewHttpServer(r router.RouterInterface) (*gin.Engine, error) {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	engine := gin.New()
-	controller.NewValidator()
+	bind.NewValidator()
 
 	// 注册路由
 	r.RegisterRouter(engine)

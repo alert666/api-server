@@ -36,6 +36,7 @@ func NewAlertSilenceServicer(jwt jwt.JwtInterface) AlertSilenceServicer {
 }
 
 func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *types.AlertSilenceCreateRequest) error {
+	var count int64
 	tenant, err := helper.GetTenant(ctx)
 	if err != nil {
 		return err
@@ -50,20 +51,28 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 	if err != nil {
 		return fmt.Errorf("转换对象失败, %s", err)
 	}
-
-	var count int64
-	aSilence.WithContext(ctx).UnderlyingDB().Where(
-		"cluster = ? AND matchers = ? AND status = 1 AND ends_at > ?",
-		obj.Cluster, obj.Matchers, time.Now(),
-	).Count(&count)
-
-	if count > 0 {
-		return fmt.Errorf("已存在相同的活跃静默规则")
-	}
-
 	obj.Cluster = tenant
 	obj.CreatedBy = mc.UserName
-	return aSilence.WithContext(ctx).Create(obj)
+
+	return store.Q.Transaction(func(tx *store.Query) error {
+		tx.AlertSilence.WithContext(ctx).UnderlyingDB().Where(
+			"cluster = ? AND matchers = ? AND status = 1 AND ends_at > ?",
+			obj.Cluster, obj.Matchers, time.Now(),
+		).Count(&count)
+		if count > 0 {
+			return fmt.Errorf("已存在相同的活跃静默规则")
+		}
+
+		if _, err := tx.
+			AlertHistory.
+			WithContext(ctx).
+			Where(tx.AlertHistory.Cluster.Eq(tenant)).
+			Where(tx.AlertHistory.Fingerprint.Eq(req.Fingerprint)).
+			Update(tx.AlertHistory.IsSilenced, true); err != nil {
+			return err
+		}
+		return tx.AlertSilence.WithContext(ctx).Create(obj)
+	})
 }
 
 func (recevicer *alertSilenceService) DeleteSilence(ctx context.Context, req *types.IDRequest) error {
