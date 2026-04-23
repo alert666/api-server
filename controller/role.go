@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/alert666/api-server/base/bind"
 	v1 "github.com/alert666/api-server/service/v1"
+	"github.com/gin-gonic/gin"
 )
 
 type RoleController interface {
@@ -33,7 +34,7 @@ func NewRoleController(roleService v1.RoleServicer) RoleController {
 // @Success 200 {object} types.Response "创建成功"
 // @Router /api/v1/role [post]
 func (receiver *roleController) CreateRole(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.roleService.CreateRole, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.roleService.CreateRole, bind.BindTypeJson)
 }
 
 // UpdateRole 更新角色
@@ -46,7 +47,7 @@ func (receiver *roleController) CreateRole(c *gin.Context) {
 // @Success 200 {object} types.Response "更新成功"
 // @Router /api/v1/role/:id [put]
 func (receiver *roleController) UpdateRole(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.roleService.UpdateRole, bindTypeUri, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.roleService.UpdateRole, bind.BindTypeUri, bind.BindTypeJson)
 }
 
 // DeleteRole 删除角色
@@ -59,7 +60,7 @@ func (receiver *roleController) UpdateRole(c *gin.Context) {
 // @Success 200 {object} types.Response "删除成功"
 // @Router /api/v1/role/:id [delete]
 func (receiver *roleController) DeleteRole(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.roleService.DeleteRole, bindTypeUri)
+	bind.ResponseOnlySuccess(c, receiver.roleService.DeleteRole, bind.BindTypeUri)
 }
 
 // QueryRole 查询角色
@@ -72,7 +73,7 @@ func (receiver *roleController) DeleteRole(c *gin.Context) {
 // @Success 200 {object} types.Response{data=model.Role} "查询成功"
 // @Router /api/v1/role/:id [get]
 func (receiver *roleController) QueryRole(c *gin.Context) {
-	ResponseWithData(c, receiver.roleService.QueryRole, bindTypeUri)
+	bind.ResponseWithData(c, receiver.roleService.QueryRole, bind.BindTypeUri)
 }
 
 // ListRole 角色列表
@@ -85,5 +86,5 @@ func (receiver *roleController) QueryRole(c *gin.Context) {
 // @Success 200 {object} types.Response{data=types.RoleListResponse} "查询成功"
 // @Router /api/v1/role/ [get]
 func (receiver *roleController) ListRole(c *gin.Context) {
-	ResponseWithData(c, receiver.roleService.ListRole, bindTypeUri, bindTypeQuery)
+	bind.ResponseWithData(c, receiver.roleService.ListRole, bind.BindTypeUri, bind.BindTypeQuery)
 }

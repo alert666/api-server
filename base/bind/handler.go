@@ -1,4 +1,4 @@
-package controller
+package bind
 
 import (
 	"context"
@@ -19,23 +19,23 @@ import (
 type bindType int
 
 const (
-	bindTypeUri bindType = iota
-	bindTypeJson
-	bindTypeQuery
-	bindTypeShouldBind
+	BindTypeUri bindType = iota
+	BindTypeJson
+	BindTypeQuery
+	BindTypeShouldBind
 )
 
 func bindWithSources(c *gin.Context, req any, sources ...bindType) (success bool) {
 	for _, src := range sources {
 		var err error
 		switch src {
-		case bindTypeUri:
+		case BindTypeUri:
 			err = c.ShouldBindUri(req)
-		case bindTypeJson:
+		case BindTypeJson:
 			err = c.ShouldBindJSON(req)
-		case bindTypeQuery:
+		case BindTypeQuery:
 			err = c.ShouldBindQuery(req)
-		case bindTypeShouldBind:
+		case BindTypeShouldBind:
 			err = c.ShouldBind(req)
 		default:
 			continue
@@ -72,7 +72,7 @@ func ResponseWithData[T any, R any](c *gin.Context, handler HandlerData[T, R], b
 	}
 
 	if data, err = handler(c.Request.Context(), req); err != nil {
-		responseError(req, c, err)
+		ResponseError(req, c, err)
 		return
 	}
 
@@ -88,7 +88,7 @@ func ResponseOnlySuccess[T any](c *gin.Context, handler HandlerErr[T], bindTypes
 	}
 
 	if err := handler(c.Request.Context(), req); err != nil {
-		responseError(req, c, err)
+		ResponseError(req, c, err)
 		return
 	}
 
@@ -103,7 +103,7 @@ func ResponseWithDataNoBind[R any](c *gin.Context, handler Handler[R]) {
 		err  error
 	)
 	if data, err = handler(c.Request.Context()); err != nil {
-		responseError(nil, c, err)
+		ResponseError(nil, c, err)
 		return
 	}
 
@@ -114,13 +114,13 @@ type HandlerErrNoBind func(ctx context.Context) error
 
 func ResponseNoBind(c *gin.Context, handler HandlerErrNoBind) {
 	if err := handler(c.Request.Context()); err != nil {
-		responseError(nil, c, err)
+		ResponseError(nil, c, err)
 		return
 	}
 	responseSuccess(c, nil)
 }
 
-func responseError(req any, c *gin.Context, err error) {
+func ResponseError(req any, c *gin.Context, err error) {
 	code, err := getErr(err)
 	c.JSON(code, types.NewResponseWithOpts(code, types.WithError(err.Error())))
 	c.Error(err)

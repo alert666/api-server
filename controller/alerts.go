@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
+	"github.com/alert666/api-server/base/bind"
 	v1 "github.com/alert666/api-server/service/v1"
+	"github.com/gin-gonic/gin"
 )
 
 type AlertManagerController interface {
@@ -20,5 +21,5 @@ func NewAlertManagerController(alertService v1.AlertsServicer) AlertManagerContr
 }
 
 func (receiver *alertManagerController) ReceiveAlerts(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.alertService.SendAlert, bindTypeQuery, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.alertService.SendAlert, bind.BindTypeQuery, bind.BindTypeJson)
 }

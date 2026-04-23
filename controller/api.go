@@ -3,10 +3,11 @@ package controller
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/alert666/api-server/base/bind"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/types"
 	v1 "github.com/alert666/api-server/service/v1"
+	"github.com/gin-gonic/gin"
 )
 
 type ApiController interface {
@@ -38,7 +39,7 @@ func NewApiController(apiService v1.ApiServicer) ApiController {
 // @Success 200 {object} types.Response "创建成功"
 // @Router /api/v1/api [post]
 func (receiver *apiController) CreateApi(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.apiService.CreateApi, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.apiService.CreateApi, bind.BindTypeJson)
 }
 
 // UpdateApi 更新 API
@@ -51,7 +52,7 @@ func (receiver *apiController) CreateApi(c *gin.Context) {
 // @Success 200 {object} types.Response "更新成功"
 // @Router /api/v1/api/:id [put]
 func (receiver *apiController) UpdateApi(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.apiService.UpdateApi, bindTypeUri, bindTypeJson)
+	bind.ResponseOnlySuccess(c, receiver.apiService.UpdateApi, bind.BindTypeUri, bind.BindTypeJson)
 }
 
 // DeleteApi 删除 API
@@ -64,7 +65,7 @@ func (receiver *apiController) UpdateApi(c *gin.Context) {
 // @Success 200 {object} types.Response "删除成功"
 // @Router /api/v1/api/:id [delete]
 func (receiver *apiController) DeleteApi(c *gin.Context) {
-	ResponseOnlySuccess(c, receiver.apiService.DeleteApi, bindTypeUri)
+	bind.ResponseOnlySuccess(c, receiver.apiService.DeleteApi, bind.BindTypeUri)
 }
 
 // QueryApi 查询 API
@@ -77,7 +78,7 @@ func (receiver *apiController) DeleteApi(c *gin.Context) {
 // @Success 200 {object} types.Response{data=model.Api} "查询成功"
 // @Router /api/v1/api/:id [get]
 func (receiver *apiController) QueryApi(c *gin.Context) {
-	ResponseWithData(c, receiver.apiService.QueryApi, bindTypeUri)
+	bind.ResponseWithData(c, receiver.apiService.QueryApi, bind.BindTypeUri)
 }
 
 // ListApi API列表
@@ -90,7 +91,7 @@ func (receiver *apiController) QueryApi(c *gin.Context) {
 // @Success 200 {object} types.Response{data=types.ApiListResponse} "查询成功"
 // @Router /api/v1/api/ [get]
 func (receiver *apiController) ListApi(c *gin.Context) {
-	ResponseWithData(c, receiver.apiService.ListApi, bindTypeUri, bindTypeQuery)
+	bind.ResponseWithData(c, receiver.apiService.ListApi, bind.BindTypeUri, bind.BindTypeQuery)
 }
 
 // @Summary 获取所有api
