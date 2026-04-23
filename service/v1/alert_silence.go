@@ -55,23 +55,35 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 	obj.CreatedBy = mc.UserName
 
 	return store.Q.Transaction(func(tx *store.Query) error {
-		tx.AlertSilence.WithContext(ctx).UnderlyingDB().Where(
-			"cluster = ? AND matchers = ? AND status = 1 AND ends_at > ?",
-			obj.Cluster, obj.Matchers, time.Now(),
-		).Count(&count)
-		if count > 0 {
-			return fmt.Errorf("已存在相同的活跃静默规则")
+		if req.Type != model.SilenceTypeIdentity {
+			tx.AlertSilence.WithContext(ctx).UnderlyingDB().Where(
+				"cluster = ? AND matchers = ? AND status = 1 AND ends_at > ?",
+				obj.Cluster, obj.Matchers, time.Now(),
+			).Count(&count)
+			if count > 0 {
+				return fmt.Errorf("已存在相同的活跃静默规则")
+			}
 		}
 
-		if _, err := tx.
-			AlertHistory.
-			WithContext(ctx).
-			Where(tx.AlertHistory.Cluster.Eq(tenant)).
-			Where(tx.AlertHistory.Fingerprint.Eq(req.Fingerprint)).
-			Update(tx.AlertHistory.IsSilenced, true); err != nil {
+		if err := tx.AlertSilence.WithContext(ctx).Create(obj); err != nil {
 			return err
 		}
-		return tx.AlertSilence.WithContext(ctx).Create(obj)
+
+		if req.Type == model.SilenceTypeIdentity {
+			if _, err := tx.
+				AlertHistory.
+				WithContext(ctx).
+				Where(tx.AlertHistory.Cluster.Eq(tenant)).
+				Where(tx.AlertHistory.Fingerprint.Eq(req.Fingerprint)).
+				Where(tx.AlertHistory.Status.Eq(constant.AlertStatusFiring)).
+				Updates(model.AlertHistory{
+					IsSilenced:     true,
+					AlertSilenceID: obj.ID,
+				}); err != nil {
+				return err
+			}
+		}
+		return nil
 	})
 }
 
