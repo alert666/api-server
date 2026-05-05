@@ -88,9 +88,9 @@ func (a *alertInhibit) CleanInhibitAlert() {
 
 func (a *alertInhibit) getAlert(ctx context.Context, w *alertinhibit.InhibitWhere) error {
 	var (
-		sQuery     = aHistory.UnderlyingDB().WithContext(ctx).Where("status = ?", constant.AlertStatusResolved)
+		sQuery     = aHistoryStore.UnderlyingDB().WithContext(ctx).Where("status = ?", constant.AlertStatusResolved)
 		sStoreObjs []*model.AlertHistory
-		tQuery     = aHistory.UnderlyingDB().WithContext(ctx).Where("status = ?", constant.AlertStatusFiring)
+		tQuery     = aHistoryStore.UnderlyingDB().WithContext(ctx).Where("status = ?", constant.AlertStatusFiring)
 		tStoreObjs []*model.AlertHistory
 	)
 
@@ -186,7 +186,7 @@ func (a *alertInhibit) getAlert(ctx context.Context, w *alertinhibit.InhibitWher
 	}
 
 	now := time.Now()
-	err := aHistory.UnderlyingDB().WithContext(ctx).
+	err := aHistoryStore.UnderlyingDB().WithContext(ctx).
 		Model(&model.AlertHistory{}).
 		Where("id IN ?", inhibitedIDs).
 		Updates(map[string]interface{}{

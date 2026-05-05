@@ -33,14 +33,14 @@ func (recevicer *alertHistoryService) QueryHistory(ctx context.Context, req *typ
 	if err != nil {
 		return nil, err
 	}
-	return aHistory.
+	return aHistoryStore.
 		WithContext(ctx).
-		Preload(aHistory.AlertSilence).
+		Preload(aHistoryStore.AlertSilence).
 		// Preload(aHistory.AlertChannel).
 		// Preload(aHistory.AlertChannel.AlertTemplate).
-		Preload(aHistory.AlertSendRecord).
-		Where(aHistory.ID.Eq(int(req.ID))).
-		Where(aHistory.Cluster.Eq(tenant)).
+		Preload(aHistoryStore.AlertSendRecord).
+		Where(aHistoryStore.ID.Eq(int(req.ID))).
+		Where(aHistoryStore.Cluster.Eq(tenant)).
 		First()
 }
 
@@ -48,7 +48,7 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 	var (
 		alertAlertHistorys []*model.AlertHistory
 		total              int64
-		query              = aHistory.WithContext(ctx)
+		query              = aHistoryStore.WithContext(ctx)
 		err                error
 	)
 	tenant, err := helper.GetTenant(ctx)
@@ -63,13 +63,13 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 	}
 
 	if req.Sort != "" && req.Direction != "" {
-		sort, ok := aHistory.GetFieldByName(req.Sort)
+		sort, ok := aHistoryStore.GetFieldByName(req.Sort)
 		if !ok {
 			return nil, fmt.Errorf("invalid sort field: %s", req.Sort)
 		}
 		query = query.Order(helper.Sort(sort, req.Direction))
 	} else {
-		query = query.Order(aHistory.StartsAt.Desc())
+		query = query.Order(aHistoryStore.StartsAt.Desc())
 	}
 
 	if req.PageSize == 0 || req.Page == 0 {
@@ -85,33 +85,33 @@ func (recevicer *alertHistoryService) ListHistory(ctx context.Context, req *type
 // 提取过滤逻辑，提高可读性
 func (s *alertHistoryService) buildHistoryFilter(tenant string, query store.IAlertHistoryDo, req *types.AlertHistoryListRequest) store.IAlertHistoryDo {
 	if tenant != "" {
-		query = query.Where(aHistory.Cluster.Eq(tenant))
+		query = query.Where(aHistoryStore.Cluster.Eq(tenant))
 	}
 	if req.Status != "" {
-		query = query.Where(aHistory.Status.Eq(req.Status))
+		query = query.Where(aHistoryStore.Status.Eq(req.Status))
 	}
 	if req.StartsAt != nil {
 		s := time.Unix(*req.StartsAt, 0)
-		query = query.Where(aHistory.StartsAt.Gte(s))
+		query = query.Where(aHistoryStore.StartsAt.Gte(s))
 	}
 	if req.EndsAt != nil {
 		e := time.Unix(*req.EndsAt, 0)
-		query = query.Where(aHistory.EndsAt.Lte(e))
+		query = query.Where(aHistoryStore.EndsAt.Lte(e))
 	}
 	if req.AlertName != "" {
-		query = query.Where(aHistory.Alertname.Like(req.AlertName + "%"))
+		query = query.Where(aHistoryStore.Alertname.Like(req.AlertName + "%"))
 	}
 	if req.Fingerprint != "" {
-		query = query.Where(aHistory.Fingerprint.Like(req.Fingerprint + "%"))
+		query = query.Where(aHistoryStore.Fingerprint.Like(req.Fingerprint + "%"))
 	}
 	if req.Severity != "" {
-		query = query.Where(aHistory.Severity.Eq(req.Severity))
+		query = query.Where(aHistoryStore.Severity.Eq(req.Severity))
 	}
 	if req.Instance != "" {
-		query = query.Where(aHistory.Instance.Eq(req.Instance))
+		query = query.Where(aHistoryStore.Instance.Eq(req.Instance))
 	}
 	if req.AlertSendRecordId != 0 {
-		query = query.Where(aHistory.AlertSendRecordID.Eq(req.AlertSendRecordId))
+		query = query.Where(aHistoryStore.AlertSendRecordID.Eq(req.AlertSendRecordId))
 	}
 
 	if len(req.Labels) > 0 {
@@ -133,7 +133,7 @@ func (s *alertHistoryService) buildHistoryFilter(tenant string, query store.IAle
 
 func (receiver *alertHistoryService) UpdateHistory(ctx context.Context, req *types.AlertHistoryUpdateRequest) error {
 	now := time.Now()
-	info, err := aHistory.WithContext(ctx).Where(aHistory.ID.Eq(int(req.ID))).Updates(model.AlertHistory{
+	info, err := aHistoryStore.WithContext(ctx).Where(aHistoryStore.ID.Eq(int(req.ID))).Updates(model.AlertHistory{
 		Status: req.Status,
 		EndsAt: &now,
 	})
@@ -151,10 +151,10 @@ func (receiver *alertHistoryService) GetTenantFiringCounts(ctx context.Context) 
 	var results []*types.TenantCount
 
 	// SQL: SELECT cluster, count(*) as count FROM alert_historys WHERE status = 'firing' GROUP BY cluster
-	err := aHistory.WithContext(ctx).
-		Select(aHistory.Cluster, aHistory.ID.Count().As("count")).
-		Where(aHistory.Status.Eq(constant.AlertStatusFiring)).
-		Group(aHistory.Cluster).
+	err := aHistoryStore.WithContext(ctx).
+		Select(aHistoryStore.Cluster, aHistoryStore.ID.Count().As("count")).
+		Where(aHistoryStore.Status.Eq(constant.AlertStatusFiring)).
+		Group(aHistoryStore.Cluster).
 		Scan(&results)
 
 	if err != nil {

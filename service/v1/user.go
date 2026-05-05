@@ -64,7 +64,7 @@ func NewUserService(cacheStore store.CacheStorer, jwt jwt.JwtInterface, feishuOa
 }
 
 func (receiver *UserService) Login(ctx context.Context, req *types.UserLoginRequest) (*types.UserLoginResponse, error) {
-	user, err := u.WithContext(ctx).Where(u.Email.Eq(req.Email), u.Status.Eq(1)).Preload(u.Roles).First()
+	user, err := userStore.WithContext(ctx).Where(userStore.Email.Eq(req.Email), userStore.Status.Eq(1)).Preload(userStore.Roles).First()
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
@@ -122,7 +122,7 @@ func (receiver *UserService) CreateUser(ctx context.Context, req *types.UserCrea
 		*req.RolesID = helper.RemoveDuplicates(*req.RolesID)
 	}
 
-	if user, err = u.WithContext(ctx).Where(u.Email.Eq(req.Email), u.Status.Eq(1)).First(); err != nil {
+	if user, err = userStore.WithContext(ctx).Where(userStore.Email.Eq(req.Email), userStore.Status.Eq(1)).First(); err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
 		}
@@ -138,7 +138,7 @@ func (receiver *UserService) CreateUser(ctx context.Context, req *types.UserCrea
 	}
 
 	if req.RolesID != nil {
-		if roles, err = r.WithContext(ctx).Where(r.ID.In(*req.RolesID...)).Find(); err != nil {
+		if roles, err = roleStore.WithContext(ctx).Where(roleStore.ID.In(*req.RolesID...)).Find(); err != nil {
 			return err
 		}
 		if err = helper.ValidateRoleIds(*req.RolesID, roles); err != nil {
@@ -156,7 +156,7 @@ func (receiver *UserService) CreateUser(ctx context.Context, req *types.UserCrea
 		Roles:    roles,
 	}
 
-	return u.WithContext(ctx).Create(user)
+	return userStore.WithContext(ctx).Create(user)
 }
 
 func (receiver *UserService) UpdateUserByAdmin(ctx context.Context, req *types.UserUpdateAdminRequest) error {
@@ -183,7 +183,7 @@ func (receiver *UserService) UpdateUserBySelf(ctx context.Context, req *types.Us
 		return err
 	}
 
-	if user, err = u.WithContext(ctx).Where(u.ID.Eq(mc.UserID)).First(); err != nil {
+	if user, err = userStore.WithContext(ctx).Where(userStore.ID.Eq(mc.UserID)).First(); err != nil {
 		return err
 	}
 
@@ -204,7 +204,7 @@ func (receiver *UserService) DeleteUser(ctx context.Context, req *types.IDReques
 		user *model.User
 	)
 	return store.Use(data.GetDB(ctx)).Transaction(func(tx *store.Query) error {
-		if user, err = tx.User.WithContext(ctx).Where(u.ID.Eq(req.ID)).Preload(u.Oauth2User).First(); err != nil {
+		if user, err = tx.User.WithContext(ctx).Where(userStore.ID.Eq(req.ID)).Preload(userStore.Oauth2User).First(); err != nil {
 			return err
 		}
 		if _, err := tx.User.WithContext(ctx).Delete(user); err != nil {
@@ -218,7 +218,7 @@ func (receiver *UserService) DeleteUser(ctx context.Context, req *types.IDReques
 }
 
 func (receiver *UserService) QueryUser(ctx context.Context, req *types.IDRequest) (*model.User, error) {
-	return u.WithContext(ctx).Where(u.ID.Eq(req.ID)).Preload(u.Roles).First()
+	return userStore.WithContext(ctx).Where(userStore.ID.Eq(req.ID)).Preload(userStore.Roles).First()
 }
 
 func (receiver *UserService) Info(ctx context.Context) (*model.User, error) {
@@ -230,37 +230,39 @@ func (receiver *UserService) Info(ctx context.Context) (*model.User, error) {
 		log.WithRequestID(ctx).Error("user not found", zap.Int64("userId", mc.UserID), zap.String("userName", mc.UserName))
 		return nil, errors.New("user not found")
 	}
-	return u.WithContext(ctx).Where(u.ID.Eq(mc.UserID)).Preload(u.Roles).First()
+	return userStore.WithContext(ctx).Where(userStore.ID.Eq(mc.UserID)).Preload(userStore.Roles).First()
 }
 
 func (receiver *UserService) ListUser(ctx context.Context, req *types.UserListRequest) (*types.UserListResponse, error) {
 	var (
-		sql   = u.WithContext(ctx)
+		sql   = userStore.WithContext(ctx)
 		users []*model.User
 		err   error
 		total int64
 	)
 
 	if req.Name != "" {
-		sql = sql.Where(u.Name.Like(req.Name + "%"))
+		sql = sql.Where(userStore.Name.Like(req.Name + "%"))
 	} else if req.Email != "" {
-		sql = sql.Where(u.Email.Like(req.Email + "%"))
+		sql = sql.Where(userStore.Email.Like(req.Email + "%"))
 	} else if req.Mobile != "" {
-		sql = sql.Where(u.Mobile.Like(req.Mobile + "%"))
+		sql = sql.Where(userStore.Mobile.Like(req.Mobile + "%"))
 	} else if req.Department != "" {
-		sql = sql.Where(u.Department.Like(req.Department + "%"))
+		sql = sql.Where(userStore.Department.Like(req.Department + "%"))
 	}
 
 	if req.Status != 0 {
-		sql = sql.Where(u.Status.Eq(req.Status))
+		sql = sql.Where(userStore.Status.Eq(req.Status))
 	}
 
 	if req.Sort != "" {
-		orderCol, ok := u.GetFieldByName(req.Sort)
+		orderCol, ok := userStore.GetFieldByName(req.Sort)
 		if !ok {
 			return nil, fmt.Errorf("invalid sort field: %s", req.Sort)
 		}
 		sql = sql.Order(helper.Sort(orderCol, req.Direction))
+	} else {
+		sql = sql.Order(userStore.CreatedAt.Desc())
 	}
 
 	if total, err = sql.Count(); err != nil {
@@ -285,7 +287,7 @@ func (receiver *UserService) ListUser(ctx context.Context, req *types.UserListRe
 
 func (receiver *UserService) updateUser(ctx context.Context, user *model.User, req *types.UserUpdateAdminRequest) (err error) {
 	if user == nil {
-		if user, err = u.WithContext(ctx).Where(u.ID.Eq(req.ID)).First(); err != nil {
+		if user, err = userStore.WithContext(ctx).Where(userStore.ID.Eq(req.ID)).First(); err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				return fmt.Errorf("user %d not found", req.ID)
 			}
@@ -314,7 +316,7 @@ func (receiver *UserService) updateUser(ctx context.Context, user *model.User, r
 		user.Status = &req.Status
 	}
 
-	if _, err := u.WithContext(ctx).Where(u.ID.Eq(user.ID)).Updates(user); err != nil {
+	if _, err := userStore.WithContext(ctx).Where(userStore.ID.Eq(user.ID)).Updates(user); err != nil {
 		return err
 	}
 	return nil
@@ -326,11 +328,11 @@ func (receiver *UserService) updateRole(ctx context.Context, req *types.UserUpda
 		user  *model.User
 	)
 	req.RolesID = helper.RemoveDuplicates(req.RolesID)
-	if user, err = u.WithContext(ctx).Where(u.ID.Eq(req.ID)).Preload(u.Roles).First(); err != nil {
+	if user, err = userStore.WithContext(ctx).Where(userStore.ID.Eq(req.ID)).Preload(userStore.Roles).First(); err != nil {
 		return err
 	}
 
-	roleSql := r.WithContext(ctx).Where(r.ID.In(req.RolesID...))
+	roleSql := roleStore.WithContext(ctx).Where(roleStore.ID.In(req.RolesID...))
 	if roles, err = roleSql.Find(); err != nil {
 		return err
 	}
@@ -338,7 +340,7 @@ func (receiver *UserService) updateRole(ctx context.Context, req *types.UserUpda
 	if err = helper.ValidateRoleIds(req.RolesID, roles); err != nil {
 		return err
 	}
-	if err = u.Roles.WithContext(ctx).Model(user).Replace(roles...); err != nil {
+	if err = userStore.Roles.WithContext(ctx).Model(user).Replace(roles...); err != nil {
 		return err
 	}
 
@@ -461,8 +463,8 @@ func (receiver *UserService) oauth2GetUser(ctx context.Context, provider string,
 		oauth2User *model.Oauth2User
 		user       *model.User
 		roles      []*model.Role
-		oauth2sql  = oauth2.WithContext(ctx)
-		uSql       = u.WithContext(ctx)
+		oauth2sql  = oauth2Store.WithContext(ctx)
+		uSql       = userStore.WithContext(ctx)
 		userName   string
 	)
 
@@ -471,7 +473,7 @@ func (receiver *UserService) oauth2GetUser(ctx context.Context, provider string,
 		return nil, err
 	}
 
-	if oauth2User, err = oauth2sql.Where(oauth2.Email.Eq(email)).First(); err != nil {
+	if oauth2User, err = oauth2sql.Where(oauth2Store.Email.Eq(email)).First(); err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
@@ -485,12 +487,12 @@ func (receiver *UserService) oauth2GetUser(ctx context.Context, provider string,
 		}
 	}
 
-	if user, err = uSql.Where(u.Email.Eq(email)).First(); err != nil {
+	if user, err = uSql.Where(userStore.Email.Eq(email)).First(); err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, err
 		}
 
-		role, err := r.WithContext(ctx).Where(r.Name.Eq("readOnly")).First()
+		role, err := roleStore.WithContext(ctx).Where(roleStore.Name.Eq("readOnly")).First()
 		if err != nil {
 			return nil, err
 		}
@@ -521,7 +523,7 @@ func (receiver *UserService) oauth2GetUser(ctx context.Context, provider string,
 		}
 	}
 
-	if oauth2User, err = oauth2sql.Where(oauth2.Email.Eq(email)).Preload(oauth2.User.Roles).First(); err != nil {
+	if oauth2User, err = oauth2sql.Where(oauth2Store.Email.Eq(email)).Preload(oauth2Store.User.Roles).First(); err != nil {
 		return nil, err
 	}
 	return oauth2User, nil
@@ -554,7 +556,7 @@ func (receiver *UserService) OAuth2Activate(ctx context.Context, req *types.OAut
 	var (
 		user *model.User
 		err  error
-		sql  = u.WithContext(ctx).Where(u.ID.Eq(int64(req.ID)))
+		sql  = userStore.WithContext(ctx).Where(userStore.ID.Eq(int64(req.ID)))
 	)
 
 	if user, err = sql.First(); err != nil {

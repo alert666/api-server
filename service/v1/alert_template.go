@@ -32,7 +32,7 @@ func NewAlertTemplateServicer(cache store.CacheStorer) AlertTemplateServicer {
 }
 
 func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, req *types.AlertTemplateCreateRequest) error {
-	storeObj, err := aTemlpate.WithContext(ctx).Where(aTemlpate.Name.Eq(req.Name)).First()
+	storeObj, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.Name.Eq(req.Name)).First()
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
@@ -73,11 +73,11 @@ func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, re
 		}
 	}
 
-	return aTemlpate.WithContext(ctx).Create(saveObj)
+	return aTemlpateStore.WithContext(ctx).Create(saveObj)
 }
 
 func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *types.AlertTemplateUpdateRequest) error {
-	obj, err := aTemlpate.WithContext(ctx).Where(aTemlpate.ID.Eq(int(req.ID))).First()
+	obj, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(int(req.ID))).First()
 	if err != nil {
 		return err
 	}
@@ -112,13 +112,13 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 	}
 
 	var acObj *model.AlertChannel
-	acObj, err = aChannel.WithContext(ctx).Where(aChannel.AlertTemplateID.Eq(int(req.ID))).First()
+	acObj, err = aChannelStore.WithContext(ctx).Where(aChannelStore.AlertTemplateID.Eq(int(req.ID))).First()
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
 		}
 		// 如果 channel 不存在, 直接更新 template 即可
-		return aTemlpate.WithContext(ctx).Save(obj)
+		return aTemlpateStore.WithContext(ctx).Save(obj)
 	}
 
 	return store.Q.Transaction(func(tx *store.Query) error {
@@ -137,12 +137,12 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 }
 
 func (receiver *alertTemplateService) DeleteTemplate(ctx context.Context, req *types.IDRequest) error {
-	_, err := aTemlpate.WithContext(ctx).Where(aTemlpate.ID.Eq(int(req.ID))).First()
+	_, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(int(req.ID))).First()
 	if err != nil {
 		return err
 	}
 
-	acObj, err := aChannel.WithContext(ctx).Where(aChannel.AlertTemplateID.Eq(int(req.ID))).First()
+	acObj, err := aChannelStore.WithContext(ctx).Where(aChannelStore.AlertTemplateID.Eq(int(req.ID))).First()
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
 	}
@@ -151,14 +151,14 @@ func (receiver *alertTemplateService) DeleteTemplate(ctx context.Context, req *t
 		return fmt.Errorf("当前模板已绑定 [%s] 告警通道，请先解除绑定", acObj.Name)
 	}
 
-	if _, err := aTemlpate.WithContext(ctx).Where(aTemlpate.ID.Eq(int(req.ID))).Delete(); err != nil {
+	if _, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(int(req.ID))).Delete(); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (receiver *alertTemplateService) QueryTemplate(ctx context.Context, req *types.IDRequest) (*model.AlertTemplate, error) {
-	obj, err := aTemlpate.WithContext(ctx).Where(aTemlpate.ID.Eq(int(req.ID))).First()
+	obj, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(int(req.ID))).First()
 	if err != nil {
 		return nil, err
 	}
@@ -170,12 +170,12 @@ func (receiver *alertTemplateService) ListTemplate(ctx context.Context, req *typ
 	var (
 		alertTemplates []*model.AlertTemplate
 		total          int64
-		sql            = aTemlpate.WithContext(ctx)
+		sql            = aTemlpateStore.WithContext(ctx)
 		err            error
 	)
 
 	if req.Name != "" {
-		sql = sql.Where(aTemlpate.Name.Like("%" + req.Name + "%"))
+		sql = sql.Where(aTemlpateStore.Name.Like("%" + req.Name + "%"))
 	}
 
 	if total, err = sql.Count(); err != nil {
@@ -183,11 +183,13 @@ func (receiver *alertTemplateService) ListTemplate(ctx context.Context, req *typ
 	}
 
 	if req.Sort != "" && req.Direction != "" {
-		sort, ok := aTemlpate.GetFieldByName(req.Sort)
+		sort, ok := aTemlpateStore.GetFieldByName(req.Sort)
 		if !ok {
 			return nil, fmt.Errorf("invalid sort field: %s", req.Sort)
 		}
 		sql = sql.Order(helper.Sort(sort, req.Direction))
+	} else {
+		sql = sql.Order(aTemlpateStore.CreatedAt.Desc())
 	}
 
 	if req.PageSize == 0 || req.Page == 0 {

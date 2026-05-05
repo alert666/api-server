@@ -94,9 +94,9 @@ func (recevicer *alertSilenceService) DeleteSilence(ctx context.Context, req *ty
 	}
 
 	// 直接执行带条件的删除
-	info, err := aSilence.WithContext(ctx).
-		Where(aSilence.ID.Eq(int(req.ID))).
-		Where(aSilence.Cluster.Eq(tenant)).
+	info, err := aSilenceStore.WithContext(ctx).
+		Where(aSilenceStore.ID.Eq(int(req.ID))).
+		Where(aSilenceStore.Cluster.Eq(tenant)).
 		Delete()
 
 	if err != nil {
@@ -115,25 +115,25 @@ func (recevicer *alertSilenceService) QuerySilence(ctx context.Context, req *typ
 	if err != nil {
 		return nil, err
 	}
-	return aSilence.WithContext(ctx).Where(aSilence.ID.Eq(int(req.ID))).Where(aSilence.Cluster.Eq(tenant)).First()
+	return aSilenceStore.WithContext(ctx).Where(aSilenceStore.ID.Eq(int(req.ID))).Where(aSilenceStore.Cluster.Eq(tenant)).First()
 }
 
 func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *types.AlertSilenceListRequest) (*types.AlertSilenceListResponse, error) {
 	var (
 		AlertSilences []*model.AlertSilence
 		total         int64
-		query         = aSilence.WithContext(ctx).UnderlyingDB()
+		query         = aSilenceStore.WithContext(ctx).UnderlyingDB()
 	)
 	tenant, err := helper.GetTenant(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if tenant != "" {
-		query = query.Where(aSilence.Cluster.Eq(tenant))
+		query = query.Where(aSilenceStore.Cluster.Eq(tenant))
 	}
 
 	if req.Status != nil {
-		query = query.Where(aSilence.Status.Eq(*req.Status))
+		query = query.Where(aSilenceStore.Status.Eq(*req.Status))
 	}
 
 	if req.StartsAt != nil && req.EndsAt != nil {
@@ -144,12 +144,12 @@ func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *type
 
 	if req.StartsAt != nil {
 		startsAt := time.Unix(*req.StartsAt, 0)
-		query = query.Where(aSilence.StartsAt.Gte(startsAt))
+		query = query.Where(aSilenceStore.StartsAt.Gte(startsAt))
 	}
 
 	if req.EndsAt != nil {
 		endsAt := time.Unix(*req.EndsAt, 0)
-		query = query.Where(aSilence.EndsAt.Lte(endsAt))
+		query = query.Where(aSilenceStore.EndsAt.Lte(endsAt))
 	}
 
 	if len(req.Matchers) > 0 {
@@ -161,7 +161,7 @@ func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *type
 	}
 
 	if req.CreatedBy != "" {
-		query = query.Where(aSilence.CreatedBy.Eq(req.CreatedBy))
+		query = query.Where(aSilenceStore.CreatedBy.Eq(req.CreatedBy))
 	}
 
 	if err := query.Count(&total).Error; err != nil {
@@ -170,7 +170,9 @@ func (recevicer *alertSilenceService) ListSilence(ctx context.Context, req *type
 
 	if req.Sort != "" && req.Direction != "" {
 		order := fmt.Sprintf("%s %s", req.Sort, req.Direction)
-		query.Order(order)
+		query = query.Order(order)
+	} else {
+		query = query.Order(aSilenceStore.CreatedAt.Desc())
 	}
 
 	if req.PageSize == 0 || req.Page == 0 {
@@ -188,10 +190,10 @@ func (recevicer *alertSilenceService) GetTenantSilenceCounts(ctx context.Context
 	var results []*types.TenantCount
 
 	// SQL: SELECT cluster, count(*) as count FROM alert_silences WHERE status = 1 GROUP BY cluster
-	err := aSilence.WithContext(ctx).
-		Select(aSilence.Cluster, aSilence.ID.Count().As("count")).
-		Where(aSilence.Status.Eq(model.SilenceEnabled)).
-		Group(aSilence.Cluster).
+	err := aSilenceStore.WithContext(ctx).
+		Select(aSilenceStore.Cluster, aSilenceStore.ID.Count().As("count")).
+		Where(aSilenceStore.Status.Eq(model.SilenceEnabled)).
+		Group(aSilenceStore.Cluster).
 		Scan(&results)
 
 	if err != nil {
@@ -251,10 +253,10 @@ func (recevicer *CleanExpiredSilence) CleanExpiredSilencesTask() {
 	now := time.Now()
 	// --- 逻辑 A: 将已过期的规则状态从 1 改为 0 ---
 	// 逻辑：如果结束时间早于现在，且状态还是“启用”，则更新为“禁用/过期”
-	info, err := aSilence.WithContext(ctx).
-		Where(aSilence.Status.Eq(model.SilenceEnabled)).
-		Where(aSilence.EndsAt.Lt(now)).
-		Update(aSilence.Status, model.SilenceExpired)
+	info, err := aSilenceStore.WithContext(ctx).
+		Where(aSilenceStore.Status.Eq(model.SilenceEnabled)).
+		Where(aSilenceStore.EndsAt.Lt(now)).
+		Update(aSilenceStore.Status, model.SilenceExpired)
 
 	if err != nil {
 		zap.L().Error("[定时任务] 更新过期静默规则状态失败", zap.Error(err))

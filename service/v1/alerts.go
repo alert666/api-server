@@ -104,7 +104,7 @@ func (receiver *alertsService) getChannel(ctx context.Context, channelName strin
 	}
 
 	if !found {
-		channel, err := aChannel.WithContext(ctx).Preload(aChannel.AlertTemplate).Where(aChannel.Name.Eq(channelName)).First()
+		channel, err := aChannelStore.WithContext(ctx).Preload(aChannelStore.AlertTemplate).Where(aChannelStore.Name.Eq(channelName)).First()
 		if err != nil {
 			return nil, err
 		}
@@ -166,7 +166,7 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 	if len(queryArgs) == 0 {
 		return nil, fmt.Errorf("查询已存在告警时查询条件为空")
 	}
-	err := aHistory.WithContext(ctx).
+	err := aHistoryStore.WithContext(ctx).
 		UnderlyingDB().
 		Preload("AlertSendRecord").
 		Where(tenantWhere, tenantValue).
@@ -178,12 +178,12 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 
 	// TODO 从 Redis 中获取
 	// 查询静默规则
-	err = aSilence.WithContext(ctx).
+	err = aSilenceStore.WithContext(ctx).
 		UnderlyingDB().
 		Where(tenantWhere, tenantValue).
-		Where(aSilence.Status.Eq(model.SilenceEnabled)).
-		Where(aSilence.EndsAt.Gte(now)).
-		Where(aSilence.StartsAt.Lte(now)).
+		Where(aSilenceStore.Status.Eq(model.SilenceEnabled)).
+		Where(aSilenceStore.EndsAt.Gte(now)).
+		Where(aSilenceStore.StartsAt.Lte(now)).
 		Find(&activeSilences).Error
 	if err != nil {
 		zap.L().Error("查询静默规则失败", zap.Error(err))
@@ -290,14 +290,14 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 
 	// 批量创建带有发送流水的告警 (Firing/Resolved)
 	if len(allCreateSendRecords) > 0 {
-		if err := aSend.WithContext(ctx).Create(allCreateSendRecords...); err != nil {
+		if err := aSendStore.WithContext(ctx).Create(allCreateSendRecords...); err != nil {
 			log.WithRequestID(ctx).Error("批量创建告警历史记录失败", zap.String("tenant", tenant), zap.Error(err))
 		}
 	}
 
 	// 批量创建静默告警 (只有 History)
 	if len(silenceCreate) > 0 {
-		if err := aHistory.WithContext(ctx).Create(silenceCreate...); err != nil {
+		if err := aHistoryStore.WithContext(ctx).Create(silenceCreate...); err != nil {
 			log.WithRequestID(ctx).Error("批量创建静默告警历史失败", zap.String("tenant", tenant), zap.Error(err))
 		}
 	}
@@ -308,7 +308,7 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 			upObj := model.AlertSendRecord{
 				ErrorMessage: updateSendRecord.ErrorMessage,
 			}
-			if _, err := aSend.WithContext(timeoutCtx).Where(aSend.ID.Eq(updateSendRecord.ID)).Updates(upObj); err != nil {
+			if _, err := aSendStore.WithContext(timeoutCtx).Where(aSendStore.ID.Eq(updateSendRecord.ID)).Updates(upObj); err != nil {
 				log.WithRequestID(ctx).Error("批量更新告警发送记录失败", zap.String("tenant", tenant), zap.Error(err))
 				continue
 			}
@@ -325,7 +325,7 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 				"is_silenced":      updateAlert.IsSilenced,
 				"alert_silence_id": updateAlert.AlertSilenceID,
 			}
-			if _, err := aHistory.WithContext(timeoutCtx).Where(aHistory.ID.Eq(updateAlert.ID)).Updates(upMap); err != nil {
+			if _, err := aHistoryStore.WithContext(timeoutCtx).Where(aHistoryStore.ID.Eq(updateAlert.ID)).Updates(upMap); err != nil {
 				log.WithRequestID(ctx).Error("批量更新告警历史记录失败", zap.String("tenant", tenant), zap.Error(err))
 				continue
 			}

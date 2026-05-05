@@ -29,8 +29,8 @@ func NewApiServicer() ApiServicer {
 }
 
 func (receiver *ApiService) CreateApi(ctx context.Context, req *types.ApiCreateRequest) (err error) {
-	sql := a.WithContext(ctx)
-	if _, err = sql.Where(a.Name.Eq(req.Name)).First(); err != nil {
+	sql := apiStore.WithContext(ctx)
+	if _, err = sql.Where(apiStore.Name.Eq(req.Name)).First(); err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
 		}
@@ -45,7 +45,7 @@ func (receiver *ApiService) CreateApi(ctx context.Context, req *types.ApiCreateR
 func (receiver *ApiService) UpdateApi(ctx context.Context, req *types.ApiUpdateRequest) (err error) {
 	var (
 		api *model.Api
-		sql = a.WithContext(ctx).Where(a.ID.Eq(req.ID))
+		sql = apiStore.WithContext(ctx).Where(apiStore.ID.Eq(req.ID))
 	)
 	if api, err = sql.First(); err != nil {
 		return err
@@ -60,10 +60,10 @@ func (receiver *ApiService) UpdateApi(ctx context.Context, req *types.ApiUpdateR
 func (receiver *ApiService) DeleteApi(ctx context.Context, req *types.IDRequest) (err error) {
 	var (
 		api *model.Api
-		sql = a.WithContext(ctx).Where(a.ID.Eq(req.ID))
+		sql = apiStore.WithContext(ctx).Where(apiStore.ID.Eq(req.ID))
 	)
 
-	if api, err = sql.Preload(a.Roles).First(); err != nil {
+	if api, err = sql.Preload(apiStore.Roles).First(); err != nil {
 		return err
 	}
 
@@ -84,7 +84,7 @@ func (receiver *ApiService) DeleteApi(ctx context.Context, req *types.IDRequest)
 }
 
 func (receiver *ApiService) QueryApi(ctx context.Context, req *types.IDRequest) (api *model.Api, err error) {
-	if api, err = a.WithContext(ctx).Where(a.ID.Eq(req.ID)).First(); err != nil {
+	if api, err = apiStore.WithContext(ctx).Where(apiStore.ID.Eq(req.ID)).First(); err != nil {
 		return nil, err
 	}
 	return api, nil
@@ -94,15 +94,15 @@ func (receiver *ApiService) ListApi(ctx context.Context, req *types.ApiListReque
 	var (
 		apis  []*model.Api
 		total int64
-		sql   = a.WithContext(ctx)
+		sql   = apiStore.WithContext(ctx)
 	)
 
 	if req.Name != "" {
-		sql = sql.Where(a.Name.Like(req.Name + "%"))
+		sql = sql.Where(apiStore.Name.Like(req.Name + "%"))
 	} else if req.Path != "" {
-		sql = sql.Where(a.Path.Like(req.Path + "%"))
+		sql = sql.Where(apiStore.Path.Like(req.Path + "%"))
 	} else if req.Method != "" {
-		sql = sql.Where(a.Method.Like(req.Method + "%"))
+		sql = sql.Where(apiStore.Method.Like(req.Method + "%"))
 	}
 
 	if total, err = sql.Count(); err != nil {
@@ -110,11 +110,13 @@ func (receiver *ApiService) ListApi(ctx context.Context, req *types.ApiListReque
 	}
 
 	if req.Sort != "" && req.Direction != "" {
-		sort, ok := a.GetFieldByName(req.Sort)
+		sort, ok := apiStore.GetFieldByName(req.Sort)
 		if !ok {
 			return nil, fmt.Errorf("invalid sort field: %s", req.Sort)
 		}
 		sql = sql.Order(helper.Sort(sort, req.Direction))
+	} else {
+		sql = sql.Order(apiStore.CreatedAt.Desc())
 	}
 
 	if req.PageSize == 0 || req.Page == 0 {

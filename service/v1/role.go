@@ -38,7 +38,7 @@ func (receiver *roleService) CreateRole(ctx context.Context, req *types.RoleCrea
 		apis  []*model.Api
 		rules []*model.CasbinRule
 	)
-	if role, err = r.WithContext(ctx).Where(r.Name.Eq(req.Name)).First(); err != nil {
+	if role, err = roleStore.WithContext(ctx).Where(roleStore.Name.Eq(req.Name)).First(); err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
 		}
@@ -49,7 +49,7 @@ func (receiver *roleService) CreateRole(ctx context.Context, req *types.RoleCrea
 	}
 
 	if len(req.Apis) > 0 {
-		sql := a.WithContext(ctx).Where(a.ID.In(req.Apis...))
+		sql := apiStore.WithContext(ctx).Where(apiStore.ID.In(req.Apis...))
 		if apis, err = sql.Find(); err != nil {
 			return err
 		}
@@ -100,7 +100,7 @@ func (receiver *roleService) UpdateRole(ctx context.Context, req *types.RoleUpda
 		casbinRules []*model.CasbinRule
 	)
 	req.Apis = helper.RemoveDuplicates(req.Apis)
-	if role, err = r.WithContext(ctx).Where(r.ID.Eq(req.ID)).First(); err != nil {
+	if role, err = roleStore.WithContext(ctx).Where(roleStore.ID.Eq(req.ID)).First(); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return fmt.Errorf("role not found")
 		}
@@ -109,7 +109,7 @@ func (receiver *roleService) UpdateRole(ctx context.Context, req *types.RoleUpda
 
 	role.Description = req.Description
 	if len(req.Apis) > 0 {
-		sql := a.WithContext(ctx).Where(a.ID.In(req.Apis...))
+		sql := apiStore.WithContext(ctx).Where(apiStore.ID.In(req.Apis...))
 		if total, err = sql.Count(); err != nil {
 			return err
 		}
@@ -122,7 +122,7 @@ func (receiver *roleService) UpdateRole(ctx context.Context, req *types.RoleUpda
 		}
 	}
 
-	casbinSql := c.WithContext(ctx).Where(c.V0.Eq(role.Name))
+	casbinSql := casbinStore.WithContext(ctx).Where(casbinStore.V0.Eq(role.Name))
 	if total, err = casbinSql.Count(); err != nil {
 		return err
 	}
@@ -141,7 +141,7 @@ func (receiver *roleService) UpdateRole(ctx context.Context, req *types.RoleUpda
 	}
 
 	err = store.Use(data.GetDB(ctx)).Transaction(func(tx *store.Query) error {
-		if _, err := tx.Role.WithContext(ctx).Where(r.ID.Eq(role.ID)).Updates(role); err != nil {
+		if _, err := tx.Role.WithContext(ctx).Where(roleStore.ID.Eq(role.ID)).Updates(role); err != nil {
 			return err
 		}
 		if total > 0 {
@@ -169,7 +169,7 @@ func (receiver *roleService) DeleteRole(ctx context.Context, req *types.IDReques
 		role        *model.Role
 		casbinRules []*model.CasbinRule
 	)
-	if role, err = r.WithContext(ctx).Where(r.ID.Eq(req.ID)).First(); err != nil {
+	if role, err = roleStore.WithContext(ctx).Where(roleStore.ID.Eq(req.ID)).First(); err != nil {
 		return err
 	}
 
@@ -182,7 +182,7 @@ func (receiver *roleService) DeleteRole(ctx context.Context, req *types.IDReques
 		return fmt.Errorf("the role is being used by the users %s", unames)
 	}
 
-	if casbinRules, err = c.WithContext(ctx).Where(c.V0.Eq(role.Name)).Find(); err != nil {
+	if casbinRules, err = casbinStore.WithContext(ctx).Where(casbinStore.V0.Eq(role.Name)).Find(); err != nil {
 		return err
 	}
 
@@ -205,7 +205,7 @@ func (receiver *roleService) DeleteRole(ctx context.Context, req *types.IDReques
 }
 
 func (receiver *roleService) QueryRole(ctx context.Context, req *types.IDRequest) (role *model.Role, err error) {
-	if role, err = r.WithContext(ctx).Where(r.ID.Eq(req.ID)).Preload(r.Apis).First(); err != nil {
+	if role, err = roleStore.WithContext(ctx).Where(roleStore.ID.Eq(req.ID)).Preload(roleStore.Apis).First(); err != nil {
 		return nil, err
 	}
 	return role, nil
@@ -216,11 +216,11 @@ func (receiver *roleService) ListRole(ctx context.Context, req *types.RoleListRe
 		err   error
 		total int64
 		roles []*model.Role
-		sql   = r.WithContext(ctx)
+		sql   = roleStore.WithContext(ctx)
 	)
 
 	if req.Name != "" {
-		sql = sql.Where(r.Name.Like(req.Name + "%"))
+		sql = sql.Where(roleStore.Name.Like(req.Name + "%"))
 	}
 
 	if total, err = sql.Count(); err != nil {
@@ -228,11 +228,13 @@ func (receiver *roleService) ListRole(ctx context.Context, req *types.RoleListRe
 	}
 
 	if req.Sort != "" && req.Direction != "" {
-		sort, ok := r.GetFieldByName(req.Sort)
+		sort, ok := roleStore.GetFieldByName(req.Sort)
 		if !ok {
 			return nil, fmt.Errorf("invalid sort field: %s", req.Sort)
 		}
 		sql = sql.Order(helper.Sort(sort, req.Direction))
+	} else {
+		sql = sql.Order(roleStore.CreatedAt.Desc())
 	}
 
 	if req.PageSize == 0 && req.Page == 0 {

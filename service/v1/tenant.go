@@ -142,6 +142,8 @@ func (receiver *TenantService) ListTenant(ctx context.Context, req *types.Tenant
 			return nil, fmt.Errorf("invalid sort field: %s", req.Sort)
 		}
 		query = query.Order(helper.Sort(sort, req.Direction))
+	} else {
+		query = query.Order(tenantStore.CreatedAt.Desc())
 	}
 
 	if req.PageSize == 0 || req.Page == 0 {
