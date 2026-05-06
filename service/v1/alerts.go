@@ -27,6 +27,7 @@ type AlertsServicer interface {
 
 type CleanDuplicateFiringer interface {
 	CleanDuplicateFiringAlertsTask()
+	CleanRepeatIntervalAlertsTask()
 }
 
 type alertsService struct {
@@ -480,7 +481,7 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 		}
 
 		elapsed := time.Since(start).Milliseconds()
-		zap.L().Info("CleanInhibitAlert 执行结束",
+		zap.L().Info("cleanDuplicateFiringAlertsTask 执行结束",
 			zap.Int64("duration_ms", elapsed),
 		)
 	}()
@@ -572,6 +573,93 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 			}
 		}
 		zap.L().Info("[定时任务] 重复告警清理任务完成", zap.Int("total_resolved", len(idsToResolve)))
+	}
+}
+
+// repeat_interval
+func (receiver *alertsService) CleanRepeatIntervalAlertsTask() {
+	start := time.Now()
+	defer func() {
+		if r := recover(); r != nil {
+			stack := debug.Stack()
+			zap.L().Error("cleanRepeatIntervalAlertsTask panic recovered",
+				zap.Any("panic", r),
+				zap.String("stack", string(stack)),
+			)
+			return
+		}
+
+		elapsed := time.Since(start).Milliseconds()
+		zap.L().Info("cleanRepeatIntervalAlertsTask 执行结束",
+			zap.Int64("duration_ms", elapsed),
+		)
+	}()
+
+	lockDuration := 5 * time.Minute
+	ctx, cancle := context.WithTimeout(context.TODO(), 290*time.Second)
+	defer cancle()
+
+	al := store.AlertHistory.WithContext(ctx)
+
+	ok, err := receiver.cacheImpl.SetNX(ctx, store.LockType, constant.AlertCleanRepeatIntervalHistoryLockKey, time.Now().Unix(), lockDuration)
+	if err != nil {
+		zap.L().Error("[定时任务] cleanRepeatIntervalAlertsTask Redis 锁异常", zap.Error(err))
+		return
+	}
+	defer receiver.cacheImpl.DelKey(ctx, store.LockType, constant.AlertCleanRepeatIntervalHistoryLockKey)
+
+	// 没抢到锁，说明其他副本正在执行，直接退出
+	if !ok {
+		zap.L().Debug("[定时任务] cleanRepeatIntervalAlertsTask 任务正在其他节点运行，本次跳过")
+		return
+	}
+
+	// 1. 查询所有正在告警（ends_at 为空）且状态为 firing 的记录
+	// 按照 StartsAt 降序排列，确保后续切片中索引 0 是最新的
+	alertHistories, err := al.Where(
+		store.AlertHistory.EndsAt.IsNull(),
+		store.AlertHistory.Status.Eq("firing"),
+	).Order(store.AlertHistory.StartsAt.Desc()).Find()
+
+	if err != nil {
+		zap.L().Error("[定时任务] cleanRepeatIntervalAlertsTask 查询 firing 状态告警失败", zap.Error(err))
+		return
+	}
+
+	if len(alertHistories) == 0 {
+		return
+	}
+
+	repeatInterval := conf.GetAlertRepeatInterval()
+	if repeatInterval == 0 {
+		return
+	}
+
+	now := time.Now()
+	ids := make([]int, 0, len(alertHistories))
+	for i := range alertHistories {
+		aaa := alertHistories[i]
+		if aaa.EndsAt != nil {
+			continue
+		}
+		if aaa.UpdatedAt.Add(repeatInterval).Before(now) {
+			ids = append(ids, aaa.ID)
+		}
+	}
+
+	if len(ids) == 0 {
+		zap.L().Info("[定时任务] cleanRepeatIntervalAlertsTask 本次无需要自动 Resolved 的告警")
+		return
+	}
+
+	result, err := al.Where(aHistoryStore.ID.In(ids...)).Updates(map[string]interface{}{
+		"status":  constant.AlertStatusResolved,
+		"ends_at": now,
+	})
+	if err != nil {
+		zap.L().Error("[定时任务] cleanRepeatIntervalAlertsTask 更新告警失败", zap.Error(err))
+	} else {
+		zap.L().Info("[定时任务] cleanRepeatIntervalAlertsTask 超时未接收到告警, 成功自动 Resolved 告警", zap.Int("count", int(result.RowsAffected)))
 	}
 }
 

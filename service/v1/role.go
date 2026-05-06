@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/alert666/api-server/base/data"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
@@ -68,7 +67,7 @@ func (receiver *roleService) CreateRole(ctx context.Context, req *types.RoleCrea
 		})
 	}
 
-	err = store.Use(data.GetDB(ctx)).Transaction(func(tx *store.Query) error {
+	err = store.Q.Transaction(func(tx *store.Query) error {
 		role := &model.Role{
 			Name:        req.Name,
 			Description: req.Description,
@@ -140,7 +139,7 @@ func (receiver *roleService) UpdateRole(ctx context.Context, req *types.RoleUpda
 		})
 	}
 
-	err = store.Use(data.GetDB(ctx)).Transaction(func(tx *store.Query) error {
+	err = store.Q.Transaction(func(tx *store.Query) error {
 		if _, err := tx.Role.WithContext(ctx).Where(roleStore.ID.Eq(role.ID)).Updates(role); err != nil {
 			return err
 		}
@@ -186,7 +185,7 @@ func (receiver *roleService) DeleteRole(ctx context.Context, req *types.IDReques
 		return err
 	}
 
-	err = store.Use(data.GetDB(ctx)).Transaction(func(tx *store.Query) error {
+	err = store.Q.Transaction(func(tx *store.Query) error {
 		if _, err = tx.Role.WithContext(ctx).Delete(role); err != nil {
 			return err
 		}

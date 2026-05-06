@@ -129,7 +129,7 @@ func (receiver *TenantService) ListTenant(ctx context.Context, req *types.Tenant
 		err     error
 	)
 	if req.Name != "" {
-		query.Where(tenantStore.Name.Like("%" + req.Name + "%"))
+		query = query.Where(tenantStore.Name.Like("%" + req.Name + "%"))
 	}
 
 	if total, err = query.Count(); err != nil {

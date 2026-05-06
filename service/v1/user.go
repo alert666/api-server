@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
-	"github.com/alert666/api-server/base/data"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
@@ -200,19 +199,21 @@ func (receiver *UserService) UpdateUserBySelf(ctx context.Context, req *types.Us
 }
 
 func (receiver *UserService) DeleteUser(ctx context.Context, req *types.IDRequest) (err error) {
-	var (
-		user *model.User
-	)
-	return store.Use(data.GetDB(ctx)).Transaction(func(tx *store.Query) error {
+	var user *model.User
+	return store.Q.Transaction(func(tx *store.Query) error {
 		if user, err = tx.User.WithContext(ctx).Where(userStore.ID.Eq(req.ID)).Preload(userStore.Oauth2User).First(); err != nil {
 			return err
 		}
 		if _, err := tx.User.WithContext(ctx).Delete(user); err != nil {
 			return err
 		}
-		if _, err := tx.Oauth2User.WithContext(ctx).Delete(user.Oauth2User); err != nil {
-			return err
+
+		if user.Oauth2User != nil {
+			if _, err := tx.Oauth2User.WithContext(ctx).Delete(user.Oauth2User); err != nil {
+				return err
+			}
 		}
+
 		return tx.User.Roles.WithContext(ctx).Model(user).Clear()
 	})
 }

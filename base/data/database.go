@@ -1,7 +1,6 @@
 package data
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/alert666/api-server/base/conf"
@@ -12,12 +11,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
-
-var dbInstance *gorm.DB
-
-func GetDB(ctx context.Context) *gorm.DB {
-	return dbInstance.WithContext(ctx)
-}
 
 func NewDB() (*gorm.DB, func(), error) {
 	dsn, err := conf.GetMysqlDsn()
@@ -32,7 +25,7 @@ func NewDB() (*gorm.DB, func(), error) {
 		zap.S().Info("enable debug mode on the database")
 	}
 
-	dbInstance, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	dbInstance, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 		Logger:                                   dbLogger,
 	})

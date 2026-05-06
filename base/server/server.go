@@ -131,6 +131,11 @@ func (receiver *CronJob) Start() error {
 			fn:   receiver.cleanInhibitAlert.CleanInhibitAlert,
 		},
 		{
+			name: "超时告警清理",
+			spec: "*/5 * * * *",
+			fn:   receiver.cleanDuplicateFiringer.CleanRepeatIntervalAlertsTask,
+		},
+		{
 			name: "重复指纹告警清理",
 			spec: "*/10 * * * *",
 			fn:   receiver.cleanDuplicateFiringer.CleanDuplicateFiringAlertsTask,
