@@ -86,6 +86,19 @@ func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *typ
 	acObj.Description = req.Description
 	acObj.AlertTemplateID = req.TemplateID
 
+	// reids publish 事件
+	var id, secret string
+	switch acObj.Type {
+	case model.ChannelTypeFeishuApp:
+		config, err := acObj.GetFeishuAppConfig()
+		if err != nil {
+			return err
+		}
+		id = config.AppID
+		secret = config.AppSecret
+	}
+	publish := fmt.Sprintf("%s:%s:%s", acObj.Name, id, secret)
+
 	return store.Q.Transaction(func(tx *store.Query) error {
 		if err := tx.AlertChannel.WithContext(ctx).Save(acObj); err != nil {
 			return err
@@ -107,7 +120,7 @@ func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *typ
 			if err := receiver.cache.SetObject(ctx, store.AlertType, acObj.Name, acObj, store.NeverExpires); err != nil {
 				return err
 			}
-			return receiver.cache.Publish(ctx, constant.AlertChannelTopicUpdate, acObj.Name)
+			return receiver.cache.Publish(ctx, constant.AlertChannelTopicUpdate, publish)
 		}
 		return nil
 	})
@@ -121,6 +134,17 @@ func (receiver *alertChannelService) DeleteChannel(ctx context.Context, req *typ
 		return err
 	}
 
+	var id, secret string
+	switch acObj.Type {
+	case model.ChannelTypeFeishuApp:
+		config, err := acObj.GetFeishuAppConfig()
+		if err != nil {
+			return err
+		}
+		id = config.AppID
+		secret = config.AppSecret
+	}
+	publish := fmt.Sprintf("%s:%s:%s", acObj.Name, id, secret)
 	return store.Q.Transaction(func(tx *store.Query) error {
 		_, err := tx.AlertChannel.WithContext(ctx).Unscoped().Where(aChannelStore.ID.Eq(acObj.ID)).Delete(acObj)
 		if err != nil {
@@ -129,7 +153,7 @@ func (receiver *alertChannelService) DeleteChannel(ctx context.Context, req *typ
 		if err := receiver.cache.DelKey(ctx, store.AlertType, acObj.Name); err != nil {
 			return err
 		}
-		return receiver.cache.Publish(ctx, constant.AlertChannelTopicDelete, acObj.Name)
+		return receiver.cache.Publish(ctx, constant.AlertChannelTopicDelete, publish)
 	})
 }
 

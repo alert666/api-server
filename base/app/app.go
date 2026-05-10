@@ -3,8 +3,8 @@ package app
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -18,7 +18,6 @@ import (
 	"github.com/alert666/api-server/store"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 )
 
 type Options func(*Application)
@@ -125,31 +124,70 @@ func (receiver *Init) Init(ctx context.Context) error {
 	receiver.caceImpl.Subscribe(ctx, constant.AlertChannelTopicDelete, func(msg string) {
 		cctx, cannelFc := context.WithTimeout(context.Background(), time.Second*10)
 		defer cannelFc()
-		_, err := store.AlertChannel.WithContext(cctx).Where(store.AlertChannel.Name.Eq(msg)).First()
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				receiver.feishuImpl.CloseCli(msg)
-				return
-			}
-			zap.L().Error(fmt.Sprintf("订阅 alertChannel 删除事件, 查询 name = %s 的alertChannel 失败", msg), zap.Error(err))
+		// 获取 alertChannel name id secret
+		c := strings.Split(msg, ":")
+		if len(c) != 3 {
+			zap.L().Error("订阅 alertChannel 删除事件, 事件异常", zap.String("msg", msg))
 			return
 		}
-		zap.S().Errorf("订阅 alertChannel 删除事件, 数据库存在记录 name = %s 的 alertChannel 删除失败", msg)
+		name := c[0]
+		id := c[1]
+		secret := c[2]
+		var results []*model.AlertChannel
+		err = store.AlertChannel.
+			UnderlyingDB().
+			WithContext(cctx).
+			Model(&model.AlertChannel{}).
+			Where("config->'$.app_id' = ? AND config->'$.app_secret' = ?", id, secret).
+			Find(&results).Error
+		if err != nil {
+			zap.L().Error("订阅 alertChannel 删除事件, 查询告警通道失败", zap.Error(err))
+			return
+		}
+		if len(results) == 0 {
+			receiver.feishuImpl.CloseCli(name, id, secret)
+		}
 	})
 
 	// 4. 订阅 alertChannel 更新事件
 	zap.L().Info("订阅 alertChannel 更新事件")
 	receiver.caceImpl.Subscribe(ctx, constant.AlertChannelTopicUpdate, func(msg string) {
-		cctx, cannelFc := context.WithTimeout(context.Background(), time.Second*10)
+		cctx, cannelFc := context.WithTimeout(context.Background(), time.Second*15)
 		defer cannelFc()
-		channel, err := store.AlertChannel.WithContext(cctx).Where(store.AlertChannel.Name.Eq(msg)).First()
+		c := strings.Split(msg, ":")
+		if len(c) != 3 {
+			zap.L().Error("订阅 alertChannel 更新事件, 事件异常", zap.String("msg", msg))
+			return
+		}
+		name := c[0]
+		id := c[1]
+		secret := c[2]
+
+		channel, err := store.AlertChannel.WithContext(cctx).Where(store.AlertChannel.Name.Eq(name)).First()
 		if err != nil {
 			zap.L().Error("订阅 alertChannel 更新事件, 查询 alertChannel 失败", zap.Error(err))
 			return
 		}
 
 		if *channel.Status == model.StatusDisabled {
-			receiver.feishuImpl.CloseCli(channel.Name)
+			// 查找是否还有其他【已启用】的通道在使用同一组 AppID/Secret
+			var count int64
+			err = store.AlertChannel.UnderlyingDB().WithContext(cctx).
+				Model(&model.AlertChannel{}).
+				Where("status = ?", model.StatusEnabled).
+				Where("config->'$.app_id' = ?", id).
+				Where("config->'$.app_secret' = ?", secret).
+				Count(&count).Error
+
+			if err != nil {
+				zap.L().Error("订阅 alertChannel 更新事件, 统计启用通道失败", zap.Error(err))
+				return
+			}
+
+			// 只有当没有任何启用中的通道使用该配置时，才彻底关闭底层客户端
+			if count == 0 {
+				receiver.feishuImpl.CloseCli(name, id, secret)
+			}
 			return
 		}
 
@@ -157,10 +195,10 @@ func (receiver *Init) Init(ctx context.Context) error {
 		case model.ChannelTypeFeishuApp:
 			appid, appSecret, err := helper.VerificationAlertFeishuConfig(channel)
 			if err != nil {
-				zap.S().Error(err)
+				zap.L().Error("订阅 alertChannel 更新事件", zap.Error(err))
 				return
 			}
-			receiver.feishuImpl.UpdateCli(msg, appid, appSecret)
+			receiver.feishuImpl.UpdateCli(name, appid, appSecret)
 			return
 		}
 	})

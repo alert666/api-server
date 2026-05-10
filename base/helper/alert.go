@@ -3,6 +3,8 @@ package helper
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -16,6 +18,15 @@ import (
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 )
+
+// HashFeishuAppConfig 对 飞书 配置进行 hash
+func HashFeishuAppConfig(appid, appSecret string) string {
+	h := sha256.New()
+	h.Write([]byte(appid))
+	h.Write([]byte(":"))
+	h.Write([]byte(appSecret))
+	return hex.EncodeToString(h.Sum(nil))
+}
 
 func VerificationAlertFeishuConfig(channel *model.AlertChannel) (appid, appSecret string, err error) {
 	var ok bool

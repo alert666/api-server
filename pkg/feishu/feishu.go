@@ -42,9 +42,9 @@ func printFeishuCli() string {
 
 type Feishuer interface {
 	Init(alertChannelName, appid, appSecret string)
-	GetCli(alertChannelName string) (*lark.Client, error)
+	GetCli(alertChannelName, appid, appSecret string) (*lark.Client, error)
 	UpdateCli(alertChannelName, appid, appSecret string)
-	CloseCli(alertChannelName string)
+	CloseCli(alertChannelName, appid, appSecret string)
 	Notifyer
 }
 
@@ -70,27 +70,34 @@ func NewFeiShu() Feishuer {
 func (receiver *FeiShu) Init(alertChannelName, appid, appSecret string) {
 	receiver.lock.Lock()
 	defer receiver.lock.Unlock()
-	if _, ok := feishuStruct.clients[alertChannelName]; ok {
+
+	// 判断客户端是否存在
+	hashStr := helper.HashFeishuAppConfig(appid, appSecret)
+	if _, ok := feishuStruct.clients[hashStr]; ok {
 		return
 	}
 
+	// 创建新的客户端并缓存
 	cli, wsCli, cancelFn := newFeishuClient(alertChannelName, appid, appSecret)
-	receiver.clients[alertChannelName] = &Client{
+	receiver.clients[hashStr] = &Client{
 		cli:      cli,
 		wsCli:    wsCli,
 		cancelFn: cancelFn,
 	}
+
 	clientNames := printFeishuCli()
 	zap.S().Infof("初始化新的飞书客户端 %s, 当前已缓存的客户端 %s", alertChannelName, clientNames)
 }
 
-func (receiver *FeiShu) GetCli(alertChannelName string) (*lark.Client, error) {
+func (receiver *FeiShu) GetCli(alertChannelName, appid, appSecret string) (*lark.Client, error) {
+	hashStr := helper.HashFeishuAppConfig(appid, appSecret)
 	receiver.lock.Lock()
 	defer receiver.lock.Unlock()
+	zap.L().Debug("获取告警通道", zap.String("name", alertChannelName))
 
-	c, ok := receiver.clients[alertChannelName]
+	c, ok := receiver.clients[hashStr]
 	if !ok {
-		return nil, fmt.Errorf("client %s not initialized", alertChannelName)
+		return nil, fmt.Errorf("client %s not initialized", hashStr)
 	}
 	return c.cli, nil
 }
@@ -178,47 +185,53 @@ func newFeishuClient(alertChannelName, appid, appSecret string) (*lark.Client, *
 
 // UpdateCli 如果 appid 和 appSecret 修改需要重新初始化客户端
 func (receiver *FeiShu) UpdateCli(alertChannelName, appid, appSecret string) {
-	receiver.lock.Lock()
-	defer receiver.lock.Unlock()
+	// 1. 先计算 Hash
+	hashStr := helper.HashFeishuAppConfig(appid, appSecret)
 
-	// 1. 如果旧客户端存在，先执行销毁逻辑
-	if oldClient, ok := receiver.clients[alertChannelName]; ok {
-		zap.S().Info("正在更新通道 [%s] 的客户端，关闭旧连接...", alertChannelName)
+	// 2. 局部锁：检查并提取旧客户端，然后立即更新/删除
+	receiver.lock.Lock()
+	oldClient, exists := receiver.clients[hashStr]
+	// 这里先不创建新客户端，先处理旧的逻辑
+	receiver.lock.Unlock()
+
+	// 3. 在锁外执行销毁逻辑（避免阻塞其他客户端的操作）
+	if exists && oldClient != nil {
+		zap.S().Infof("正在更新通道 [%s] 的客户端，关闭旧连接...", alertChannelName)
 		if oldClient.cancelFn != nil {
-			// 触发 context 取消，停止旧的 wsCli.Start
-			oldClient.cancelFn()
-			zap.S().Infof("停止旧的飞书客户端 %s 连接, ", alertChannelName)
+			oldClient.cancelFn() // 触发异步关闭
 		}
 	}
 
-	time.Sleep(5 * time.Second)
-	// 2. 创建新的客户端
+	// 4. 创建新的客户端（这个过程可能涉及网络请求获取 token，比较耗时，务必在锁外执行）
 	cli, wsCli, cancel := newFeishuClient(alertChannelName, appid, appSecret)
 
-	// 3. 覆盖存储
-	receiver.clients[alertChannelName] = &Client{
+	// 5. 重新加锁写入新客户端
+	receiver.lock.Lock()
+	receiver.clients[hashStr] = &Client{
 		cli:      cli,
 		wsCli:    wsCli,
 		cancelFn: cancel,
 	}
-	clientNames := printFeishuCli()
+	clientNames := printFeishuCli() // 假设这个函数内部也是线程安全的
+	receiver.lock.Unlock()
+
 	zap.S().Infof("已更新飞书客户端 %s, 当前已缓存的客户端 %s", alertChannelName, clientNames)
 }
 
 // UpdateCli 如果 appid 和 appSecret 修改需要重新初始化客户端
-func (receiver *FeiShu) CloseCli(alertChannelName string) {
+func (receiver *FeiShu) CloseCli(alertChannelName, appid, appSecret string) {
+	hashStr := helper.HashFeishuAppConfig(appid, appSecret)
 	receiver.lock.Lock()
 	defer receiver.lock.Unlock()
 
-	// 1. 如果旧客户端存在，先执行销毁逻辑
-	if oldClient, ok := receiver.clients[alertChannelName]; ok {
+	if oldClient, ok := receiver.clients[hashStr]; ok {
 		zap.S().Infof("正在更新通道 [%s] 的客户端，关闭旧连接...", alertChannelName)
 		if oldClient.cancelFn != nil {
 			oldClient.cancelFn()
 			time.Sleep(5 * time.Second)
 		}
 	}
-	delete(receiver.clients, alertChannelName)
+	delete(receiver.clients, hashStr)
 	clientNames := printFeishuCli()
 	zap.S().Infof("从本地缓存中删除 [%s] 的客户端成功, 当前已缓存的客户端 %s", alertChannelName, clientNames)
 }
@@ -341,7 +354,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 	}
 
 	var firingErr, resolvedErr error
-	larkCli, err := receiver.GetCli(alertChannel.Name)
+	larkCli, err := receiver.GetCli(alertChannel.Name, feishuAppConf.AppID, feishuAppConf.AppSecret)
 	if err != nil {
 		return nil, err
 	}
