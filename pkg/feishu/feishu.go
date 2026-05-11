@@ -291,7 +291,8 @@ func (receiver *FeishuCard) Build(ctx context.Context, receiveIdType, receiveId,
 	// 服务端错误处理
 	if !resp.Success() {
 		log.WithRequestID(ctx).Error("发起请求发送飞书卡片时服务发生错误", zap.String("logId", resp.RequestId()), zap.Error(err), zap.String("错误响应", larkcore.Prettify(resp.CodeError)))
-		return err
+		reqID := log.GetRequestIDFromContext(ctx)
+		return fmt.Errorf("错误响应, 请查看日志, requestID: %v", reqID)
 	}
 
 	// // 业务处理

@@ -32,6 +32,7 @@ func newTenant(db *gorm.DB, opts ...gen.DOOption) tenant {
 	_tenant.CreatedAt = field.NewTime(tableName, "created_at")
 	_tenant.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_tenant.Name = field.NewString(tableName, "name")
+	_tenant.Label = field.NewString(tableName, "label")
 	_tenant.Description = field.NewString(tableName, "description")
 
 	_tenant.fillFieldMap()
@@ -47,6 +48,7 @@ type tenant struct {
 	CreatedAt   field.Time
 	UpdatedAt   field.Time
 	Name        field.String
+	Label       field.String
 	Description field.String
 
 	fieldMap map[string]field.Expr
@@ -68,6 +70,7 @@ func (t *tenant) updateTableName(table string) *tenant {
 	t.CreatedAt = field.NewTime(table, "created_at")
 	t.UpdatedAt = field.NewTime(table, "updated_at")
 	t.Name = field.NewString(table, "name")
+	t.Label = field.NewString(table, "label")
 	t.Description = field.NewString(table, "description")
 
 	t.fillFieldMap()
@@ -85,11 +88,12 @@ func (t *tenant) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (t *tenant) fillFieldMap() {
-	t.fieldMap = make(map[string]field.Expr, 5)
+	t.fieldMap = make(map[string]field.Expr, 6)
 	t.fieldMap["id"] = t.ID
 	t.fieldMap["created_at"] = t.CreatedAt
 	t.fieldMap["updated_at"] = t.UpdatedAt
 	t.fieldMap["name"] = t.Name
+	t.fieldMap["label"] = t.Label
 	t.fieldMap["description"] = t.Description
 }
 

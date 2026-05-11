@@ -65,10 +65,15 @@ func (receiver *alertChannelService) CreateAlerChannel(ctx context.Context, req 
 func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *types.AlertChannelUpdateRequest) error {
 	sql := aChannelStore.WithContext(ctx)
 
+	// 1. 加载旧数据
 	acObj, err := sql.Preload(aChannelStore.AlertTemplate).Where(aChannelStore.ID.Eq(int(req.ID))).First()
 	if err != nil {
 		return err
 	}
+
+	// 2. 检查模板是否变更
+	// 如果传入的 TemplateID 与数据库中的不一致
+	templateChanged := acObj.AlertTemplateID != req.TemplateID
 
 	acObj.Type = model.ChannelType(req.Type)
 	acObj.Status = req.Status
@@ -84,12 +89,18 @@ func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *typ
 	}
 	acObj.Config = c
 	acObj.Description = req.Description
+
+	// 更新外键 ID
 	acObj.AlertTemplateID = req.TemplateID
 
-	// reids publish 事件
+	// 【关键修复】如果模板 ID 变了，必须把旧的实体对象清空，否则后续逻辑会认为它还是旧的
+	if templateChanged {
+		acObj.AlertTemplate = nil
+	}
+
+	// redis publish 事件处理...
 	var id, secret string
-	switch acObj.Type {
-	case model.ChannelTypeFeishuApp:
+	if acObj.Type == model.ChannelTypeFeishuApp {
 		config, err := acObj.GetFeishuAppConfig()
 		if err != nil {
 			return err
@@ -100,15 +111,20 @@ func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *typ
 	publish := fmt.Sprintf("%s:%s:%s", acObj.Name, id, secret)
 
 	return store.Q.Transaction(func(tx *store.Query) error {
+		// 3. 保存 Channel 记录
 		if err := tx.AlertChannel.WithContext(ctx).Save(acObj); err != nil {
 			return err
 		}
 
+		// 4. 清理旧缓存
 		if err := receiver.cache.DelKey(ctx, store.AlertType, acObj.Name); err != nil {
 			return err
 		}
 
 		if *acObj.Status == model.StatusEnabled {
+			// 5. 【修复加载逻辑】
+			// 此时由于上面 templateChanged 时设置了 acObj.AlertTemplate = nil
+			// 这里的逻辑会正确执行，从数据库拉取最新的模板内容
 			if acObj.AlertTemplate == nil {
 				template, err := tx.AlertTemplate.WithContext(ctx).Where(aTemlpateStore.ID.Eq(acObj.AlertTemplateID)).First()
 				if err != nil {
@@ -117,6 +133,7 @@ func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *typ
 				acObj.AlertTemplate = template
 			}
 
+			// 6. 存入缓存的是带有最新 AlertTemplate 实体的 acObj
 			if err := receiver.cache.SetObject(ctx, store.AlertType, acObj.Name, acObj, store.NeverExpires); err != nil {
 				return err
 			}

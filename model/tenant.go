@@ -7,6 +7,7 @@ type Tenant struct {
 	CreatedAt   time.Time `gorm:"column:created_at" json:"createdAt"`
 	UpdatedAt   time.Time `gorm:"column:updated_at" json:"updatedAt"`
 	Name        string    `gorm:"column:name" json:"name"`
+	Label       string    `gorm:"column:label" json:"label"`
 	Description string    `gorm:"column:description" json:"description"`
 }
 

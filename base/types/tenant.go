@@ -4,11 +4,13 @@ import "github.com/alert666/api-server/model"
 
 type TenantCreateRequest struct {
 	Name        string `json:"name" binding:"required"`
+	Label       string `json:"label" binding:"required"`
 	Description string `json:"description"`
 }
 
 type TenantUpdateRequest struct {
 	*IDRequest
+	Label       string `json:"label" binding:"required"`
 	Description string `json:"description"`
 }
 

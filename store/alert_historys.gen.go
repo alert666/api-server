@@ -30,6 +30,7 @@ func newAlertHistory(db *gorm.DB, opts ...gen.DOOption) alertHistory {
 	_alertHistory.ALL = field.NewAsterisk(tableName)
 	_alertHistory.ID = field.NewInt(tableName, "id")
 	_alertHistory.CreatedAt = field.NewTime(tableName, "created_at")
+	_alertHistory.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_alertHistory.Fingerprint = field.NewString(tableName, "fingerprint")
 	_alertHistory.StartsAt = field.NewTime(tableName, "starts_at")
 	_alertHistory.Cluster = field.NewString(tableName, "cluster")
@@ -106,8 +107,9 @@ type alertHistory struct {
 	alertHistoryDo
 
 	ALL               field.Asterisk
-	ID                field.Int    // 主键ID
-	CreatedAt         field.Time   // 本条记录存入数据库的时间
+	ID                field.Int  // 主键ID
+	CreatedAt         field.Time // 本条记录存入数据库的时间
+	UpdatedAt         field.Time
 	Fingerprint       field.String // 指纹
 	StartsAt          field.Time   // 开始时间
 	Cluster           field.String // 租户
@@ -146,6 +148,7 @@ func (a *alertHistory) updateTableName(table string) *alertHistory {
 	a.ALL = field.NewAsterisk(table)
 	a.ID = field.NewInt(table, "id")
 	a.CreatedAt = field.NewTime(table, "created_at")
+	a.UpdatedAt = field.NewTime(table, "updated_at")
 	a.Fingerprint = field.NewString(table, "fingerprint")
 	a.StartsAt = field.NewTime(table, "starts_at")
 	a.Cluster = field.NewString(table, "cluster")
@@ -177,9 +180,10 @@ func (a *alertHistory) GetFieldByName(fieldName string) (field.OrderExpr, bool) 
 }
 
 func (a *alertHistory) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 20)
+	a.fieldMap = make(map[string]field.Expr, 21)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["created_at"] = a.CreatedAt
+	a.fieldMap["updated_at"] = a.UpdatedAt
 	a.fieldMap["fingerprint"] = a.Fingerprint
 	a.fieldMap["starts_at"] = a.StartsAt
 	a.fieldMap["cluster"] = a.Cluster

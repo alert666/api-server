@@ -73,11 +73,11 @@ func NewLogger() {
 }
 
 func WithRequestID(ctx context.Context) *zap.Logger {
-	return zap.L().With(zap.String("request-id", getRequestIDFromContext(ctx)))
+	return zap.L().With(zap.String("request-id", GetRequestIDFromContext(ctx)))
 }
 
-// getRequestIDFromContext 从上下文中获取请求 ID
-func getRequestIDFromContext(ctx context.Context) string {
+// GetRequestIDFromContext 从上下文中获取请求 ID
+func GetRequestIDFromContext(ctx context.Context) string {
 	if reqID, ok := ctx.Value(constant.RequestIDContextKey).(string); ok {
 		return reqID
 	}

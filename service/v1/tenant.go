@@ -43,6 +43,7 @@ func (receiver *TenantService) CreateTenant(ctx context.Context, req *types.Tena
 	return store.Q.Transaction(func(tx *store.Query) error {
 		if err := tx.Tenant.WithContext(ctx).Create(&model.Tenant{
 			Name:        req.Name,
+			Label:       req.Label,
 			Description: req.Description,
 		}); err != nil {
 			return err
@@ -55,7 +56,7 @@ func (receiver *TenantService) CreateTenant(ctx context.Context, req *types.Tena
 		options := make([]*types.TenantOption, 0, len(storeObjs))
 		for _, storeObj := range storeObjs {
 			options = append(options, &types.TenantOption{
-				Label: storeObj.Name,
+				Label: storeObj.Label,
 				Value: storeObj.Name,
 			})
 		}
@@ -65,7 +66,13 @@ func (receiver *TenantService) CreateTenant(ctx context.Context, req *types.Tena
 
 func (receiver *TenantService) UpdateTenant(ctx context.Context, req *types.TenantUpdateRequest) error {
 	return store.Q.Transaction(func(tx *store.Query) error {
-		info, err := tenantStore.WithContext(ctx).Where(tenantStore.ID.Eq(req.ID)).Update(tenantStore.Description, req.Description)
+		info, err := tenantStore.
+			WithContext(ctx).
+			Where(tenantStore.ID.Eq(req.ID)).
+			UpdateSimple(
+				tenantStore.Description.Value(req.Description),
+				tenantStore.Label.Value(req.Label),
+			)
 		if err != nil {
 			return err
 		}
@@ -78,10 +85,11 @@ func (receiver *TenantService) UpdateTenant(ctx context.Context, req *types.Tena
 		if err != nil {
 			return err
 		}
+
 		res := make([]*types.TenantOption, 0, len(storeObjs))
 		for _, storeObj := range storeObjs {
 			res = append(res, &types.TenantOption{
-				Label: storeObj.Name,
+				Label: storeObj.Label,
 				Value: storeObj.Name,
 			})
 		}
@@ -172,7 +180,7 @@ func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]*types.Te
 		res = make([]*types.TenantOption, 0, len(storeObjs))
 		for _, storeObj := range storeObjs {
 			res = append(res, &types.TenantOption{
-				Label: storeObj.Name,
+				Label: storeObj.Label,
 				Value: storeObj.Name,
 			})
 		}

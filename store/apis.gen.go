@@ -35,6 +35,7 @@ func newApi(db *gorm.DB, opts ...gen.DOOption) api {
 	_api.Name = field.NewString(tableName, "name")
 	_api.Path = field.NewString(tableName, "path")
 	_api.Method = field.NewString(tableName, "method")
+	_api.Effect = field.NewString(tableName, "effect")
 	_api.Description = field.NewString(tableName, "description")
 	_api.Roles = apiManyToManyRoles{
 		db: db.Session(&gorm.Session{}),
@@ -103,6 +104,7 @@ type api struct {
 	Name        field.String
 	Path        field.String
 	Method      field.String
+	Effect      field.String // 访问接口的策略:allow或deny
 	Description field.String
 	Roles       apiManyToManyRoles
 
@@ -128,6 +130,7 @@ func (a *api) updateTableName(table string) *api {
 	a.Name = field.NewString(table, "name")
 	a.Path = field.NewString(table, "path")
 	a.Method = field.NewString(table, "method")
+	a.Effect = field.NewString(table, "effect")
 	a.Description = field.NewString(table, "description")
 
 	a.fillFieldMap()
@@ -145,7 +148,7 @@ func (a *api) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *api) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 9)
+	a.fieldMap = make(map[string]field.Expr, 10)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["created_at"] = a.CreatedAt
 	a.fieldMap["updated_at"] = a.UpdatedAt
@@ -153,6 +156,7 @@ func (a *api) fillFieldMap() {
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["path"] = a.Path
 	a.fieldMap["method"] = a.Method
+	a.fieldMap["effect"] = a.Effect
 	a.fieldMap["description"] = a.Description
 
 }

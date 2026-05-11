@@ -110,7 +110,7 @@ func (receiver *Init) Init(ctx context.Context) error {
 	res := make([]*types.TenantOption, 0, len(storeTenants))
 	for _, storeObj := range storeTenants {
 		res = append(res, &types.TenantOption{
-			Label: storeObj.Name,
+			Label: storeObj.Label,
 			Value: storeObj.Name,
 		})
 	}

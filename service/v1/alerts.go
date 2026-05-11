@@ -671,7 +671,11 @@ func (receiver *alertsService) IsSilenced(ctx context.Context, alert *types.Aler
 
 	for _, s := range activeSilences {
 		// 1. 基础时间窗口过滤 (如果 SQL 已经过滤很准了，这里其实很快)
-		if alert.StartsAt.Before(s.StartsAt) || alert.StartsAt.After(s.EndsAt) {
+		if alert.EndsAt != nil && alert.EndsAt.Before(s.StartsAt) {
+			continue
+		}
+
+		if alert.StartsAt.After(s.EndsAt) {
 			continue
 		}
 

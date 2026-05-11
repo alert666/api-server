@@ -23,6 +23,7 @@ import (
 	"github.com/alert666/api-server/pkg/feishu"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/alert666/api-server/store"
+	"go.uber.org/zap"
 )
 
 // AlertmanagerPayload 对应你提供的 JSON 结构
@@ -343,22 +344,22 @@ func TestGetAlertDescript(t *testing.T) {
 }
 
 func TestIsSilenced(t *testing.T) {
-	var req *types.AlertReceiveReq
-	json.Unmarshal([]byte(testData), &req)
+	// var req *types.AlertReceiveReq
+	// json.Unmarshal([]byte(testData), &req)
 
-	enable := 1
-	now := time.Now()
-	silences := make([]*model.AlertSilence, 0)
+	// enable := 1
+	// now := time.Now()
+	// silences := make([]*model.AlertSilence, 0)
 
-	silences = append(silences, &model.AlertSilence{
-		ID:          1,
-		Cluster:     "chengde",
-		Type:        1,
-		Fingerprint: "28c89c4f51cb8e24",
-		Status:      &enable,
-		EndsAt:      now.Add(100 * time.Hour),
-		StartsAt:    now.Add(-100 * time.Hour),
-	})
+	// silences = append(silences, &model.AlertSilence{
+	// 	ID:          1,
+	// 	Cluster:     "chengde",
+	// 	Type:        1,
+	// 	Fingerprint: "28c89c4f51cb8e24",
+	// 	Status:      &enable,
+	// 	EndsAt:      now.Add(100 * time.Hour),
+	// 	StartsAt:    now.Add(-100 * time.Hour),
+	// })
 
 	// matcher := &model.Matcher{
 	// 	Name:  "alertname",
@@ -384,34 +385,74 @@ func TestIsSilenced(t *testing.T) {
 	// 	Matchers:    matchersBy,
 	// })
 
-	matcher1 := &model.Matcher{
-		Name:  "alertname",
-		Type:  "!=",
-		Value: "DaemonSet滚动更新卡住",
-	}
-	matchers1 := make([]*model.Matcher, 0)
-	matchers1 = append(matchers1, matcher1)
+	// matcher1 := &model.Matcher{
+	// 	Name:  "alertname",
+	// 	Type:  "!=",
+	// 	Value: "DaemonSet滚动更新卡住",
+	// }
+	// matchers1 := make([]*model.Matcher, 0)
+	// matchers1 = append(matchers1, matcher1)
 
-	matchersBy1, err := json.Marshal(&matchers1)
+	// matchersBy1, err := json.Marshal(&matchers1)
+	// if err != nil {
+	// 	t.Fatal(err)
+	// }
+
+	// silences = append(silences, &model.AlertSilence{
+	// 	ID:          3,
+	// 	Cluster:     "chengde",
+	// 	Type:        2,
+	// 	Fingerprint: "28c89c4f51cb8e24",
+	// 	Status:      &enable,
+	// 	EndsAt:      now.Add(100 * time.Hour),
+	// 	StartsAt:    now.Add(-100 * time.Hour),
+	// 	Matchers:    matchersBy1,
+	// })
+
+	alertsServicer := v1.NewAlertsServicer(nil, nil)
+	err := conf.LoadConfig("../../config.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
+	log.NewLogger()
+	data.NewDB()
+	var activeSilences []*model.AlertSilence
+	now := time.Now()
+	err = store.AlertSilence.WithContext(context.TODO()).
+		UnderlyingDB().
+		Where("cluster = ?", "xinjiang").
+		Where(store.AlertSilence.Status.Eq(model.SilenceEnabled)).
+		Where(store.AlertSilence.EndsAt.Gte(now)).
+		Where(store.AlertSilence.StartsAt.Lte(now)).
+		Find(&activeSilences).Error
+	if err != nil {
+		zap.L().Error("查询静默规则失败", zap.Error(err))
+	}
 
-	silences = append(silences, &model.AlertSilence{
-		ID:          3,
-		Cluster:     "chengde",
-		Type:        2,
-		Fingerprint: "28c89c4f51cb8e24",
-		Status:      &enable,
-		EndsAt:      now.Add(100 * time.Hour),
-		StartsAt:    now.Add(-100 * time.Hour),
-		Matchers:    matchersBy1,
+	layout := "2006-01-02 15:04:05.000"
+
+	startTime, err := time.Parse(layout, "2026-05-12 17:59:38.889")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(t)
+
+	alerts := make([]*types.Alert, 0)
+	alerts = append(alerts, &types.Alert{
+		Status:      "firing",
+		StartsAt:    startTime,
+		EndsAt:      nil,
+		Fingerprint: "ab0c89768a745dcc",
 	})
+	// req := &types.AlertReceiveReq{
+	// 	ChannelName: "idc",
+	// 	Status:      "firing",
+	// 	Alerts:
+	// }
 
-	alertsServicer := v1.NewAlertsServicer(nil, nil)
-
-	for _, v := range req.Alerts {
-		silience, id := alertsServicer.IsSilenced(context.Background(), v, silences)
+	for _, v := range alerts {
+		silience, id := alertsServicer.IsSilenced(context.Background(), v, activeSilences)
 
 		fmt.Println("☀️------------------------------------☀️")
 		fmt.Println("silience", silience)
