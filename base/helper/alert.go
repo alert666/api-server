@@ -131,10 +131,45 @@ var FuncMap = template.FuncMap{
 		}
 		return string(b)
 	},
+	// "getDescript": func(data any) string {
+	// 	switch d := data.(type) {
+	// 	case *types.Alert:
+	// 		return d.Annotations["description"]
+	// 	case []*types.Alert:
+	// 		count := len(d)
+	// 		if count == 0 {
+	// 			return ""
+	// 		}
+
+	// 		var sb strings.Builder
+	// 		for i, v := range d {
+	// 			if i < 3 {
+	// 				sb.WriteString(fmt.Sprintf("告警%d. %s\n", i+1, v.Annotations["description"]))
+	// 			} else {
+	// 				break
+	// 			}
+	// 		}
+
+	// 		if count > 3 {
+	// 			sb.WriteString(fmt.Sprintf("---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。", count))
+	// 		}
+
+	// 		return sb.String()
+
+	// 	default:
+	// 		return ""
+	// 	}
+	// },
 	"getDescript": func(data any) string {
 		switch d := data.(type) {
 		case *types.Alert:
-			return d.Annotations["description"]
+			desc := d.Annotations["description"]
+			if desc == "" {
+				return "_无详细描述_"
+			}
+			// return fmt.Sprintf("```yaml\n%s\n```", strings.TrimSpace(desc))
+			return strings.TrimSpace(desc)
+
 		case []*types.Alert:
 			count := len(d)
 			if count == 0 {
@@ -143,19 +178,17 @@ var FuncMap = template.FuncMap{
 
 			var sb strings.Builder
 			for i, v := range d {
-				if i < 3 {
-					sb.WriteString(fmt.Sprintf("%d. %s\n", i+1, v.Annotations["description"]))
-				} else {
+				if i >= 3 {
 					break
 				}
-			}
 
-			if count > 3 {
-				sb.WriteString(fmt.Sprintf("---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。", count))
+				sb.WriteString(fmt.Sprintf("<font color='red'>**告警实例 #%d**\n</font>", i+1))
+				desc := v.Annotations["description"]
+				// sb.WriteString("```yaml\n")
+				sb.WriteString(strings.TrimSpace(desc))
+				sb.WriteString("\n\n")
 			}
-
 			return sb.String()
-
 		default:
 			return ""
 		}
