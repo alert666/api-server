@@ -12,7 +12,7 @@ const (
 
 // AlertSendRecord 告警发送明细/日志表
 type AlertSendRecord struct {
-	ID                int             `gorm:"primaryKey;autoIncrement" json:"id"`
+	ID                uint64          `gorm:"primaryKey;autoIncrement" json:"id"`
 	CreatedAt         time.Time       `gorm:"column:created_at" json:"createdAt,omitempty"`
 	UpdatedAt         time.Time       `gorm:"column:updated_at" json:"updatedAt,omitempty"`
 	AlertHistory      []*AlertHistory `gorm:"foreignKey:AlertSendRecordID" json:"alertHistory"`

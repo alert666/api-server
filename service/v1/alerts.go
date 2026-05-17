@@ -16,6 +16,7 @@ import (
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/pkg/feishu"
+	"github.com/alert666/api-server/pkg/sonyflake"
 	"github.com/alert666/api-server/store"
 	"go.uber.org/zap"
 )
@@ -35,14 +36,16 @@ type alertsService struct {
 	feishuImpl  feishu.Feishuer
 	tenantKey   string
 	dbTenantKey string
+	sonyflake   *sonyflake.SonyflakeID
 }
 
-func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer) AlertsServicer {
+func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer, sonyflake *sonyflake.SonyflakeID) AlertsServicer {
 	return &alertsService{
 		cacheImpl:   cache,
 		feishuImpl:  feishuImpl,
 		tenantKey:   conf.GetAlertTenantKey(),
 		dbTenantKey: constant.AlertDBTenantKey,
+		sonyflake:   sonyflake,
 	}
 }
 
@@ -290,6 +293,16 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 	allUpdateAlerts = append(allUpdateAlerts, silenceUpdate...)
 
 	// 批量创建带有发送流水的告警 (Firing/Resolved)
+	SendRecorID, err := receiver.sonyflake.NextID()
+	if err != nil {
+		log.WithRequestID(ctx).Error(err.Error())
+	}
+	if SendRecorID != 0 {
+		for i := range allCreateSendRecords {
+			allCreateSendRecords[i].ID = SendRecorID
+		}
+	}
+
 	if len(allCreateSendRecords) > 0 {
 		if err := aSendStore.WithContext(ctx).Create(allCreateSendRecords...); err != nil {
 			log.WithRequestID(ctx).Error("批量创建告警历史记录失败", zap.String("tenant", tenant), zap.Error(err))
@@ -360,7 +373,7 @@ func (receiver *alertsService) processAlerts(ctx context.Context, req *processAl
 		createSendRecords     = make([]*model.AlertSendRecord, 0, alertsLen)
 		updateSendRecords     = make([]*model.AlertSendRecord, 0, alertsLen)
 		updateAlerts          = make([]*model.AlertHistory, 0, alertsLen)
-		updatedRecordIDs      = make(map[int]struct{}, alertsLen)
+		updatedRecordIDs      = make(map[uint64]struct{}, alertsLen)
 	)
 
 	// 转换单次发送告警记录的发送状态

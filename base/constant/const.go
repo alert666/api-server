@@ -30,4 +30,5 @@ const (
 	AlertCleanRepeatIntervalHistoryLockKey = "alert:clean:RepeatInterval:history"
 	AlertCleanExpiredSilencesLockKey       = "alert:clean:expired:silences"
 	AlertCleanInhibitLockKey               = "alert:clean:expired:inhibit"
+	DefaultRedisIncrKey                    = "machine_id"
 )

@@ -29,6 +29,7 @@ const (
 
 type CacheStorer interface {
 	DelKey(ctx context.Context, cacheType CacheType, cacheKey any) error
+	Incr(ctx context.Context, key string) (int64, error)
 	CacheSeter
 	CacheStringer
 	CacheSuber
@@ -238,6 +239,12 @@ func (c *CacheStore) DelKey(ctx context.Context, cacheType CacheType, cacheKey a
 		return fmt.Errorf("cache delKey error: %w", err)
 	}
 	return nil
+}
+
+// Incr 自增
+func (c *CacheStore) Incr(ctx context.Context, key string) (int64, error) {
+	saveKey := fmt.Sprintf("%s:%s", c.keyPrefix, key)
+	return c.client.Incr(ctx, saveKey).Result()
 }
 
 // 新增辅助方法用于构建缓存key，提高可读性和可测试性

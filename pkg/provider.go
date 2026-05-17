@@ -7,6 +7,7 @@ import (
 	"github.com/alert666/api-server/pkg/jwt"
 	localcache "github.com/alert666/api-server/pkg/local_cache"
 	"github.com/alert666/api-server/pkg/oauth"
+	"github.com/alert666/api-server/pkg/sonyflake"
 	"github.com/google/wire"
 )
 
@@ -20,4 +21,5 @@ var PkgProviderSet = wire.NewSet(
 	oauth.NewOAuth2,
 	localcache.NewCacher,
 	alertinhibit.NewMatchers,
+	sonyflake.NewSonyflakeID,
 )

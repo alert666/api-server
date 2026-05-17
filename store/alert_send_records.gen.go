@@ -28,7 +28,7 @@ func newAlertSendRecord(db *gorm.DB, opts ...gen.DOOption) alertSendRecord {
 
 	tableName := _alertSendRecord.alertSendRecordDo.TableName()
 	_alertSendRecord.ALL = field.NewAsterisk(tableName)
-	_alertSendRecord.ID = field.NewInt(tableName, "id")
+	_alertSendRecord.ID = field.NewUint64(tableName, "id")
 	_alertSendRecord.CreatedAt = field.NewTime(tableName, "created_at")
 	_alertSendRecord.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_alertSendRecord.SendStatus = field.NewString(tableName, "send_status")
@@ -80,7 +80,7 @@ type alertSendRecord struct {
 	alertSendRecordDo
 
 	ALL               field.Asterisk
-	ID                field.Int
+	ID                field.Uint64
 	CreatedAt         field.Time
 	UpdatedAt         field.Time
 	SendStatus        field.String // 发送状态(success, failed)
@@ -103,7 +103,7 @@ func (a alertSendRecord) As(alias string) *alertSendRecord {
 
 func (a *alertSendRecord) updateTableName(table string) *alertSendRecord {
 	a.ALL = field.NewAsterisk(table)
-	a.ID = field.NewInt(table, "id")
+	a.ID = field.NewUint64(table, "id")
 	a.CreatedAt = field.NewTime(table, "created_at")
 	a.UpdatedAt = field.NewTime(table, "updated_at")
 	a.SendStatus = field.NewString(table, "send_status")

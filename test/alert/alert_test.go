@@ -409,7 +409,7 @@ func TestIsSilenced(t *testing.T) {
 	// 	Matchers:    matchersBy1,
 	// })
 
-	alertsServicer := v1.NewAlertsServicer(nil, nil)
+	alertsServicer := v1.NewAlertsServicer(nil, nil, nil)
 	err := conf.LoadConfig("../../config.yaml")
 	if err != nil {
 		t.Fatal(err)
