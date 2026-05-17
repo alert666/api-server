@@ -10,12 +10,15 @@ import (
 	"time"
 
 	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/types"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )
 
 var (
-	NeverExpires time.Duration = 0
+	NeverExpires   time.Duration = 0
+	getTenantCache CacheStringer
 )
 
 type CacheType string
@@ -53,11 +56,14 @@ func NewCacheStore(redisClient *redis.Client) (*CacheStore, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	return &CacheStore{
+
+	cacheStore := &CacheStore{
 		client:     redisClient,
 		expireTime: expireTime,
 		keyPrefix:  prefix,
-	}, closeup, nil
+	}
+	getTenantCache = cacheStore
+	return cacheStore, closeup, nil
 }
 
 type CacheLocker interface {
@@ -250,4 +256,22 @@ func (c *CacheStore) buildCacheKey(cacheType CacheType, key string) string {
 	sb.WriteByte(':')
 	sb.WriteString(key)
 	return sb.String()
+}
+
+func GetTenantLabel(cluster string) string {
+	var res []*types.TenantOption
+	exits, err := getTenantCache.GetObject(context.TODO(), TenantType, constant.TenantOptionsCacheKey, &res)
+	if err != nil {
+		zap.L().Error("获取 tenant 缓存失败", zap.Error(err))
+		return cluster
+	}
+
+	if exits {
+		for i := range res {
+			if res[i].Value == cluster {
+				return res[i].Label
+			}
+		}
+	}
+	return cluster
 }

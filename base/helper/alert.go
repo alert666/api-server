@@ -15,6 +15,7 @@ import (
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
+	"github.com/alert666/api-server/store"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 )
@@ -85,6 +86,9 @@ var FuncMap = template.FuncMap{
 		var cstZone = time.FixedZone("CST", 8*3600)
 		return t.In(cstZone).Format("2006-01-02 15:04:05")
 	},
+	"getClusterLabel": func(cluster string) string {
+		return store.GetTenantLabel(cluster)
+	},
 	"add": func(a, b int) int {
 		return a + b
 	},
@@ -110,6 +114,7 @@ var FuncMap = template.FuncMap{
 		if promQL == "" {
 			return grafanaAddr + "/explore"
 		}
+
 		stateJSON := fmt.Sprintf(
 			`{"datasource":%q,"queries":[{"expr":%q,"refId":"A"}],"range":{"from":"now-1h","to":"now"}}`,
 			datasource,
@@ -117,7 +122,7 @@ var FuncMap = template.FuncMap{
 		)
 		return grafanaAddr + "/explore?left=" + url.QueryEscape(stateJSON)
 	},
-	// 当告警Channel为飞书的时候, 设置飞书卡片按钮跳转链接
+	// 当告警Channel为飞书的时候, 设置飞书卡片按钮跳转 grafana 链接
 	"newViewLink": func(link string) string {
 		m := map[string]string{
 			"pc_url":      link,
@@ -131,35 +136,28 @@ var FuncMap = template.FuncMap{
 		}
 		return string(b)
 	},
-	// "getDescript": func(data any) string {
-	// 	switch d := data.(type) {
-	// 	case *types.Alert:
-	// 		return d.Annotations["description"]
-	// 	case []*types.Alert:
-	// 		count := len(d)
-	// 		if count == 0 {
-	// 			return ""
-	// 		}
+	// 当告警Channel为飞书的时候, 设置飞书卡片按钮跳转平台的链接
+	"newAlertManagerLink": func(link string, area string) string {
+		u, err := url.Parse(link)
+		if err != nil {
+			return "{}"
+		}
+		params := u.Query()
+		params.Add("tenant", area)
+		u.RawQuery = params.Encode()
 
-	// 		var sb strings.Builder
-	// 		for i, v := range d {
-	// 			if i < 3 {
-	// 				sb.WriteString(fmt.Sprintf("告警%d. %s\n", i+1, v.Annotations["description"]))
-	// 			} else {
-	// 				break
-	// 			}
-	// 		}
-
-	// 		if count > 3 {
-	// 			sb.WriteString(fmt.Sprintf("---\n💡 当前已聚合 %d 条告警，仅展示前 3 条。", count))
-	// 		}
-
-	// 		return sb.String()
-
-	// 	default:
-	// 		return ""
-	// 	}
-	// },
+		m := map[string]string{
+			"pc_url":      u.String(),
+			"android_url": "",
+			"ios_url":     "",
+			"url":         u.String(),
+		}
+		b, err := json.Marshal(m)
+		if err != nil {
+			return "{}"
+		}
+		return string(b)
+	},
 	"getDescript": func(data any) string {
 		switch d := data.(type) {
 		case *types.Alert:
