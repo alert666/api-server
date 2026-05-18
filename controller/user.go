@@ -28,6 +28,7 @@ type UserController interface {
 	OAuth2CallbackController(c *gin.Context)
 	OAuth2ProviderController(c *gin.Context)
 	OAuth2ActivateController(c *gin.Context)
+	GetUserOption(c *gin.Context)
 }
 
 type UserControllerImpl struct {
@@ -255,4 +256,16 @@ func (receiver *UserControllerImpl) OAuth2ActivateController(c *gin.Context) {
 		return
 	}
 	bind.ResponseWithData(c, receiver.userServicer.OAuth2Activate, bind.BindTypeUri, bind.BindTypeJson)
+}
+
+// GetUserOption 获取用户 Options
+// @Summary 获取用户 Options
+// @Description 获取用户 Options
+// @Tags 用户管理
+// @Accept json
+// @Produce json
+// @Success 200 {object} types.Response{data=[]types.UserOption} "查询成功"
+// @Router /api/v1/user/options [get]
+func (receiver *UserControllerImpl) GetUserOption(c *gin.Context) {
+	bind.ResponseWithDataNoBind(c, receiver.userServicer.GetUserOptions)
 }

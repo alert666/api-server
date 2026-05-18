@@ -1,6 +1,8 @@
 package constant
 
-import apitypes "github.com/alert666/api-server/base/types"
+import (
+	apitypes "github.com/alert666/api-server/base/types"
+)
 
 type userContextKey struct{}
 type providerContextKey struct{}
@@ -20,7 +22,7 @@ const (
 	EmptyRoleSentinel                      = "__empty__"
 	OAuth2ProviderList                     = "oauth2:provider:list"
 	TenantIDHeader                         = "X-Tenant-Id"
-	TenantOptionsCacheKey                  = "options"
+	OptionsCacheKey                        = "options"
 	AlertStatusResolved                    = "resolved"
 	AlertStatusFiring                      = "firing"
 	AlertChannelTopicUpdate                = "alert:channel:update"

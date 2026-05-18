@@ -92,3 +92,8 @@ func NewUserLoginResponse(user *model.User, token string) *UserLoginResponse {
 		Token: token,
 	}
 }
+
+type UserOption struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+}

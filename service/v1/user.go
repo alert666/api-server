@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
@@ -19,6 +20,7 @@ import (
 	"github.com/alert666/api-server/store"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/sync/singleflight"
 	"gorm.io/gorm"
 )
 
@@ -44,18 +46,20 @@ type GeneralUserServicer interface {
 	DeleteUser(ctx context.Context, req *types.IDRequest) error
 	QueryUser(ctx context.Context, req *types.IDRequest) (*model.User, error)
 	ListUser(ctx context.Context, pagination *types.UserListRequest) (*types.UserListResponse, error)
+	GetUserOptions(ctx context.Context) ([]types.UserOption, error)
 }
 
 type UserService struct {
-	cacheStore store.CacheStorer
+	cacheImpl  store.CacheStorer
 	jwt        jwt.JwtInterface
 	oauth      *oauth.OAuth2
 	localCache localcache.Cacher
+	gsf        singleflight.Group
 }
 
 func NewUserService(cacheStore store.CacheStorer, jwt jwt.JwtInterface, feishuOauth *oauth.OAuth2, localCache localcache.Cacher) UserServicer {
 	return &UserService{
-		cacheStore: cacheStore,
+		cacheImpl:  cacheStore,
 		jwt:        jwt,
 		oauth:      feishuOauth,
 		localCache: localCache,
@@ -85,7 +89,7 @@ func (receiver *UserService) Login(ctx context.Context, req *types.UserLoginRequ
 
 	tokenExpire := receiver.jwt.GetExpire()
 	if len(user.Roles) == 0 {
-		if err := receiver.cacheStore.SetSet(ctx, store.RoleType, user.ID, []any{constant.EmptyRoleSentinel}, &tokenExpire); err != nil {
+		if err := receiver.cacheImpl.SetSet(ctx, store.RoleType, user.ID, []any{constant.EmptyRoleSentinel}, &tokenExpire); err != nil {
 			log.WithRequestID(ctx).
 				Error("login set empty role cache error", zap.Int64("userID", user.ID), zap.Error(err))
 		}
@@ -94,7 +98,7 @@ func (receiver *UserService) Login(ctx context.Context, req *types.UserLoginRequ
 		for _, role := range user.Roles {
 			roleNames = append(roleNames, role.Name)
 		}
-		if err := receiver.cacheStore.SetSet(ctx, store.RoleType, user.ID, roleNames, &tokenExpire); err != nil {
+		if err := receiver.cacheImpl.SetSet(ctx, store.RoleType, user.ID, roleNames, &tokenExpire); err != nil {
 			log.WithRequestID(ctx).
 				Error("login set role cache error", zap.Int64("userID", user.ID), zap.Any("roles", roleNames), zap.Error(err))
 		}
@@ -108,7 +112,7 @@ func (receiver *UserService) Logout(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	return receiver.cacheStore.DelKey(ctx, store.RoleType, mc.UserID)
+	return receiver.cacheImpl.DelKey(ctx, store.RoleType, mc.UserID)
 }
 
 func (receiver *UserService) CreateUser(ctx context.Context, req *types.UserCreateRequest) (err error) {
@@ -154,8 +158,32 @@ func (receiver *UserService) CreateUser(ctx context.Context, req *types.UserCrea
 		Mobile:   req.Mobile,
 		Roles:    roles,
 	}
+	var updatedOptions []types.UserOption
+	err = store.Q.Transaction(func(tx *store.Query) error {
+		if err := tx.User.WithContext(ctx).Create(user); err != nil {
+			return fmt.Errorf("创建用户失败, %w", err)
+		}
 
-	return userStore.WithContext(ctx).Create(user)
+		options, err := receiver.GetUserOptions(ctx)
+		if err != nil {
+			return err
+		}
+
+		newOption := types.UserOption{
+			Label: user.Name,
+			Value: strconv.Itoa(int(user.ID)),
+		}
+		updatedOptions = append(options, newOption)
+
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	_ = receiver.cacheImpl.SetObject(ctx, store.UserType, constant.OptionsCacheKey, updatedOptions, store.NeverExpires)
+
+	return nil
 }
 
 func (receiver *UserService) UpdateUserByAdmin(ctx context.Context, req *types.UserUpdateAdminRequest) error {
@@ -200,7 +228,7 @@ func (receiver *UserService) UpdateUserBySelf(ctx context.Context, req *types.Us
 
 func (receiver *UserService) DeleteUser(ctx context.Context, req *types.IDRequest) (err error) {
 	var user *model.User
-	return store.Q.Transaction(func(tx *store.Query) error {
+	err = store.Q.Transaction(func(tx *store.Query) error {
 		if user, err = tx.User.WithContext(ctx).Where(userStore.ID.Eq(req.ID)).Preload(userStore.Oauth2User).First(); err != nil {
 			return err
 		}
@@ -216,6 +244,10 @@ func (receiver *UserService) DeleteUser(ctx context.Context, req *types.IDReques
 
 		return tx.User.Roles.WithContext(ctx).Model(user).Clear()
 	})
+	if err == nil {
+		_ = receiver.cacheImpl.DelKey(ctx, store.UserType, constant.OptionsCacheKey)
+	}
+	return err
 }
 
 func (receiver *UserService) QueryUser(ctx context.Context, req *types.IDRequest) (*model.User, error) {
@@ -346,7 +378,7 @@ func (receiver *UserService) updateRole(ctx context.Context, req *types.UserUpda
 	}
 
 	// 如果redis缓存中存在该用户的角色，需要删除
-	cacheRoles, err := receiver.cacheStore.GetSet(ctx, store.RoleType, user.ID)
+	cacheRoles, err := receiver.cacheImpl.GetSet(ctx, store.RoleType, user.ID)
 	if err != nil {
 		return err
 	}
@@ -356,7 +388,7 @@ func (receiver *UserService) updateRole(ctx context.Context, req *types.UserUpda
 		return nil
 	}
 
-	if err := receiver.cacheStore.DelKey(ctx, store.RoleType, user.ID); err != nil {
+	if err := receiver.cacheImpl.DelKey(ctx, store.RoleType, user.ID); err != nil {
 		return err
 	}
 
@@ -367,14 +399,14 @@ func (receiver *UserService) updateRole(ctx context.Context, req *types.UserUpda
 
 	go func() {
 		time.Sleep(time.Second * 5)
-		if err := receiver.cacheStore.DelKey(context.TODO(), store.RoleType, user.ID); err != nil {
+		if err := receiver.cacheImpl.DelKey(context.TODO(), store.RoleType, user.ID); err != nil {
 			log.WithRequestID(ctx).Error("del role cache error", zap.Int64("userID", user.ID), zap.Any("roleNames", roleNames), zap.Error(err))
 			return
 		}
 		log.WithRequestID(ctx).Info("del role cache success", zap.Int64("userID", user.ID), zap.Any("roleNames", roleNames))
 	}()
 
-	return receiver.cacheStore.SetSet(ctx, store.RoleType, user.ID, roleNames, nil)
+	return receiver.cacheImpl.SetSet(ctx, store.RoleType, user.ID, roleNames, nil)
 }
 
 // hashPassword 对密码进行 Bcrypt 哈希
@@ -445,12 +477,12 @@ func (receiver *UserService) OAuth2Callback(ctx context.Context, req *types.OAut
 	}
 
 	if len(roleNames) > 0 {
-		if err := receiver.cacheStore.SetSet(ctx, store.RoleType, oauth2User.User.ID, roleNames, nil); err != nil {
+		if err := receiver.cacheImpl.SetSet(ctx, store.RoleType, oauth2User.User.ID, roleNames, nil); err != nil {
 			log.WithRequestID(ctx).Error(fmt.Sprintf("login set role cache error, userID %d", oauth2User.User.ID), zap.Error(err))
 		}
 	} else {
 		// set a sentinel so other parts know user has no roles
-		if err := receiver.cacheStore.SetSet(ctx, store.RoleType, oauth2User.User.ID, []any{constant.EmptyRoleSentinel}, nil); err != nil {
+		if err := receiver.cacheImpl.SetSet(ctx, store.RoleType, oauth2User.User.ID, []any{constant.EmptyRoleSentinel}, nil); err != nil {
 			log.WithRequestID(ctx).Error(fmt.Sprintf("login set empty role cache error,userID %d", oauth2User.User.ID), zap.Error(err))
 		}
 	}
@@ -581,4 +613,47 @@ func (receiver *UserService) OAuth2Activate(ctx context.Context, req *types.OAut
 		return nil, err
 	}
 	return types.NewUserLoginResponse(user, token), nil
+}
+
+func (receiver *UserService) GetUserOptions(ctx context.Context) ([]types.UserOption, error) {
+	var res []types.UserOption
+	exists, err := receiver.cacheImpl.GetObject(ctx, store.UserType, constant.OptionsCacheKey, &res)
+	if err != nil {
+		return nil, err
+	}
+	if exists {
+		return res, nil
+	}
+
+	v, err, _ := receiver.gsf.Do(constant.OptionsCacheKey, func() (interface{}, error) {
+		var innerRes []types.UserOption
+		if ex, _ := receiver.cacheImpl.GetObject(ctx, store.UserType, constant.OptionsCacheKey, &innerRes); ex {
+			return innerRes, nil
+		}
+
+		var users []struct {
+			ID   int
+			Name string
+		}
+		u := userStore
+		if err := u.WithContext(ctx).Select(u.ID, u.Name).Scan(&users); err != nil {
+			return nil, err
+		}
+
+		resList := make([]types.UserOption, 0, len(users))
+		for _, v := range users {
+			resList = append(resList, types.UserOption{
+				Label: v.Name,
+				Value: strconv.Itoa(v.ID),
+			})
+		}
+		_ = receiver.cacheImpl.SetObject(ctx, store.UserType, constant.OptionsCacheKey, resList, store.NeverExpires)
+		return resList, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return v.([]types.UserOption), nil
 }

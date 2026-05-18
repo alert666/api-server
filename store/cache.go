@@ -28,6 +28,7 @@ const (
 	AlertType  CacheType = "alert"
 	LockType   CacheType = "lock"
 	TenantType CacheType = "tenant"
+	UserType   CacheType = "user"
 )
 
 type CacheStorer interface {
@@ -260,7 +261,7 @@ func (c *CacheStore) buildCacheKey(cacheType CacheType, key string) string {
 
 func GetTenantLabel(cluster string) string {
 	var res []*types.TenantOption
-	exits, err := getTenantCache.GetObject(context.TODO(), TenantType, constant.TenantOptionsCacheKey, &res)
+	exits, err := getTenantCache.GetObject(context.TODO(), TenantType, constant.OptionsCacheKey, &res)
 	if err != nil {
 		zap.L().Error("获取 tenant 缓存失败", zap.Error(err))
 		return cluster

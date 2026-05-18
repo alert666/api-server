@@ -14,7 +14,6 @@ type AlertSilenceCreateRequest struct {
 	EndsAt      *int64          `json:"endsAt" binding:"required,gtfield=StartsAt"`
 	Fingerprint string          `json:"fingerprint" binding:"required_without=Matchers"`
 	Matchers    []model.Matcher `json:"matchers" binding:"required_without=Fingerprint"`
-	CreatedBy   string          `json:"createdBy" binding:"required"`
 	Comment     string          `json:"comment" binding:"required,max=255"`
 }
 
@@ -30,7 +29,6 @@ func (receiver *AlertSilenceCreateRequest) TOMolelAlertSilence() (*model.AlertSi
 		Status:      receiver.Status,
 		StartsAt:    s,
 		EndsAt:      e,
-		CreatedBy:   receiver.CreatedBy,
 		Comment:     receiver.Comment,
 		Fingerprint: receiver.Fingerprint,
 		Matchers:    mBytes,

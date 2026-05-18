@@ -121,7 +121,7 @@ func (receiver *Init) Init(ctx context.Context) error {
 		})
 	}
 
-	if err := receiver.caceImpl.SetObject(ctx, store.TenantType, constant.TenantOptionsCacheKey, res, store.NeverExpires); err != nil {
+	if err := receiver.caceImpl.SetObject(ctx, store.TenantType, constant.OptionsCacheKey, res, store.NeverExpires); err != nil {
 		zap.L().Error("缓存 tenants 失败", zap.Error(err))
 	}
 

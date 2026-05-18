@@ -9,6 +9,7 @@ import (
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/store"
+	"golang.org/x/sync/singleflight"
 )
 
 type TenantServicer interface {
@@ -17,11 +18,12 @@ type TenantServicer interface {
 	DeleteTenant(ctx context.Context, req *types.IDRequest) error
 	QueryTenant(ctx context.Context, req *types.IDRequest) (*model.Tenant, error)
 	ListTenant(ctx context.Context, pagination *types.TenantListRequest) (*types.TenantListResponse, error)
-	GetTenantOption(ctx context.Context) ([]*types.TenantOption, error)
+	GetTenantOption(ctx context.Context) ([]types.TenantOption, error)
 }
 
 type TenantService struct {
 	cacheImpl store.CacheStorer
+	sf        singleflight.Group
 }
 
 func NewTenantServicer(cacheImpl store.CacheStorer) TenantServicer {
@@ -60,7 +62,7 @@ func (receiver *TenantService) CreateTenant(ctx context.Context, req *types.Tena
 				Value: storeObj.Name,
 			})
 		}
-		return receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.TenantOptionsCacheKey, options, store.NeverExpires)
+		return receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.OptionsCacheKey, options, store.NeverExpires)
 	})
 }
 
@@ -94,7 +96,7 @@ func (receiver *TenantService) UpdateTenant(ctx context.Context, req *types.Tena
 			})
 		}
 
-		return receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.TenantOptionsCacheKey, res, store.NeverExpires)
+		return receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.OptionsCacheKey, res, store.NeverExpires)
 	})
 
 }
@@ -121,7 +123,7 @@ func (receiver *TenantService) DeleteTenant(ctx context.Context, req *types.IDRe
 				Value: storeObj.Name,
 			})
 		}
-		return receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.TenantOptionsCacheKey, options, store.NeverExpires)
+		return receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.OptionsCacheKey, options, store.NeverExpires)
 	})
 }
 
@@ -165,36 +167,55 @@ func (receiver *TenantService) ListTenant(ctx context.Context, req *types.Tenant
 	return types.NewTenantListResponse(Tenants, total, req.PageSize, req.Page), nil
 }
 
-func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]*types.TenantOption, error) {
-	var res []*types.TenantOption
-	exits, err := receiver.cacheImpl.GetObject(ctx, store.TenantType, constant.TenantOptionsCacheKey, &res)
+func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]types.TenantOption, error) {
+	var res []types.TenantOption
+
+	exists, err := receiver.cacheImpl.GetObject(ctx, store.TenantType, constant.OptionsCacheKey, &res)
+	if err != nil {
+		return nil, err
+	}
+	if exists {
+		return res, nil
+	}
+
+	data, err, _ := receiver.sf.Do(constant.OptionsCacheKey, func() (interface{}, error) {
+		var innerRes []*types.TenantOption
+		if ex, _ := receiver.cacheImpl.GetObject(ctx, store.TenantType, constant.OptionsCacheKey, &innerRes); ex {
+			return innerRes, nil
+		}
+
+		var storeObjs []struct {
+			Name  string
+			Label string
+		}
+		err := tenantStore.WithContext(ctx).
+			Select(tenantStore.Name, tenantStore.Label).
+			Scan(&storeObjs)
+		if err != nil {
+			return nil, err
+		}
+
+		resList := make([]types.TenantOption, 0, len(storeObjs))
+		for _, obj := range storeObjs {
+			label := obj.Label
+			if label == "" {
+				label = obj.Name
+			}
+			resList = append(resList, types.TenantOption{
+				Label: label,
+				Value: obj.Name,
+			})
+		}
+
+		// 5. 设置缓存（即使 resList 为空也设置，避免缓存穿透）
+		_ = receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.OptionsCacheKey, resList, store.NeverExpires)
+
+		return resList, nil
+	})
+
 	if err != nil {
 		return nil, err
 	}
 
-	if !exits || len(res) == 0 {
-		storeObjs, err := tenantStore.WithContext(ctx).Find()
-		if err != nil {
-			return nil, err
-		}
-		res = make([]*types.TenantOption, 0, len(storeObjs))
-		for _, storeObj := range storeObjs {
-			var label string
-			if storeObj.Label == "" {
-				label = storeObj.Name
-			} else {
-				label = storeObj.Label
-			}
-
-			res = append(res, &types.TenantOption{
-				Label: label,
-				Value: storeObj.Name,
-			})
-		}
-
-		if err := receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.TenantOptionsCacheKey, res, store.NeverExpires); err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
+	return data.([]types.TenantOption), nil
 }

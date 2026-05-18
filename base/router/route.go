@@ -119,6 +119,7 @@ func (r *Router) registerUserRouter(apiGroup *gin.RouterGroup) {
 		userGroup.GET("/:id", r.userRouter.UserQueryController)
 		userGroup.GET("", r.userRouter.UserListController)
 		userGroup.DELETE("/:id", r.userRouter.UserDeleteController)
+		userGroup.GET("/options", r.userRouter.GetUserOption)
 	}
 }
 
