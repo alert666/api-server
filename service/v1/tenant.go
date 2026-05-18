@@ -179,8 +179,15 @@ func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]*types.Te
 		}
 		res = make([]*types.TenantOption, 0, len(storeObjs))
 		for _, storeObj := range storeObjs {
+			var label string
+			if storeObj.Label == "" {
+				label = storeObj.Name
+			} else {
+				label = storeObj.Label
+			}
+
 			res = append(res, &types.TenantOption{
-				Label: storeObj.Label,
+				Label: label,
 				Value: storeObj.Name,
 			})
 		}

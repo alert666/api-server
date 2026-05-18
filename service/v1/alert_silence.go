@@ -78,7 +78,7 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 				Where(tx.AlertHistory.Status.Eq(constant.AlertStatusFiring)).
 				Updates(model.AlertHistory{
 					IsSilenced:     true,
-					AlertSilenceID: obj.ID,
+					AlertSilenceID: &obj.ID,
 				}); err != nil {
 				return err
 			}

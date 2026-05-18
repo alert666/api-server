@@ -19,7 +19,7 @@ type AlertHistory struct {
 	EndsAt            *time.Time       `gorm:"column:ends_at;type:datetime;index:idx_ends_at;comment:告警恢复时间" json:"endsAt"`
 	AlertChannelID    int              `gorm:"column:alert_channel_id;not null;index:idx_channel_id;comment:关联通道ID" json:"alertChannelId"`
 	AlertSendRecordID *int             `gorm:"column:alert_send_record_id;index:idx_send_record_id;comment:关联发送记录ID和分组ID" json:"alertSendRecordID"`
-	AlertSilenceID    int              `gorm:"column:alert_silence_id;index:idx_history_silence_id;comment:关联静默规则ID" json:"alertSilenceID"`
+	AlertSilenceID    *int             `gorm:"column:alert_silence_id;index:idx_history_silence_id;comment:关联静默规则ID" json:"alertSilenceID"`
 	Alertname         string           `gorm:"column:alertname;type:varchar(255);not null" json:"alertname"`
 	Severity          string           `gorm:"column:severity;type:varchar(32)" json:"severity"`
 	Instance          string           `gorm:"column:instance;type:varchar(255)" json:"instance"`

@@ -533,3 +533,12 @@ func TestAlertInhibitRulesConfig(t *testing.T) {
 	inhibitImpl := v1.NewalertInhibit(matchers, cacheStore)
 	inhibitImpl.CleanInhibitAlert()
 }
+
+func TestIntAddress(t *testing.T) {
+
+	var a *int
+
+	b := a
+
+	fmt.Println(b)
+}

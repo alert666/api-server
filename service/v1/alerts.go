@@ -214,6 +214,8 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 				zap.L().Info("告警被静默", zap.String("fingerprint", alerts[i].Fingerprint), zap.Int("silenceID", silenceID))
 				// 被静默的告警不进入 firingAlertArry，不触发发送
 				continue
+			} else {
+				alerts[i].IsSilenced = false
 			}
 
 			alerts[i].EndsAt = nil
@@ -404,6 +406,10 @@ func (receiver *alertsService) processAlerts(ctx context.Context, req *processAl
 			if alert.Status == constant.AlertStatusFiring {
 				storeHistory.EndsAt = nil
 				storeHistory.Status = alert.Status
+				if !alert.IsSilenced {
+					storeHistory.IsSilenced = alert.IsSilenced
+					storeHistory.AlertSilenceID = nil
+				}
 			}
 			// 将修改后的 alertHistory 追加到更新的数组中
 			updateAlerts = append(updateAlerts, storeHistory)
@@ -765,7 +771,7 @@ func (receiver *alertsService) processSilencedAlerts(notifyReq *types.NotifyReq)
 			storeHistory.SendCount += 1
 			storeHistory.Status = alert.Status
 			storeHistory.IsSilenced = true
-			storeHistory.AlertSilenceID = alert.SilenceID // 记录是哪个规则静默的
+			storeHistory.AlertSilenceID = &alert.SilenceID
 			updateAlerts = append(updateAlerts, storeHistory)
 		} else {
 			// 新告警即被静默
@@ -776,7 +782,7 @@ func (receiver *alertsService) processSilencedAlerts(notifyReq *types.NotifyReq)
 			}
 
 			alertHistory.IsSilenced = true
-			alertHistory.AlertSilenceID = alert.SilenceID
+			alertHistory.AlertSilenceID = &alert.SilenceID
 			alertHistory.AlertSendRecordID = nil
 			createAlerts = append(createAlerts, alertHistory)
 		}
