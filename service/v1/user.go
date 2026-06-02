@@ -46,7 +46,7 @@ type GeneralUserServicer interface {
 	DeleteUser(ctx context.Context, req *types.IDRequest) error
 	QueryUser(ctx context.Context, req *types.IDRequest) (*model.User, error)
 	ListUser(ctx context.Context, pagination *types.UserListRequest) (*types.UserListResponse, error)
-	GetUserOptions(ctx context.Context) ([]types.UserOption, error)
+	GetUserOptions(ctx context.Context) ([]types.Option, error)
 }
 
 type UserService struct {
@@ -158,7 +158,7 @@ func (receiver *UserService) CreateUser(ctx context.Context, req *types.UserCrea
 		Mobile:   req.Mobile,
 		Roles:    roles,
 	}
-	var updatedOptions []types.UserOption
+	var updatedOptions []types.Option
 	err = store.Q.Transaction(func(tx *store.Query) error {
 		if err := tx.User.WithContext(ctx).Create(user); err != nil {
 			return fmt.Errorf("创建用户失败, %w", err)
@@ -169,7 +169,7 @@ func (receiver *UserService) CreateUser(ctx context.Context, req *types.UserCrea
 			return err
 		}
 
-		newOption := types.UserOption{
+		newOption := types.Option{
 			Label: user.Name,
 			Value: strconv.Itoa(int(user.ID)),
 		}
@@ -615,8 +615,8 @@ func (receiver *UserService) OAuth2Activate(ctx context.Context, req *types.OAut
 	return types.NewUserLoginResponse(user, token), nil
 }
 
-func (receiver *UserService) GetUserOptions(ctx context.Context) ([]types.UserOption, error) {
-	var res []types.UserOption
+func (receiver *UserService) GetUserOptions(ctx context.Context) ([]types.Option, error) {
+	var res []types.Option
 	exists, err := receiver.cacheImpl.GetObject(ctx, store.UserType, constant.OptionsCacheKey, &res)
 	if err != nil {
 		return nil, err
@@ -626,7 +626,7 @@ func (receiver *UserService) GetUserOptions(ctx context.Context) ([]types.UserOp
 	}
 
 	v, err, _ := receiver.gsf.Do(constant.OptionsCacheKey, func() (interface{}, error) {
-		var innerRes []types.UserOption
+		var innerRes []types.Option
 		if ex, _ := receiver.cacheImpl.GetObject(ctx, store.UserType, constant.OptionsCacheKey, &innerRes); ex {
 			return innerRes, nil
 		}
@@ -640,9 +640,9 @@ func (receiver *UserService) GetUserOptions(ctx context.Context) ([]types.UserOp
 			return nil, err
 		}
 
-		resList := make([]types.UserOption, 0, len(users))
+		resList := make([]types.Option, 0, len(users))
 		for _, v := range users {
-			resList = append(resList, types.UserOption{
+			resList = append(resList, types.Option{
 				Label: v.Name,
 				Value: strconv.Itoa(v.ID),
 			})
@@ -655,5 +655,5 @@ func (receiver *UserService) GetUserOptions(ctx context.Context) ([]types.UserOp
 		return nil, err
 	}
 
-	return v.([]types.UserOption), nil
+	return v.([]types.Option), nil
 }

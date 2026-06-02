@@ -93,7 +93,7 @@ func NewUserLoginResponse(user *model.User, token string) *UserLoginResponse {
 	}
 }
 
-type UserOption struct {
+type Option struct {
 	Label string `json:"label"`
 	Value string `json:"value"`
 }

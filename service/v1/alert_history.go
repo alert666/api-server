@@ -3,6 +3,7 @@ package v1
 import (
 	"context"
 	"fmt"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -11,6 +12,8 @@ import (
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/store"
+	"go.uber.org/zap"
+	"golang.org/x/sync/singleflight"
 )
 
 type AlertHistoryServicer interface {
@@ -18,14 +21,24 @@ type AlertHistoryServicer interface {
 	UpdateHistory(ctx context.Context, req *types.AlertHistoryUpdateRequest) error
 	ListHistory(ctx context.Context, req *types.AlertHistoryListRequest) (*types.AlertHistoryListResponse, error)
 	GetTenantFiringCounts(ctx context.Context) ([]*types.TenantCount, error)
+	CacheAlertNameOptioner
 }
 
 type alertHistoryService struct {
-	cache store.CacheStorer
+	cacheImpl store.CacheStorer
+	sf        singleflight.Group
 }
 
 func NewHistoryServicer(cache store.CacheStorer) AlertHistoryServicer {
-	return &alertHistoryService{}
+	return &alertHistoryService{
+		cacheImpl: cache,
+	}
+}
+
+func NewCacheAlertNameOptioner(cache store.CacheStorer) CacheAlertNameOptioner {
+	return &alertHistoryService{
+		cacheImpl: cache,
+	}
 }
 
 func (recevicer *alertHistoryService) QueryHistory(ctx context.Context, req *types.IDRequest) (*model.AlertHistory, error) {
@@ -162,4 +175,99 @@ func (receiver *alertHistoryService) GetTenantFiringCounts(ctx context.Context) 
 	}
 
 	return results, nil
+}
+
+type CacheAlertNameOptioner interface {
+	GetAlertNameOptions(ctx context.Context) ([]types.Option, error)
+	CacheAlertNameOptions()
+}
+
+func (receiver *alertHistoryService) GetAlertNameOptions(ctx context.Context) ([]types.Option, error) {
+	var options []types.Option
+	exits, err := receiver.cacheImpl.GetObject(ctx, store.AlertNameType, constant.OptionsCacheKey, &options)
+	if err != nil {
+		return nil, err
+	}
+
+	if exits {
+		return options, nil
+	}
+
+	_, err, _ = receiver.sf.Do(constant.OptionsCacheKey, func() (interface{}, error) {
+		receiver.CacheAlertNameOptions()
+		return nil, nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("缓存 alertNameOptions 失败, %w", err)
+	}
+
+	receiver.CacheAlertNameOptions()
+	exits, err = receiver.cacheImpl.GetObject(ctx, store.AlertNameType, constant.OptionsCacheKey, &options)
+	if err != nil {
+		return nil, err
+	}
+
+	return options, nil
+}
+
+func (receiver *alertHistoryService) CacheAlertNameOptions() {
+	start := time.Now()
+	defer func() {
+		if r := recover(); r != nil {
+			stack := debug.Stack()
+			zap.L().Error("CacheAlertNameOptions panic recovered",
+				zap.Any("panic", r),
+				zap.String("stack", string(stack)),
+			)
+			return
+		}
+		elapsed := time.Since(start).Milliseconds()
+		zap.L().Info("CacheAlertNameOptions 执行结束",
+			zap.Int64("duration_ms", elapsed),
+		)
+	}()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 58*time.Second)
+	defer cancel()
+
+	ok, err := receiver.cacheImpl.SetNX(ctx, store.LockType, constant.AlertNamesOptionsLockKey, time.Now().Unix(), 58*time.Second)
+	if err != nil {
+		zap.L().Error("[定时任务] CacheAlertNameOptions Redis 分布式锁异常", zap.Error(err))
+		return
+	}
+	defer receiver.cacheImpl.DelKey(ctx, store.LockType, constant.AlertNamesOptionsLockKey)
+
+	if !ok {
+		zap.L().Debug("[定时任务] CacheAlertNameOptions 缓存 AlertNames 任务正在其他节点运行，本次跳过")
+		return
+	}
+
+	zap.L().Debug("[定时任务] CacheAlertNameOptions 成功获取锁，开始缓存 AlertNames")
+
+	options, err := receiver.cacheAlertNameOptions(ctx)
+	if err != nil {
+		zap.L().Error("[定时任务] 获取 alertName Options 失败", zap.Error(err))
+	}
+
+	if len(options) == 0 {
+		return
+	}
+
+	if err = receiver.cacheImpl.SetObject(ctx, store.AlertNameType, constant.OptionsCacheKey, options, store.NeverExpires); err != nil {
+		zap.L().Error("[定时任务] 设置 alertName Options 失败", zap.Error(err))
+	}
+}
+
+func (receiver *alertHistoryService) cacheAlertNameOptions(ctx context.Context) ([]types.Option, error) {
+	var options []types.Option
+	err := store.AlertHistory.WithContext(ctx).UnderlyingDB().
+		Model(&model.AlertHistory{}).
+		Select("distinct alertname as label, alertname as value").
+		Scan(&options).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return options, nil
 }
