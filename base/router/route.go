@@ -212,6 +212,7 @@ func (r *Router) registerHistoryRouter(apiGroup *gin.RouterGroup) {
 		baseGroup.GET("", r.alertHistory.ListAlertHistory)
 		baseGroup.GET("/firingCount", r.alertHistory.GetTenantFiringCounts)
 		baseGroup.PUT("/:id", r.alertHistory.UpdateAlertHistory)
+		baseGroup.GET("/alertNameOptions", r.alertHistory.GetAlertNameOptions)
 	}
 }
 

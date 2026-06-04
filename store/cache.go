@@ -29,7 +29,7 @@ const (
 	LockType      CacheType = "lock"
 	TenantType    CacheType = "tenant"
 	UserType      CacheType = "user"
-	AlertNameType CacheType = "user"
+	AlertNameType CacheType = "alertName"
 )
 
 type CacheStorer interface {

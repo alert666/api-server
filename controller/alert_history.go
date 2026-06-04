@@ -11,6 +11,7 @@ type AlertHistoryController interface {
 	ListAlertHistory(c *gin.Context)
 	UpdateAlertHistory(c *gin.Context)
 	GetTenantFiringCounts(c *gin.Context)
+	GetAlertNameOptions(c *gin.Context)
 }
 
 type alertHistoryController struct {
@@ -63,8 +64,19 @@ func (receiver *alertHistoryController) UpdateAlertHistory(c *gin.Context) {
 // @Tags AlertHistory 管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=[]types.TenantFiringCount} "更新成功"
+// @Success 200 {object} types.Response{data=[]types.TenantFiringCount} "询成功"
 // @Router /api/v1/alertHistory/firingCount [get]
 func (receiver *alertHistoryController) GetTenantFiringCounts(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, receiver.alertHistoryService.GetTenantFiringCounts)
+}
+
+// @Summary 获取 AlertHistory aletName options
+// @Description 获取 AlertHistory aletName options
+// @Tags AlertHistory 管理
+// @Accept json
+// @Produce json
+// @Success 200 {object} types.Response{data=[]types.Option} "查询成功"
+// @Router /api/v1/alertHistory/alertNameOptions [get]
+func (receiver *alertHistoryController) GetAlertNameOptions(c *gin.Context) {
+	bind.ResponseWithDataNoBind(c, receiver.alertHistoryService.GetAlertNameOptions)
 }
