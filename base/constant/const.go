@@ -32,4 +32,5 @@ const (
 	AlertCleanRepeatIntervalHistoryLockKey = "alert:clean:RepeatInterval:history"
 	AlertCleanExpiredSilencesLockKey       = "alert:clean:expired:silences"
 	AlertCleanInhibitLockKey               = "alert:clean:expired:inhibit"
+	AlertNamesOptionsLockKey               = "alert:clean:expired:inhibit"
 )

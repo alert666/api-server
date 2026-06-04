@@ -229,11 +229,12 @@ func NewApplication(
 	cleanDuplicateFiringer v1.CleanDuplicateFiringer,
 	cleanExpiredSilencer v1.CleanExpiredSilencer,
 	cleanInhibitAlert v1.AlertInhibiter,
+	cacheAlertNameOptioner v1.CacheAlertNameOptioner,
 ) *Application {
 	return newApp(
 		WithServer(
 			server.NewServer(e),
-			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert),
+			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert, cacheAlertNameOptioner),
 		),
 		WithInit(redis, feishu),
 	)

@@ -97,18 +97,21 @@ type CronJob struct {
 	cleanDuplicateFiringer v1.CleanDuplicateFiringer
 	cleanExpiredSilencer   v1.CleanExpiredSilencer
 	cleanInhibitAlert      v1.AlertInhibiter
+	cacheAlertNameOptioner v1.CacheAlertNameOptioner
 }
 
 func NewCronJob(
 	cleanDuplicateFiringer v1.CleanDuplicateFiringer,
 	cleanExpiredSilencer v1.CleanExpiredSilencer,
 	cleanInhibitAlert v1.AlertInhibiter,
+	cacheAlertNameOptioner v1.CacheAlertNameOptioner,
 ) *CronJob {
 	return &CronJob{
 		shutdown:               defaultShutdownTimeout,
 		cleanDuplicateFiringer: cleanDuplicateFiringer,
 		cleanExpiredSilencer:   cleanExpiredSilencer,
 		cleanInhibitAlert:      cleanInhibitAlert,
+		cacheAlertNameOptioner: cacheAlertNameOptioner,
 	}
 }
 
@@ -144,6 +147,11 @@ func (receiver *CronJob) Start() error {
 			name: "重复告警静默清理",
 			spec: "* * * * *",
 			fn:   receiver.cleanExpiredSilencer.CleanExpiredSilencesTask,
+		},
+		{
+			name: "告警名称 Options 缓存",
+			spec: "* * * * *",
+			fn:   receiver.cacheAlertNameOptioner.CacheAlertNameOptions,
 		},
 	}
 

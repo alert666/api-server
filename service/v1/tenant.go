@@ -123,6 +123,9 @@ func (receiver *TenantService) DeleteTenant(ctx context.Context, req *types.IDRe
 				Value: storeObj.Name,
 			})
 		}
+
+		_ = receiver.cacheImpl.DelKey(ctx, store.TenantType, constant.OptionsCacheKey)
+
 		return receiver.cacheImpl.SetObject(ctx, store.TenantType, constant.OptionsCacheKey, options, store.NeverExpires)
 	})
 }

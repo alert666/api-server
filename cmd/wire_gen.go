@@ -94,7 +94,8 @@ func InitApplication() (*app.Application, func(), error) {
 		return nil, nil, err
 	}
 	alertInhibiter := v1.NewalertInhibit(v, cacheStore)
-	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter)
+	cacheAlertNameOptioner := v1.NewCacheAlertNameOptioner(cacheStore)
+	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter, cacheAlertNameOptioner)
 	return application, func() {
 		cleanup2()
 		cleanup()
