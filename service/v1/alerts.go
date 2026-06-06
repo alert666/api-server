@@ -75,7 +75,6 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	notifyReq.AlertChannel = alertChannel
 	notifyReq.AlertReceiveReq = req
 
-	// TODO 发送告警生成 sendRecordID, 在发送卡片消息的时候直接可以发送 组ID
 	var sendResult *types.NotifySendResult
 	switch alertChannel.Type {
 	case model.ChannelTypeFeishuApp:
@@ -200,24 +199,32 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 		key := helper.GetAlertMapKey(alerts[i].Fingerprint, alerts[i].StartsAt)
 		alerts[i].GeneratorURL = strings.ReplaceAll(alerts[i].GeneratorURL, "\\", "")
 		// 在这里处理静默.如果静默保存到静默map里.然后更新数据了
-		// --- 处理 Firing 状态 ---
-		if alerts[i].Status == constant.AlertStatusFiring {
-			// 如果是 Firing 那么将 EndsAt 设置为 nil
-			alerts[i].EndsAt = nil
+		defaultResolvedEndTime := time.Now()
+		// 校验静默
+		isSilenced, silenceID := receiver.IsSilenced(ctx, alerts[i], activeSilences)
+		if isSilenced {
+			alerts[i].IsSilenced = true
+			alerts[i].SilenceID = silenceID
+			silencedAlertMap[key] = alerts[i]
+			zap.L().Info("告警被静默", zap.String("fingerprint", alerts[i].Fingerprint), zap.Int("silenceID", silenceID))
 
-			// 校验静默
-			isSilenced, silenceID := receiver.IsSilenced(ctx, alerts[i], activeSilences)
-			if isSilenced {
-				alerts[i].IsSilenced = true
-				alerts[i].SilenceID = silenceID
-				silencedAlertMap[key] = alerts[i]
-				zap.L().Info("告警被静默", zap.String("fingerprint", alerts[i].Fingerprint), zap.Int("silenceID", silenceID))
-				// 被静默的告警不进入 firingAlertArry，不触发发送
-				continue
+			// 处理 time 类型默认值,防止数据库保存失败
+			if alerts[i].Status == constant.AlertStatusFiring {
+				alerts[i].EndsAt = nil
 			} else {
-				alerts[i].IsSilenced = false
+				if alerts[i].EndsAt.IsZero() {
+					alerts[i].EndsAt = &defaultResolvedEndTime
+				}
 			}
 
+			continue
+		} else {
+			alerts[i].IsSilenced = false
+		}
+
+		// --- 处理 Firing 状态 ---
+		if alerts[i].Status == constant.AlertStatusFiring {
+			// 处理 time 类型默认值,防止数据库保存失败
 			alerts[i].EndsAt = nil
 			firingAlertMap[key] = alerts[i]
 			firingAlertArry = append(firingAlertArry, alerts[i])
@@ -230,6 +237,10 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 					delete(existingHistorMap, key)
 					continue
 				}
+			}
+			// 处理 time 类型默认值,防止数据库保存失败
+			if alerts[i].EndsAt.IsZero() {
+				alerts[i].EndsAt = &defaultResolvedEndTime
 			}
 			resolvedAlertArry = append(resolvedAlertArry, alerts[i])
 			resolvedAlertMap[key] = alerts[i]
@@ -677,8 +688,10 @@ func (receiver *alertsService) IsSilenced(ctx context.Context, alert *types.Aler
 
 	for _, s := range activeSilences {
 		// 1. 基础时间窗口过滤 (如果 SQL 已经过滤很准了，这里其实很快)
-		if alert.EndsAt != nil && alert.EndsAt.Before(s.StartsAt) {
-			continue
+		if !alert.EndsAt.IsZero() {
+			if alert.EndsAt != nil && alert.EndsAt.Before(s.StartsAt) {
+				continue
+			}
 		}
 
 		if alert.StartsAt.After(s.EndsAt) {
