@@ -230,7 +230,7 @@ func (recevicer *CleanExpiredSilence) CleanExpiredSilencesTask() {
 			return
 		}
 		elapsed := time.Since(start).Milliseconds()
-		zap.L().Info("CleanExpiredSilencesTask 执行结束",
+		zap.L().Debug("CleanExpiredSilencesTask 执行结束",
 			zap.Int64("duration_ms", elapsed),
 		)
 	}()
@@ -248,7 +248,7 @@ func (recevicer *CleanExpiredSilence) CleanExpiredSilencesTask() {
 		zap.L().Debug("[定时任务] CleanExpiredSilencesTask 清理过期静默规则任务正在其他节点运行，本次跳过")
 		return
 	}
-	zap.L().Info("[定时任务] 成功获取锁，开始清理过期静默规则")
+	zap.L().Debug("[定时任务] 成功获取锁，开始清理过期静默规则")
 
 	now := time.Now()
 	// --- 逻辑 A: 将已过期的规则状态从 1 改为 0 ---
@@ -261,7 +261,7 @@ func (recevicer *CleanExpiredSilence) CleanExpiredSilencesTask() {
 	if err != nil {
 		zap.L().Error("[定时任务] 更新过期静默规则状态失败", zap.Error(err))
 	} else if info.RowsAffected > 0 {
-		zap.L().Info("[定时任务] 成功将过期静默规则置为失效", zap.Int64("count", info.RowsAffected))
+		zap.L().Debug("[定时任务] 成功将过期静默规则置为失效", zap.Int64("count", info.RowsAffected))
 	}
 
 	// // --- 逻辑 B: (可选) 物理删除过期很久的记录 (例如 30 天前) ---

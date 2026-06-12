@@ -22,6 +22,7 @@ const (
 	EmptyRoleSentinel                      = "__empty__"
 	OAuth2ProviderList                     = "oauth2:provider:list"
 	TenantIDHeader                         = "X-Tenant-Id"
+	RequestIDHeader                        = "X-Request-ID"
 	OptionsCacheKey                        = "options"
 	AlertStatusResolved                    = "resolved"
 	AlertStatusFiring                      = "firing"

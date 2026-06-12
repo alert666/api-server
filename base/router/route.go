@@ -23,16 +23,18 @@ type RouterInterface interface {
 }
 
 type Router struct {
-	userRouter    controller.UserController
-	roleRouter    controller.RoleController
-	apiRouter     controller.ApiController
-	clusterRouter controller.ClusterController
-	middleware    middleware.MiddlewareInterface
-	alert         controller.AlertManagerController
-	alertTemplate controller.AlertTemplateController
-	alertChannel  controller.AlertChannelController
-	alertHistory  controller.AlertHistoryController
-	alertSilence  controller.AlertSilenceController
+	userRouter         controller.UserController
+	roleRouter         controller.RoleController
+	apiRouter          controller.ApiController
+	clusterRouter      controller.ClusterController
+	middleware         middleware.MiddlewareInterface
+	alert              controller.AlertManagerController
+	alertTemplate      controller.AlertTemplateController
+	alertChannel       controller.AlertChannelController
+	alertHistory       controller.AlertHistoryController
+	alertSilence       controller.AlertSilenceController
+	agentCommandRouter controller.AgentCommandController
+	internalForward    *controller.InternalForwardController
 }
 
 func NewRouter(
@@ -46,18 +48,22 @@ func NewRouter(
 	alertChannel controller.AlertChannelController,
 	alertHistory controller.AlertHistoryController,
 	alertSilence controller.AlertSilenceController,
+	agentCommandRouter controller.AgentCommandController,
+	internalForward *controller.InternalForwardController,
 ) *Router {
 	return &Router{
-		userRouter:    userRouter,
-		roleRouter:    roleRouter,
-		apiRouter:     apiRouter,
-		clusterRouter: clusterRouter,
-		middleware:    middleware,
-		alert:         alertmanager,
-		alertTemplate: alertTemplate,
-		alertChannel:  alertChannel,
-		alertHistory:  alertHistory,
-		alertSilence:  alertSilence,
+		userRouter:         userRouter,
+		roleRouter:         roleRouter,
+		apiRouter:          apiRouter,
+		clusterRouter:      clusterRouter,
+		middleware:         middleware,
+		alert:              alertmanager,
+		alertTemplate:      alertTemplate,
+		alertChannel:       alertChannel,
+		alertHistory:       alertHistory,
+		alertSilence:       alertSilence,
+		agentCommandRouter: agentCommandRouter,
+		internalForward:    internalForward,
 	}
 }
 
@@ -103,6 +109,8 @@ func (r *Router) RegisterRouter(engine *gin.Engine) {
 	r.registerAlertChannelRouter(apiGroup)
 	r.registerHistoryRouter(apiGroup)
 	r.registerAlertSilenceRouter(apiGroup)
+	r.registerAgentCommandRouter(apiGroup)
+	r.registerInternalRouter(engine)
 }
 
 func (r *Router) registerUserRouter(apiGroup *gin.RouterGroup) {
@@ -224,5 +232,21 @@ func (r *Router) registerOAuthRouter(apiGroup *gin.RouterGroup) {
 		oauthGroup.GET("/login", r.userRouter.OAuth2LoginController)
 		oauthGroup.GET("/callback", r.userRouter.OAuth2CallbackController)
 		oauthGroup.POST("/:id", r.userRouter.OAuth2ActivateController)
+	}
+}
+
+func (r *Router) registerAgentCommandRouter(apiGroup *gin.RouterGroup) {
+	baseGroup := apiGroup.Group("/agents")
+	{
+		baseGroup.Use(r.middleware.Auth(), r.middleware.AuthZ())
+		baseGroup.POST("/commands/wait", r.agentCommandRouter.SendCommandAndWait)
+	}
+}
+
+func (r *Router) registerInternalRouter(engine *gin.Engine) {
+	internalGroup := engine.Group("/internal/v1")
+	internalGroup.Use(controller.InternalAuthMiddleware())
+	{
+		internalGroup.POST("/forward-command", r.internalForward.HandleForward)
 	}
 }

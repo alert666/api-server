@@ -1,4 +1,4 @@
-package handler
+﻿package handler
 
 import (
 	"context"
@@ -25,7 +25,6 @@ func NewTunnelHandler(dataTunnelSvc svc.DataTunnelServicer) *TunnelHandler {
 }
 
 // DataTunnel 双向流 RPC 实现
-// 客户端通过此 RPC 与服务端建立长连接，收发 TunnelMessage
 func (h *TunnelHandler) DataTunnel(stream pb.TunnelService_DataTunnelServer) error {
 	ctx := stream.Context()
 
@@ -41,25 +40,27 @@ func (h *TunnelHandler) DataTunnel(stream pb.TunnelService_DataTunnelServer) err
 		return status.Error(codes.InvalidArgument, "first message must be Init")
 	}
 
-	agentID := init.GetAgentId()
+	agentID := init.GetAgentID()
+	clusterID := init.GetClusterID()
 	if agentID == "" {
 		return status.Error(codes.InvalidArgument, "agent_id is required")
 	}
 
 	zap.L().Info("agent connected",
-		zap.String("agent_id", agentID),
-		zap.String("cluster_id", init.GetClusterId()),
+		zap.String("agentID", agentID),
+		zap.String("clusterID", init.GetClusterID()),
 		zap.String("version", init.GetVersion()),
 	)
 
-	// 2. 注册 agent
-	if err := h.dataTunnelSvc.RegisterAgent(ctx, init); err != nil {
+	// 2. 注册 agent，获取命令推送通道
+	cmdChan, err := h.dataTunnelSvc.RegisterAgent(ctx, init)
+	if err != nil {
 		zap.L().Error("register agent failed", zap.String("agent_id", agentID), zap.Error(err))
 		return status.Errorf(codes.Internal, "register agent failed: %v", err)
 	}
 	defer func() {
-		if err := h.dataTunnelSvc.UnregisterAgent(context.Background(), agentID); err != nil {
-			zap.L().Error("unregister agent failed", zap.String("agent_id", agentID), zap.Error(err))
+		if err := h.dataTunnelSvc.UnregisterAgent(context.Background(), agentID, clusterID, cmdChan); err != nil {
+			zap.L().Warn("unregister agent", zap.String("agent_id", agentID), zap.Error(err))
 		}
 	}()
 
@@ -78,9 +79,10 @@ func (h *TunnelHandler) DataTunnel(stream pb.TunnelService_DataTunnelServer) err
 			}
 
 			if result := msg.GetCommandResult(); result != nil {
-				if err := h.dataTunnelSvc.HandleCommandResult(ctx, agentID, result); err != nil {
+				if err := h.dataTunnelSvc.HandleCommandResult(ctx, agentID, msg.GetTaskId(), result); err != nil {
 					zap.L().Error("handle command result failed",
 						zap.String("agent_id", agentID),
+						zap.String("request_id", msg.GetTaskId()),
 						zap.Int32("cmd", int32(result.GetCommandType())),
 						zap.Error(err),
 					)
@@ -89,7 +91,7 @@ func (h *TunnelHandler) DataTunnel(stream pb.TunnelService_DataTunnelServer) err
 		}
 	}()
 
-	// 4. 主循环：下发命令
+	// 4. 主循环：等待命令通道推送，实时下发
 	for {
 		select {
 		case <-ctx.Done():
@@ -100,35 +102,26 @@ func (h *TunnelHandler) DataTunnel(stream pb.TunnelService_DataTunnelServer) err
 				zap.L().Error("stream recv error", zap.String("agent_id", agentID), zap.Error(err))
 			}
 			return err
-		default:
-		}
-
-		commands, err := h.dataTunnelSvc.PullCommands(ctx, agentID)
-		if err != nil {
-			zap.L().Error("pull commands failed", zap.String("agent_id", agentID), zap.Error(err))
-			continue
-		}
-
-		for _, cmd := range commands {
+		case ac, ok := <-cmdChan:
+			if !ok {
+				// channel 被关闭：同一 agentID 的新副本已上线，本连接退出
+				zap.L().Info("agent channel closed, another replica took over",
+					zap.String("agent_id", agentID))
+				return nil
+			}
 			msg := &pb.TunnelMessage{
-				RequestId: agentID,
-				Payload:   &pb.TunnelMessage_Command{Command: cmd},
+				TaskId:  ac.RequestID,
+				Payload: &pb.TunnelMessage_Command{Command: ac.Command},
 			}
 			if err := stream.Send(msg); err != nil {
 				zap.L().Error("send command failed",
 					zap.String("agent_id", agentID),
-					zap.Int32("cmd", int32(cmd.GetType())),
+					zap.String("request_id", ac.RequestID),
+					zap.Int32("cmd", int32(ac.Command.GetType())),
 					zap.Error(err),
 				)
 				return err
 			}
-		}
-
-		// 频率控制
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
 		}
 	}
 }

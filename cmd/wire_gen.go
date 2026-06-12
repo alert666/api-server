@@ -81,7 +81,10 @@ func InitApplication() (*app.Application, func(), error) {
 	alertHistoryController := controller.NewAlertHistoryController(alertHistoryServicer)
 	alertSilenceServicer := v1.NewAlertSilenceServicer(generateToken)
 	alertSilenceController := controller.NewAlertSilenceController(alertSilenceServicer)
-	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController)
+	dataTunnelServicer := v1.NewDataTunnelService(cacheStore)
+	agentCommandController := controller.NewAgentCommandController(dataTunnelServicer)
+	internalForwardController := controller.NewInternalForwardController(dataTunnelServicer)
+	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController, agentCommandController, internalForwardController)
 	engine, err := server.NewHttpServer(routerRouter)
 	if err != nil {
 		cleanup2()
@@ -99,7 +102,6 @@ func InitApplication() (*app.Application, func(), error) {
 	alertInhibiter := v1.NewalertInhibit(v, cacheStore)
 	cacheAlertNameOptioner := v1.NewCacheAlertNameOptioner(cacheStore)
 	string2 := NewGRPCBindAddress()
-	dataTunnelServicer := v1.NewDataTunnelService()
 	tunnelHandler := handler.NewTunnelHandler(dataTunnelServicer)
 	grpcServer, err := server2.NewGRPCServer(string2, tunnelHandler)
 	if err != nil {
@@ -116,7 +118,7 @@ func InitApplication() (*app.Application, func(), error) {
 
 // wire.go:
 
-// NewGRPCBindAddress 提供 gRPC 监听地址
+// NewGRPCBindAddress 锟结供 gRPC 锟斤拷锟斤拷锟斤拷址
 func NewGRPCBindAddress() string {
 	return conf.GetGRPCBind()
 }

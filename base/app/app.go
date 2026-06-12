@@ -71,7 +71,7 @@ func (receiver *Init) Init(ctx context.Context) error {
 			zap.L().Error("同步 AlertChannel 到 Redis 失败", zap.String("name", v.Name), zap.Error(err))
 			continue
 		}
-		zap.L().Info("同步 AlertChannel 到 Redis 成功", zap.Any("channels", alertChannels))
+		zap.L().Debug("同步 AlertChannel 到 Redis 成功", zap.Any("channels", alertChannels))
 
 		var alertConfig map[string]string
 		if err := json.Unmarshal(v.Config, &alertConfig); err != nil {

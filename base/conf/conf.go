@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+	"net"
 	"os"
 	"path/filepath"
 	"time"
@@ -62,6 +63,22 @@ func GetGRPCBind() string {
 		bind = defaultGRPCBind
 	}
 	return bind
+}
+
+// GetGrpcTLSCertFile 获取 gRPC TLS 证书文件路径
+func GetGrpcTLSCertFile() string {
+	return viper.GetString("grpc.tls.certFile")
+}
+
+// GetGrpcTLSKeyFile 获取 gRPC TLS 私钥文件路径
+func GetGrpcTLSKeyFile() string {
+	return viper.GetString("grpc.tls.keyFile")
+}
+
+// GetGrpcTLSCAFile 获取 gRPC mTLS CA 证书文件路径（用于验证客户端证书）
+// 配置此项后开启 mTLS（双向 TLS），客户端必须出示由该 CA 签发的证书
+func GetGrpcTLSCAFile() string {
+	return viper.GetString("grpc.tls.caFile")
 }
 
 func GetServerTimeZone() string {
@@ -280,4 +297,44 @@ func GetAlertTenantKey() string {
 func GetAlertRepeatInterval() time.Duration {
 	return viper.GetDuration("alert.repeatInterval")
 }
+
 const defaultGRPCBind = "0.0.0.0:9090"
+
+// GetInternalAdvertiseAddr 获取本实例的内部广播地址。
+// 优先配置 internal.advertiseAddr；未配置时用出站 IP + server.bind 端口。
+func GetInternalAdvertiseAddr() string {
+	if addr := viper.GetString("internal.advertiseAddr"); addr != "" {
+		return addr
+	}
+
+	_, port, err := net.SplitHostPort(GetServerBind())
+	if err != nil {
+		port = "8080"
+	}
+
+	ip := os.Getenv("MY_POD_IP")
+	if ip != "" {
+		return fmt.Sprintf("http://%s:%s", ip, port)
+	}
+
+	return fmt.Sprintf("http://%s:%s", GetOutboundIP(), port)
+}
+
+// GetOutboundIP returns the preferred outbound IP of this machine.
+func GetOutboundIP() string {
+	addrs := []string{"223.5.5.5:80", "223.6.6.6:80"}
+	for _, addr := range addrs {
+		conn, err := net.Dial("udp", addr)
+		if err == nil {
+			ip := conn.LocalAddr().(*net.UDPAddr).IP.String()
+			conn.Close()
+			return ip
+		}
+	}
+	return "127.0.0.1"
+}
+
+// GetInternalToken 获取内部 API 认证 token
+func GetInternalToken() string {
+	return viper.GetString("internal.token")
+}

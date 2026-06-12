@@ -43,7 +43,7 @@ func NewServer(server *gin.Engine) *Server {
 }
 
 func (s *Server) Start() (err error) {
-	zap.S().Infof("start server, addr: %s", s.server.Addr)
+	zap.S().Infof("http server listening on: %s", s.server.Addr)
 	if err = s.server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}
@@ -159,7 +159,7 @@ func (receiver *CronJob) Start() error {
 		// 显式捕获局部变量，确保闭包安全
 		currJob := job
 		_, err := c.AddFunc(currJob.spec, func() {
-			zap.L().Info("[CronJob] 任务开始执行", zap.String("job", currJob.name))
+			zap.L().Debug("[CronJob] 任务开始执行", zap.String("job", currJob.name))
 			currJob.fn()
 		})
 

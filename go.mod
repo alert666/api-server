@@ -3,6 +3,7 @@ module github.com/alert666/api-server
 go 1.25.9
 
 require (
+	github.com/alert666/alertmanager-proto v0.0.5
 	github.com/casbin/casbin/v2 v2.109.0
 	github.com/casbin/gorm-adapter/v3 v3.33.0
 	github.com/gin-contrib/cors v1.7.6
@@ -11,6 +12,7 @@ require (
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
 	github.com/go-playground/validator/v10 v10.27.0
+	github.com/go-resty/resty/v2 v2.17.2
 	github.com/go-sql-driver/mysql v1.9.3
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/google/uuid v1.6.0
@@ -51,7 +53,6 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/alert666/alertmanager-proto v0.0.0
 	github.com/bmatcuk/doublestar/v4 v4.9.1 // indirect
 	github.com/bytedance/sonic v1.14.0 // indirect
 	github.com/bytedance/sonic/loader v0.3.0 // indirect
@@ -122,5 +123,3 @@ require (
 	modernc.org/memory v1.11.0 // indirect
 	modernc.org/sqlite v1.42.2 // indirect
 )
-
-replace github.com/alert666/alertmanager-proto => ../alertmanager-proto
