@@ -55,6 +55,15 @@ func GetServerBind() string {
 	return bind
 }
 
+// GetGRPCBind 获取 gRPC 监听地址
+func GetGRPCBind() string {
+	bind := viper.GetString("grpc.bind")
+	if bind == "" {
+		bind = defaultGRPCBind
+	}
+	return bind
+}
+
 func GetServerTimeZone() string {
 	timeZone := viper.GetString("server.timeZone")
 	if timeZone == "" {
@@ -271,3 +280,4 @@ func GetAlertTenantKey() string {
 func GetAlertRepeatInterval() time.Duration {
 	return viper.GetDuration("alert.repeatInterval")
 }
+const defaultGRPCBind = "0.0.0.0:9090"

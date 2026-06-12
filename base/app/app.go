@@ -12,6 +12,7 @@ import (
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/server"
 	"github.com/alert666/api-server/base/types"
+	grpcserver "github.com/alert666/api-server/grpc/server"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/pkg/feishu"
 	v1 "github.com/alert666/api-server/service/v1"
@@ -230,11 +231,13 @@ func NewApplication(
 	cleanExpiredSilencer v1.CleanExpiredSilencer,
 	cleanInhibitAlert v1.AlertInhibiter,
 	cacheAlertNameOptioner v1.CacheAlertNameOptioner,
+	grpcSrv *grpcserver.GRPCServer,
 ) *Application {
 	return newApp(
 		WithServer(
 			server.NewServer(e),
 			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert, cacheAlertNameOptioner),
+			grpcSrv,
 		),
 		WithInit(redis, feishu),
 	)

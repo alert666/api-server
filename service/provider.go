@@ -19,4 +19,5 @@ var ServiceProviderSet = wire.NewSet(
 	v1.NewCleanExpiredSilencer,
 	v1.NewalertInhibit,
 	v1.NewCacheAlertNameOptioner,
+	v1.NewDataTunnelService,
 )

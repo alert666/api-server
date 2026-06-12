@@ -8,11 +8,14 @@ package cmd
 
 import (
 	"github.com/alert666/api-server/base/app"
+	"github.com/alert666/api-server/base/conf"
 	"github.com/alert666/api-server/base/data"
 	"github.com/alert666/api-server/base/middleware"
 	"github.com/alert666/api-server/base/router"
 	"github.com/alert666/api-server/base/server"
 	"github.com/alert666/api-server/controller"
+	"github.com/alert666/api-server/grpc/handler"
+	server2 "github.com/alert666/api-server/grpc/server"
 	"github.com/alert666/api-server/pkg/alertinhibit"
 	"github.com/alert666/api-server/pkg/casbin"
 	"github.com/alert666/api-server/pkg/feishu"
@@ -95,9 +98,25 @@ func InitApplication() (*app.Application, func(), error) {
 	}
 	alertInhibiter := v1.NewalertInhibit(v, cacheStore)
 	cacheAlertNameOptioner := v1.NewCacheAlertNameOptioner(cacheStore)
-	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter, cacheAlertNameOptioner)
+	string2 := NewGRPCBindAddress()
+	dataTunnelServicer := v1.NewDataTunnelService()
+	tunnelHandler := handler.NewTunnelHandler(dataTunnelServicer)
+	grpcServer, err := server2.NewGRPCServer(string2, tunnelHandler)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter, cacheAlertNameOptioner, grpcServer)
 	return application, func() {
 		cleanup2()
 		cleanup()
 	}, nil
+}
+
+// wire.go:
+
+// NewGRPCBindAddress 提供 gRPC 监听地址
+func NewGRPCBindAddress() string {
+	return conf.GetGRPCBind()
 }
