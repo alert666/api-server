@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.24.5
+ARG GO_VERSION=1.25.9
 FROM registry.cn-beijing.aliyuncs.com/qqlx/golang:${GO_VERSION}-alpine-otel AS builder
 
 ARG MAIN_PATH=cmd/apiserver/main.go
