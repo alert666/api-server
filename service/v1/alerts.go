@@ -498,7 +498,7 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 		}
 
 		elapsed := time.Since(start).Milliseconds()
-		zap.L().Info("cleanDuplicateFiringAlertsTask 执行结束",
+		zap.L().Debug("cleanDuplicateFiringAlertsTask 执行结束",
 			zap.Int64("duration_ms", elapsed),
 		)
 	}()
@@ -607,7 +607,7 @@ func (receiver *alertsService) CleanRepeatIntervalAlertsTask() {
 		}
 
 		elapsed := time.Since(start).Milliseconds()
-		zap.L().Info("cleanRepeatIntervalAlertsTask 执行结束",
+		zap.L().Debug("cleanRepeatIntervalAlertsTask 执行结束",
 			zap.Int64("duration_ms", elapsed),
 		)
 	}()

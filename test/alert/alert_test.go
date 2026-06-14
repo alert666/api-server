@@ -541,4 +541,6 @@ func TestIntAddress(t *testing.T) {
 	b := a
 
 	fmt.Println(b)
+
+	fmt.Println(conf.GetOutboundIP())
 }

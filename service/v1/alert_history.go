@@ -222,7 +222,7 @@ func (receiver *alertHistoryService) CacheAlertNameOptions() {
 			return
 		}
 		elapsed := time.Since(start).Milliseconds()
-		zap.L().Info("CacheAlertNameOptions 执行结束",
+		zap.L().Debug("CacheAlertNameOptions 执行结束",
 			zap.Int64("duration_ms", elapsed),
 		)
 	}()

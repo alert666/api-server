@@ -24,12 +24,14 @@ var (
 type CacheType string
 
 const (
-	RoleType      CacheType = "role"
-	AlertType     CacheType = "alert"
-	LockType      CacheType = "lock"
-	TenantType    CacheType = "tenant"
-	UserType      CacheType = "user"
-	AlertNameType CacheType = "alertName"
+	RoleType         CacheType = "role"
+	AlertType        CacheType = "alert"
+	LockType         CacheType = "lock"
+	TenantType       CacheType = "tenant"
+	UserType         CacheType = "user"
+	AlertNameType    CacheType = "alertName"
+	AgentClusterType CacheType = "agentCluster"
+	AgentServerType  CacheType = "agentServer"
 )
 
 type CacheStorer interface {
@@ -88,6 +90,7 @@ func (c *CacheStore) SetNX(ctx context.Context, cacheType CacheType, cacheKey an
 type CacheSeter interface {
 	GetSet(ctx context.Context, cacheType CacheType, cacheKey any) ([]string, error)
 	SetSet(ctx context.Context, cacheType CacheType, cacheKey any, cacheValue []any, expireTime *time.Duration) error
+	RemSet(ctx context.Context, cacheType CacheType, cacheKey any, members ...any) error
 }
 
 func (c *CacheStore) GetSet(ctx context.Context, cacheType CacheType, cacheKey any) ([]string, error) {
@@ -249,6 +252,15 @@ func (c *CacheStore) DelKey(ctx context.Context, cacheType CacheType, cacheKey a
 }
 
 // 新增辅助方法用于构建缓存key，提高可读性和可测试性
+func (c *CacheStore) RemSet(ctx context.Context, cacheType CacheType, cacheKey any, members ...any) error {
+	key, err := c.NormalizeCacheKey(cacheKey)
+	if err != nil {
+		return err
+	}
+	saveKey := c.buildCacheKey(cacheType, key)
+	return c.client.SRem(ctx, saveKey, members...).Err()
+}
+
 func (c *CacheStore) buildCacheKey(cacheType CacheType, key string) string {
 	var sb strings.Builder
 	sb.Grow(len(c.keyPrefix) + 1 + len(cacheType) + 1 + len(key))

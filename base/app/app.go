@@ -12,6 +12,7 @@ import (
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/server"
 	"github.com/alert666/api-server/base/types"
+	grpcserver "github.com/alert666/api-server/grpc/server"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/pkg/feishu"
 	v1 "github.com/alert666/api-server/service/v1"
@@ -70,7 +71,7 @@ func (receiver *Init) Init(ctx context.Context) error {
 			zap.L().Error("同步 AlertChannel 到 Redis 失败", zap.String("name", v.Name), zap.Error(err))
 			continue
 		}
-		zap.L().Info("同步 AlertChannel 到 Redis 成功", zap.Any("channels", alertChannels))
+		zap.L().Debug("同步 AlertChannel 到 Redis 成功", zap.Any("channels", alertChannels))
 
 		var alertConfig map[string]string
 		if err := json.Unmarshal(v.Config, &alertConfig); err != nil {
@@ -230,11 +231,13 @@ func NewApplication(
 	cleanExpiredSilencer v1.CleanExpiredSilencer,
 	cleanInhibitAlert v1.AlertInhibiter,
 	cacheAlertNameOptioner v1.CacheAlertNameOptioner,
+	grpcSrv *grpcserver.GRPCServer,
 ) *Application {
 	return newApp(
 		WithServer(
 			server.NewServer(e),
 			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert, cacheAlertNameOptioner),
+			grpcSrv,
 		),
 		WithInit(redis, feishu),
 	)

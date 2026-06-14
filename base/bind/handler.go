@@ -30,11 +30,11 @@ func bindWithSources(c *gin.Context, req any, sources ...bindType) (success bool
 		var err error
 		switch src {
 		case BindTypeUri:
-			err = c.ShouldBindUri(req)
+			err = c.BindUri(req)
 		case BindTypeJson:
-			err = c.ShouldBindJSON(req)
+			err = c.BindJSON(req)
 		case BindTypeQuery:
-			err = c.ShouldBindQuery(req)
+			err = c.BindQuery(req)
 		case BindTypeShouldBind:
 			err = c.ShouldBind(req)
 		default:
@@ -124,7 +124,7 @@ func ResponseError(req any, c *gin.Context, err error) {
 	code, err := getErr(err)
 	c.JSON(code, types.NewResponseWithOpts(code, types.WithError(err.Error())))
 	c.Error(err)
-	if c.Request.URL.Path != "/api/v1/alerts" && c.Request.Method != "POST" {
+	if (c.Request.URL.Path != "/api/v1/alerts" && c.Request.Method != "POST") || c.Request.URL.Path != "/api/v1/agents/beijing/commands/wait" {
 		log.WithRequestID(c.Request.Context()).Debug("打印 body", zap.Any("body", req))
 	}
 }

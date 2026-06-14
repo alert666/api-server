@@ -45,7 +45,7 @@ func (a *alertInhibit) CleanInhibitAlert() {
 			return
 		}
 
-		zap.L().Info("CleanInhibitAlert 执行结束",
+		zap.L().Debug("CleanInhibitAlert 执行结束",
 			zap.Int64("duration_ms", elapsed),
 		)
 	}()
@@ -66,7 +66,7 @@ func (a *alertInhibit) CleanInhibitAlert() {
 		return
 	}
 
-	zap.L().Info("[定时任务] 成功获取锁，开始清理被抑制告警")
+	zap.L().Debug("[定时任务] 成功获取锁，开始清理被抑制告警")
 	// 获取源 label 相关的告警
 	var wg sync.WaitGroup
 	for _, m := range a.matchersImpl {
