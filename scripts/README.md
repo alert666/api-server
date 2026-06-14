@@ -1,4 +1,4 @@
-﻿# 证书管理
+# 证书管理
 
 gRPC mTLS 使用 `gen-certs.sh` 管理证书。
 
@@ -12,8 +12,11 @@ gRPC mTLS 使用 `gen-certs.sh` 管理证书。
 ```bash
 cd scripts
 
-# 完整生成（首次部署）
+# 完整生成（首次部署，默认 SAN 含 localhost + 127.0.0.1）
 bash gen-certs.sh
+
+# 生成服务端证书，追加自定义 DNS/IP 到 SAN（避免 x509 hostname mismatch）
+bash gen-certs.sh server "DNS:grpc-ops.suanlene.cn,IP:10.0.0.1"
 
 # 仅生成/续签服务端证书
 bash gen-certs.sh server
@@ -24,6 +27,10 @@ bash gen-certs.sh client
 # 仅生成 CA（已存在则跳过）
 bash gen-certs.sh ca
 ```
+
+> **关于 SAN**：`server` 子命令支持可选的第二个参数（逗号分隔的 `DNS:...` / `IP:...`），
+> 会追加进证书的 `subjectAltName`。默认已含 `DNS:localhost,IP:127.0.0.1`。
+> 客户端证书（`client`）不需要 SAN，因为 mTLS 中服务端不校验客户端主机名。
 
 ## 输出文件
 

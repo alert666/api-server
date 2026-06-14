@@ -1,7 +1,8 @@
-﻿#!/usr/bin/env bash
-# gen-certs.sh — 管理 CA / 服务端 / 客户端证书，支持按需单独生成
+#!/usr/bin/env bash
+# gen-certs.sh — 管理 CA / 服务端 / 客户端证书，支持按需单独生成，支持自定义 SAN
 #
 # 用法:
+#   bash gen-certs.sh server "DNS:grpc-ops.suanlene.cn,IP:10.0.0.1"
 #   bash gen-certs.sh         完整生成（CA + server + client）
 #   bash gen-certs.sh ca      仅生成 CA（已存在则跳过）
 #   bash gen-certs.sh server  仅生成 / 续签服务端证书
@@ -42,11 +43,18 @@ generate_server() {
   echo "==> [Server] 生成私钥和证书"
   openssl genrsa -out server.key ${KEY_BITS}
   openssl req -new -key server.key -out server.csr -subj "/CN=${SERVER_CN}"
+
+  # 构建 subjectAltName，默认含 localhost/127.0.0.1，可通过 $2 追加额外 SAN
+  local alt="DNS:localhost,IP:127.0.0.1"
+  if [[ -n "${2:-}" ]]; then
+    alt="${alt},$2"
+  fi
+
   cat > server.ext <<EOF
 basicConstraints=CA:FALSE
 keyUsage=digitalSignature,keyEncipherment
 extendedKeyUsage=serverAuth
-subjectAltName=DNS:localhost,IP:127.0.0.1
+subjectAltName=${alt}
 EOF
   openssl x509 -req -in server.csr \
     -CA ca.crt -CAkey ca.key -CAcreateserial \
@@ -79,19 +87,21 @@ EOF
 }
 
 case "${1:-all}" in
-  ca)     generate_ca ;;
-  server) generate_server ;;
-  client) generate_client ;;
+  ca)     generate_ca "$@" ;;
+  server) generate_server "$@" ;;
+  client) generate_client "$@" ;;
   all)
-    generate_ca
-    generate_server
-    generate_client
+    generate_ca "$@"
+    generate_server "$@"
+    generate_client "$@"
     ;;
   *)
-    echo "用法: $0 [ca|server|client|all]"
+    echo "用法: $0 [ca|server|client|all] [server 额外 SAN]"
     echo ""
-    echo "  ca      仅生成 CA（如已存在则跳过）"
+    echo "  ca      仅生成 CA（已存在则跳过）"
     echo "  server  仅生成 / 续签服务端证书"
+    echo "          第二个参数可追加 DNS/IP 到 SAN，例如："
+    echo "            bash gen-certs.sh server \"DNS:example.com,IP:10.0.0.1\""
     echo "  client  仅生成 / 续签客户端证书"
     echo "  all     完整生成（默认）"
     exit 1
