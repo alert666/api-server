@@ -53,8 +53,6 @@ func (*AlertChannel) TableName() string {
 type FeishuAppConfig struct {
 	AppID         string `json:"app_id"`          // 飞书应用的 App ID
 	AppSecret     string `json:"app_secret"`      // 飞书应用的 App Secret
-	ReceiveIdType string `json:"receive_id_type"` // 接收者类型: open_id, user_id, email, chat_id
-	ReceiveId     string `json:"receive_id"`      // 接收者ID (具体是哪个用户或哪个群)
 }
 
 // WebhookConfig 通用 Webhook 配置

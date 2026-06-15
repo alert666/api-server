@@ -57,19 +57,11 @@ func VerificationAlertConfig(channelName string, channelType model.ChannelType, 
 	case model.ChannelTypeFeishuApp:
 		appID := config["app_id"]
 		appSecret := config["app_secret"]
-		receiveId := config["receive_id"]
-		receiveIdType := config["receive_id_type"]
 		if appID == nil {
 			return fmt.Errorf("alertChannel.Config 飞书应用 ID 不存在")
 		}
 		if appSecret == nil {
 			return fmt.Errorf("alertChannel.Config 飞书应用 secret 不存在")
-		}
-		if receiveId == nil {
-			return fmt.Errorf("alertChannel.Config 飞书应用 receiveId 不存在")
-		}
-		if receiveIdType == nil {
-			return fmt.Errorf("alertChannel.Config 飞书应用 receiveIdType 不存在")
 		}
 		return nil
 	default:
