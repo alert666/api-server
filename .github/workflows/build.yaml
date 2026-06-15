@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - main
+      - refactor/alert
     tags:
       - "v*"
   pull_request:
     branches:
       - main
+      - refactor/alert
 
 jobs:
   build:

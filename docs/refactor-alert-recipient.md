@@ -8,13 +8,13 @@
 
 不同渠道类型的"接收者"性质不同，设计上需要统一处理：
 
-| 渠道类型 | 传输凭证 | 接收者 | 可分离？ |
-|----------|----------|--------|----------|
-| 飞书 App (feishuApp) | AppID + AppSecret | receive_id_type + receive_id | ✅ 可分离 |
-| 飞书 Bot (feishuBoot) | AppID + AppSecret | receive_id_type + receive_id | ✅ 可分离 |
-| 钉钉机器人 (dingtalk) | WebhookURL + Secret | 隐含在 URL 中 | ❌ 不可分离 |
-| 通用 Webhook (webhook) | URL + Secret | 隐含在 URL 中 | ❌ 不可分离 |
-| 邮件 (email) | SMTP 配置 | To 列表 | ✅ 可分离 |
+| 渠道类型               | 传输凭证            | 接收者                       | 可分离？   |
+| ---------------------- | ------------------- | ---------------------------- | ---------- |
+| 飞书 App (feishuApp)   | AppID + AppSecret   | receive_id_type + receive_id | ✅ 可分离   |
+| 飞书 Bot (feishuBoot)  | AppID + AppSecret   | receive_id_type + receive_id | ✅ 可分离   |
+| 钉钉机器人 (dingtalk)  | WebhookURL + Secret | 隐含在 URL 中                | ❌ 不可分离 |
+| 通用 Webhook (webhook) | URL + Secret        | 隐含在 URL 中                | ❌ 不可分离 |
+| 邮件 (email)           | SMTP 配置           | To 列表                      | ✅ 可分离   |
 
 结论：**接收者应统一放在 AlertTemplate 层，用渠道无关的通用字段承载，各渠道类型的发送逻辑自行解读。对于 Webhook 类渠道，如果目标已经固定在 URL 中，Template 中该字段可为空，发送时回退使用 Channel 中的 URL。但这也意味着 Webhook 类渠道要多个接收者仍需多个 Channel——这是 Webhook 本身的限制，不是设计缺陷。**
 
@@ -27,17 +27,17 @@
 
 ## 影响范围总览
 
-| 层级 | 文件 | 变更类型 |
-|------|------|----------|
-| Model | `model/alert_channel.go` | FeishuAppConfig 移除 ReceiveIdType / ReceiveId |
-| Model | `model/alert_template.go` | 新增 ReceiveIdType / ReceiveId 字段（渠道通用） |
-| Types | `base/types/alert_template.go` | Create/Update 请求新增接收者字段 |
-| Helper | `base/helper/alert.go` | VerificationAlertConfig 不再校验接收者；新增模板接收者校验 |
-| Service | `service/v1/alert_template.go` | Create/Update 持久化接收者 |
-| Service | `service/v1/alert_channel.go` | 逻辑不变 |
-| Service | `pkg/feishu/feishu.go` | renderAndSend / Notify 从模板读接收者 |
-| App | `base/app/app.go` | 不受影响 |
-| DB | Migration | alert_templates 加两列 + 数据迁移 |
+| 层级    | 文件                           | 变更类型                                                   |
+| ------- | ------------------------------ | ---------------------------------------------------------- |
+| Model   | `model/alert_channel.go`       | FeishuAppConfig 移除 ReceiveIdType / ReceiveId             |
+| Model   | `model/alert_template.go`      | 新增 ReceiveIdType / ReceiveId 字段（渠道通用）            |
+| Types   | `base/types/alert_template.go` | Create/Update 请求新增接收者字段                           |
+| Helper  | `base/helper/alert.go`         | VerificationAlertConfig 不再校验接收者；新增模板接收者校验 |
+| Service | `service/v1/alert_template.go` | Create/Update 持久化接收者                                 |
+| Service | `service/v1/alert_channel.go`  | 逻辑不变                                                   |
+| Service | `pkg/feishu/feishu.go`         | renderAndSend / Notify 从模板读接收者                      |
+| App     | `base/app/app.go`              | 不受影响                                                   |
+| DB      | Migration                      | alert_templates 加两列 + 数据迁移                          |
 
 ## 详细变更步骤
 
@@ -177,8 +177,8 @@ ALTER TABLE alert_templates
 ## 验证清单
 
 - [x] Model 编译通过
-- [ ] Store 重新生成后编译通过
-- [ ] 创建 Template 时可传入接收者并持久化
-- [ ] 创建 Channel 时不再要求接收者字段
-- [ ] 告警发送到达正确的飞书会话
-- [ ] 数据迁移脚本执行后旧数据不丢失
+- [x] Store 重新生成后编译通过
+- [x] 创建 Template 时可传入接收者并持久化
+- [x] 创建 Channel 时不再要求接收者字段
+- [x] 告警发送到达正确的飞书会话
+- [x] 数据迁移脚本执行后旧数据不丢失

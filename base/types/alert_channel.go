@@ -20,7 +20,6 @@ type AlertChannelUpdateRequest struct {
 	AggregationStatus *int           `json:"aggregationStatus" binding:"required,oneof=0 1"`
 	Config            map[string]any `json:"config" binding:"required"`
 	Description       string         `json:"description"`
-	TemplateID        int            `json:"templateID"`
 }
 
 type AlertChannelListRequest struct {

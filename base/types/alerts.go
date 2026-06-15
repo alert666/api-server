@@ -11,7 +11,7 @@ import (
 
 // AlertReceiveReq 是 Alertmanager 发送的 Webhook 顶层 JSON 结构
 type AlertReceiveReq struct {
-	ChannelName       string            `form:"channelName" binding:"required"`
+	TemplateName      string            `form:"templateName" binding:"required"`
 	Receiver          string            `json:"receiver"`
 	Status            string            `json:"status"` // "firing" or "resolved"
 	Alerts            []*Alert          `json:"alerts"`
@@ -44,7 +44,7 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 	promQL := "(node_filesystem_avail_bytes%7Bmountpoint%3D%22%2F%22%7D+%2F+node_filesystem_size_bytes%7Bmountpoint%3D%22%2F%22%7D%29+*+100+%3C+10"
 
 	return &AlertReceiveReq{
-		ChannelName: "feishu",
+		TemplateName: "feishu",
 		Receiver:    "feishu-receiver",
 		Status:      "firing",
 		Version:     "4",
@@ -136,7 +136,7 @@ func ConvertToModel(tenantKey string, a *Alert, channelID int) (*model.AlertHist
 // DeepCopy 创建 AlertReceiveReq 的深拷贝，确保在处理过程中数据不被修改
 func (receiver *AlertReceiveReq) DeepCopy() *AlertReceiveReq {
 	return &AlertReceiveReq{
-		ChannelName:       receiver.ChannelName,
+		TemplateName:      receiver.TemplateName,
 		Receiver:          receiver.Receiver,
 		Status:            receiver.Status,
 		GroupLabels:       receiver.GroupLabels,
@@ -152,6 +152,7 @@ func (receiver *AlertReceiveReq) DeepCopy() *AlertReceiveReq {
 // NotifyReq 是内部服务处理告警发送的请求结构，包含了告警发送通道信息、告警详情和原始接收请求
 type NotifyReq struct {
 	AlertChannel     *model.AlertChannel
+	AlertTemplate    *model.AlertTemplate
 	AlertReceiveReq  *AlertReceiveReq
 	TenantValue      string
 	AlertMap         *AlertMap

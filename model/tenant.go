@@ -6,9 +6,9 @@ type Tenant struct {
 	ID          int64     `gorm:"column:id;primarykey;autoIncrement" json:"id"`
 	CreatedAt   time.Time `gorm:"column:created_at" json:"createdAt"`
 	UpdatedAt   time.Time `gorm:"column:updated_at" json:"updatedAt"`
-	Name        string    `gorm:"column:name" json:"name"`
-	Label       string    `gorm:"column:label" json:"label"`
-	Description string    `gorm:"column:description" json:"description"`
+	Name        string    `gorm:"column:name;type:varchar(20)" json:"name"`
+	Label       string    `gorm:"column:label;type:varchar(20)" json:"label"`
+	Description string    `gorm:"column:description;type:varchar(255)" json:"description"`
 }
 
 func (receiver *Tenant) TableName() string {

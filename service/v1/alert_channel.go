@@ -1,10 +1,12 @@
-package v1
+﻿package v1
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+
+	"go.uber.org/zap"
 
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
@@ -33,7 +35,7 @@ func NewChannelServicer(cache store.CacheStorer) AlertChannelServicer {
 }
 
 func (receiver *alertChannelService) CreateAlerChannel(ctx context.Context, req *types.AlertChannelCreateRequest) error {
-	_, err := aChannelStore.WithContext(ctx).Unscoped().Where(aChannelStore.Name.Eq(req.Name)).First()
+	_, err := aChannelStore.WithContext(ctx).Where(aChannelStore.Name.Eq(req.Name)).First()
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return err
@@ -57,23 +59,34 @@ func (receiver *alertChannelService) CreateAlerChannel(ctx context.Context, req 
 			Description:       req.Description,
 		}
 
-		return aChannelStore.WithContext(ctx).Create(obj)
+		if err := aChannelStore.WithContext(ctx).Create(obj); err != nil {
+			return err
+		}
+		if err := receiver.cache.SetObject(ctx, store.AlertChannelType, obj.ID, obj, store.NeverExpires); err != nil {
+			zap.L().Error("cache AlertChannel failed", zap.Int("id", obj.ID), zap.Error(err))
+		}
+		if obj.Type == model.ChannelTypeFeishuApp {
+			config, err := obj.GetFeishuAppConfig()
+			if err == nil {
+				publish := fmt.Sprintf("%s:%s:%s", obj.Name, config.AppID, config.AppSecret)
+				if err := receiver.cache.Publish(ctx, constant.AlertChannelTopicUpdate, publish); err != nil {
+					zap.L().Error("publish channel create event failed", zap.Error(err))
+				}
+			}
+		}
+		return nil
 	}
-	return fmt.Errorf("alertChannel 已经存在, 创建失败")
+	return fmt.Errorf("alertChannel already exists, create failed")
 }
 
 func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *types.AlertChannelUpdateRequest) error {
 	sql := aChannelStore.WithContext(ctx)
 
 	// 1. 加载旧数据
-	acObj, err := sql.Preload(aChannelStore.AlertTemplate).Where(aChannelStore.ID.Eq(int(req.ID))).First()
+	acObj, err := sql.Where(aChannelStore.ID.Eq(int(req.ID))).First()
 	if err != nil {
 		return err
 	}
-
-	// 2. 检查模板是否变更
-	// 如果传入的 TemplateID 与数据库中的不一致
-	templateChanged := acObj.AlertTemplateID != req.TemplateID
 
 	acObj.Type = model.ChannelType(req.Type)
 	acObj.Status = req.Status
@@ -89,14 +102,6 @@ func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *typ
 	}
 	acObj.Config = c
 	acObj.Description = req.Description
-
-	// 更新外键 ID
-	acObj.AlertTemplateID = req.TemplateID
-
-	// 【关键修复】如果模板 ID 变了，必须把旧的实体对象清空，否则后续逻辑会认为它还是旧的
-	if templateChanged {
-		acObj.AlertTemplate = nil
-	}
 
 	// redis publish 事件处理...
 	var id, secret string
@@ -117,24 +122,13 @@ func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *typ
 		}
 
 		// 4. 清理旧缓存
-		if err := receiver.cache.DelKey(ctx, store.AlertType, acObj.Name); err != nil {
+		if err := receiver.cache.DelKey(ctx, store.AlertChannelType, acObj.ID); err != nil {
 			return err
 		}
 
 		if *acObj.Status == model.StatusEnabled {
-			// 5. 【修复加载逻辑】
-			// 此时由于上面 templateChanged 时设置了 acObj.AlertTemplate = nil
-			// 这里的逻辑会正确执行，从数据库拉取最新的模板内容
-			if acObj.AlertTemplate == nil {
-				template, err := tx.AlertTemplate.WithContext(ctx).Where(aTemlpateStore.ID.Eq(acObj.AlertTemplateID)).First()
-				if err != nil {
-					return err
-				}
-				acObj.AlertTemplate = template
-			}
-
 			// 6. 存入缓存的是带有最新 AlertTemplate 实体的 acObj
-			if err := receiver.cache.SetObject(ctx, store.AlertType, acObj.Name, acObj, store.NeverExpires); err != nil {
+			if err := receiver.cache.SetObject(ctx, store.AlertChannelType, acObj.ID, acObj, store.NeverExpires); err != nil {
 				return err
 			}
 			return receiver.cache.Publish(ctx, constant.AlertChannelTopicUpdate, publish)
@@ -151,6 +145,19 @@ func (receiver *alertChannelService) DeleteChannel(ctx context.Context, req *typ
 		return err
 	}
 
+	// 检查是否有告警模板绑定了该渠道，绑定了则不允许删除
+	templates, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.AlertChannelID.Eq(acObj.ID)).Find()
+	if err != nil {
+		return err
+	}
+	if len(templates) > 0 {
+		names := make([]string, 0, len(templates))
+		for _, t := range templates {
+			names = append(names, t.Name)
+		}
+		return fmt.Errorf("告警渠道 [%s] 已被告警模板 [%v] 绑定, 无法删除", acObj.Name, names)
+	}
+
 	var id, secret string
 	switch acObj.Type {
 	case model.ChannelTypeFeishuApp:
@@ -163,11 +170,11 @@ func (receiver *alertChannelService) DeleteChannel(ctx context.Context, req *typ
 	}
 	publish := fmt.Sprintf("%s:%s:%s", acObj.Name, id, secret)
 	return store.Q.Transaction(func(tx *store.Query) error {
-		_, err := tx.AlertChannel.WithContext(ctx).Unscoped().Where(aChannelStore.ID.Eq(acObj.ID)).Delete(acObj)
+		_, err := tx.AlertChannel.WithContext(ctx).Where(aChannelStore.ID.Eq(acObj.ID)).Delete(acObj)
 		if err != nil {
 			return err
 		}
-		if err := receiver.cache.DelKey(ctx, store.AlertType, acObj.Name); err != nil {
+		if err := receiver.cache.DelKey(ctx, store.AlertChannelType, acObj.ID); err != nil {
 			return err
 		}
 		return receiver.cache.Publish(ctx, constant.AlertChannelTopicDelete, publish)
@@ -175,11 +182,18 @@ func (receiver *alertChannelService) DeleteChannel(ctx context.Context, req *typ
 }
 
 func (receiver *alertChannelService) QueryChannel(ctx context.Context, req *types.IDRequest) (*model.AlertChannel, error) {
+	var cached model.AlertChannel
+	found, err := receiver.cache.GetObject(ctx, store.AlertChannelType, int(req.ID), &cached)
+	if err == nil && found {
+		return &cached, nil
+	}
 	obj, err := aChannelStore.WithContext(ctx).Where(aChannelStore.ID.Eq(int(req.ID))).First()
 	if err != nil {
 		return nil, err
 	}
-
+	if err := receiver.cache.SetObject(ctx, store.AlertChannelType, obj.ID, obj, store.NeverExpires); err != nil {
+		zap.L().Error("cache AlertChannel failed", zap.Int("id", obj.ID), zap.Error(err))
+	}
 	return obj, nil
 }
 

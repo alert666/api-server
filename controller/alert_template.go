@@ -12,6 +12,7 @@ type AlertTemplateController interface {
 	DeleteAlertTemplate(c *gin.Context)
 	QueryAlertTemplate(c *gin.Context)
 	ListAlertTemplate(c *gin.Context)
+	CopyAlertTemplate(c *gin.Context)
 }
 
 type alertTemplateController struct {
@@ -50,6 +51,20 @@ func (receiver *alertTemplateController) UpdateAlertTemplate(c *gin.Context) {
 	bind.ResponseOnlySuccess(c, receiver.alertTemplateService.UpdateTemplate, bind.BindTypeJson, bind.BindTypeUri)
 }
 
+// CopyApi 拷贝 AlerTemplate
+// @Summary 拷贝 AlerTemplate
+// @Description 拷贝一个已有的 AlerTemplate，需指定新名称
+// @Tags AlerTemplate 管理
+// @Accept json
+// @Produce json
+// @Param id path int true "被拷贝模板的 ID"
+// @Param data body types.AlertTemplateCopyRequest true "拷贝请求参数（name 为新模板名称）"
+// @Success 200 {object} types.Response{data=model.AlertTemplate} "拷贝成功，返回新创建的模板"
+// @Router /api/v1/alertTemplate/:id/copy [post]
+func (receiver *alertTemplateController) CopyAlertTemplate(c *gin.Context) {
+	bind.ResponseWithData(c, receiver.alertTemplateService.CopyTemplate, bind.BindTypeJson, bind.BindTypeUri)
+}
+
 // DeleteApi 删除 AlerTemplate
 // @Summary 删除 AlerTemplate
 // @Description 删除 AlerTemplate
@@ -84,5 +99,5 @@ func (receiver *alertTemplateController) QueryAlertTemplate(c *gin.Context) {
 // @Success 200 {object} types.Response{data=types.AlertTemplateListResponse} "查询成功"
 // @Router /api/v1/AlertTemplate [get]
 func (receiver *alertTemplateController) ListAlertTemplate(c *gin.Context) {
-	bind.ResponseWithData(c, receiver.alertTemplateService.ListTemplate, bind.BindTypeUri, bind.BindTypeQuery)
+	bind.ResponseWithData(c, receiver.alertTemplateService.ListTemplate, bind.BindTypeQuery)
 }

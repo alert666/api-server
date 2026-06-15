@@ -1,4 +1,4 @@
-package v1
+﻿package v1
 
 import (
 	"context"
@@ -18,7 +18,7 @@ type TenantServicer interface {
 	DeleteTenant(ctx context.Context, req *types.IDRequest) error
 	QueryTenant(ctx context.Context, req *types.IDRequest) (*model.Tenant, error)
 	ListTenant(ctx context.Context, pagination *types.TenantListRequest) (*types.TenantListResponse, error)
-	GetTenantOption(ctx context.Context) ([]types.TenantOption, error)
+	GetTenantOption(ctx context.Context) ([]*types.TenantOption, error)
 }
 
 type TenantService struct {
@@ -57,8 +57,12 @@ func (receiver *TenantService) CreateTenant(ctx context.Context, req *types.Tena
 		}
 		options := make([]*types.TenantOption, 0, len(storeObjs))
 		for _, storeObj := range storeObjs {
+			label := storeObj.Label
+			if label == "" {
+				label = storeObj.Name
+			}
 			options = append(options, &types.TenantOption{
-				Label: storeObj.Label,
+				Label: label,
 				Value: storeObj.Name,
 			})
 		}
@@ -90,8 +94,12 @@ func (receiver *TenantService) UpdateTenant(ctx context.Context, req *types.Tena
 
 		res := make([]*types.TenantOption, 0, len(storeObjs))
 		for _, storeObj := range storeObjs {
+			label := storeObj.Label
+			if label == "" {
+				label = storeObj.Name
+			}
 			res = append(res, &types.TenantOption{
-				Label: storeObj.Label,
+				Label: label,
 				Value: storeObj.Name,
 			})
 		}
@@ -118,8 +126,12 @@ func (receiver *TenantService) DeleteTenant(ctx context.Context, req *types.IDRe
 		}
 		options := make([]*types.TenantOption, 0, len(storeObjs))
 		for _, storeObj := range storeObjs {
+			label := storeObj.Label
+			if label == "" {
+				label = storeObj.Name
+			}
 			options = append(options, &types.TenantOption{
-				Label: storeObj.Name,
+				Label: label,
 				Value: storeObj.Name,
 			})
 		}
@@ -170,8 +182,8 @@ func (receiver *TenantService) ListTenant(ctx context.Context, req *types.Tenant
 	return types.NewTenantListResponse(Tenants, total, req.PageSize, req.Page), nil
 }
 
-func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]types.TenantOption, error) {
-	var res []types.TenantOption
+func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]*types.TenantOption, error) {
+	var res []*types.TenantOption
 
 	exists, err := receiver.cacheImpl.GetObject(ctx, store.TenantType, constant.OptionsCacheKey, &res)
 	if err != nil {
@@ -198,13 +210,13 @@ func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]types.Ten
 			return nil, err
 		}
 
-		resList := make([]types.TenantOption, 0, len(storeObjs))
+		resList := make([]*types.TenantOption, 0, len(storeObjs))
 		for _, obj := range storeObjs {
 			label := obj.Label
 			if label == "" {
 				label = obj.Name
 			}
-			resList = append(resList, types.TenantOption{
+			resList = append(resList, &types.TenantOption{
 				Label: label,
 				Value: obj.Name,
 			})
@@ -220,5 +232,5 @@ func (receiver *TenantService) GetTenantOption(ctx context.Context) ([]types.Ten
 		return nil, err
 	}
 
-	return data.([]types.TenantOption), nil
+	return data.([]*types.TenantOption), nil
 }

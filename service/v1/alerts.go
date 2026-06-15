@@ -1,4 +1,4 @@
-package v1
+﻿package v1
 
 import (
 	"context"
@@ -54,16 +54,14 @@ func NewCleanDuplicateFiringer(cache store.CacheStorer) CleanDuplicateFiringer {
 
 func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertReceiveReq) error {
 	log.WithRequestID(ctx).Debug("接收告警数据", zap.Any("data", req))
-	// 获取告警发送Channel
-	alertChannel, err := receiver.getChannel(ctx, req.ChannelName)
+	// 通过 templateName 获取告警模板（含关联的 Channel）
+	alertTemplate, err := receiver.getTemplate(ctx, req.TemplateName)
 	if err != nil {
-		log.WithRequestID(ctx).Error("获取告警发送channel失败", zap.Error(err))
+		log.WithRequestID(ctx).Error("获取告警模板失败", zap.Error(err))
 		return err
 	}
 
-	if alertChannel.AlertTemplate == nil {
-		return fmt.Errorf("%s alertChannel 未绑定模板, 发送告警失败", alertChannel.Name)
-	}
+	alertChannel := alertTemplate.AlertChannel
 
 	tenantValue := req.Alerts[0].Labels[receiver.tenantKey]
 	notifyReq, err := receiver.aggregatedAlarmGrouping(ctx, tenantValue, req.Alerts)
@@ -73,6 +71,7 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	}
 	notifyReq.TenantValue = tenantValue
 	notifyReq.AlertChannel = alertChannel
+	notifyReq.AlertTemplate = alertTemplate
 	notifyReq.AlertReceiveReq = req
 
 	var sendResult *types.NotifySendResult
@@ -94,47 +93,93 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	return nil
 }
 
-// getChannel 获取告警发送方式
-func (receiver *alertsService) getChannel(ctx context.Context, channelName string) (*model.AlertChannel, error) {
-	var channel model.AlertChannel
-	found, err := receiver.cacheImpl.GetObject(ctx, store.AlertType, channelName, &channel)
+// getTemplate 通过模板名称获取告警模板（含关联的 Channel 和已初始化的 SDK 客户端）
+// getTemplate: fetch alert template with associated channel (O(1) Redis lookup by AlertChannelID)
+func (receiver *alertsService) getTemplate(ctx context.Context, templateName string) (*model.AlertTemplate, error) {
+	var template model.AlertTemplate
+	found, err := receiver.cacheImpl.GetObject(ctx, store.AlertTemplateType, templateName, &template)
 	if err != nil {
-		zap.L().Error("从缓存获取渠道失败", zap.String("name", channelName), zap.Error(err))
+		zap.L().Error("get template from cache failed", zap.String("name", templateName), zap.Error(err))
 		return nil, err
 	}
 
 	if !found {
-		channel, err := aChannelStore.WithContext(ctx).Preload(aChannelStore.AlertTemplate).Where(aChannelStore.Name.Eq(channelName)).First()
+		// cache miss: load from DB, cache template and channel separately
+		tpl, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.Name.Eq(templateName)).First()
 		if err != nil {
-			return nil, err
-		}
-		if *channel.Status != model.StatusEnabled {
-			return nil, fmt.Errorf("告警通道 %s 未启用, 发送失败", channel.Name)
+			return nil, fmt.Errorf("alert template %s not found", templateName)
 		}
 
+		template = *tpl
+		channel, err := aChannelStore.WithContext(ctx).Where(aChannelStore.ID.Eq(template.AlertChannelID)).First()
+		if err != nil {
+			return nil, fmt.Errorf("channel (ID=%d) for template %s not found", template.AlertChannelID, templateName)
+		}
+		if *channel.Status != model.StatusEnabled {
+			return nil, fmt.Errorf("channel [%s] for template %s is disabled", channel.Name, templateName)
+		}
+		template.AlertChannel = channel
+
+		// init feishu SDK client
 		switch channel.Type {
 		case model.ChannelTypeFeishuApp:
 			appid, appSecret, err := helper.VerificationAlertFeishuConfig(channel)
 			if err != nil {
 				return nil, err
 			}
-			// 缓存客户端
 			receiver.feishuImpl.Init(channel.Name, appid, appSecret)
-			// 缓存 redis
-			if err := receiver.cacheImpl.SetObject(ctx, store.AlertType, channel.Name, channel, store.NeverExpires); err != nil {
+		default:
+			return nil, fmt.Errorf("unsupported channel type: %s", channel.Type)
+		}
+
+		// cache template and channel separately
+		if err := receiver.cacheImpl.SetObject(ctx, store.AlertTemplateType, template.Name, template, store.NeverExpires); err != nil {
+			return nil, err
+		}
+		if err := receiver.cacheImpl.SetObject(ctx, store.AlertChannelType, channel.ID, channel, store.NeverExpires); err != nil {
+			return nil, err
+		}
+		return &template, nil
+	}
+
+	// cache hit: O(1) lookup channel by AlertChannelID
+	if template.AlertChannel == nil {
+		var channel model.AlertChannel
+		chFound, chErr := receiver.cacheImpl.GetObject(ctx, store.AlertChannelType, template.AlertChannelID, &channel)
+		if chErr != nil {
+			return nil, chErr
+		}
+		if !chFound {
+			// channel cache miss: DB fallback
+			chPtr, err := aChannelStore.WithContext(ctx).Where(aChannelStore.ID.Eq(template.AlertChannelID)).First()
+			if err != nil {
+				return nil, fmt.Errorf("channel (ID=%d) for template %s not found", template.AlertChannelID, templateName)
+			}
+			channel = *chPtr
+			if err := receiver.cacheImpl.SetObject(ctx, store.AlertChannelType, channel.ID, channel, store.NeverExpires); err != nil {
 				return nil, err
 			}
-			return channel, nil
+		}
+		if *channel.Status != model.StatusEnabled {
+			return nil, fmt.Errorf("channel [%s] for template %s is disabled", channel.Name, templateName)
+		}
+		template.AlertChannel = &channel
+
+		// init feishu SDK client
+		switch channel.Type {
+		case model.ChannelTypeFeishuApp:
+			appid, appSecret, err := helper.VerificationAlertFeishuConfig(&channel)
+			if err != nil {
+				return nil, err
+			}
+			receiver.feishuImpl.Init(channel.Name, appid, appSecret)
 		default:
-			return nil, fmt.Errorf("不支持的 Channel 类型: %s", channel.Type)
+			return nil, fmt.Errorf("unsupported channel type: %s", channel.Type)
 		}
 	}
 
-	return &channel, nil
+	return &template, nil
 }
-
-// aggregatedAlarmGrouping 告警分组
-// 需要将告警分配 firing 和 resolved 两组, 分别发送
 func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tenantValue string, alerts []*types.Alert) (*types.NotifyReq, error) {
 	log.WithRequestID(ctx).Info("告警分组", zap.String("tenant", tenantValue))
 	alertLen := len(alerts)
