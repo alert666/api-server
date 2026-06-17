@@ -1,6 +1,7 @@
 ﻿package v1
 
 import (
+	"encoding/json"
 	"context"
 	"encoding/base64"
 	"errors"
@@ -71,24 +72,28 @@ func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, re
 		}
 	}
 
+	receiveIdBytes, err := json.Marshal(req.ReceiveId)
+	if err != nil {
+		return fmt.Errorf("序列化 ReceiveId 失败, %s", err)
+	}
 	saveObj := &model.AlertTemplate{
 		Name:                req.Name,
 		AlertChannelID:      req.AlertChannelID,
 		ReceiveIdType:       req.ReceiveIdType,
-		ReceiveId:           req.ReceiveId,
+		ReceiveId:           string(receiveIdBytes),
 		Description:         req.Description,
 		Template:            string(templateBy),
 		AggregationTemplate: string(aggTemplateBy),
 	}
 
 	if req.AggregationTemplate != "" {
-		if err := helper.ValidateYamlTemplate(ctx, true, saveObj.AggregationTemplate); err != nil {
+		if err := validateTemplate(ctx, req.ReceiveIdType, true, saveObj.AggregationTemplate); err != nil {
 			return fmt.Errorf("测试聚合模板失败, %s", err)
 		}
 	}
 
 	if req.Template != "" {
-		if err := helper.ValidateYamlTemplate(ctx, false, saveObj.Template); err != nil {
+		if err := validateTemplate(ctx, req.ReceiveIdType, false, saveObj.Template); err != nil {
 			return fmt.Errorf("测试非聚合模板失败, %s", err)
 		}
 	}
@@ -130,7 +135,11 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 	obj.Template = string(templateBy)
 	obj.AggregationTemplate = string(aggTemplateBy)
 	obj.ReceiveIdType = req.ReceiveIdType
-	obj.ReceiveId = req.ReceiveId
+	receiveIdBytes, err := json.Marshal(req.ReceiveId)
+	if err != nil {
+		return fmt.Errorf("序列化 ReceiveId 失败, %s", err)
+	}
+	obj.ReceiveId = string(receiveIdBytes)
 	obj.AlertChannelID = req.AlertChannelID
 	obj.Description = req.Description
 
@@ -153,13 +162,13 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 	}
 
 	if req.AggregationTemplate != "" {
-		if err := helper.ValidateYamlTemplate(ctx, true, obj.AggregationTemplate); err != nil {
+		if err := validateTemplate(ctx, req.ReceiveIdType, true, obj.AggregationTemplate); err != nil {
 			return fmt.Errorf("测试聚合模板失败, %s", err)
 		}
 	}
 
 	if req.Template != "" {
-		if err := helper.ValidateYamlTemplate(ctx, false, obj.Template); err != nil {
+		if err := validateTemplate(ctx, req.ReceiveIdType, false, obj.Template); err != nil {
 			return fmt.Errorf("测试聚合模板失败, %s", err)
 		}
 	}
@@ -220,7 +229,11 @@ func (receiver *alertTemplateService) CopyTemplate(ctx context.Context, req *typ
 	}
 
 	// 校验接收者配置
-	if err := helper.ValidateTemplateRecipient(src.ReceiveIdType, src.ReceiveId); err != nil {
+	var copyReceiveIds []string
+	if err := json.Unmarshal([]byte(src.ReceiveId), &copyReceiveIds); err != nil {
+		return nil, fmt.Errorf("反序列化 ReceiveId 失败, %s", err)
+	}
+	if err := helper.ValidateTemplateRecipient(src.ReceiveIdType, copyReceiveIds); err != nil {
 		return nil, fmt.Errorf("接收者配置校验失败: %s", err)
 	}
 
@@ -280,4 +293,14 @@ func (receiver *alertTemplateService) ListTemplate(ctx context.Context, req *typ
 		}
 	}
 	return types.NewAlertTemplateListResponse(alertTemplates, total, req.PageSize, req.Page), nil
+}
+
+// validateTemplate 根据接收者类型选择模板校验方式：
+// - email: 仅校验 Go template 语法（HTML 模板）
+// - 其他（飞书/Webhook）: 校验 YAML 模板结构
+func validateTemplate(ctx context.Context, receiveIdType string, aggregation bool, tpl string) error {
+	if receiveIdType == "email" {
+		return helper.ValidateTemplateSyntax(ctx, aggregation, tpl)
+	}
+	return helper.ValidateYamlTemplate(ctx, aggregation, tpl)
 }

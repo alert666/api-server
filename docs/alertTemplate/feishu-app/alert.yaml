@@ -1,0 +1,20 @@
+# 飞书卡片 id
+template_id: "AAqty0YBOvteV"
+# 飞书卡片版本
+template_version_name: "1.0.1"
+template_variable:
+  alertName: {{ index .Labels "alertname" | printf "%q" }}
+  alertDescribe: {{ getDescript . | printf "%q" }}
+  alertCluster: {{ getClusterLabel (index .Labels "cluster") }}
+  alertLevel: {{ index .Labels "severity" | printf "%q" }}
+  alertStartTime: {{ timeFormat .StartsAt | printf "%q" }}
+  alertEndTime: {{ getEndTime .EndsAt "告警未恢复" | printf "%q" }}
+  # @用户的 id
+  alertUser: "<at id=uid></at>"
+  # 获取 grafana 的地址
+  # https://xxx 为 grafana 的地址
+  # thanos 是 需要跳转 grafana 的数据源
+  grafanaLink: {{ newViewLink (getGrafanaExploreLink "https://xxx" .GeneratorURL "thanos" ) }}
+  # 获取当前平台的地址
+  # index .Labels "cluster" 跳转到对应租户告警历史页面，对应 url 参数中的 tenant
+  alertmanagerAddr: {{ newAlertManagerLink "https://xxx/workspace/alert/history?page=1&pageSize=15&status=firing" (index .Labels "cluster") }}

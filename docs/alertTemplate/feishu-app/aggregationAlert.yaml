@@ -1,0 +1,24 @@
+{{- if .Alerts -}}
+{{- $first := index .Alerts 0 -}}
+{{- $count := len .Alerts -}}
+# 飞书卡片 id
+template_id: "xxx"
+# 飞书卡片版本
+template_version_name: "1.0.1"
+template_variable:
+  alertName: {{ if gt $count 1 }}{{ printf "[聚合%d条告警] %s" $count (index $first.Labels "alertname") | printf "%q" }}{{ else }}{{ index $first.Labels "alertname" | printf "%q" }}{{ end }}
+  alertCluster: {{ getClusterLabel (index $first.Labels "cluster") }}
+  alertLevel: {{ index $first.Labels "severity" | printf "%q" }}
+  alertStartTime: {{ timeFormat $first.StartsAt | printf "%q" }}
+  alertEndTime: {{ getEndTime $first.EndsAt "告警未恢复" | printf "%q" }}
+  # @用户的 id
+  alertUser: "<at id=xxx></at>"
+  alertDescribe: {{ getDescript .Alerts | printf "%q" }}
+  # 获取 grafana 的地址
+  # https://xxx 为 grafana 的地址
+  # thanos 是 需要跳转 grafana 的数据源
+  grafanaLink: {{ newViewLink (getGrafanaExploreLink "https://xxx" $first.GeneratorURL "thanos") }}
+  # 获取当前平台的地址
+  # index .Labels "cluster" 跳转到对应租户告警历史页面，对应 url 参数中的 tenant
+  alertmanagerAddr: {{ newAlertManagerLink "https://xxx/workspace/alert/history?page=1&pageSize=15&status=firing" (index $first.Labels "cluster") }}
+{{- end -}}

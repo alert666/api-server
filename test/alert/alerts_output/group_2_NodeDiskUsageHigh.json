@@ -1,0 +1,4769 @@
+{
+  "alerts": [
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.195:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9fcb3bceaf227b10",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9fcb3bceaf227b10",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.195:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:52:09.379676+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.236:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7122329fda9b20b0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7122329fda9b20b0",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.236:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:31:43.379678+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.249:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "816163d119731818",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=816163d119731818",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.249:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:01:42.379681+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.36:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8b36a08abd7591c2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8b36a08abd7591c2",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.36:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:15:11.379683+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.6:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "14f1474a0d0ac9ec",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=14f1474a0d0ac9ec",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.6:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:15:27.379684+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.206:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6839b6e07828d9d3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6839b6e07828d9d3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.206:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:16:13.379687+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.10:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "da63f08330c4d963",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=da63f08330c4d963",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.10:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:00:23.379689+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.170:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "25c5f767c514f173",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=25c5f767c514f173",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.170:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:57:50.379691+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.100:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "088ea56810058d14",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=088ea56810058d14",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.100:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:57:45.379692+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.102:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7289eacac41d915a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7289eacac41d915a",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.102:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:58:37.379694+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.112:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f85eb9192ca79207",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f85eb9192ca79207",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.112:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:51:43.379696+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.26:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ea5672e7206df7da",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ea5672e7206df7da",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.26:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:43:12.379698+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.7:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "af61a9bf42f9f9eb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=af61a9bf42f9f9eb",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.7:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:07:22.3797+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.0:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ca3bf1d3f02b3cc5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ca3bf1d3f02b3cc5",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.0:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:33:20.379702+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.244:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b40e68ade5b00e36",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b40e68ade5b00e36",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.244:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:18:40.379703+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.104:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4965436f22850a6d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4965436f22850a6d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.104:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:06:27.379705+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.137:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e6ead1228a00b8ca",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e6ead1228a00b8ca",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.137:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:54:05.379707+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.134:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "32b97bc0c43f1d3f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=32b97bc0c43f1d3f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.134:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:18:44.379708+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.159:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b37d245a40bd214f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b37d245a40bd214f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.159:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:32:19.37971+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.177:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a0883f377b31a82d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a0883f377b31a82d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.177:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:24:28.379713+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.153:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "68e73963e904e331",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=68e73963e904e331",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.153:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:37:44.379714+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.37:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "734915783eba5a6b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=734915783eba5a6b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.37:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T07:59:16.379716+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.16:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d288e453f96aa39e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d288e453f96aa39e",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.16:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:34:53.379718+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.24:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b83adae50b5ac913",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b83adae50b5ac913",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.24:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:38:38.37972+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.27:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7a2d4a0356d6b648",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7a2d4a0356d6b648",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.27:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:36:11.379721+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.161:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "68c0735e95ad23d9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=68c0735e95ad23d9",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.161:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:09:49.379723+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.92:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c5fb856234c67beb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c5fb856234c67beb",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.92:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:10:14.379725+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.104:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7b01661b2d5b44c3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7b01661b2d5b44c3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.104:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:13:29.379727+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.228:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d5f3daf5aff8308d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d5f3daf5aff8308d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.228:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:34:18.379728+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.72:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9d0ff14b438675ad",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9d0ff14b438675ad",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.72:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:45:08.37973+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5ffa6072c959e436",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5ffa6072c959e436",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:20:07.379732+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.159:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f2abed74dcfcb07a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f2abed74dcfcb07a",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.159:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:48:45.379733+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.220:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "44d81da7afc3fd20",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=44d81da7afc3fd20",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.220:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T07:59:30.379735+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.227:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c75df256a66c7946",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c75df256a66c7946",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.227:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:33:31.379737+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.55:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "39ceaade2d0d5f36",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=39ceaade2d0d5f36",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.55:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:55:32.379739+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.74:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "43219c75daa61c55",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=43219c75daa61c55",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.74:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:55:20.379741+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.29:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9f3f58831a030bc8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9f3f58831a030bc8",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.29:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:31:34.379743+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 51% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.150:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ac9ff02792695be1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ac9ff02792695be1",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.150:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:01:03.379745+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.253:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5db5a8689ba837d8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5db5a8689ba837d8",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.253:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:10:40.379747+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.54:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2efaefde3ad9617d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2efaefde3ad9617d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.54:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:31:49.379748+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.16:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "cf601b1831081636",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=cf601b1831081636",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.16:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:01:15.37975+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.41:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "414aaeab5184e281",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=414aaeab5184e281",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.41:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:36:15.379752+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.214:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b382efe53ad56b5c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b382efe53ad56b5c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.214:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:32:46.379754+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.194:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fe4a8691dfa3dd20",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fe4a8691dfa3dd20",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.194:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:35:51.379756+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.86:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4961ded5f6ce679d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4961ded5f6ce679d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.86:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:42:30.379757+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.19:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "756b4e89b5366f56",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=756b4e89b5366f56",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.19:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:00:59.379759+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.214:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "55328333d7f38563",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=55328333d7f38563",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.214:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:25:12.379761+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.208:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "47e2e027087e197c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=47e2e027087e197c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.208:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:29:15.379763+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.251:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d0744f85bc2a9b6c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d0744f85bc2a9b6c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.251:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:20:11.379765+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.26:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7e20446519dd8685",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7e20446519dd8685",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.26:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:23:25.379767+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.119:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "05a162bd265e3f1b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=05a162bd265e3f1b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.119:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:36:17.379769+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.244:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1ebf16f636cbe89c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1ebf16f636cbe89c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.244:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:59:22.37977+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.119:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e0669312a095f168",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e0669312a095f168",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.119:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:12:28.379772+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.245:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fadfe8cf475e2dcc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fadfe8cf475e2dcc",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.245:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:11:08.379774+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.185:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4eb5b49dec86be23",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4eb5b49dec86be23",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.185:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:51:21.379776+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.81:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "47446399ddfb3a33",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=47446399ddfb3a33",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.81:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:33:18.379777+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.18:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4bae4450b41b0fc9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4bae4450b41b0fc9",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.18:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:50:32.379779+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.133:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "59675939dd7bd311",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=59675939dd7bd311",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.133:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:35:51.37978+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.65:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "108f973f2996d3fb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=108f973f2996d3fb",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.65:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:19:46.379782+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.243:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "66e6ba8ae5907212",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=66e6ba8ae5907212",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.243:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:27:24.379784+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.73:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0cb44adecca921a3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0cb44adecca921a3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.73:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:32:10.379786+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.10:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c5d630cfdc77386e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c5d630cfdc77386e",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.10:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:41:41.379788+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.245:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "50c081923d7b48e6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=50c081923d7b48e6",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.245:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:26:10.37979+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.112:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "28f0d5e130d614da",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=28f0d5e130d614da",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.112:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:03:55.379792+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.175:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "259a5c97dd956ab9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=259a5c97dd956ab9",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.175:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:03:38.379793+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.89:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0c726420b16d6869",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0c726420b16d6869",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.89:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:07:46.379795+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.16:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d909c8d31426e175",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d909c8d31426e175",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.16:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:22:29.379797+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.68:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "49e53802872ec5a5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=49e53802872ec5a5",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.68:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:00:08.379798+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.67:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9eaa298a2c7e36dd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9eaa298a2c7e36dd",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.67:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:27:58.3798+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.165:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8aebaef8bff77083",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8aebaef8bff77083",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.165:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:43:23.379802+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.53:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "026dff31077b12b2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=026dff31077b12b2",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.53:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:19:57.379804+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.80:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "06eb17b77ed0fee2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=06eb17b77ed0fee2",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.80:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:11:51.379805+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.18:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bacce8019ac7d0f3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bacce8019ac7d0f3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.18:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:15:34.379807+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.244:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "890ad53f9f517cef",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=890ad53f9f517cef",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.244:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:19:34.379809+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.166:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4dd3f080c2db5e58",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4dd3f080c2db5e58",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.166:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:23:38.379813+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.147:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "97d36adbe68975bc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=97d36adbe68975bc",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.147:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:02:48.379815+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.148:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8718ffc58a5ab9c8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8718ffc58a5ab9c8",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.148:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:48:03.379817+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.194:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "dd72a753d6c35f1f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=dd72a753d6c35f1f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.194:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:43:13.379819+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.161:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d99fb2819f9dc060",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d99fb2819f9dc060",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.161:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:43:36.37982+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.1:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6b46c0b344e6c121",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6b46c0b344e6c121",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.1:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:16:09.379823+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.69:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7061b5ed8dbf7eb3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7061b5ed8dbf7eb3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.69:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:49:05.379824+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.56:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e4c8ad861140c1c0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e4c8ad861140c1c0",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.56:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:45:38.379826+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.130:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "85dc4fd1e6d2d7cd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=85dc4fd1e6d2d7cd",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.130:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:04:45.379828+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.58:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7081275f00e34888",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7081275f00e34888",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.58:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:40:42.379829+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.211:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4e09a6dda470eb64",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4e09a6dda470eb64",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.211:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T07:58:18.379831+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.64:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8e01358c5538bd41",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8e01358c5538bd41",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.64:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:51:27.379833+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.15:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "dd02f8989621d9ce",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=dd02f8989621d9ce",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.15:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:19:52.379835+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.188:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bebdafad9c3cd32b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bebdafad9c3cd32b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.188:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:52:19.379836+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.104:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6cf4aea4b65f77a2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6cf4aea4b65f77a2",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.104:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:04:34.379838+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.197:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d5d8b0a3740ecb2c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d5d8b0a3740ecb2c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.197:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:40:28.37984+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.14:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d996f09b9eb412fc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d996f09b9eb412fc",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.14:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:45:49.379842+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.95:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "605860e78e58099b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=605860e78e58099b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.95:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:12:30.379843+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f7bd6c0e85d32d18",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f7bd6c0e85d32d18",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:33:41.379845+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.202:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "50b7944d362da8e4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=50b7944d362da8e4",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.202:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:29:42.379847+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.106:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b68a116f78c9381c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b68a116f78c9381c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.106:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:50:01.379849+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.50:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "220a3bface5fa761",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=220a3bface5fa761",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.50:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:45:21.37985+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.36:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "20c736a067899163",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=20c736a067899163",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.36:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:18:35.379852+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.195:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9f373d1911a8e3b2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9f373d1911a8e3b2",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.195:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:37:17.379854+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.177:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d39ea0b58461c833",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d39ea0b58461c833",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.177:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:39:20.379856+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.8:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "aa15ed35bd2ab820",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=aa15ed35bd2ab820",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.8:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:50:03.379858+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.209:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0b6c8c1382447d7e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0b6c8c1382447d7e",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.209:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:37:29.379859+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.253:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "341458b86c34c29a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=341458b86c34c29a",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.253:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:03:29.379861+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.213:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0538b35acec9506b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0538b35acec9506b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.213:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:14:48.379863+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "87caf792f9d34f4b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=87caf792f9d34f4b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:15:26.379865+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.217:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f90255b9c5934bf6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f90255b9c5934bf6",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.217:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:47:16.379866+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.10:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "50d68011736d482e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=50d68011736d482e",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.10:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:56:18.379868+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.1:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0b88ccdb44c9fe8e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0b88ccdb44c9fe8e",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.1:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:20:28.37987+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.101:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a174a99f1dbede3d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a174a99f1dbede3d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.101:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:07:41.379871+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.249:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7fff7b580baac237",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7fff7b580baac237",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.249:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:18:06.379873+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.186:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0804f323e88b193b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0804f323e88b193b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.186:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:16:09.379875+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.33:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f4eb78f1e0a8ad13",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f4eb78f1e0a8ad13",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.33:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:03:52.379876+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.66:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "11ea524be6e8a98d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=11ea524be6e8a98d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.66:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:31:58.379878+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.57:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3a9eb762ea2e241b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3a9eb762ea2e241b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.57:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:16:59.37988+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.53:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3753cfbe6cdf9dff",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3753cfbe6cdf9dff",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.53:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:40:27.379882+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.234:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a3d670a563019f83",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a3d670a563019f83",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.234:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:13:21.379884+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.129:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8f9d854331b83708",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8f9d854331b83708",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.129:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:59:48.379885+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.137:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "980da0a9a155acc9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=980da0a9a155acc9",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.137:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:06:14.379887+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "551df7ef652cf6cf",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=551df7ef652cf6cf",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:14:27.379889+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.160:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3f0984b6b1898d8d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3f0984b6b1898d8d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.160:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:30:17.379891+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.138:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "32618f6516e61c4c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=32618f6516e61c4c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.138:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:00:34.379893+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.34:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b34a88a0d3f8803d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b34a88a0d3f8803d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.34:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:46:04.379894+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.32:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b33fd2fb648cf809",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b33fd2fb648cf809",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.32:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:19:48.379896+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.220:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ba709dd798ff5065",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ba709dd798ff5065",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.220:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:57:12.379898+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.52:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f616fefde8f4d0fd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f616fefde8f4d0fd",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.52:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:35:30.3799+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.215:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6be25894619d4fa7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6be25894619d4fa7",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.215:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:56:51.379901+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.106:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "17f37365e874c68b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=17f37365e874c68b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.106:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:27:08.379903+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.203:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7667f3de3617a737",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7667f3de3617a737",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.203:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:08:38.379905+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.23:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "92ccdf064d7d35b3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=92ccdf064d7d35b3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.23:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:08:34.379906+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f243abaa63aa10f4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f243abaa63aa10f4",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:30:03.379908+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.119:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ef0731512136bd99",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ef0731512136bd99",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.119:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:22:49.37991+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.146:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "337ae203a2018860",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=337ae203a2018860",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.146:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:04:16.379912+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.31:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "404f0981cf4c0131",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=404f0981cf4c0131",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.31:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:56:19.379914+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.203:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "be799816c2098157",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=be799816c2098157",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.203:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:32:10.379916+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.223:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "987e3aade82ac491",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=987e3aade82ac491",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.223:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:08:07.379917+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.151:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "411eb1d4a479d70e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=411eb1d4a479d70e",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.151:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:22:54.379919+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.248:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7dc126b170f30e6b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7dc126b170f30e6b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.248:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:32:22.379921+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.139:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ddee01649be86948",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ddee01649be86948",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.139:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:55:48.379923+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.246:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1ea6efe517cab6f3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1ea6efe517cab6f3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.246:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:06:01.379924+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.207:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5868086cd8707580",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5868086cd8707580",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.207:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:04:48.379926+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.96:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "79b01e3bcb72d7ef",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=79b01e3bcb72d7ef",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.96:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:51:45.379928+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.43:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "006f34e9ea11a18b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=006f34e9ea11a18b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.43:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:43:56.379929+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.200:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ba311f85c3294089",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ba311f85c3294089",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.200:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:10:26.379931+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.64:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "02c21e909e6a8e63",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=02c21e909e6a8e63",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.64:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:19:54.379933+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.134:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8689c06422e5e104",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8689c06422e5e104",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.134:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:44:10.379935+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.66:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4e021cacfb895410",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4e021cacfb895410",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.66:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:25:45.379936+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.74:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "42c205067959d330",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=42c205067959d330",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.74:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:27:24.379938+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.177:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f3d13cdbbd88cd6a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f3d13cdbbd88cd6a",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.177:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:42:42.37994+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.133:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a50e58182234ee3f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a50e58182234ee3f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.133:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:27:23.379943+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.56:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "eb7634ab050c5161",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=eb7634ab050c5161",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.56:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:19:29.379945+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.143:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "62511c8fe5a91b1a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=62511c8fe5a91b1a",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.143:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:52:58.379947+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.144:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f308d8be6651920c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f308d8be6651920c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.144:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:24:16.379949+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.200:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8cebd4675804b8d7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8cebd4675804b8d7",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.200:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:32:10.379951+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.206:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "cd8825c24724e262",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=cd8825c24724e262",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.206:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:57:33.379953+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.30:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "177e724afd675a8b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=177e724afd675a8b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.30:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:30:08.379954+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.114:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a3efaa00f8974916",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a3efaa00f8974916",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.114:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:40:59.379956+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.60:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7309304510a3b394",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7309304510a3b394",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.60:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:44:30.379958+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.215:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2e101888aca4bc22",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2e101888aca4bc22",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.215:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:25:45.37996+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.166:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2f0a87f9a6bd5760",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2f0a87f9a6bd5760",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.166:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:13:07.379961+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.113:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "49832a456e932666",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=49832a456e932666",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.113:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:53:37.379963+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.253:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2a6b5d9d9ee0fe53",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2a6b5d9d9ee0fe53",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.253:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:04:59.379965+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.76:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2b7060e12df03556",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2b7060e12df03556",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.76:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:23:35.379967+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.59:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4e283f6be6e1c6c8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4e283f6be6e1c6c8",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.59:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:20:02.379969+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.198:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "78caddf1e7c9cd4d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=78caddf1e7c9cd4d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.198:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:38:03.379971+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.142:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0665c0d00e78226b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0665c0d00e78226b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.142:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:19:47.379972+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.148:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3312de6b1422ed4d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3312de6b1422ed4d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.148:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:21:48.379974+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.28:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5fb24ec024b7cf22",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5fb24ec024b7cf22",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.28:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:03:28.379976+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "273cef7454bd3693",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=273cef7454bd3693",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:01:43.379978+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.83:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0740ccdcce71ac9d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0740ccdcce71ac9d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.83:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:23:45.379979+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.50:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e13874f9858edd04",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e13874f9858edd04",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.50:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:48:07.379981+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.184:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "daea3123f556dff7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=daea3123f556dff7",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.184:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:33:22.379983+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.223:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4199fcb986b4a247",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4199fcb986b4a247",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.223:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:34:31.379985+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.224:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4d0d8fcc4fd2a1b2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4d0d8fcc4fd2a1b2",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.224:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:08:31.379986+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.232:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8985b4d271a20fc7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8985b4d271a20fc7",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.232:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:23:32.379988+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.48:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c844782dd485e084",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c844782dd485e084",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.48:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:02:03.37999+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.166:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ff4ea59378666b7f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ff4ea59378666b7f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.166:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:34:50.379992+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.77:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0cc4b423eeaa556b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0cc4b423eeaa556b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.77:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:32:42.379994+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b1a08c2f30517d4f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b1a08c2f30517d4f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:21:14.379996+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.64:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "78e92a8b86eeffdf",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=78e92a8b86eeffdf",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.64:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:29:24.379998+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.99:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "13c4b1f11a29e909",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=13c4b1f11a29e909",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.99:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:08:52.38+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.94:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7c52f4cb2afea20f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7c52f4cb2afea20f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.94:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:52:35.380002+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.235:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5bcecc86c159a566",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5bcecc86c159a566",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.235:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:15:32.380003+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.7:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "87e7058233eb7239",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=87e7058233eb7239",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.7:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:11:17.380005+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.43:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "30abad2e8c354e8d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=30abad2e8c354e8d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.43:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:48:19.380007+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.26:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9afc19b15afd16f2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9afc19b15afd16f2",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.26:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:41:55.380009+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.153:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ff098b6251b9b235",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ff098b6251b9b235",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.153:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:59:16.380011+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.174:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b419976df59a3810",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b419976df59a3810",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.174:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:34:34.380012+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.240:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f143a0af6bce0166",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f143a0af6bce0166",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.240:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:36:02.380014+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.7:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6166f8e4648ee3be",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6166f8e4648ee3be",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.7:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:11:59.380017+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.243:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9da72cd01974e946",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9da72cd01974e946",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.243:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:07:38.380018+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.240:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "81b683238359ca65",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=81b683238359ca65",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.240:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:25:37.38002+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.151:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3ccfe3553d59c6b3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3ccfe3553d59c6b3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.151:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:14:39.380022+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.132:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "36a9adb8304bc560",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=36a9adb8304bc560",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.132:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:46:58.380024+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.179:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "87a39b8265f52526",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=87a39b8265f52526",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.179:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:40:42.380026+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.1:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "84dff2d1a62e8723",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=84dff2d1a62e8723",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.1:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:29:03.380027+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.91:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "27244209e2352922",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=27244209e2352922",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.91:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:48:26.380029+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.127:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "30a536a2ebe5ec18",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=30a536a2ebe5ec18",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.127:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:56:29.380031+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.147:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f8d54700a7d597ff",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f8d54700a7d597ff",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.147:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:27:37.380032+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.231:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "35f2a0d9c6c1d752",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=35f2a0d9c6c1d752",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.231:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:03:35.380034+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.221:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4b415d010f568092",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4b415d010f568092",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.221:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:24:08.380036+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.112:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e1ad1fe032a11a6d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e1ad1fe032a11a6d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.112:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:57:31.380056+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.34:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "454fd9d4d7c05a2e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=454fd9d4d7c05a2e",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.34:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:08:38.380058+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.60:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b5450534cb01284b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b5450534cb01284b",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.60:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:10:58.380061+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.101:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5c6ecbe81fc860b7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5c6ecbe81fc860b7",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.101:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:44:12.380062+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.251:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "aaa484a12ba0c010",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=aaa484a12ba0c010",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.251:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:19:07.380064+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.117:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "39f35f89bd71bc8d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=39f35f89bd71bc8d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.117:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:56:45.380066+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.68:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e2882e1daa971cf3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e2882e1daa971cf3",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.68:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:00:14.380068+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.182:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "99a2a18a6b9082ef",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=99a2a18a6b9082ef",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.182:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:48:15.380069+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.247:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9451c9f70d0a6d96",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9451c9f70d0a6d96",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.247:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:06:37.380071+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.234:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "71eab8de15786665",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=71eab8de15786665",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.234:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:38:15.380073+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.47:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c9db735dc707102d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c9db735dc707102d",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.47:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:26:41.380075+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.112:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "70d967f362b6498c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=70d967f362b6498c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.112:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:57:07.380076+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.197:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f6c573460d31a0fd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f6c573460d31a0fd",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.197:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:46:57.380078+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.159:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "af883149b4178748",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=af883149b4178748",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.159:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:33:35.380079+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.138:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a95b5b9db44b5633",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a95b5b9db44b5633",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.138:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:43:37.380081+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.183:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "55794ba81481ea00",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=55794ba81481ea00",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.183:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:47:57.380083+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.111:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "49f1489d9830e01a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=49f1489d9830e01a",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.111:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:40:47.380085+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.208:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8a7bb5fb8b626c06",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8a7bb5fb8b626c06",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.208:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:36:29.380087+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.75:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9caec5d3be4c3819",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9caec5d3be4c3819",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.75:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:02:43.380089+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.223:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "80d030c302b66c14",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=80d030c302b66c14",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.223:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:21:58.38009+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.126:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "39864f10b011b6d4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=39864f10b011b6d4",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.126:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:02:44.380092+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.157:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "124cc0af866ffe48",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=124cc0af866ffe48",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.157:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:13:26.380094+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.180:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9b41105f379daa59",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9b41105f379daa59",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.180:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:35:05.380095+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.5:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6daf622e84190b72",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6daf622e84190b72",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.5:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:59:00.380097+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.113:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6ad027eb8b794ae6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6ad027eb8b794ae6",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.113:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:48:11.380099+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.5:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4c59525722782341",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4c59525722782341",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.5:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:42:00.3801+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.26:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "196d12216dfaea36",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=196d12216dfaea36",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.26:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:07:52.380102+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.173:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "639b01406059b47c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=639b01406059b47c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.173:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:11:18.380104+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 51% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.114:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a64d74f2847d3730",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a64d74f2847d3730",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.114:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:31:45.380106+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.117:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "91a595f519be7533",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=91a595f519be7533",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.117:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:31:28.380107+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.85:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "35df3bf4fa1b8c85",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=35df3bf4fa1b8c85",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.85:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:25:01.380109+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.191:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a85127b86cd0e66c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a85127b86cd0e66c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.191:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:42:51.380111+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.190:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a846293207d32f7c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a846293207d32f7c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.190:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:18:32.380113+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.132:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b763ccb5d98d7afa",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b763ccb5d98d7afa",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.132:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:40:14.380114+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.190:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1794daf662a81166",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1794daf662a81166",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.190:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:31:52.380116+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.63:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5c37b8e4a657c5f7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5c37b8e4a657c5f7",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.63:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:02:00.380118+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.20:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "97a8d1f0db3f4833",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=97a8d1f0db3f4833",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.20:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:00:25.380119+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.187:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "102e8e06f737c76f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=102e8e06f737c76f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.187:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:20:21.380121+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.229:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "121df1c27c7e6c8c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=121df1c27c7e6c8c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.229:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:37:24.380123+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.144:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "44930eea94b61ab4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=44930eea94b61ab4",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.144:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:13:24.380124+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.24:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "25788b3ab80f2a7f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=25788b3ab80f2a7f",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.24:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:37:23.380126+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.194:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "42890fae113b569e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=42890fae113b569e",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.194:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:56:59.380128+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.20:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8339b04a994e954c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8339b04a994e954c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.20:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:19:16.38013+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.20:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7f9d22d617e8187c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7f9d22d617e8187c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.20:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:31:43.380131+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.16:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f2d366f2023f97b1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f2d366f2023f97b1",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.16:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:17:29.380134+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.153:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a62a5089b6ee1070",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a62a5089b6ee1070",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.153:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:32:54.380135+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bc7e72c0bfd2e6cb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bc7e72c0bfd2e6cb",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:52:04.380137+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.152:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "929ec2ee0258e10c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=929ec2ee0258e10c",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.152:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:09:05.380139+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.186:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9bcba20110dd83ec",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9bcba20110dd83ec",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.186:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:47:52.380141+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.235:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "389204a4bb5a9889",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=389204a4bb5a9889",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.235:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:15:33.380142+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: NodeDiskUsageHigh 在 10.0.0.66:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3e109a66a52c61f6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3e109a66a52c61f6",
+      "labels": {
+        "alertname": "NodeDiskUsageHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.66:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:03:31.380144+08:00",
+      "status": "firing"
+    }
+  ],
+  "commonAnnotations": {},
+  "commonLabels": {
+    "alertname": "NodeDiskUsageHigh",
+    "cluster": "prod-aliyun-01"
+  },
+  "externalURL": "http://alertmanager.example.com",
+  "groupKey": "{}/{alertname=\"NodeDiskUsageHigh\", cluster=\"prod-aliyun-01\"}",
+  "groupLabels": {
+    "alertname": "NodeDiskUsageHigh",
+    "cluster": "prod-aliyun-01"
+  },
+  "receiver": "feishu-receiver",
+  "status": "firing",
+  "truncatedAlerts": 0,
+  "version": "4"
+}

@@ -18,6 +18,7 @@ import (
 	server2 "github.com/alert666/api-server/grpc/server"
 	"github.com/alert666/api-server/pkg/alertinhibit"
 	"github.com/alert666/api-server/pkg/casbin"
+	"github.com/alert666/api-server/pkg/email"
 	"github.com/alert666/api-server/pkg/feishu"
 	"github.com/alert666/api-server/pkg/jwt"
 	"github.com/alert666/api-server/pkg/local_cache"
@@ -69,7 +70,8 @@ func InitApplication() (*app.Application, func(), error) {
 	tenantServicer := v1.NewTenantServicer(cacheStore)
 	clusterController := controller.NewClusterController(tenantServicer)
 	feishuer := feishu.NewFeiShu()
-	alertsServicer := v1.NewAlertsServicer(cacheStore, feishuer)
+	emailer := email.NewEmailSender()
+	alertsServicer := v1.NewAlertsServicer(cacheStore, feishuer, emailer)
 	alertManagerController := controller.NewAlertManagerController(alertsServicer)
 	authChecker := casbin.NewAuthChecker(enforcer)
 	middlewareMiddleware := middleware.NewMiddleware(generateToken, authChecker, cacheStore)
@@ -118,7 +120,7 @@ func InitApplication() (*app.Application, func(), error) {
 
 // wire.go:
 
-// NewGRPCBindAddress 锟结供 gRPC 锟斤拷锟斤拷锟斤拷址
+// NewGRPCBindAddress 提供 gRPC 监听地址
 func NewGRPCBindAddress() string {
 	return conf.GetGRPCBind()
 }

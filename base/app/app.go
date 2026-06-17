@@ -85,7 +85,7 @@ func (receiver *Init) Init(ctx context.Context) error {
 			continue
 		}
 
-		var alertConfig map[string]string
+		var alertConfig map[string]any
 		if err := json.Unmarshal(v.Config, &alertConfig); err != nil {
 			zap.L().Error("序列化 AlertChannel 配置失败", zap.String("name", v.Name), zap.Error(err))
 			continue
@@ -93,8 +93,8 @@ func (receiver *Init) Init(ctx context.Context) error {
 
 		switch v.Type {
 		case model.ChannelTypeFeishuApp:
-			appID := alertConfig["app_id"]
-			appSecret := alertConfig["app_secret"]
+			appID, _ := alertConfig["app_id"].(string)
+			appSecret, _ := alertConfig["app_secret"].(string)
 
 			if appID == "" || appSecret == "" {
 				zap.L().Warn("飞书应用配置不完整", zap.String("name", v.Name))

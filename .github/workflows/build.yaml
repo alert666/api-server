@@ -54,7 +54,7 @@ jobs:
         with:
           platforms: linux/amd64
           context: .
-          file: deploy/Dockerfile
+          file: docs/deploy/Dockerfile
           push: true
           tags: |
             ${{ vars.DOCKER_HUB }}/qqlx/alertmanager:${{ steps.vars.outputs.IMAGE_TAG }}

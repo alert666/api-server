@@ -30,16 +30,25 @@ func HashFeishuAppConfig(appid, appSecret string) string {
 }
 
 // ValidateTemplateRecipient 校验模板接收者配置
-func ValidateTemplateRecipient(receiveIdType, receiveId string) error {
-	switch receiveIdType {
-	case "open_id", "user_id", "email", "chat_id":
-		if receiveId == "" {
-			return fmt.Errorf("接收者类型为 %s 时, receiveId 不能为空", receiveIdType)
-		}
-		return nil
-	default:
-		return fmt.Errorf("不支持的接收者类型: %s", receiveIdType)
+func ValidateTemplateRecipient(receiveIdType string, receiveIds []string) error {
+	if len(receiveIds) == 0 {
+		return fmt.Errorf("receiveId 不能为空")
 	}
+	if receiveIdType == "" && len(receiveIds) > 0 {
+		return nil
+	}
+	for _, receiveId := range receiveIds {
+		switch receiveIdType {
+		case "open_id", "user_id", "email", "chat_id":
+			if receiveId == "" {
+				return fmt.Errorf("接收者类型为 %s 时, receiveId 不能为空", receiveIdType)
+			}
+			continue
+		default:
+			return fmt.Errorf("不支持的接收者类型: %s", receiveIdType)
+		}
+	}
+	return nil
 }
 
 func VerificationAlertFeishuConfig(channel *model.AlertChannel) (appid, appSecret string, err error) {
@@ -67,6 +76,24 @@ func VerificationAlertFeishuConfig(channel *model.AlertChannel) (appid, appSecre
 
 func VerificationAlertConfig(channelName string, channelType model.ChannelType, config map[string]any) error {
 	switch channelType {
+	case model.ChannelTypeEmail:
+		smtpHost := config["smtp_host"]
+		smtpPort := config["smtp_port"]
+		username := config["username"]
+		password := config["password"]
+		if smtpHost == nil || smtpHost == "" {
+			return fmt.Errorf("alertChannel.Config smtp_host 不存在")
+		}
+		if smtpPort == nil {
+			return fmt.Errorf("alertChannel.Config smtp_port 不存在")
+		}
+		if username == nil || username == "" {
+			return fmt.Errorf("alertChannel.Config username 不存在")
+		}
+		if password == nil || password == "" {
+			return fmt.Errorf("alertChannel.Config password 不存在")
+		}
+		return nil
 	case model.ChannelTypeFeishuApp:
 		appID := config["app_id"]
 		appSecret := config["app_secret"]
@@ -227,6 +254,35 @@ func ValidateYamlTemplate(ctx context.Context, aggregation bool, alertTpl string
 
 	for _, v := range req.Alerts {
 		if err := validateFunc(v); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// ValidateTemplateSyntax 仅校验模板语法（解析+渲染），不做 YAML 结构校验，用于 HTML/Markdown 模板（如邮件）
+// ValidateTemplateSyntax 仅校验模板语法（解析+渲染），不做 YAML 结构校验，用于 HTML/Markdown 模板（如邮件）
+func ValidateTemplateSyntax(ctx context.Context, aggregation bool, alertTpl string) error {
+	req := types.NewTestAlertReceiveReq()
+	tmpl, err := template.New("validate").Funcs(FuncMap).Parse(alertTpl)
+	if err != nil {
+		return fmt.Errorf("构建告警模版失败, %s", err)
+	}
+
+	renderFunc := func(data any) error {
+		var buf bytes.Buffer
+		if err := tmpl.Execute(&buf, data); err != nil {
+			return fmt.Errorf("渲染告警模版失败, %s", err)
+		}
+		return nil
+	}
+
+	if aggregation {
+		return renderFunc(req)
+	}
+
+	for _, v := range req.Alerts {
+		if err := renderFunc(v); err != nil {
 			return err
 		}
 	}

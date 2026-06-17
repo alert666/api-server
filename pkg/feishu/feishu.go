@@ -371,22 +371,31 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 	// 聚合发送告警
 	if *notifyReq.AlertChannel.AggregationStatus == model.AggregationEnabled {
 		log.WithRequestID(ctx).Debug("聚合发送告警")
+		var receiveIds []string
+		if err := json.Unmarshal([]byte(notifyReq.AlertTemplate.ReceiveId), &receiveIds); err != nil {
+			return nil, fmt.Errorf("解析 ReceiveId 失败: %w", err)
+		}
 		if len(alertArry.FiringAlertArry) > 0 {
 			newReq := notifyReq.AlertReceiveReq.DeepCopy()
 			newReq.Alerts = alertArry.FiringAlertArry
-			firingErr = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, notifyReq.AlertTemplate.ReceiveId, newReq, notifyReq.AlertTemplate.AggregationTemplate, "red")
-			if firingErr != nil {
-				err = firingErr
-				log.WithRequestID(ctx).Error("聚合发送告警卡片失败", zap.Error(firingErr))
+			for _, rid := range receiveIds {
+				err = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, rid, newReq, notifyReq.AlertTemplate.AggregationTemplate, "red")
+				if err != nil {
+					firingErr = err
+					log.WithRequestID(ctx).Error("聚合发送告警卡片失败", zap.Error(err))
+				}
 			}
 		}
 
 		if len(alertArry.ResolvedAlertArry) > 0 {
 			newReq := notifyReq.AlertReceiveReq.DeepCopy()
 			newReq.Alerts = alertArry.ResolvedAlertArry
-			if resolvedErr = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, notifyReq.AlertTemplate.ReceiveId, newReq, notifyReq.AlertTemplate.AggregationTemplate, "green"); resolvedErr != nil {
-				err = resolvedErr
-				log.WithRequestID(ctx).Error("聚合发送恢复卡片失败", zap.Error(resolvedErr))
+			for _, rid := range receiveIds {
+				err = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, rid, newReq, notifyReq.AlertTemplate.AggregationTemplate, "green")
+				if err != nil {
+					resolvedErr = err
+					log.WithRequestID(ctx).Error("聚合发送恢复卡片失败", zap.Error(err))
+				}
 			}
 		}
 
@@ -402,8 +411,11 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 	if *notifyReq.AlertChannel.AggregationStatus == model.AggregationDisabled {
 		// 非聚合发送
 		receiveIdType := notifyReq.AlertTemplate.ReceiveIdType
-		receiveId := notifyReq.AlertTemplate.ReceiveId
-		normalSendResult, err := receiver.singleSend(ctx, larkCli, receiveIdType, receiveId, notifyReq.AlertTemplate, alertArry)
+		var receiveIds []string
+		if err := json.Unmarshal([]byte(notifyReq.AlertTemplate.ReceiveId), &receiveIds); err != nil {
+			return nil, fmt.Errorf("解析 ReceiveId 失败: %w", err)
+		}
+		normalSendResult, err := receiver.singleSend(ctx, larkCli, receiveIdType, receiveIds, notifyReq.AlertTemplate, alertArry)
 		if err != nil {
 			return nil, err
 		}
@@ -416,40 +428,44 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 	return nil, fmt.Errorf("不支持的发送模式, 只支持聚合发送和非聚合发送")
 }
 
-func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, receiveIdType, receiveId string, alertTemplate *model.AlertTemplate, alertArry *types.AlertArry) ([]*types.SingleSendResult, error) {
+func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, receiveIdType string, receiveIds []string, alertTemplate *model.AlertTemplate, alertArry *types.AlertArry) ([]*types.SingleSendResult, error) {
 	var (
 		errs    []error
 		results []*types.SingleSendResult
 	)
 
-	process := func(v *types.Alert) {
-		color := "red"
-		if v.Status == constant.AlertStatusResolved {
-			color = "green"
+	for _, rid := range receiveIds {
+		if rid == "" {
+			continue
 		}
-		err := receiver.renderAndSend(ctx, larkCli, receiveIdType, receiveId, v, alertTemplate.Template, color)
-
-		results = append(results, &types.SingleSendResult{
-			Alert:   v,
-			SendErr: err,
-		})
-
-		if err != nil {
-			log.WithRequestID(ctx).Error("发送单条飞书卡片失败", zap.Error(err))
-			// 限制错误收集数量
-			if len(errs) < 4 {
-				errs = append(errs, err)
+		process := func(v *types.Alert) {
+			color := "red"
+			if v.Status == constant.AlertStatusResolved {
+				color = "green"
 			}
-		}
-		// 防止飞书限流
-		time.Sleep(time.Microsecond * 200)
-	}
+			err := receiver.renderAndSend(ctx, larkCli, receiveIdType, rid, v, alertTemplate.Template, color)
 
-	for _, v := range alertArry.FiringAlertArry {
-		process(v)
-	}
-	for _, v := range alertArry.ResolvedAlertArry {
-		process(v)
+			results = append(results, &types.SingleSendResult{
+				Alert:   v,
+				SendErr: err,
+			})
+
+			if err != nil {
+				log.WithRequestID(ctx).Error("发送单条飞书卡片失败", zap.Error(err))
+				// 限制错误收集数量
+				if len(errs) < 4 {
+					errs = append(errs, err)
+				}
+			}
+			// 防止飞书限流
+			time.Sleep(time.Microsecond * 200)
+		}
+		for _, v := range alertArry.FiringAlertArry {
+			process(v)
+		}
+		for _, v := range alertArry.ResolvedAlertArry {
+			process(v)
+		}
 	}
 
 	return results, errors.Join(errs...)
