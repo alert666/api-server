@@ -1,10 +1,12 @@
-package v1
+﻿package v1
 
 import (
 	"context"
 	"encoding/base64"
 	"errors"
 	"fmt"
+
+	"go.uber.org/zap"
 
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/types"
@@ -18,6 +20,7 @@ type AlertTemplateServicer interface {
 	UpdateTemplate(ctx context.Context, req *types.AlertTemplateUpdateRequest) error
 	DeleteTemplate(ctx context.Context, req *types.IDRequest) error
 	QueryTemplate(ctx context.Context, req *types.IDRequest) (*model.AlertTemplate, error)
+	CopyTemplate(ctx context.Context, req *types.AlertTemplateCopyRequest) (*model.AlertTemplate, error)
 	ListTemplate(ctx context.Context, req *types.AlertTemplateListRequest) (*types.AlertTemplateListResponse, error)
 }
 
@@ -41,6 +44,20 @@ func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, re
 		return fmt.Errorf("%s AlertTemplate 已经存在, 创建失败", req.Name)
 	}
 
+	if req.AlertChannelID > 0 {
+		// 校验关联的告警渠道是否存在且已启用
+		channel, err := aChannelStore.WithContext(ctx).Where(aChannelStore.ID.Eq(req.AlertChannelID)).First()
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return fmt.Errorf("关联的告警渠道(ID=%d)不存在", req.AlertChannelID)
+			}
+			return fmt.Errorf("查询告警渠道失败: %w", err)
+		}
+		if *channel.Status != model.StatusEnabled {
+			return fmt.Errorf("关联的告警渠道 [%s] 未启用", channel.Name)
+		}
+	}
+
 	templateBy, err := base64.StdEncoding.DecodeString(req.Template)
 	if err != nil {
 		return fmt.Errorf("base64 解密 Template 失败, %s", err)
@@ -56,6 +73,9 @@ func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, re
 
 	saveObj := &model.AlertTemplate{
 		Name:                req.Name,
+		AlertChannelID:      req.AlertChannelID,
+		ReceiveIdType:       req.ReceiveIdType,
+		ReceiveId:           req.ReceiveId,
 		Description:         req.Description,
 		Template:            string(templateBy),
 		AggregationTemplate: string(aggTemplateBy),
@@ -73,7 +93,19 @@ func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, re
 		}
 	}
 
-	return aTemlpateStore.WithContext(ctx).Create(saveObj)
+	if err := helper.ValidateTemplateRecipient(req.ReceiveIdType, req.ReceiveId); err != nil {
+		return fmt.Errorf("接收者配置校验失败: %s", err)
+	}
+
+	if err := aTemlpateStore.WithContext(ctx).Create(saveObj); err != nil {
+		return err
+	}
+
+	// 缓存新创建的模板
+	if err := receiver.cache.SetObject(ctx, store.AlertTemplateType, saveObj.Name, saveObj, store.NeverExpires); err != nil {
+		zap.L().Error("cache AlertTemplate failed", zap.String("name", saveObj.Name), zap.Error(err))
+	}
+	return nil
 }
 
 func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *types.AlertTemplateUpdateRequest) error {
@@ -97,7 +129,28 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 
 	obj.Template = string(templateBy)
 	obj.AggregationTemplate = string(aggTemplateBy)
+	obj.ReceiveIdType = req.ReceiveIdType
+	obj.ReceiveId = req.ReceiveId
+	obj.AlertChannelID = req.AlertChannelID
 	obj.Description = req.Description
+
+	if err := helper.ValidateTemplateRecipient(req.ReceiveIdType, req.ReceiveId); err != nil {
+		return fmt.Errorf("接收者配置校验失败: %s", err)
+	}
+
+	// 校验关联的告警渠道是否存在且已启用
+	if req.AlertChannelID > 0 {
+		channel, err := aChannelStore.WithContext(ctx).Where(aChannelStore.ID.Eq(req.AlertChannelID)).First()
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return fmt.Errorf("关联的告警渠道(ID=%d)不存在", req.AlertChannelID)
+			}
+			return fmt.Errorf("查询告警渠道失败: %w", err)
+		}
+		if *channel.Status != model.StatusEnabled {
+			return fmt.Errorf("关联的告警渠道 [%s] 未启用", channel.Name)
+		}
+	}
 
 	if req.AggregationTemplate != "" {
 		if err := helper.ValidateYamlTemplate(ctx, true, obj.AggregationTemplate); err != nil {
@@ -111,50 +164,75 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 		}
 	}
 
-	var acObj *model.AlertChannel
-	acObj, err = aChannelStore.WithContext(ctx).Where(aChannelStore.AlertTemplateID.Eq(int(req.ID))).First()
-	if err != nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return err
-		}
-		// 如果 channel 不存在, 直接更新 template 即可
-		return aTemlpateStore.WithContext(ctx).Save(obj)
+	if err := aTemlpateStore.WithContext(ctx).Save(obj); err != nil {
+		return err
 	}
-
-	return store.Q.Transaction(func(tx *store.Query) error {
-		if acObj == nil {
-			return fmt.Errorf("更新模版失败, 关联的 AlertChannel 不存在")
-		}
-		acObj.AlertTemplate = obj
-		if err := receiver.cache.DelKey(ctx, store.AlertType, acObj.Name); err != nil {
-			return err
-		}
-		if err := receiver.cache.SetObject(ctx, store.AlertType, acObj.Name, acObj, store.NeverExpires); err != nil {
-			return err
-		}
-		return tx.AlertTemplate.WithContext(ctx).Save(obj)
-	})
+	// 更新缓存
+	if err := receiver.cache.SetObject(ctx, store.AlertTemplateType, obj.Name, obj, store.NeverExpires); err != nil {
+		zap.L().Error("cache AlertTemplate update failed", zap.String("name", obj.Name), zap.Error(err))
+	}
+	return nil
 }
 
 func (receiver *alertTemplateService) DeleteTemplate(ctx context.Context, req *types.IDRequest) error {
-	_, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(int(req.ID))).First()
+	obj, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(int(req.ID))).First()
 	if err != nil {
 		return err
-	}
-
-	acObj, err := aChannelStore.WithContext(ctx).Where(aChannelStore.AlertTemplateID.Eq(int(req.ID))).First()
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return err
-	}
-
-	if err == nil {
-		return fmt.Errorf("当前模板已绑定 [%s] 告警通道，请先解除绑定", acObj.Name)
 	}
 
 	if _, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(int(req.ID))).Delete(); err != nil {
 		return err
 	}
+
+	if err := receiver.cache.DelKey(ctx, store.AlertTemplateType, obj.Name); err != nil {
+		zap.L().Error("delete AlertTemplate cache failed", zap.String("name", obj.Name), zap.Error(err))
+	}
 	return nil
+
+}
+
+func (receiver *alertTemplateService) CopyTemplate(ctx context.Context, req *types.AlertTemplateCopyRequest) (*model.AlertTemplate, error) {
+	// 查询源模板
+	src, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(int(req.ID))).First()
+	if err != nil {
+		return nil, err
+	}
+
+	// 检查用户指定的名称是否已存在
+	newName := req.Name
+	exist, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.Name.Eq(newName)).First()
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+	if exist != nil {
+		return nil, fmt.Errorf("%s AlertTemplate 已经存在, 拷贝失败", newName)
+	}
+
+	// 拷贝字段构建新对象（不设置 ID/CreatedAt/UpdatedAt，由 DB 自动生成）
+	newObj := &model.AlertTemplate{
+		Name:                newName,
+		AlertChannelID:      src.AlertChannelID,
+		ReceiveIdType:       src.ReceiveIdType,
+		ReceiveId:           src.ReceiveId,
+		Description:         src.Description,
+		Template:            src.Template,
+		AggregationTemplate: src.AggregationTemplate,
+	}
+
+	// 校验接收者配置
+	if err := helper.ValidateTemplateRecipient(src.ReceiveIdType, src.ReceiveId); err != nil {
+		return nil, fmt.Errorf("接收者配置校验失败: %s", err)
+	}
+
+	if err := aTemlpateStore.WithContext(ctx).Create(newObj); err != nil {
+		return nil, err
+	}
+
+	// 缓存
+	if err := receiver.cache.SetObject(ctx, store.AlertTemplateType, newObj.Name, newObj, store.NeverExpires); err != nil {
+		zap.L().Error("cache copied AlertTemplate failed", zap.String("name", newObj.Name), zap.Error(err))
+	}
+	return newObj, nil
 }
 
 func (receiver *alertTemplateService) QueryTemplate(ctx context.Context, req *types.IDRequest) (*model.AlertTemplate, error) {

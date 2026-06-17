@@ -34,14 +34,12 @@ type AlertChannel struct {
 	CreatedAt         time.Time      `gorm:"column:created_at" json:"createdAt,omitempty"`
 	UpdatedAt         time.Time      `gorm:"column:updated_at" json:"updatedAt,omitempty"`
 	DeletedAt         gorm.DeletedAt `gorm:"column:deleted_at;index" json:"-"`
-	Name              string         `gorm:"column:name;type:varchar(100);not null;uniqueIndex;comment:告警渠道名称(如: SRE团队钉钉群)" json:"name"`
+	Name              string         `gorm:"column:name;type:varchar(100);not null;index;comment:告警渠道名称(如: SRE团队钉钉群)" json:"name"`
 	Type              ChannelType    `gorm:"column:type;type:varchar(50);not null;index;comment:渠道类型(feishuApp/feishuBoot/webhook)" json:"type"`
 	Status            *int           `gorm:"column:status;type:tinyint;not null;default:1;index;comment:状态(0-停用, 1-启用)" json:"status"`
 	AggregationStatus *int           `gorm:"column:aggregation_status;type:tinyint;not null;index;comment:状态(0-停用, 1-启用)" json:"aggregationStatus"`
 	Config            datatypes.JSON `gorm:"column:config;type:json;not null;comment:渠道动态配置(JSON格式)" json:"config"`
 	Description       string         `gorm:"column:description;type:varchar(255);comment:描述与备注" json:"description"`
-	AlertTemplateID   int            `gorm:"column:alert_template_id;index;comment:绑定的告警模板ID" json:"alertTemplateID"`
-	AlertTemplate     *AlertTemplate `gorm:"foreignKey:AlertTemplateID" json:"alertTemplate,omitempty"`
 }
 
 // TableName 指定表名
@@ -51,10 +49,8 @@ func (*AlertChannel) TableName() string {
 
 // FeishuAppConfig 飞书自建应用配置
 type FeishuAppConfig struct {
-	AppID         string `json:"app_id"`          // 飞书应用的 App ID
-	AppSecret     string `json:"app_secret"`      // 飞书应用的 App Secret
-	ReceiveIdType string `json:"receive_id_type"` // 接收者类型: open_id, user_id, email, chat_id
-	ReceiveId     string `json:"receive_id"`      // 接收者ID (具体是哪个用户或哪个群)
+	AppID     string `json:"app_id"`     // 飞书应用的 App ID
+	AppSecret string `json:"app_secret"` // 飞书应用的 App Secret
 }
 
 // WebhookConfig 通用 Webhook 配置

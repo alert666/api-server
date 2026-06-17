@@ -33,9 +33,17 @@ func newAlertTemplate(db *gorm.DB, opts ...gen.DOOption) alertTemplate {
 	_alertTemplate.UpdatedAt = field.NewTime(tableName, "updated_at")
 	_alertTemplate.DeletedAt = field.NewField(tableName, "deleted_at")
 	_alertTemplate.Name = field.NewString(tableName, "name")
+	_alertTemplate.ReceiveIdType = field.NewString(tableName, "receive_id_type")
+	_alertTemplate.ReceiveId = field.NewString(tableName, "receive_id")
+	_alertTemplate.AlertChannelID = field.NewInt(tableName, "alert_channel_id")
 	_alertTemplate.Description = field.NewString(tableName, "description")
 	_alertTemplate.Template = field.NewString(tableName, "template")
 	_alertTemplate.AggregationTemplate = field.NewString(tableName, "aggregation_template")
+	_alertTemplate.AlertChannel = alertTemplateBelongsToAlertChannel{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("AlertChannel", "model.AlertChannel"),
+	}
 
 	_alertTemplate.fillFieldMap()
 
@@ -51,9 +59,13 @@ type alertTemplate struct {
 	UpdatedAt           field.Time
 	DeletedAt           field.Field
 	Name                field.String // 模板名称
+	ReceiveIdType       field.String // 接收者类型(open_id/user_id/email/chat_id/空-Webhook类无需指定)
+	ReceiveId           field.String // 接收者ID
+	AlertChannelID      field.Int    // 关联的告警渠道ID
 	Description         field.String
 	Template            field.String // 单个告警(Markdown/HTML)模板
 	AggregationTemplate field.String // 聚合告警(Markdown/HTML)模板
+	AlertChannel        alertTemplateBelongsToAlertChannel
 
 	fieldMap map[string]field.Expr
 }
@@ -75,6 +87,9 @@ func (a *alertTemplate) updateTableName(table string) *alertTemplate {
 	a.UpdatedAt = field.NewTime(table, "updated_at")
 	a.DeletedAt = field.NewField(table, "deleted_at")
 	a.Name = field.NewString(table, "name")
+	a.ReceiveIdType = field.NewString(table, "receive_id_type")
+	a.ReceiveId = field.NewString(table, "receive_id")
+	a.AlertChannelID = field.NewInt(table, "alert_channel_id")
 	a.Description = field.NewString(table, "description")
 	a.Template = field.NewString(table, "template")
 	a.AggregationTemplate = field.NewString(table, "aggregation_template")
@@ -94,25 +109,113 @@ func (a *alertTemplate) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (a *alertTemplate) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 8)
+	a.fieldMap = make(map[string]field.Expr, 12)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["created_at"] = a.CreatedAt
 	a.fieldMap["updated_at"] = a.UpdatedAt
 	a.fieldMap["deleted_at"] = a.DeletedAt
 	a.fieldMap["name"] = a.Name
+	a.fieldMap["receive_id_type"] = a.ReceiveIdType
+	a.fieldMap["receive_id"] = a.ReceiveId
+	a.fieldMap["alert_channel_id"] = a.AlertChannelID
 	a.fieldMap["description"] = a.Description
 	a.fieldMap["template"] = a.Template
 	a.fieldMap["aggregation_template"] = a.AggregationTemplate
+
 }
 
 func (a alertTemplate) clone(db *gorm.DB) alertTemplate {
 	a.alertTemplateDo.ReplaceConnPool(db.Statement.ConnPool)
+	a.AlertChannel.db = db.Session(&gorm.Session{Initialized: true})
+	a.AlertChannel.db.Statement.ConnPool = db.Statement.ConnPool
 	return a
 }
 
 func (a alertTemplate) replaceDB(db *gorm.DB) alertTemplate {
 	a.alertTemplateDo.ReplaceDB(db)
+	a.AlertChannel.db = db.Session(&gorm.Session{})
 	return a
+}
+
+type alertTemplateBelongsToAlertChannel struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a alertTemplateBelongsToAlertChannel) Where(conds ...field.Expr) *alertTemplateBelongsToAlertChannel {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a alertTemplateBelongsToAlertChannel) WithContext(ctx context.Context) *alertTemplateBelongsToAlertChannel {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a alertTemplateBelongsToAlertChannel) Session(session *gorm.Session) *alertTemplateBelongsToAlertChannel {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a alertTemplateBelongsToAlertChannel) Model(m *model.AlertTemplate) *alertTemplateBelongsToAlertChannelTx {
+	return &alertTemplateBelongsToAlertChannelTx{a.db.Model(m).Association(a.Name())}
+}
+
+func (a alertTemplateBelongsToAlertChannel) Unscoped() *alertTemplateBelongsToAlertChannel {
+	a.db = a.db.Unscoped()
+	return &a
+}
+
+type alertTemplateBelongsToAlertChannelTx struct{ tx *gorm.Association }
+
+func (a alertTemplateBelongsToAlertChannelTx) Find() (result *model.AlertChannel, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a alertTemplateBelongsToAlertChannelTx) Append(values ...*model.AlertChannel) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a alertTemplateBelongsToAlertChannelTx) Replace(values ...*model.AlertChannel) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a alertTemplateBelongsToAlertChannelTx) Delete(values ...*model.AlertChannel) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a alertTemplateBelongsToAlertChannelTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a alertTemplateBelongsToAlertChannelTx) Count() int64 {
+	return a.tx.Count()
+}
+
+func (a alertTemplateBelongsToAlertChannelTx) Unscoped() *alertTemplateBelongsToAlertChannelTx {
+	a.tx = a.tx.Unscoped()
+	return &a
 }
 
 type alertTemplateDo struct{ gen.DO }

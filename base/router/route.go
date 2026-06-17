@@ -182,6 +182,7 @@ func (r *Router) registerAlertTemplateRouter(apiGroup *gin.RouterGroup) {
 		baseGroup.Use(r.middleware.Auth(), r.middleware.AuthZ())
 		baseGroup.POST("", r.alertTemplate.CreateAlertTemplate)
 		baseGroup.PUT("/:id", r.alertTemplate.UpdateAlertTemplate)
+		baseGroup.POST("/:id/copy", r.alertTemplate.CopyAlertTemplate)
 		baseGroup.DELETE("/:id", r.alertTemplate.DeleteAlertTemplate)
 		baseGroup.GET("/:id", r.alertTemplate.QueryAlertTemplate)
 		baseGroup.GET("", r.alertTemplate.ListAlertTemplate)

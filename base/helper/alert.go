@@ -29,6 +29,19 @@ func HashFeishuAppConfig(appid, appSecret string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
+// ValidateTemplateRecipient 校验模板接收者配置
+func ValidateTemplateRecipient(receiveIdType, receiveId string) error {
+	switch receiveIdType {
+	case "open_id", "user_id", "email", "chat_id":
+		if receiveId == "" {
+			return fmt.Errorf("接收者类型为 %s 时, receiveId 不能为空", receiveIdType)
+		}
+		return nil
+	default:
+		return fmt.Errorf("不支持的接收者类型: %s", receiveIdType)
+	}
+}
+
 func VerificationAlertFeishuConfig(channel *model.AlertChannel) (appid, appSecret string, err error) {
 	var ok bool
 	config := make(map[string]any, 0)
@@ -57,19 +70,11 @@ func VerificationAlertConfig(channelName string, channelType model.ChannelType, 
 	case model.ChannelTypeFeishuApp:
 		appID := config["app_id"]
 		appSecret := config["app_secret"]
-		receiveId := config["receive_id"]
-		receiveIdType := config["receive_id_type"]
 		if appID == nil {
 			return fmt.Errorf("alertChannel.Config 飞书应用 ID 不存在")
 		}
 		if appSecret == nil {
 			return fmt.Errorf("alertChannel.Config 飞书应用 secret 不存在")
-		}
-		if receiveId == nil {
-			return fmt.Errorf("alertChannel.Config 飞书应用 receiveId 不存在")
-		}
-		if receiveIdType == nil {
-			return fmt.Errorf("alertChannel.Config 飞书应用 receiveIdType 不存在")
 		}
 		return nil
 	default:

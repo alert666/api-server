@@ -24,14 +24,15 @@ var (
 type CacheType string
 
 const (
-	RoleType         CacheType = "role"
-	AlertType        CacheType = "alert"
-	LockType         CacheType = "lock"
-	TenantType       CacheType = "tenant"
-	UserType         CacheType = "user"
-	AlertNameType    CacheType = "alertName"
-	AgentClusterType CacheType = "agentCluster"
-	AgentServerType  CacheType = "agentServer"
+	RoleType          CacheType = "role"
+	AlertChannelType  CacheType = "alertChannel"
+	AlertTemplateType CacheType = "alertTemplate"
+	LockType          CacheType = "lock"
+	TenantType        CacheType = "tenant"
+	UserType          CacheType = "user"
+	AlertNameType     CacheType = "alertName"
+	AgentClusterType  CacheType = "agentCluster"
+	AgentServerType   CacheType = "agentServer"
 )
 
 type CacheStorer interface {

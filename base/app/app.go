@@ -1,4 +1,4 @@
-package app
+﻿package app
 
 import (
 	"context"
@@ -57,21 +57,33 @@ type Init struct {
 }
 
 func (receiver *Init) Init(ctx context.Context) error {
-	// 1. 从数据库获取全量数据（包含关联的模板）, 缓存到 cache
+	// 1. 查询所有模板，缓存到 Redis（模板和 Channel 分别缓存）
+	zap.L().Info("缓存全量 AlertTemplate")
+	templates, err := store.AlertTemplate.WithContext(ctx).Find()
+	if err != nil {
+		return fmt.Errorf("获取全量 AlertTemplate 失败: %w", err)
+	}
+	for _, t := range templates {
+		err := receiver.caceImpl.SetObject(ctx, store.AlertTemplateType, t.Name, t, store.NeverExpires)
+		if err != nil {
+			zap.L().Error("同步 AlertTemplate 到 Redis 失败", zap.String("name", t.Name), zap.Error(err))
+		}
+	}
+
+	// 2. 查询所有已启用的 Channel，按 ID 缓存（模板通过 AlertChannelID O(1) 查询）
+	zap.L().Info("缓存全量 AlertChannel")
 	alertChannels, err := store.AlertChannel.
-		Preload(store.AlertChannel.AlertTemplate).
 		Where(store.AlertChannel.Status.Eq(int(model.StatusEnabled))).
 		Find()
 	if err != nil {
 		return fmt.Errorf("获取全量 alertChannel 失败: %w", err)
 	}
+
 	for _, v := range alertChannels {
-		err := receiver.caceImpl.SetObject(ctx, store.AlertType, v.Name, v, store.NeverExpires)
-		if err != nil {
-			zap.L().Error("同步 AlertChannel 到 Redis 失败", zap.String("name", v.Name), zap.Error(err))
+		if err := receiver.caceImpl.SetObject(ctx, store.AlertChannelType, v.ID, v, store.NeverExpires); err != nil {
+			zap.L().Error("同步 AlertChannel 到 Redis 失败", zap.Int("id", v.ID), zap.Error(err))
 			continue
 		}
-		zap.L().Debug("同步 AlertChannel 到 Redis 成功", zap.Any("channels", alertChannels))
 
 		var alertConfig map[string]string
 		if err := json.Unmarshal(v.Config, &alertConfig); err != nil {

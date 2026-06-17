@@ -50,11 +50,6 @@ func newAlertHistory(db *gorm.DB, opts ...gen.DOOption) alertHistory {
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("AlertChannel", "model.AlertChannel"),
-		AlertTemplate: struct {
-			field.RelationField
-		}{
-			RelationField: field.NewRelation("AlertChannel.AlertTemplate", "model.AlertTemplate"),
-		},
 	}
 
 	_alertHistory.AlertSendRecord = alertHistoryBelongsToAlertSendRecord{
@@ -225,10 +220,6 @@ type alertHistoryBelongsToAlertChannel struct {
 	db *gorm.DB
 
 	field.RelationField
-
-	AlertTemplate struct {
-		field.RelationField
-	}
 }
 
 func (a alertHistoryBelongsToAlertChannel) Where(conds ...field.Expr) *alertHistoryBelongsToAlertChannel {

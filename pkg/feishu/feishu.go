@@ -71,6 +71,8 @@ func (receiver *FeiShu) Init(alertChannelName, appid, appSecret string) {
 	receiver.lock.Lock()
 	defer receiver.lock.Unlock()
 
+	zap.L().Info("缓存飞书 app", zap.String("alertChannelName", alertChannelName), zap.String("appid", appid), zap.String("appSecret", appSecret))
+
 	// 判断客户端是否存在
 	hashStr := helper.HashFeishuAppConfig(appid, appSecret)
 	if _, ok := feishuStruct.clients[hashStr]; ok {
@@ -236,8 +238,13 @@ func (receiver *FeiShu) CloseCli(alertChannelName, appid, appSecret string) {
 	zap.S().Infof("从本地缓存中删除 [%s] 的客户端成功, 当前已缓存的客户端 %s", alertChannelName, clientNames)
 }
 
-func (receiver *FeiShu) renderAndSend(ctx context.Context, larkCli *lark.Client, conf *model.FeishuAppConfig, data interface{}, tpl string, color string) error {
-	log.WithRequestID(ctx).Debug("发送飞书发送告警")
+func (receiver *FeiShu) renderAndSend(ctx context.Context, larkCli *lark.Client, receiveIdType, receiveId string, data interface{}, tpl string, color string) error {
+	log.WithRequestID(ctx).Debug("发送飞书发送告警",
+		zap.String("receiveIdType", receiveIdType),
+		zap.String("receiveId", receiveId),
+		zap.String("tpl", tpl),
+		zap.Any("data", data),
+	)
 	// 1. 渲染模板
 	content, err := RenderingAlertContent().Build(ctx, data, tpl)
 	if err != nil {
@@ -257,7 +264,7 @@ func (receiver *FeiShu) renderAndSend(ctx context.Context, larkCli *lark.Client,
 	}
 
 	// 4. 发送
-	return SendCard(larkCli).Build(ctx, conf.ReceiveIdType, conf.ReceiveId, string(byData))
+	return SendCard(larkCli).Build(ctx, receiveIdType, receiveId, string(byData))
 }
 
 type FeishuCard struct {
@@ -367,7 +374,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 		if len(alertArry.FiringAlertArry) > 0 {
 			newReq := notifyReq.AlertReceiveReq.DeepCopy()
 			newReq.Alerts = alertArry.FiringAlertArry
-			firingErr = receiver.renderAndSend(ctx, larkCli, feishuAppConf, newReq, alertChannel.AlertTemplate.AggregationTemplate, "red")
+			firingErr = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, notifyReq.AlertTemplate.ReceiveId, newReq, notifyReq.AlertTemplate.AggregationTemplate, "red")
 			if firingErr != nil {
 				err = firingErr
 				log.WithRequestID(ctx).Error("聚合发送告警卡片失败", zap.Error(firingErr))
@@ -377,7 +384,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 		if len(alertArry.ResolvedAlertArry) > 0 {
 			newReq := notifyReq.AlertReceiveReq.DeepCopy()
 			newReq.Alerts = alertArry.ResolvedAlertArry
-			if resolvedErr = receiver.renderAndSend(ctx, larkCli, feishuAppConf, newReq, alertChannel.AlertTemplate.AggregationTemplate, "green"); resolvedErr != nil {
+			if resolvedErr = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, notifyReq.AlertTemplate.ReceiveId, newReq, notifyReq.AlertTemplate.AggregationTemplate, "green"); resolvedErr != nil {
 				err = resolvedErr
 				log.WithRequestID(ctx).Error("聚合发送恢复卡片失败", zap.Error(resolvedErr))
 			}
@@ -394,7 +401,9 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 
 	if *notifyReq.AlertChannel.AggregationStatus == model.AggregationDisabled {
 		// 非聚合发送
-		normalSendResult, err := receiver.singleSend(ctx, larkCli, feishuAppConf, alertChannel, alertArry)
+		receiveIdType := notifyReq.AlertTemplate.ReceiveIdType
+		receiveId := notifyReq.AlertTemplate.ReceiveId
+		normalSendResult, err := receiver.singleSend(ctx, larkCli, receiveIdType, receiveId, notifyReq.AlertTemplate, alertArry)
 		if err != nil {
 			return nil, err
 		}
@@ -407,7 +416,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 	return nil, fmt.Errorf("不支持的发送模式, 只支持聚合发送和非聚合发送")
 }
 
-func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, conf *model.FeishuAppConfig, alertChannel *model.AlertChannel, alertArry *types.AlertArry) ([]*types.SingleSendResult, error) {
+func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, receiveIdType, receiveId string, alertTemplate *model.AlertTemplate, alertArry *types.AlertArry) ([]*types.SingleSendResult, error) {
 	var (
 		errs    []error
 		results []*types.SingleSendResult
@@ -418,7 +427,7 @@ func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, co
 		if v.Status == constant.AlertStatusResolved {
 			color = "green"
 		}
-		err := receiver.renderAndSend(ctx, larkCli, conf, v, alertChannel.AlertTemplate.Template, color)
+		err := receiver.renderAndSend(ctx, larkCli, receiveIdType, receiveId, v, alertTemplate.Template, color)
 
 		results = append(results, &types.SingleSendResult{
 			Alert:   v,
