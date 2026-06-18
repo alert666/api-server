@@ -1,4 +1,4 @@
-package controller
+﻿package controller
 
 import (
 	"net/http"
@@ -75,7 +75,7 @@ func (receiver *apiController) DeleteApi(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body types.IDRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=model.Api} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/api/:id [get]
 func (receiver *apiController) QueryApi(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.apiService.QueryApi, bind.BindTypeUri)
@@ -88,8 +88,8 @@ func (receiver *apiController) QueryApi(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data query types.ApiListRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=types.ApiListResponse} "查询成功"
-// @Router /api/v1/api/ [get]
+// @Success 200 {object} types.Response{} "查询成功"
+// @Router /api/v1/api [get]
 func (receiver *apiController) ListApi(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.apiService.ListApi, bind.BindTypeUri, bind.BindTypeQuery)
 }
@@ -99,7 +99,7 @@ func (receiver *apiController) ListApi(c *gin.Context) {
 // @Tags API管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=types.ServerApiData} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/api/serverApi [get]
 func (receiver *apiController) GetServerApi(c *gin.Context) {
 	c.JSON(http.StatusOK, types.NewResponseWithOpts(http.StatusOK, types.WithMsg("success"), types.WithData(constant.ApiData)))

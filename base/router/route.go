@@ -1,4 +1,4 @@
-package router
+﻿package router
 
 import (
 	"time"
@@ -209,7 +209,7 @@ func (r *Router) registerAlertSilenceRouter(apiGroup *gin.RouterGroup) {
 		baseGroup.DELETE("/:id", r.alertSilence.DeleteAlertSilence)
 		baseGroup.GET("/:id", r.alertSilence.QueryAlertSilence)
 		baseGroup.GET("", r.alertSilence.ListAlertSilence)
-		baseGroup.GET("enableCount", r.alertSilence.GetTenantSilenceCounts)
+		baseGroup.GET("/enableCount", r.alertSilence.GetTenantSilenceCounts)
 	}
 }
 

@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/api": {
+        "/api/v1/agents/commands/wait": {
             "post": {
-                "description": "创建 API",
+                "description": "通过 gRPC 数据隧道向指定 Agent 发送命令，阻塞等待执行结果后返回。",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,9 +25,117 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "API管理"
+                    "Agent 命令"
                 ],
-                "summary": "创建 API",
+                "summary": "向 Agent 下发命令",
+                "parameters": [
+                    {
+                        "description": "命令请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.SendCommandAndWaitReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "命令执行成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertChannel": {
+            "get": {
+                "description": "获取所有 AlerChannel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerChannel 管理"
+                ],
+                "summary": "获取所有 AlerChannel",
+                "parameters": [
+                    {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "type": "string",
+                        "name": "direction",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Page 从 1 开始, 表示第几页",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "PageSize 最大值 100，默认值 20, 表示每页多少条数据",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "name",
+                            "created_at",
+                            "updated_at"
+                        ],
+                        "type": "string",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "feishuApp",
+                            "feishuBoot",
+                            "webhook",
+                            "email"
+                        ],
+                        "type": "string",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建 AlerChannel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerChannel 管理"
+                ],
+                "summary": "创建 AlerChannel",
                 "parameters": [
                     {
                         "description": "创建请求参数",
@@ -35,7 +143,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.ApiCreateRequest"
+                            "$ref": "#/definitions/types.AlertChannelCreateRequest"
                         }
                     }
                 ],
@@ -43,13 +151,823 @@ const docTemplate = `{
                     "200": {
                         "description": "创建成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
             }
         },
-        "/api/v1/api/": {
+        "/api/v1/alertChannel/:id": {
+            "get": {
+                "description": "查询 AlerChannel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerChannel 管理"
+                ],
+                "summary": "查询 AlerChannel",
+                "parameters": [
+                    {
+                        "description": "查询请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.IDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "更新 AlerChannel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerChannel 管理"
+                ],
+                "summary": "更新 AlerChannel",
+                "parameters": [
+                    {
+                        "description": "更新请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AlertChannelUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "更新成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除 AlerChannel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerChannel 管理"
+                ],
+                "summary": "删除 AlerChannel",
+                "parameters": [
+                    {
+                        "description": "删除请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.IDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertHistory": {
+            "get": {
+                "description": "获取所有 AlertHistory",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlertHistory 管理"
+                ],
+                "summary": "获取所有 AlertHistory",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "alertName",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "alertSendRecordId",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "type": "string",
+                        "name": "direction",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "endsAt",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "fingerprint",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "instance",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "labels",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Page 从 1 开始, 表示第几页",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "PageSize 最大值 100，默认值 20, 表示每页多少条数据",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "severity",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "alertname",
+                            "fingerprint",
+                            "starts_at",
+                            "ends_at",
+                            "severity",
+                            "instance"
+                        ],
+                        "type": "string",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "startsAt",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "resolved",
+                            "firing"
+                        ],
+                        "type": "string",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertHistory/:id": {
+            "get": {
+                "description": "使用 ID 查询告警历史详情",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlertHistory 管理"
+                ],
+                "summary": "查询 AlertHistory",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "告警历史ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "更新 AlertHistory 状态",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlertHistory 管理"
+                ],
+                "summary": "更新 AlertHistory 状态",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "告警历史ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "更新请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AlertHistoryUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "更新成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertHistory/alertNameOptions": {
+            "get": {
+                "description": "获取 AlertHistory aletName options",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlertHistory 管理"
+                ],
+                "summary": "获取 AlertHistory aletName options",
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertHistory/firingCount": {
+            "get": {
+                "description": "更新 获取 AlertHistory 告警状态数量",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlertHistory 管理"
+                ],
+                "summary": "获取 AlertHistory 告警状态数量",
+                "responses": {
+                    "200": {
+                        "description": "询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertSilence": {
+            "get": {
+                "description": "获取所有 AlerSilence",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerSilence 管理"
+                ],
+                "summary": "获取所有 AlerSilence",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "createdBy",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "type": "string",
+                        "name": "direction",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "endsAt",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Page 从 1 开始, 表示第几页",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "PageSize 最大值 100，默认值 20, 表示每页多少条数据",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "name",
+                            "created_at",
+                            "updated_at"
+                        ],
+                        "type": "string",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "startsAt",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "type": "integer",
+                        "name": "status",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建 AlerSilence",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerSilence 管理"
+                ],
+                "summary": "创建 AlerSilence",
+                "parameters": [
+                    {
+                        "description": "创建请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AlertSilenceCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertSilence/:id": {
+            "get": {
+                "description": "查询 AlerSilence",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerSilence 管理"
+                ],
+                "summary": "查询 AlerSilence",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "静默规则ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除 AlerSilence",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerSilence 管理"
+                ],
+                "summary": "删除 AlerSilence",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "静默规则ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertSilence/enableCount": {
+            "get": {
+                "description": "获取各个租户活跃 AlerSilence 的数量",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerSilence 管理"
+                ],
+                "summary": "获取各个租户活跃 AlerSilence 的数量",
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertTemplate": {
+            "get": {
+                "description": "获取所有 AlerTemplate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerTemplate 管理"
+                ],
+                "summary": "获取所有 AlerTemplate",
+                "parameters": [
+                    {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "type": "string",
+                        "name": "direction",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Page 从 1 开始, 表示第几页",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "PageSize 最大值 100，默认值 20, 表示每页多少条数据",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "name",
+                            "created_at",
+                            "updated_at"
+                        ],
+                        "type": "string",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建 AlerTemplate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerTemplate 管理"
+                ],
+                "summary": "创建 AlerTemplate",
+                "parameters": [
+                    {
+                        "description": "创建请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AlertTemplateCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertTemplate/:id": {
+            "get": {
+                "description": "查询 AlerTemplate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerTemplate 管理"
+                ],
+                "summary": "查询 AlerTemplate",
+                "parameters": [
+                    {
+                        "description": "查询请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.IDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "更新 AlerTemplate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerTemplate 管理"
+                ],
+                "summary": "更新 AlerTemplate",
+                "parameters": [
+                    {
+                        "description": "更新请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AlertTemplateUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "更新成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除 AlerTemplate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerTemplate 管理"
+                ],
+                "summary": "删除 AlerTemplate",
+                "parameters": [
+                    {
+                        "description": "删除请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.IDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alertTemplate/:id/copy": {
+            "post": {
+                "description": "拷贝一个已有的 AlerTemplate，需指定新名称",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AlerTemplate 管理"
+                ],
+                "summary": "拷贝 AlerTemplate",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "被拷贝模板的 ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "拷贝请求参数（name 为新模板名称）",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AlertTemplateCopyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "拷贝成功，返回新创建的模板",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/alerts": {
+            "post": {
+                "description": "作为 Alertmanager Webhook 回调接口，接收并持久化告警数据。支持同时绑定 query 参数（templateName）和 JSON body。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "告警管理"
+                ],
+                "summary": "接收 Alertmanager 告警",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "告警模板名称",
+                        "name": "templateName",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "Alertmanager Webhook JSON 数据",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.AlertReceiveReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "接收成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/api": {
             "get": {
                 "description": "使用分页查询 API 的信息, 支持根据 name 查询",
                 "consumes": [
@@ -89,12 +1007,17 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
+                        "description": "Page 从 1 开始, 表示第几页",
                         "name": "page",
                         "in": "query"
                     },
                     {
+                        "maximum": 100,
+                        "minimum": 1,
                         "type": "integer",
+                        "description": "PageSize 最大值 100，默认值 20, 表示每页多少条数据",
                         "name": "pageSize",
                         "in": "query"
                     },
@@ -121,19 +1044,39 @@ const docTemplate = `{
                     "200": {
                         "description": "查询成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/apitypes.ApiListResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建 API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API管理"
+                ],
+                "summary": "创建 API",
+                "parameters": [
+                    {
+                        "description": "创建请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.ApiCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -159,7 +1102,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.IDRequest"
+                            "$ref": "#/definitions/types.IDRequest"
                         }
                     }
                 ],
@@ -167,19 +1110,7 @@ const docTemplate = `{
                     "200": {
                         "description": "查询成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.Api"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -203,7 +1134,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.ApiUpdateRequest"
+                            "$ref": "#/definitions/types.ApiUpdateRequest"
                         }
                     }
                 ],
@@ -211,7 +1142,7 @@ const docTemplate = `{
                     "200": {
                         "description": "更新成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -235,7 +1166,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.IDRequest"
+                            "$ref": "#/definitions/types.IDRequest"
                         }
                     }
                 ],
@@ -243,7 +1174,7 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -266,19 +1197,7 @@ const docTemplate = `{
                     "200": {
                         "description": "查询成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/apitypes.ServerApiData"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -304,7 +1223,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.OAuthActivateRequest"
+                            "$ref": "#/definitions/types.OAuthActivateRequest"
                         }
                     }
                 ],
@@ -312,19 +1231,7 @@ const docTemplate = `{
                     "200": {
                         "description": "激活成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/apitypes.UserLoginResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -355,19 +1262,7 @@ const docTemplate = `{
                     "200": {
                         "description": "登录成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/apitypes.UserLoginResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -386,6 +1281,14 @@ const docTemplate = `{
                     "用户管理"
                 ],
                 "summary": "OAuth 登录",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OAuth2 provider 名称（如 feishu、keycloak）",
+                        "name": "provider",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "302": {
                         "description": "重定向到 OAuth 登录页面",
@@ -413,62 +1316,13 @@ const docTemplate = `{
                     "200": {
                         "description": "获取成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
             }
         },
         "/api/v1/role": {
-            "post": {
-                "description": "创建角色",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "角色管理"
-                ],
-                "summary": "创建角色",
-                "parameters": [
-                    {
-                        "description": "创建请求参数",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/apitypes.RoleCreateRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "创建成功",
-                        "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/role/": {
             "get": {
                 "description": "使用分页查询角色的信息, 支持根据 name 查询",
                 "consumes": [
@@ -497,12 +1351,17 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
+                        "description": "Page 从 1 开始, 表示第几页",
                         "name": "page",
                         "in": "query"
                     },
                     {
+                        "maximum": 100,
+                        "minimum": 1,
                         "type": "integer",
+                        "description": "PageSize 最大值 100，默认值 20, 表示每页多少条数据",
                         "name": "pageSize",
                         "in": "query"
                     },
@@ -522,19 +1381,39 @@ const docTemplate = `{
                     "200": {
                         "description": "查询成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/apitypes.RoleListResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建角色",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "创建角色",
+                "parameters": [
+                    {
+                        "description": "创建请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.RoleCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -560,7 +1439,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.IDRequest"
+                            "$ref": "#/definitions/types.IDRequest"
                         }
                     }
                 ],
@@ -568,19 +1447,7 @@ const docTemplate = `{
                     "200": {
                         "description": "查询成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.Role"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -604,7 +1471,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.RoleUpdateRequest"
+                            "$ref": "#/definitions/types.RoleUpdateRequest"
                         }
                     }
                 ],
@@ -612,7 +1479,7 @@ const docTemplate = `{
                     "200": {
                         "description": "更新成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -636,7 +1503,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.IDRequest"
+                            "$ref": "#/definitions/types.IDRequest"
                         }
                     }
                 ],
@@ -644,13 +1511,231 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
             }
         },
-        "/api/v1/user/": {
+        "/api/v1/tenant": {
+            "get": {
+                "description": "使用分页查询集群的信息, 支持根据 name 查询",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "集群管理"
+                ],
+                "summary": "集群列表",
+                "parameters": [
+                    {
+                        "enum": [
+                            "asc",
+                            "desc"
+                        ],
+                        "type": "string",
+                        "name": "direction",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Page 从 1 开始, 表示第几页",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "maximum": 100,
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "PageSize 最大值 100，默认值 20, 表示每页多少条数据",
+                        "name": "pageSize",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            "id",
+                            "name",
+                            "created_at",
+                            "updated_at"
+                        ],
+                        "type": "string",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建集群",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "集群管理"
+                ],
+                "summary": "创建集群",
+                "parameters": [
+                    {
+                        "description": "创建请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.TenantCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "创建成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/tenant/:id": {
+            "get": {
+                "description": "查询集群",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "集群管理"
+                ],
+                "summary": "查询集群",
+                "parameters": [
+                    {
+                        "description": "查询请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.IDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "更新集群",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "集群管理"
+                ],
+                "summary": "更新集群",
+                "parameters": [
+                    {
+                        "description": "更新请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.TenantUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "更新成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除集群",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "集群管理"
+                ],
+                "summary": "删除集群",
+                "parameters": [
+                    {
+                        "description": "删除请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.IDRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/tenant/options": {
+            "get": {
+                "description": "获取集群 Options",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "集群管理"
+                ],
+                "summary": "获取集群 Options",
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user": {
             "get": {
                 "description": "使用分页查询用户的信息, 支持根据 name, email, mobile, department 查询",
                 "consumes": [
@@ -694,12 +1779,17 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
+                        "description": "Page 从 1 开始, 表示第几页",
                         "name": "page",
                         "in": "query"
                     },
                     {
+                        "maximum": 100,
+                        "minimum": 1,
                         "type": "integer",
+                        "description": "PageSize 最大值 100，默认值 20, 表示每页多少条数据",
                         "name": "pageSize",
                         "in": "query"
                     },
@@ -732,19 +1822,7 @@ const docTemplate = `{
                     "200": {
                         "description": "登录成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/apitypes.UserListResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -770,7 +1848,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.IDRequest"
+                            "$ref": "#/definitions/types.IDRequest"
                         }
                     }
                 ],
@@ -778,19 +1856,7 @@ const docTemplate = `{
                     "200": {
                         "description": "查询成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.User"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -814,7 +1880,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.UserUpdateAdminRequest"
+                            "$ref": "#/definitions/types.UserUpdateAdminRequest"
                         }
                     }
                 ],
@@ -822,7 +1888,7 @@ const docTemplate = `{
                     "200": {
                         "description": "更新成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -846,7 +1912,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.IDRequest"
+                            "$ref": "#/definitions/types.IDRequest"
                         }
                     }
                 ],
@@ -854,7 +1920,7 @@ const docTemplate = `{
                     "200": {
                         "description": "删除成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -877,19 +1943,41 @@ const docTemplate = `{
                     "200": {
                         "description": "查询成功",
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/model.User"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/login": {
+            "post": {
+                "description": "使用邮箱和密码登录，返回用户信息和 Token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "登录请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UserLoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "登录成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -912,7 +2000,30 @@ const docTemplate = `{
                     "200": {
                         "description": "注销成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/options": {
+            "get": {
+                "description": "获取用户 Options",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "获取用户 Options",
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -938,7 +2049,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.UserCreateRequest"
+                            "$ref": "#/definitions/types.UserCreateRequest"
                         }
                     }
                 ],
@@ -946,7 +2057,7 @@ const docTemplate = `{
                     "200": {
                         "description": "创建成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -972,7 +2083,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/apitypes.UserUpdateSelfRequest"
+                            "$ref": "#/definitions/types.UserUpdateSelfRequest"
                         }
                     }
                 ],
@@ -980,53 +2091,7 @@ const docTemplate = `{
                     "200": {
                         "description": "更新成功",
                         "schema": {
-                            "$ref": "#/definitions/apitypes.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/users/login": {
-            "post": {
-                "description": "使用邮箱和密码登录，返回用户信息和 Token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户管理"
-                ],
-                "summary": "用户登录",
-                "parameters": [
-                    {
-                        "description": "登录请求参数",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/apitypes.UserLoginRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "登录成功",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/apitypes.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/apitypes.UserLoginResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -1034,9 +2099,367 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "apitypes.ApiCreateRequest": {
+        "model.Matcher": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "标签名",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "操作符: =, !=, =~, !~",
+                    "type": "string"
+                },
+                "value": {
+                    "description": "标签值",
+                    "type": "string"
+                }
+            }
+        },
+        "types.Alert": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "endsAt": {
+                    "type": "string"
+                },
+                "fingerprint": {
+                    "type": "string"
+                },
+                "generatorURL": {
+                    "type": "string"
+                },
+                "isSilenced": {
+                    "type": "boolean"
+                },
+                "labels": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "silenceID": {
+                    "type": "integer"
+                },
+                "startsAt": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "\"firing\" or \"resolved\"",
+                    "type": "string"
+                }
+            }
+        },
+        "types.AlertChannelCreateRequest": {
             "type": "object",
             "required": [
+                "config",
+                "name",
+                "status",
+                "type"
+            ],
+            "properties": {
+                "aggregationStatus": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ]
+                },
+                "config": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 15
+                },
+                "status": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "feishuApp",
+                        "feishuBoot",
+                        "webhook",
+                        "email"
+                    ]
+                }
+            }
+        },
+        "types.AlertChannelUpdateRequest": {
+            "type": "object",
+            "required": [
+                "aggregationStatus",
+                "config",
+                "id",
+                "status",
+                "type"
+            ],
+            "properties": {
+                "aggregationStatus": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ]
+                },
+                "config": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "feishuApp",
+                        "feishuBoot",
+                        "webhook",
+                        "email"
+                    ]
+                }
+            }
+        },
+        "types.AlertHistoryUpdateRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "status"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.AlertReceiveReq": {
+            "type": "object",
+            "required": [
+                "templateName"
+            ],
+            "properties": {
+                "alerts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Alert"
+                    }
+                },
+                "commonAnnotations": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "commonLabels": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "externalURL": {
+                    "type": "string"
+                },
+                "groupKey": {
+                    "type": "string"
+                },
+                "groupLabels": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "receiver": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "\"firing\" or \"resolved\"",
+                    "type": "string"
+                },
+                "templateName": {
+                    "type": "string"
+                },
+                "truncatedAlerts": {
+                    "type": "integer"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.AlertSilenceCreateRequest": {
+            "type": "object",
+            "required": [
+                "comment",
+                "endsAt",
+                "startsAt",
+                "status",
+                "type"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "endsAt": {
+                    "type": "integer"
+                },
+                "fingerprint": {
+                    "type": "string"
+                },
+                "matchers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Matcher"
+                    }
+                },
+                "startsAt": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ]
+                },
+                "type": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        2
+                    ]
+                }
+            }
+        },
+        "types.AlertTemplateCopyRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.AlertTemplateCreateRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "receiveId",
+                "receiveIdType",
+                "template"
+            ],
+            "properties": {
+                "aggregationTemplate": {
+                    "type": "string"
+                },
+                "alertChannelID": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "receiveId": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "receiveIdType": {
+                    "type": "string",
+                    "enum": [
+                        "open_id",
+                        "user_id",
+                        "email",
+                        "chat_id"
+                    ]
+                },
+                "template": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.AlertTemplateUpdateRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "receiveId",
+                "receiveIdType",
+                "template"
+            ],
+            "properties": {
+                "aggregationTemplate": {
+                    "type": "string"
+                },
+                "alertChannelID": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "receiveId": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "receiveIdType": {
+                    "type": "string",
+                    "enum": [
+                        "open_id",
+                        "user_id",
+                        "email",
+                        "chat_id"
+                    ]
+                },
+                "template": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.ApiCreateRequest": {
+            "type": "object",
+            "required": [
+                "effect",
                 "method",
                 "name",
                 "path"
@@ -1044,6 +2467,13 @@ const docTemplate = `{
             "properties": {
                 "description": {
                     "type": "string"
+                },
+                "effect": {
+                    "type": "string",
+                    "enum": [
+                        "allow",
+                        "deny"
+                    ]
                 },
                 "method": {
                     "type": "string",
@@ -1063,41 +2493,7 @@ const docTemplate = `{
                 }
             }
         },
-        "apitypes.ApiInfo": {
-            "type": "object",
-            "properties": {
-                "handler": {
-                    "type": "string"
-                },
-                "method": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                }
-            }
-        },
-        "apitypes.ApiListResponse": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Api"
-                    }
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "pageSize": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "apitypes.ApiUpdateRequest": {
+        "types.ApiUpdateRequest": {
             "type": "object",
             "required": [
                 "id"
@@ -1111,7 +2507,7 @@ const docTemplate = `{
                 }
             }
         },
-        "apitypes.IDRequest": {
+        "types.IDRequest": {
             "type": "object",
             "required": [
                 "id"
@@ -1122,43 +2518,36 @@ const docTemplate = `{
                 }
             }
         },
-        "apitypes.OAuthActivateRequest": {
+        "types.OAuthActivateRequest": {
             "type": "object",
-            "required": [
-                "confirmPassword",
-                "id",
-                "password"
-            ],
             "properties": {
                 "confirmPassword": {
-                    "type": "string",
-                    "minLength": 8
-                },
-                "id": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "password": {
-                    "type": "string",
-                    "minLength": 8
+                    "type": "string"
                 }
             }
         },
-        "apitypes.Response": {
+        "types.Response": {
             "type": "object",
             "properties": {
                 "code": {
                     "type": "integer"
                 },
                 "data": {},
-                "msg": {
+                "error": {
                     "type": "string"
                 },
-                "requestId": {
+                "msg": {
                     "type": "string"
                 }
             }
         },
-        "apitypes.RoleCreateRequest": {
+        "types.RoleCreateRequest": {
             "type": "object",
             "required": [
                 "name"
@@ -1178,27 +2567,7 @@ const docTemplate = `{
                 }
             }
         },
-        "apitypes.RoleListResponse": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Role"
-                    }
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "pageSize": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "apitypes.RoleUpdateRequest": {
+        "types.RoleUpdateRequest": {
             "type": "object",
             "required": [
                 "id"
@@ -1218,27 +2587,64 @@ const docTemplate = `{
                 }
             }
         },
-        "apitypes.ServerApiData": {
+        "types.SendCommandAndWaitReq": {
             "type": "object",
+            "required": [
+                "description",
+                "type"
+            ],
             "properties": {
-                "apiInfo": {
+                "description": {
+                    "type": "string"
+                },
+                "params": {
                     "type": "object",
                     "additionalProperties": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/apitypes.ApiInfo"
-                        }
-                    }
-                },
-                "apiType": {
-                    "type": "array",
-                    "items": {
                         "type": "string"
                     }
+                },
+                "type": {
+                    "type": "integer"
                 }
             }
         },
-        "apitypes.UserCreateRequest": {
+        "types.TenantCreateRequest": {
+            "type": "object",
+            "required": [
+                "label",
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.TenantUpdateRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "label"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "label": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.UserCreateRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -1273,27 +2679,7 @@ const docTemplate = `{
                 }
             }
         },
-        "apitypes.UserListResponse": {
-            "type": "object",
-            "properties": {
-                "list": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.User"
-                    }
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "pageSize": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "apitypes.UserLoginRequest": {
+        "types.UserLoginRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -1309,18 +2695,7 @@ const docTemplate = `{
                 }
             }
         },
-        "apitypes.UserLoginResponse": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                },
-                "user": {
-                    "$ref": "#/definitions/model.User"
-                }
-            }
-        },
-        "apitypes.UserUpdateAdminRequest": {
+        "types.UserUpdateAdminRequest": {
             "type": "object",
             "required": [
                 "id"
@@ -1367,7 +2742,7 @@ const docTemplate = `{
                 }
             }
         },
-        "apitypes.UserUpdateSelfRequest": {
+        "types.UserUpdateSelfRequest": {
             "type": "object",
             "properties": {
                 "avatar": {
@@ -1394,111 +2769,6 @@ const docTemplate = `{
                     "minLength": 8
                 }
             }
-        },
-        "model.Api": {
-            "type": "object",
-            "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "method": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Role"
-                    }
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.Role": {
-            "type": "object",
-            "properties": {
-                "apis": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Api"
-                    }
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
-                },
-                "users": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.User"
-                    }
-                }
-            }
-        },
-        "model.User": {
-            "type": "object",
-            "properties": {
-                "avatar": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "department": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "mobile": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "nickName": {
-                    "type": "string"
-                },
-                "roles": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Role"
-                    }
-                },
-                "status": {
-                    "type": "integer"
-                },
-                "updatedAt": {
-                    "type": "string"
-                }
-            }
         }
     }
 }`
@@ -1506,11 +2776,11 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "10.0.0.10:8080",
+	Host:             "0.0.0.0:8080",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Swagger API",
-	Description:      "api-server api docs.",
+	Title:            "api-server — 告警管理 API",
+	Description:      "告警管理后端服务 API 文档，支持告警接收、静默、抑制、通知、多租户管理、RBAC 权限控制等功能。",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

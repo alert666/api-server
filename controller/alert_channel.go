@@ -1,4 +1,4 @@
-package controller
+﻿package controller
 
 import (
 	"github.com/alert666/api-server/base/bind"
@@ -27,7 +27,7 @@ func NewAlertChannelController(alertChannelService v1.AlertChannelServicer) Aler
 // CreateApi 创建 AlerChannel
 // @Summary 创建 AlerChannel
 // @Description 创建 AlerChannel
-// @Tags AAlerChannel 管理
+// @Tags AlerChannel 管理
 // @Accept json
 // @Produce json
 // @Param data body types.AlertChannelCreateRequest true "创建请求参数"
@@ -70,7 +70,7 @@ func (receiver *alertChannelController) DeleteAlertChannel(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body types.IDRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=model.AlertChannel} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/alertChannel/:id [get]
 func (receiver *alertChannelController) QueryAlertChannel(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.alertChannelService.QueryChannel, bind.BindTypeUri)
@@ -81,8 +81,8 @@ func (receiver *alertChannelController) QueryAlertChannel(c *gin.Context) {
 // @Tags AlerChannel 管理
 // @Accept json
 // @Produce json
-// @Param data body types.AlertChannelListRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=types.AlertChannelListResponse} "查询成功"
+// @Param data query types.AlertChannelListRequest true "查询请求参数"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/alertChannel [get]
 func (receiver *alertChannelController) ListAlertChannel(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.alertChannelService.ListChannel, bind.BindTypeUri, bind.BindTypeQuery)

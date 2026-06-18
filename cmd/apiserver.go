@@ -71,18 +71,18 @@ func runApp(_ *cobra.Command, _ []string) error {
 
 	app, cleanup, err := InitApplication()
 	if err != nil {
-		return fmt.Errorf("init application faild: %w", err)
+		return fmt.Errorf("init application faild, %w", err)
 	}
 	defer cleanup()
 
 	v1.NewStore()
 
 	if err = app.Initer.Init(ctx); err != nil {
-		return fmt.Errorf("init application faild: %w", err)
+		return fmt.Errorf("init application faild, %w", err)
 	}
 
 	if err := app.Run(ctx); err != nil {
-		return fmt.Errorf("run application faild: %w", err)
+		return fmt.Errorf("run application faild, %w", err)
 	}
 	zap.L().Info("server exiting")
 	return nil

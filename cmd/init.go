@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"github.com/alert666/api-server/base/conf"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/data"
@@ -15,6 +13,8 @@ import (
 	"github.com/alert666/api-server/pkg/jwt"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/alert666/api-server/store"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -106,12 +106,14 @@ func initApplication(_ *cobra.Command, _ []string) error {
 			Name:        "admin",
 			Path:        "*",
 			Method:      "*",
+			Effect:      "allow",
 			Description: "拥有所有接口权限",
 		},
 		{
 			Name:        "readOnly",
 			Path:        "*",
 			Method:      "GET",
+			Effect:      "allow",
 			Description: "只读接口权限",
 		},
 	}

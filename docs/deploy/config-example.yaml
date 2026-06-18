@@ -1,59 +1,121 @@
 server:
-  bind: 0.0.0.0:8080
-  timeZone: "Asia/Shanghai"
+  bind: 0.0.0.0:8080          # 监听地址
+  timeZone: "Asia/Shanghai"   # 时区
+
 log:
-  level: debug
+  level: debug                # 日志级别
+
+grpc:
+  bind: 0.0.0.0:50051
+  tls:
+    caFile: D:\Data\git\alert666\api-server\deploy\certs\ca.crt
+    certFile: D:\Data\git\alert666\api-server\deploy\certs\server.crt
+    keyFile: D:\Data\git\alert666\api-server\deploy\certs\server.key
+
 mysql:
-  # 开启后会打印 sql 语句
-  debug: true
-  username: xxx
-  password: xxx
-  host: xxx
+  debug: false                # 是否打印 SQL
+  username: root
+  password: ""
+  host: 127.0.0.1
   port: 3306
-  database: xxx
+  database: alert
   maxIdleConns: 10
   maxOpenConns: 20
   maxLifetime: 30m
+
 redis:
-  # single sentinel
-  mode: single
-  host: redis:6379
-  password: 123456
-  # 过期时间 3s 3m 3h
+  mode: single                # single | sentinel
+  host: 127.0.0.1:6379
+  password: ""
   expireTime: 300s
-  # redis key 前缀
-  keyPrefix: tutu
+  keyPrefix: alert
   db: 0
   poolSize: 20
   minIdleConns: 10
   connMaxLifetime: 30m
+
 jwt:
-  issuer: tutu
-  secret: 123456
+  issuer: alert
+  secret: "your-secret-key"
   expireTime: 9999h
+
 oauth2:
-  # 是否启用 oauth2
   enable: true
   providers:
     feishu:
-      clientId: xxx
-      clientSecret: xxx
-      # scopes: []
+      clientId: ""
+      clientSecret: ""
       authUrl: https://accounts.feishu.cn/open-apis/authen/v1/authorize
       tokenUrl: https://open.feishu.cn/open-apis/authen/v2/oauth/token
       userInfoUrl: https://open.feishu.cn/open-apis/authen/v1/user_info
-      # 回调地址, host 为前端地址
-      redirectUrl: http://10.0.0.10:5173/oauth/login
+      redirectUrl: http://localhost:5173/oauth/login
     keycloak:
-      clientId: xxx
-      clientSecret: xxx
-      scopes:
-        - openid
-        - email
-        - profile
-        - roles
-      authUrl: https://keycloak.qqlx.net/realms/qqlx/protocol/openid-connect/auth
-      tokenUrl: https://keycloak.qqlx.net/realms/qqlx/protocol/openid-connect/token
-      userInfoUrl: https://keycloak.qqlx.net/realms/qqlx/protocol/openid-connect/userinfo
-      # 回调地址, host 为前端地址
-      redirectUrl: http://10.0.0.10:5173/oauth/login
+      clientId: ""
+      clientSecret: ""
+      scopes: ["openid", "email", "profile"]
+      authUrl: https://keycloak.example.com/realms/myrealm/protocol/openid-connect/auth
+      tokenUrl: https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token
+      userInfoUrl: https://keycloak.example.com/realms/myrealm/protocol/openid-connect/userinfo
+      redirectUrl: http://localhost:5173/oauth/login
+
+alert:
+  tenantKey: cluster
+  repeatInterval: 4h
+  inhibit_rules:
+    # 1. 磁盘空间抑制
+    - source_matchers:
+      - alertname = "节点磁盘空间不足"
+      - severity = "critical"
+      target_matchers:
+        - alertname="节点磁盘空间不足"
+        - severity = "warning"
+      equal:
+      - instance
+      - device
+      - mountpoint
+
+    # 2. 网络接口抑制
+    - source_matchers:
+      - alertname = "主机网络接口宕机"
+      target_matchers:
+      - alertname = "网络接口波动"
+      equal:
+      - instance
+      - device
+
+    # 3. 节点宕机抑制 Pod
+    - source_matchers:
+      - alertname = "KubeNodeNotReady"
+      target_matchers:
+        - alert_scope = "pod"
+      equal:
+      - node
+
+    # 4. Pod 根因抑制
+    - source_matchers:
+      - alertname = "KubePodCrashLooping"
+      target_matchers:
+      - alertname = "KubePodNotReady"
+      equal:
+      - namespace
+      - pod
+
+    # 5. Pod 状态抑  
+    - source_matchers:
+      - alertname = "KubePodNotHealthy"
+      target_matchers:
+        - alertname = "KubePodNotReady"
+      equal:
+      - namespace
+      - pod
+
+    # 6. Pod 抑制 workload
+    - source_matchers:
+        - alert_scope = "pod"
+      target_matchers:
+        - alert_scope = "workload"
+      equal:
+      - workload
+
+internal:
+  token: internal-shared-secret

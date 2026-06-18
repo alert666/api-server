@@ -1,4 +1,4 @@
-package controller
+﻿package controller
 
 import (
 	"github.com/alert666/api-server/base/bind"
@@ -25,12 +25,12 @@ func NewAlertHistoryController(alertHistoryService v1.AlertHistoryServicer) Aler
 }
 
 // ListAlertHistory 查询 AlertHistory
-// @Summary 创建 AlertHistory
-// @Description 创建 AlertHistory
+// @Summary 查询 AlertHistory
+// @Description 使用 ID 查询告警历史详情
 // @Tags AlertHistory 管理
 // @Accept json
 // @Produce json
-// @Param data body types.IDRequest true "创建请求参数"
+// @Param id path int true "告警历史ID"
 // @Success 200 {object} types.Response "创建成功"
 // @Router /api/v1/alertHistory/:id [get]
 func (recevicer *alertHistoryController) QueryAlertHistory(c *gin.Context) {
@@ -42,7 +42,8 @@ func (recevicer *alertHistoryController) QueryAlertHistory(c *gin.Context) {
 // @Tags AlertHistory 管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=types.AlertHistoryListResponse} "查询成功"
+// @Param data query types.AlertHistoryListRequest true "查询请求参数"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/alertHistory [get]
 func (receiver *alertHistoryController) ListAlertHistory(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.alertHistoryService.ListHistory, bind.BindTypeQuery)
@@ -53,8 +54,10 @@ func (receiver *alertHistoryController) ListAlertHistory(c *gin.Context) {
 // @Tags AlertHistory 管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=types.AlertHistoryUpdateRequest} "更新成功"
-// @Router /api/v1/alertHistory [put]
+// @Param id path int true "告警历史ID"
+// @Param data body types.AlertHistoryUpdateRequest true "更新请求参数"
+// @Success 200 {object} types.Response{} "更新成功"
+// @Router /api/v1/alertHistory/:id [put]
 func (receiver *alertHistoryController) UpdateAlertHistory(c *gin.Context) {
 	bind.ResponseOnlySuccess(c, receiver.alertHistoryService.UpdateHistory, bind.BindTypeJson, bind.BindTypeUri)
 }
@@ -64,7 +67,7 @@ func (receiver *alertHistoryController) UpdateAlertHistory(c *gin.Context) {
 // @Tags AlertHistory 管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=[]types.TenantFiringCount} "询成功"
+// @Success 200 {object} types.Response{} "询成功"
 // @Router /api/v1/alertHistory/firingCount [get]
 func (receiver *alertHistoryController) GetTenantFiringCounts(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, receiver.alertHistoryService.GetTenantFiringCounts)
@@ -75,7 +78,7 @@ func (receiver *alertHistoryController) GetTenantFiringCounts(c *gin.Context) {
 // @Tags AlertHistory 管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=[]types.Option} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/alertHistory/alertNameOptions [get]
 func (receiver *alertHistoryController) GetAlertNameOptions(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, receiver.alertHistoryService.GetAlertNameOptions)

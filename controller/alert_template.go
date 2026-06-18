@@ -1,4 +1,4 @@
-package controller
+﻿package controller
 
 import (
 	"github.com/alert666/api-server/base/bind"
@@ -28,7 +28,7 @@ func NewAlertTemplateController(alertTemplateService v1.AlertTemplateServicer) A
 // CreateApi 创建 AlerTemplate
 // @Summary 创建 AlerTemplate
 // @Description 创建 AlerTemplate
-// @Tags AAlerTemplate 管理
+// @Tags AlerTemplate 管理
 // @Accept json
 // @Produce json
 // @Param data body types.AlertTemplateCreateRequest true "创建请求参数"
@@ -59,7 +59,7 @@ func (receiver *alertTemplateController) UpdateAlertTemplate(c *gin.Context) {
 // @Produce json
 // @Param id path int true "被拷贝模板的 ID"
 // @Param data body types.AlertTemplateCopyRequest true "拷贝请求参数（name 为新模板名称）"
-// @Success 200 {object} types.Response{data=model.AlertTemplate} "拷贝成功，返回新创建的模板"
+// @Success 200 {object} types.Response{} "拷贝成功，返回新创建的模板"
 // @Router /api/v1/alertTemplate/:id/copy [post]
 func (receiver *alertTemplateController) CopyAlertTemplate(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.alertTemplateService.CopyTemplate, bind.BindTypeJson, bind.BindTypeUri)
@@ -73,7 +73,7 @@ func (receiver *alertTemplateController) CopyAlertTemplate(c *gin.Context) {
 // @Produce json
 // @Param data body types.IDRequest true "删除请求参数"
 // @Success 200 {object} types.Response "删除成功"
-// @Router /api/v1/AlertTemplate/:id [delete]
+// @Router /api/v1/alertTemplate/:id [delete]
 func (receiver *alertTemplateController) DeleteAlertTemplate(c *gin.Context) {
 	bind.ResponseOnlySuccess(c, receiver.alertTemplateService.DeleteTemplate, bind.BindTypeUri)
 }
@@ -85,8 +85,8 @@ func (receiver *alertTemplateController) DeleteAlertTemplate(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body types.IDRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=model.AlertTemplate} "查询成功"
-// @Router /api/v1/AlertTemplate/:id [get]
+// @Success 200 {object} types.Response{} "查询成功"
+// @Router /api/v1/alertTemplate/:id [get]
 func (receiver *alertTemplateController) QueryAlertTemplate(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.alertTemplateService.QueryTemplate, bind.BindTypeUri)
 }
@@ -96,8 +96,9 @@ func (receiver *alertTemplateController) QueryAlertTemplate(c *gin.Context) {
 // @Tags AlerTemplate 管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=types.AlertTemplateListResponse} "查询成功"
-// @Router /api/v1/AlertTemplate [get]
+// @Param data query types.AlertTemplateListRequest true "查询请求参数"
+// @Success 200 {object} types.Response{} "查询成功"
+// @Router /api/v1/alertTemplate [get]
 func (receiver *alertTemplateController) ListAlertTemplate(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.alertTemplateService.ListTemplate, bind.BindTypeQuery)
 }

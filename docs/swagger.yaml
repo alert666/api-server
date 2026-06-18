@@ -1,7 +1,262 @@
 definitions:
-  apitypes.ApiCreateRequest:
+  model.Matcher:
+    properties:
+      name:
+        description: 标签名
+        type: string
+      type:
+        description: '操作符: =, !=, =~, !~'
+        type: string
+      value:
+        description: 标签值
+        type: string
+    type: object
+  types.Alert:
+    properties:
+      annotations:
+        additionalProperties:
+          type: string
+        type: object
+      endsAt:
+        type: string
+      fingerprint:
+        type: string
+      generatorURL:
+        type: string
+      isSilenced:
+        type: boolean
+      labels:
+        additionalProperties:
+          type: string
+        type: object
+      silenceID:
+        type: integer
+      startsAt:
+        type: string
+      status:
+        description: '"firing" or "resolved"'
+        type: string
+    type: object
+  types.AlertChannelCreateRequest:
+    properties:
+      aggregationStatus:
+        enum:
+        - 0
+        - 1
+        type: integer
+      config:
+        additionalProperties: {}
+        type: object
+      description:
+        type: string
+      name:
+        maxLength: 15
+        type: string
+      status:
+        enum:
+        - 0
+        - 1
+        type: integer
+      type:
+        enum:
+        - feishuApp
+        - feishuBoot
+        - webhook
+        - email
+        type: string
+    required:
+    - config
+    - name
+    - status
+    - type
+    type: object
+  types.AlertChannelUpdateRequest:
+    properties:
+      aggregationStatus:
+        enum:
+        - 0
+        - 1
+        type: integer
+      config:
+        additionalProperties: {}
+        type: object
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        enum:
+        - 0
+        - 1
+        type: integer
+      type:
+        enum:
+        - feishuApp
+        - feishuBoot
+        - webhook
+        - email
+        type: string
+    required:
+    - aggregationStatus
+    - config
+    - id
+    - status
+    - type
+    type: object
+  types.AlertHistoryUpdateRequest:
+    properties:
+      id:
+        type: integer
+      status:
+        type: string
+    required:
+    - id
+    - status
+    type: object
+  types.AlertReceiveReq:
+    properties:
+      alerts:
+        items:
+          $ref: '#/definitions/types.Alert'
+        type: array
+      commonAnnotations:
+        additionalProperties:
+          type: string
+        type: object
+      commonLabels:
+        additionalProperties:
+          type: string
+        type: object
+      externalURL:
+        type: string
+      groupKey:
+        type: string
+      groupLabels:
+        additionalProperties:
+          type: string
+        type: object
+      receiver:
+        type: string
+      status:
+        description: '"firing" or "resolved"'
+        type: string
+      templateName:
+        type: string
+      truncatedAlerts:
+        type: integer
+      version:
+        type: string
+    required:
+    - templateName
+    type: object
+  types.AlertSilenceCreateRequest:
+    properties:
+      comment:
+        maxLength: 255
+        type: string
+      endsAt:
+        type: integer
+      fingerprint:
+        type: string
+      matchers:
+        items:
+          $ref: '#/definitions/model.Matcher'
+        type: array
+      startsAt:
+        type: integer
+      status:
+        enum:
+        - 0
+        - 1
+        type: integer
+      type:
+        enum:
+        - 1
+        - 2
+        type: integer
+    required:
+    - comment
+    - endsAt
+    - startsAt
+    - status
+    - type
+    type: object
+  types.AlertTemplateCopyRequest:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+    - id
+    - name
+    type: object
+  types.AlertTemplateCreateRequest:
+    properties:
+      aggregationTemplate:
+        type: string
+      alertChannelID:
+        type: integer
+      description:
+        type: string
+      name:
+        type: string
+      receiveId:
+        items:
+          type: string
+        type: array
+      receiveIdType:
+        enum:
+        - open_id
+        - user_id
+        - email
+        - chat_id
+        type: string
+      template:
+        type: string
+    required:
+    - name
+    - receiveId
+    - receiveIdType
+    - template
+    type: object
+  types.AlertTemplateUpdateRequest:
+    properties:
+      aggregationTemplate:
+        type: string
+      alertChannelID:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      receiveId:
+        items:
+          type: string
+        type: array
+      receiveIdType:
+        enum:
+        - open_id
+        - user_id
+        - email
+        - chat_id
+        type: string
+      template:
+        type: string
+    required:
+    - id
+    - receiveId
+    - receiveIdType
+    - template
+    type: object
+  types.ApiCreateRequest:
     properties:
       description:
+        type: string
+      effect:
+        enum:
+        - allow
+        - deny
         type: string
       method:
         enum:
@@ -16,33 +271,12 @@ definitions:
       path:
         type: string
     required:
+    - effect
     - method
     - name
     - path
     type: object
-  apitypes.ApiInfo:
-    properties:
-      handler:
-        type: string
-      method:
-        type: string
-      path:
-        type: string
-    type: object
-  apitypes.ApiListResponse:
-    properties:
-      list:
-        items:
-          $ref: '#/definitions/model.Api'
-        type: array
-      page:
-        type: integer
-      pageSize:
-        type: integer
-      total:
-        type: integer
-    type: object
-  apitypes.ApiUpdateRequest:
+  types.ApiUpdateRequest:
     properties:
       description:
         type: string
@@ -51,39 +285,33 @@ definitions:
     required:
     - id
     type: object
-  apitypes.IDRequest:
+  types.IDRequest:
     properties:
       id:
         type: integer
     required:
     - id
     type: object
-  apitypes.OAuthActivateRequest:
+  types.OAuthActivateRequest:
     properties:
       confirmPassword:
-        minLength: 8
         type: string
       id:
-        type: string
+        type: integer
       password:
-        minLength: 8
         type: string
-    required:
-    - confirmPassword
-    - id
-    - password
     type: object
-  apitypes.Response:
+  types.Response:
     properties:
       code:
         type: integer
       data: {}
+      error:
+        type: string
       msg:
         type: string
-      requestId:
-        type: string
     type: object
-  apitypes.RoleCreateRequest:
+  types.RoleCreateRequest:
     properties:
       apis:
         items:
@@ -96,20 +324,7 @@ definitions:
     required:
     - name
     type: object
-  apitypes.RoleListResponse:
-    properties:
-      list:
-        items:
-          $ref: '#/definitions/model.Role'
-        type: array
-      page:
-        type: integer
-      pageSize:
-        type: integer
-      total:
-        type: integer
-    type: object
-  apitypes.RoleUpdateRequest:
+  types.RoleUpdateRequest:
     properties:
       apis:
         items:
@@ -122,20 +337,45 @@ definitions:
     required:
     - id
     type: object
-  apitypes.ServerApiData:
+  types.SendCommandAndWaitReq:
     properties:
-      apiInfo:
+      description:
+        type: string
+      params:
         additionalProperties:
-          items:
-            $ref: '#/definitions/apitypes.ApiInfo'
-          type: array
-        type: object
-      apiType:
-        items:
           type: string
-        type: array
+        type: object
+      type:
+        type: integer
+    required:
+    - description
+    - type
     type: object
-  apitypes.UserCreateRequest:
+  types.TenantCreateRequest:
+    properties:
+      description:
+        type: string
+      label:
+        type: string
+      name:
+        type: string
+    required:
+    - label
+    - name
+    type: object
+  types.TenantUpdateRequest:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      label:
+        type: string
+    required:
+    - id
+    - label
+    type: object
+  types.UserCreateRequest:
     properties:
       avatar:
         type: string
@@ -159,20 +399,7 @@ definitions:
     - name
     - password
     type: object
-  apitypes.UserListResponse:
-    properties:
-      list:
-        items:
-          $ref: '#/definitions/model.User'
-        type: array
-      page:
-        type: integer
-      pageSize:
-        type: integer
-      total:
-        type: integer
-    type: object
-  apitypes.UserLoginRequest:
+  types.UserLoginRequest:
     properties:
       email:
         type: string
@@ -183,14 +410,7 @@ definitions:
     - email
     - password
     type: object
-  apitypes.UserLoginResponse:
-    properties:
-      token:
-        type: string
-      user:
-        $ref: '#/definitions/model.User'
-    type: object
-  apitypes.UserUpdateAdminRequest:
+  types.UserUpdateAdminRequest:
     properties:
       avatar:
         type: string
@@ -222,7 +442,7 @@ definitions:
     required:
     - id
     type: object
-  apitypes.UserUpdateSelfRequest:
+  types.UserUpdateSelfRequest:
     properties:
       avatar:
         type: string
@@ -241,105 +461,645 @@ definitions:
         minLength: 8
         type: string
     type: object
-  model.Api:
-    properties:
-      createdAt:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      method:
-        type: string
-      name:
-        type: string
-      path:
-        type: string
-      roles:
-        items:
-          $ref: '#/definitions/model.Role'
-        type: array
-      updatedAt:
-        type: string
-    type: object
-  model.Role:
-    properties:
-      apis:
-        items:
-          $ref: '#/definitions/model.Api'
-        type: array
-      createdAt:
-        type: string
-      description:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updatedAt:
-        type: string
-      users:
-        items:
-          $ref: '#/definitions/model.User'
-        type: array
-    type: object
-  model.User:
-    properties:
-      avatar:
-        type: string
-      createdAt:
-        type: string
-      department:
-        type: string
-      email:
-        type: string
-      id:
-        type: integer
-      mobile:
-        type: string
-      name:
-        type: string
-      nickName:
-        type: string
-      roles:
-        items:
-          $ref: '#/definitions/model.Role'
-        type: array
-      status:
-        type: integer
-      updatedAt:
-        type: string
-    type: object
-host: 10.0.0.10:8080
+host: 0.0.0.0:8080
 info:
   contact: {}
-  description: api-server api docs.
-  title: Swagger API
+  description: 告警管理后端服务 API 文档，支持告警接收、静默、抑制、通知、多租户管理、RBAC 权限控制等功能。
+  title: api-server — 告警管理 API
   version: "1.0"
 paths:
-  /api/v1/api:
+  /api/v1/agents/commands/wait:
     post:
       consumes:
       - application/json
-      description: 创建 API
+      description: 通过 gRPC 数据隧道向指定 Agent 发送命令，阻塞等待执行结果后返回。
+      parameters:
+      - description: 命令请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.SendCommandAndWaitReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 命令执行成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 向 Agent 下发命令
+      tags:
+      - Agent 命令
+  /api/v1/alertChannel:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有 AlerChannel
+      parameters:
+      - enum:
+        - asc
+        - desc
+        in: query
+        name: direction
+        type: string
+      - in: query
+        name: name
+        type: string
+      - description: Page 从 1 开始, 表示第几页
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: PageSize 最大值 100，默认值 20, 表示每页多少条数据
+        in: query
+        maximum: 100
+        minimum: 1
+        name: pageSize
+        type: integer
+      - enum:
+        - id
+        - name
+        - created_at
+        - updated_at
+        in: query
+        name: sort
+        type: string
+      - enum:
+        - feishuApp
+        - feishuBoot
+        - webhook
+        - email
+        in: query
+        name: type
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取所有 AlerChannel
+      tags:
+      - AlerChannel 管理
+    post:
+      consumes:
+      - application/json
+      description: 创建 AlerChannel
       parameters:
       - description: 创建请求参数
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.ApiCreateRequest'
+          $ref: '#/definitions/types.AlertChannelCreateRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 创建成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
-      summary: 创建 API
+            $ref: '#/definitions/types.Response'
+      summary: 创建 AlerChannel
       tags:
-      - API管理
-  /api/v1/api/:
+      - AlerChannel 管理
+  /api/v1/alertChannel/:id:
+    delete:
+      consumes:
+      - application/json
+      description: 删除 AlerChannel
+      parameters:
+      - description: 删除请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.IDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 删除 AlerChannel
+      tags:
+      - AlerChannel 管理
+    get:
+      consumes:
+      - application/json
+      description: 查询 AlerChannel
+      parameters:
+      - description: 查询请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.IDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 查询 AlerChannel
+      tags:
+      - AlerChannel 管理
+    put:
+      consumes:
+      - application/json
+      description: 更新 AlerChannel
+      parameters:
+      - description: 更新请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.AlertChannelUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 更新 AlerChannel
+      tags:
+      - AlerChannel 管理
+  /api/v1/alertHistory:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有 AlertHistory
+      parameters:
+      - in: query
+        name: alertName
+        type: string
+      - in: query
+        name: alertSendRecordId
+        type: integer
+      - enum:
+        - asc
+        - desc
+        in: query
+        name: direction
+        type: string
+      - in: query
+        name: endsAt
+        type: integer
+      - in: query
+        name: fingerprint
+        type: string
+      - in: query
+        name: instance
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: string
+        name: labels
+        type: array
+      - description: Page 从 1 开始, 表示第几页
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: PageSize 最大值 100，默认值 20, 表示每页多少条数据
+        in: query
+        maximum: 100
+        minimum: 1
+        name: pageSize
+        type: integer
+      - in: query
+        name: severity
+        type: string
+      - enum:
+        - id
+        - alertname
+        - fingerprint
+        - starts_at
+        - ends_at
+        - severity
+        - instance
+        in: query
+        name: sort
+        type: string
+      - in: query
+        name: startsAt
+        type: integer
+      - enum:
+        - resolved
+        - firing
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取所有 AlertHistory
+      tags:
+      - AlertHistory 管理
+  /api/v1/alertHistory/:id:
+    get:
+      consumes:
+      - application/json
+      description: 使用 ID 查询告警历史详情
+      parameters:
+      - description: 告警历史ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 查询 AlertHistory
+      tags:
+      - AlertHistory 管理
+    put:
+      consumes:
+      - application/json
+      description: 更新 AlertHistory 状态
+      parameters:
+      - description: 告警历史ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.AlertHistoryUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 更新 AlertHistory 状态
+      tags:
+      - AlertHistory 管理
+  /api/v1/alertHistory/alertNameOptions:
+    get:
+      consumes:
+      - application/json
+      description: 获取 AlertHistory aletName options
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取 AlertHistory aletName options
+      tags:
+      - AlertHistory 管理
+  /api/v1/alertHistory/firingCount:
+    get:
+      consumes:
+      - application/json
+      description: 更新 获取 AlertHistory 告警状态数量
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取 AlertHistory 告警状态数量
+      tags:
+      - AlertHistory 管理
+  /api/v1/alertSilence:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有 AlerSilence
+      parameters:
+      - in: query
+        name: createdBy
+        type: string
+      - enum:
+        - asc
+        - desc
+        in: query
+        name: direction
+        type: string
+      - in: query
+        name: endsAt
+        type: integer
+      - description: Page 从 1 开始, 表示第几页
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: PageSize 最大值 100，默认值 20, 表示每页多少条数据
+        in: query
+        maximum: 100
+        minimum: 1
+        name: pageSize
+        type: integer
+      - enum:
+        - id
+        - name
+        - created_at
+        - updated_at
+        in: query
+        name: sort
+        type: string
+      - in: query
+        name: startsAt
+        type: integer
+      - enum:
+        - 0
+        - 1
+        in: query
+        name: status
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取所有 AlerSilence
+      tags:
+      - AlerSilence 管理
+    post:
+      consumes:
+      - application/json
+      description: 创建 AlerSilence
+      parameters:
+      - description: 创建请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.AlertSilenceCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 创建 AlerSilence
+      tags:
+      - AlerSilence 管理
+  /api/v1/alertSilence/:id:
+    delete:
+      consumes:
+      - application/json
+      description: 删除 AlerSilence
+      parameters:
+      - description: 静默规则ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 删除 AlerSilence
+      tags:
+      - AlerSilence 管理
+    get:
+      consumes:
+      - application/json
+      description: 查询 AlerSilence
+      parameters:
+      - description: 静默规则ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 查询 AlerSilence
+      tags:
+      - AlerSilence 管理
+  /api/v1/alertSilence/enableCount:
+    get:
+      consumes:
+      - application/json
+      description: 获取各个租户活跃 AlerSilence 的数量
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取各个租户活跃 AlerSilence 的数量
+      tags:
+      - AlerSilence 管理
+  /api/v1/alertTemplate:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有 AlerTemplate
+      parameters:
+      - enum:
+        - asc
+        - desc
+        in: query
+        name: direction
+        type: string
+      - in: query
+        name: name
+        type: string
+      - description: Page 从 1 开始, 表示第几页
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: PageSize 最大值 100，默认值 20, 表示每页多少条数据
+        in: query
+        maximum: 100
+        minimum: 1
+        name: pageSize
+        type: integer
+      - enum:
+        - id
+        - name
+        - created_at
+        - updated_at
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取所有 AlerTemplate
+      tags:
+      - AlerTemplate 管理
+    post:
+      consumes:
+      - application/json
+      description: 创建 AlerTemplate
+      parameters:
+      - description: 创建请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.AlertTemplateCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 创建 AlerTemplate
+      tags:
+      - AlerTemplate 管理
+  /api/v1/alertTemplate/:id:
+    delete:
+      consumes:
+      - application/json
+      description: 删除 AlerTemplate
+      parameters:
+      - description: 删除请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.IDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 删除 AlerTemplate
+      tags:
+      - AlerTemplate 管理
+    get:
+      consumes:
+      - application/json
+      description: 查询 AlerTemplate
+      parameters:
+      - description: 查询请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.IDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 查询 AlerTemplate
+      tags:
+      - AlerTemplate 管理
+    put:
+      consumes:
+      - application/json
+      description: 更新 AlerTemplate
+      parameters:
+      - description: 更新请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.AlertTemplateUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 更新 AlerTemplate
+      tags:
+      - AlerTemplate 管理
+  /api/v1/alertTemplate/:id/copy:
+    post:
+      consumes:
+      - application/json
+      description: 拷贝一个已有的 AlerTemplate，需指定新名称
+      parameters:
+      - description: 被拷贝模板的 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 拷贝请求参数（name 为新模板名称）
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.AlertTemplateCopyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 拷贝成功，返回新创建的模板
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 拷贝 AlerTemplate
+      tags:
+      - AlerTemplate 管理
+  /api/v1/alerts:
+    post:
+      consumes:
+      - application/json
+      description: 作为 Alertmanager Webhook 回调接口，接收并持久化告警数据。支持同时绑定 query 参数（templateName）和
+        JSON body。
+      parameters:
+      - description: 告警模板名称
+        in: query
+        name: templateName
+        required: true
+        type: string
+      - description: Alertmanager Webhook JSON 数据
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.AlertReceiveReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 接收成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 接收 Alertmanager 告警
+      tags:
+      - 告警管理
+  /api/v1/api:
     get:
       consumes:
       - application/json
@@ -362,10 +1122,15 @@ paths:
       - in: query
         name: name
         type: string
-      - in: query
+      - description: Page 从 1 开始, 表示第几页
+        in: query
+        minimum: 1
         name: page
         type: integer
-      - in: query
+      - description: PageSize 最大值 100，默认值 20, 表示每页多少条数据
+        in: query
+        maximum: 100
+        minimum: 1
         name: pageSize
         type: integer
       - in: query
@@ -387,13 +1152,29 @@ paths:
         "200":
           description: 查询成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/apitypes.ApiListResponse'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: API列表
+      tags:
+      - API管理
+    post:
+      consumes:
+      - application/json
+      description: 创建 API
+      parameters:
+      - description: 创建请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.ApiCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 创建 API
       tags:
       - API管理
   /api/v1/api/:id:
@@ -407,14 +1188,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.IDRequest'
+          $ref: '#/definitions/types.IDRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 删除成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 删除 API
       tags:
       - API管理
@@ -428,19 +1209,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.IDRequest'
+          $ref: '#/definitions/types.IDRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 查询成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.Api'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: 查询 API
       tags:
       - API管理
@@ -454,14 +1230,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.ApiUpdateRequest'
+          $ref: '#/definitions/types.ApiUpdateRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 更新成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 更新 API
       tags:
       - API管理
@@ -476,12 +1252,7 @@ paths:
         "200":
           description: 查询成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/apitypes.ServerApiData'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: 获取所有api
       tags:
       - API管理
@@ -496,19 +1267,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.OAuthActivateRequest'
+          $ref: '#/definitions/types.OAuthActivateRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 激活成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/apitypes.UserLoginResponse'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: OAuth2 激活
       tags:
       - 用户管理
@@ -528,12 +1294,7 @@ paths:
         "200":
           description: 登录成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/apitypes.UserLoginResponse'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: OAuth 回调
       tags:
       - 用户管理
@@ -542,6 +1303,11 @@ paths:
       consumes:
       - application/json
       description: 使用 OAuth 登录，返回用户信息和 Token
+      parameters:
+      - description: OAuth2 provider 名称（如 feishu、keycloak）
+        in: query
+        name: provider
+        type: string
       produces:
       - application/json
       responses:
@@ -563,40 +1329,11 @@ paths:
         "200":
           description: 获取成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  items:
-                    type: string
-                  type: array
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: OAuth2 提供商列表
       tags:
       - 用户管理
   /api/v1/role:
-    post:
-      consumes:
-      - application/json
-      description: 创建角色
-      parameters:
-      - description: 创建请求参数
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/apitypes.RoleCreateRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 创建成功
-          schema:
-            $ref: '#/definitions/apitypes.Response'
-      summary: 创建角色
-      tags:
-      - 角色管理
-  /api/v1/role/:
     get:
       consumes:
       - application/json
@@ -611,10 +1348,15 @@ paths:
       - in: query
         name: name
         type: string
-      - in: query
+      - description: Page 从 1 开始, 表示第几页
+        in: query
+        minimum: 1
         name: page
         type: integer
-      - in: query
+      - description: PageSize 最大值 100，默认值 20, 表示每页多少条数据
+        in: query
+        maximum: 100
+        minimum: 1
         name: pageSize
         type: integer
       - enum:
@@ -631,13 +1373,29 @@ paths:
         "200":
           description: 查询成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/apitypes.RoleListResponse'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: 角色列表
+      tags:
+      - 角色管理
+    post:
+      consumes:
+      - application/json
+      description: 创建角色
+      parameters:
+      - description: 创建请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.RoleCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 创建角色
       tags:
       - 角色管理
   /api/v1/role/:id:
@@ -651,14 +1409,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.IDRequest'
+          $ref: '#/definitions/types.IDRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 删除成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 删除角色
       tags:
       - 角色管理
@@ -672,19 +1430,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.IDRequest'
+          $ref: '#/definitions/types.IDRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 查询成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.Role'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: 查询角色
       tags:
       - 角色管理
@@ -698,18 +1451,162 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.RoleUpdateRequest'
+          $ref: '#/definitions/types.RoleUpdateRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 更新成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 更新角色
       tags:
       - 角色管理
-  /api/v1/user/:
+  /api/v1/tenant:
+    get:
+      consumes:
+      - application/json
+      description: 使用分页查询集群的信息, 支持根据 name 查询
+      parameters:
+      - enum:
+        - asc
+        - desc
+        in: query
+        name: direction
+        type: string
+      - in: query
+        name: name
+        type: string
+      - description: Page 从 1 开始, 表示第几页
+        in: query
+        minimum: 1
+        name: page
+        type: integer
+      - description: PageSize 最大值 100，默认值 20, 表示每页多少条数据
+        in: query
+        maximum: 100
+        minimum: 1
+        name: pageSize
+        type: integer
+      - enum:
+        - id
+        - name
+        - created_at
+        - updated_at
+        in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 集群列表
+      tags:
+      - 集群管理
+    post:
+      consumes:
+      - application/json
+      description: 创建集群
+      parameters:
+      - description: 创建请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.TenantCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 创建集群
+      tags:
+      - 集群管理
+  /api/v1/tenant/:id:
+    delete:
+      consumes:
+      - application/json
+      description: 删除集群
+      parameters:
+      - description: 删除请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.IDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 删除集群
+      tags:
+      - 集群管理
+    get:
+      consumes:
+      - application/json
+      description: 查询集群
+      parameters:
+      - description: 查询请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.IDRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 查询集群
+      tags:
+      - 集群管理
+    put:
+      consumes:
+      - application/json
+      description: 更新集群
+      parameters:
+      - description: 更新请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.TenantUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 更新集群
+      tags:
+      - 集群管理
+  /api/v1/tenant/options:
+    get:
+      consumes:
+      - application/json
+      description: 获取集群 Options
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取集群 Options
+      tags:
+      - 集群管理
+  /api/v1/user:
     get:
       consumes:
       - application/json
@@ -733,10 +1630,15 @@ paths:
       - in: query
         name: name
         type: string
-      - in: query
+      - description: Page 从 1 开始, 表示第几页
+        in: query
+        minimum: 1
         name: page
         type: integer
-      - in: query
+      - description: PageSize 最大值 100，默认值 20, 表示每页多少条数据
+        in: query
+        maximum: 100
+        minimum: 1
         name: pageSize
         type: integer
       - enum:
@@ -763,12 +1665,7 @@ paths:
         "200":
           description: 登录成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/apitypes.UserListResponse'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: 用户列表
       tags:
       - 用户管理
@@ -783,14 +1680,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.IDRequest'
+          $ref: '#/definitions/types.IDRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 删除成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 用户删除
       tags:
       - 用户管理
@@ -804,19 +1701,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.IDRequest'
+          $ref: '#/definitions/types.IDRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 查询成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.User'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: 用户查询
       tags:
       - 用户管理
@@ -830,14 +1722,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.UserUpdateAdminRequest'
+          $ref: '#/definitions/types.UserUpdateAdminRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 更新成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 用户更新
       tags:
       - 用户管理
@@ -852,13 +1744,30 @@ paths:
         "200":
           description: 查询成功
           schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/model.User'
-              type: object
+            $ref: '#/definitions/types.Response'
       summary: 用户获取自己的信息
+      tags:
+      - 用户管理
+  /api/v1/user/login:
+    post:
+      consumes:
+      - application/json
+      description: 使用邮箱和密码登录，返回用户信息和 Token
+      parameters:
+      - description: 登录请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 登录成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 用户登录
       tags:
       - 用户管理
   /api/v1/user/logout:
@@ -872,8 +1781,23 @@ paths:
         "200":
           description: 注销成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 用户注销
+      tags:
+      - 用户管理
+  /api/v1/user/options:
+    get:
+      consumes:
+      - application/json
+      description: 获取用户 Options
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 获取用户 Options
       tags:
       - 用户管理
   /api/v1/user/register:
@@ -887,14 +1811,14 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.UserCreateRequest'
+          $ref: '#/definitions/types.UserCreateRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 创建成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 用户创建
       tags:
       - 用户管理
@@ -909,42 +1833,15 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/apitypes.UserUpdateSelfRequest'
+          $ref: '#/definitions/types.UserUpdateSelfRequest'
       produces:
       - application/json
       responses:
         "200":
           description: 更新成功
           schema:
-            $ref: '#/definitions/apitypes.Response'
+            $ref: '#/definitions/types.Response'
       summary: 用户更新自己的信息
-      tags:
-      - 用户管理
-  /api/v1/users/login:
-    post:
-      consumes:
-      - application/json
-      description: 使用邮箱和密码登录，返回用户信息和 Token
-      parameters:
-      - description: 登录请求参数
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/apitypes.UserLoginRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 登录成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/apitypes.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/apitypes.UserLoginResponse'
-              type: object
-      summary: 用户登录
       tags:
       - 用户管理
 swagger: "2.0"

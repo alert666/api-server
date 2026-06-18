@@ -1,4 +1,4 @@
-package controller
+﻿package controller
 
 import (
 	"context"
@@ -48,8 +48,8 @@ func NewUserController(userServicer v1.UserServicer) UserController {
 // @Accept json
 // @Produce json
 // @Param data body types.UserLoginRequest true "登录请求参数"
-// @Success 200 {object} types.Response{data=types.UserLoginResponse} "登录成功"
-// @Router /api/v1/users/login [post]
+// @Success 200 {object} types.Response{} "登录成功"
+// @Router /api/v1/user/login [post]
 func (receiver *UserControllerImpl) UserLoginController(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.userServicer.Login, bind.BindTypeJson)
 }
@@ -125,7 +125,7 @@ func (receiver *UserControllerImpl) UserDeleteController(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body types.IDRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=model.User} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/user/:id [get]
 func (receiver *UserControllerImpl) UserQueryController(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.userServicer.QueryUser, bind.BindTypeUri)
@@ -137,7 +137,7 @@ func (receiver *UserControllerImpl) UserQueryController(c *gin.Context) {
 // @Tags 用户管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=model.User} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/user/info [get]
 func (receiver *UserControllerImpl) UserInfoController(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, receiver.userServicer.Info)
@@ -150,8 +150,8 @@ func (receiver *UserControllerImpl) UserInfoController(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data query types.UserListRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=types.UserListResponse} "登录成功"
-// @Router /api/v1/user/ [get]
+// @Success 200 {object} types.Response{} "登录成功"
+// @Router /api/v1/user [get]
 func (receiver *UserControllerImpl) UserListController(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.userServicer.ListUser, bind.BindTypeQuery)
 }
@@ -162,6 +162,7 @@ func (receiver *UserControllerImpl) UserListController(c *gin.Context) {
 // @Tags 用户管理
 // @Accept json
 // @Produce json
+// @Param provider query string false "OAuth2 provider 名称（如 feishu、keycloak）"
 // @Success 302 {string} string "重定向到 OAuth 登录页面"
 // @Router /api/v1/oauth2/login [get]
 func (receiver *UserControllerImpl) OAuth2LoginController(c *gin.Context) {
@@ -192,7 +193,7 @@ func (receiver *UserControllerImpl) OAuth2LoginController(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data query types.OAuthLoginRequest true "回调请求参数"
-// @Success 200 {object} types.Response{data=types.UserLoginResponse} "登录成功"
+// @Success 200 {object} types.Response{} "登录成功"
 // @Router /api/v1/oauth2/callback [get]
 func (receiver *UserControllerImpl) OAuth2CallbackController(c *gin.Context) {
 	session := sessions.Default(c)
@@ -228,7 +229,7 @@ func (receiver *UserControllerImpl) OAuth2CallbackController(c *gin.Context) {
 // @Tags 用户管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=[]string} "获取成功"
+// @Success 200 {object} types.Response{} "获取成功"
 // @Router /api/v1/oauth2/provider [get]
 func (receiver *UserControllerImpl) OAuth2ProviderController(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, receiver.userServicer.OAuth2Provider)
@@ -241,7 +242,7 @@ func (receiver *UserControllerImpl) OAuth2ProviderController(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body types.OAuthActivateRequest true "激活请求参数"
-// @Success 200 {object} types.Response{data=types.UserLoginResponse} "激活成功"
+// @Success 200 {object} types.Response{} "激活成功"
 // @Router /api/v1/oauth2/:id [post]
 func (receiver *UserControllerImpl) OAuth2ActivateController(c *gin.Context) {
 	session := sessions.Default(c)
@@ -264,7 +265,7 @@ func (receiver *UserControllerImpl) OAuth2ActivateController(c *gin.Context) {
 // @Tags 用户管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=[]types.UserOption} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/user/options [get]
 func (receiver *UserControllerImpl) GetUserOption(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, receiver.userServicer.GetUserOptions)

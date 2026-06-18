@@ -1,4 +1,4 @@
-package controller
+﻿package controller
 
 import (
 	"github.com/alert666/api-server/base/bind"
@@ -31,9 +31,9 @@ func NewClusterController(ClusterHistoryService v1.TenantServicer) ClusterContro
 // @Tags 集群管理
 // @Accept json
 // @Produce json
-// @Param data body types.ClusterCreateRequest true "创建请求参数"
+// @Param data body types.TenantCreateRequest true "创建请求参数"
 // @Success 200 {object} types.Response "创建成功"
-// @Router /api/v1/cluster [post]
+// @Router /api/v1/tenant [post]
 func (recevicer *clusterController) CreateCluster(c *gin.Context) {
 	bind.ResponseOnlySuccess(c, recevicer.ClusterHistoryService.CreateTenant, bind.BindTypeJson)
 }
@@ -44,9 +44,9 @@ func (recevicer *clusterController) CreateCluster(c *gin.Context) {
 // @Tags 集群管理
 // @Accept json
 // @Produce json
-// @Param data body types.ClusterUpdateRequest true "更新请求参数"
+// @Param data body types.TenantUpdateRequest true "更新请求参数"
 // @Success 200 {object} types.Response "更新成功"
-// @Router /api/v1/Cluster/:id [put]
+// @Router /api/v1/tenant/:id [put]
 func (recevicer *clusterController) UpdateCluster(c *gin.Context) {
 	bind.ResponseOnlySuccess(c, recevicer.ClusterHistoryService.UpdateTenant, bind.BindTypeJson, bind.BindTypeUri)
 }
@@ -59,7 +59,7 @@ func (recevicer *clusterController) UpdateCluster(c *gin.Context) {
 // @Produce json
 // @Param data body types.IDRequest true "删除请求参数"
 // @Success 200 {object} types.Response "删除成功"
-// @Router /api/v1/Cluster/:id [delete]
+// @Router /api/v1/tenant/:id [delete]
 func (recevicer *clusterController) DeleteCluster(c *gin.Context) {
 	bind.ResponseOnlySuccess(c, recevicer.ClusterHistoryService.DeleteTenant, bind.BindTypeUri)
 }
@@ -71,8 +71,8 @@ func (recevicer *clusterController) DeleteCluster(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body types.IDRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=model.Cluster} "查询成功"
-// @Router /api/v1/cluster/:id [get]
+// @Success 200 {object} types.Response{} "查询成功"
+// @Router /api/v1/tenant/:id [get]
 func (recevicer *clusterController) QueryCluster(c *gin.Context) {
 	bind.ResponseWithData(c, recevicer.ClusterHistoryService.QueryTenant, bind.BindTypeUri)
 }
@@ -83,9 +83,9 @@ func (recevicer *clusterController) QueryCluster(c *gin.Context) {
 // @Tags 集群管理
 // @Accept json
 // @Produce json
-// @Param data query types.ClusterListRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=types.ClusterListResponse} "查询成功"
-// @Router /api/v1/cluster/ [get]
+// @Param data query types.TenantListRequest true "查询请求参数"
+// @Success 200 {object} types.Response{} "查询成功"
+// @Router /api/v1/tenant [get]
 func (recevicer *clusterController) ListCluster(c *gin.Context) {
 	bind.ResponseWithData(c, recevicer.ClusterHistoryService.ListTenant, bind.BindTypeQuery)
 }
@@ -96,8 +96,8 @@ func (recevicer *clusterController) ListCluster(c *gin.Context) {
 // @Tags 集群管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=[]types.ClusterOption} "查询成功"
-// @Router /api/v1/cluster/options [get]
+// @Success 200 {object} types.Response{} "查询成功"
+// @Router /api/v1/tenant/options [get]
 func (recevicer *clusterController) GetClusterOption(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, recevicer.ClusterHistoryService.GetTenantOption)
 }

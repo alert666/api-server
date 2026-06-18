@@ -1,4 +1,4 @@
-package controller
+﻿package controller
 
 import (
 	"github.com/alert666/api-server/base/bind"
@@ -70,7 +70,7 @@ func (receiver *roleController) DeleteRole(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body types.IDRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=model.Role} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/role/:id [get]
 func (receiver *roleController) QueryRole(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.roleService.QueryRole, bind.BindTypeUri)
@@ -83,8 +83,8 @@ func (receiver *roleController) QueryRole(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data query types.RoleListRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=types.RoleListResponse} "查询成功"
-// @Router /api/v1/role/ [get]
+// @Success 200 {object} types.Response{} "查询成功"
+// @Router /api/v1/role [get]
 func (receiver *roleController) ListRole(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.roleService.ListRole, bind.BindTypeUri, bind.BindTypeQuery)
 }

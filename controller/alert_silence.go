@@ -1,4 +1,4 @@
-package controller
+﻿package controller
 
 import (
 	"github.com/alert666/api-server/base/bind"
@@ -27,7 +27,7 @@ func NewAlertSilenceController(alertSilenceService v1.AlertSilenceServicer) Aler
 // CreateApi 创建 AlerSilence
 // @Summary 创建 AlerSilence
 // @Description 创建 AlerSilence
-// @Tags AAlerSilence 管理
+// @Tags AlerSilence 管理
 // @Accept json
 // @Produce json
 // @Param data body types.AlertSilenceCreateRequest true "创建请求参数"
@@ -43,7 +43,7 @@ func (receiver *alertSilenceController) CreateAlertSilence(c *gin.Context) {
 // @Tags AlerSilence 管理
 // @Accept json
 // @Produce json
-// @Param data body types.IDRequest true "删除请求参数"
+// @Param id path int true "静默规则ID"
 // @Success 200 {object} types.Response "删除成功"
 // @Router /api/v1/alertSilence/:id [delete]
 func (receiver *alertSilenceController) DeleteAlertSilence(c *gin.Context) {
@@ -56,8 +56,8 @@ func (receiver *alertSilenceController) DeleteAlertSilence(c *gin.Context) {
 // @Tags AlerSilence 管理
 // @Accept json
 // @Produce json
-// @Param data body types.IDRequest true "查询请求参数"
-// @Success 200 {object} types.Response{data=model.AlertSilence} "查询成功"
+// @Param id path int true "静默规则ID"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/alertSilence/:id [get]
 func (receiver *alertSilenceController) QueryAlertSilence(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.alertSilenceImpl.QuerySilence, bind.BindTypeUri)
@@ -68,8 +68,8 @@ func (receiver *alertSilenceController) QueryAlertSilence(c *gin.Context) {
 // @Tags AlerSilence 管理
 // @Accept json
 // @Produce json
-// @Param data body types.AlertSilenceListRequest true "List请求参数"
-// @Success 200 {object} types.Response{data=types.AlertSilenceListResponse} "查询成功"
+// @Param data query types.AlertSilenceListRequest true "List请求参数"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/alertSilence [get]
 func (receiver *alertSilenceController) ListAlertSilence(c *gin.Context) {
 	bind.ResponseWithData(c, receiver.alertSilenceImpl.ListSilence, bind.BindTypeQuery)
@@ -80,7 +80,7 @@ func (receiver *alertSilenceController) ListAlertSilence(c *gin.Context) {
 // @Tags AlerSilence 管理
 // @Accept json
 // @Produce json
-// @Success 200 {object} types.Response{data=[]types.TenantCount} "查询成功"
+// @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/alertSilence/enableCount [get]
 func (receiver *alertSilenceController) GetTenantSilenceCounts(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, receiver.alertSilenceImpl.GetTenantSilenceCounts)
