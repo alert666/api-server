@@ -1,4 +1,4 @@
-package middleware
+﻿package middleware
 
 import (
 	apitypes "github.com/alert666/api-server/base/types"
@@ -12,6 +12,8 @@ type MiddlewareInterface interface {
 	Auth() gin.HandlerFunc
 	AuthZ() gin.HandlerFunc
 	Session() gin.HandlerFunc
+	AlertReceiveAuth() gin.HandlerFunc
+	InternalAuth() gin.HandlerFunc
 	TenantMiddleware() gin.HandlerFunc
 }
 

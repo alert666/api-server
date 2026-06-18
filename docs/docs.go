@@ -928,6 +928,11 @@ const docTemplate = `{
         },
         "/api/v1/alerts": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "作为 Alertmanager Webhook 回调接口，接收并持久化告警数据。支持同时绑定 query 参数（templateName）和 JSON body。",
                 "consumes": [
                     "application/json"
@@ -2769,6 +2774,13 @@ const docTemplate = `{
                     "minLength": 8
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

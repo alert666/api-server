@@ -20,6 +20,7 @@
     - [前置依赖](#前置依赖)
     - [本地运行](#本地运行)
   - [配置说明](#配置说明)
+    - [Alertmanager 对接示例](#alertmanager-对接示例)
   - [API 文档](#api-文档)
   - [部署](#部署)
     - [Docker Compose](#docker-compose)
@@ -62,8 +63,6 @@ api-server 是一个告警管理后端服务，配合[前端 UI](https://github.
 - **Agent 命令** — 通过 HTTP API 向 Agent 下发命令并同步等待结果
 - **跨副本转发** — 多副本部署时自动将命令转发至目标 Agent 所在副本执行
 
-![swagger](docs/img/swagger.png)
-
 ## 技术栈
 
 | 类别     | 技术                                                   |
@@ -85,7 +84,7 @@ api-server 是一个告警管理后端服务，配合[前端 UI](https://github.
 
 ## 项目结构
 
-```
+```bash
 .
 ├── cmd/apiserver/     # 入口 + Wire 依赖注入
 ├── base/              # 核心框架：server、middleware、config、logger、types
@@ -218,6 +217,9 @@ oauth2:
       redirectUrl: http://localhost:5173/oauth/login
 
 alert:
+  receiveToken: ""            # 告警接收认证 token（不配置则不校验认证）
+  # 示例（Alertmanager 侧需配置对应的 Authorization 头）：
+  # receiveToken: "a8f5c2e3-9b1d-4f6e-8c2a-1d3e5f7a9b0c"
   tenantKey: cluster          # 租户标签键名，从告警 label 中提取（默认 cluster）
   repeatInterval: 4h          # 告警重复发送间隔
   inhibit_rules:              # 告警抑制规则列表（详见「告警抑制说明」）
@@ -235,18 +237,43 @@ alert:
 internal:
   token: internal-shared-secret   # 内部 API 认证 token（用于跨副本命令转发）
   advertiseAddr: ""               # 可选，手动指定本实例广播地址（默认自动探测）
+
 ```
 
+### Alertmanager 对接示例
+
+Prometheus Alertmanager 配置 webhook receiver 示例（token 需与 config.yaml 中 `alert.receiveToken` 一致）：
+
+```yaml
+# alertmanager.yml
+route:
+  receiver: 'api-server'
+  group_by: ['alertname', 'cluster']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 4h
+  http_config:
+    authorization:
+      type: Bearer
+      credentials: '<your-global-token>'
+      
+receivers:
+  - name: 'api-server'
+    webhook_configs:
+      - url: 'http://<api-server-host>:8080/api/v1/alerts?templateName=<template-name>'
+        http_config:
+          authorization:
+            type: Bearer
+            credentials: <token from config.yaml alert.receiveToken>
+```
 
 ## API 文档
 
 项目集成了 Swagger 自动文档。启动服务后访问：
 
-```
+```bash
 http://localhost:8080/swagger/index.html
 ```
-
-![swagger](docs/img/swagger.png)
 
 主要 API 分组：
 
@@ -304,9 +331,6 @@ docker compose up -d
 
 每次请求都会生成唯一的 `requestId`，通过它可以在日志和 Trace 系统中快速定位问题链路。
 
-![trace](docs/img/trace.png)
-![metrics](docs/img/metrics.png)
-
 ## 告警抑制说明
 
 Alertmanager 原生抑制在告警恢复场景下存在已知问题：当 source 告警恢复后，target 告警的 recovery 通知也会被抑制，导致数据库中 target 告警状态与 Alertmanager 中的实际状态不一致。
@@ -347,7 +371,6 @@ go test ./...
 # 指定 domain 测试
 go test ./test/alert/
 go test ./test/store/
-go test ./test/casbin/
 ```
 
 ### 提交规范

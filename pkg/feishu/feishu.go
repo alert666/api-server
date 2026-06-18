@@ -158,9 +158,11 @@ func newFeishuClient(alertChannelName, appid, appSecret string) (*lark.Client, *
 		larkLogLevel = larkcore.LogLevelInfo
 	}
 
+	zapAdapter := newZapLoggerAdapter(zap.L())
 	wsCli := larkws.NewClient(appid, appSecret,
 		larkws.WithEventHandler(eventHandler),
 		larkws.WithLogLevel(larkLogLevel),
+		larkws.WithLogger(zapAdapter),
 	)
 	zap.S().Infof("创建新的飞书客户端 %s 长连接", alertChannelName)
 
@@ -176,7 +178,8 @@ func newFeishuClient(alertChannelName, appid, appSecret string) (*lark.Client, *
 	}()
 
 	cli := lark.NewClient(appid, appSecret,
-		lark.WithLogLevel(larkcore.LogLevelDebug),
+		lark.WithLogLevel(larkLogLevel),
+		lark.WithLogger(zapAdapter),
 		lark.WithReqTimeout(10*time.Second),
 	)
 
