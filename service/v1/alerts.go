@@ -15,6 +15,7 @@ import (
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
+	"github.com/alert666/api-server/pkg/email"
 	"github.com/alert666/api-server/pkg/feishu"
 	"github.com/alert666/api-server/store"
 	"go.uber.org/zap"
@@ -33,12 +34,14 @@ type CleanDuplicateFiringer interface {
 type alertsService struct {
 	cacheImpl   store.CacheStorer
 	feishuImpl  feishu.Feishuer
+	emailImpl   email.Emailer
 	tenantKey   string
 	dbTenantKey string
 }
 
-func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer) AlertsServicer {
+func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer, emailImpl email.Emailer) AlertsServicer {
 	return &alertsService{
+		emailImpl:   emailImpl,
 		cacheImpl:   cache,
 		feishuImpl:  feishuImpl,
 		tenantKey:   conf.GetAlertTenantKey(),
@@ -76,6 +79,11 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 
 	var sendResult *types.NotifySendResult
 	switch alertChannel.Type {
+	case model.ChannelTypeEmail:
+		sendResult, err = receiver.emailImpl.Notify(ctx, notifyReq)
+		if err != nil {
+			return err
+		}
 	case model.ChannelTypeFeishuApp:
 		sendResult, err = receiver.feishuImpl.Notify(ctx, notifyReq)
 		if err != nil {
@@ -122,6 +130,7 @@ func (receiver *alertsService) getTemplate(ctx context.Context, templateName str
 
 		// init feishu SDK client
 		switch channel.Type {
+		case model.ChannelTypeEmail:
 		case model.ChannelTypeFeishuApp:
 			appid, appSecret, err := helper.VerificationAlertFeishuConfig(channel)
 			if err != nil {
@@ -167,6 +176,7 @@ func (receiver *alertsService) getTemplate(ctx context.Context, templateName str
 
 		// init feishu SDK client
 		switch channel.Type {
+		case model.ChannelTypeEmail:
 		case model.ChannelTypeFeishuApp:
 			appid, appSecret, err := helper.VerificationAlertFeishuConfig(&channel)
 			if err != nil {

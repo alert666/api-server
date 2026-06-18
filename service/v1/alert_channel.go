@@ -177,7 +177,10 @@ func (receiver *alertChannelService) DeleteChannel(ctx context.Context, req *typ
 		if err := receiver.cache.DelKey(ctx, store.AlertChannelType, acObj.ID); err != nil {
 			return err
 		}
-		return receiver.cache.Publish(ctx, constant.AlertChannelTopicDelete, publish)
+		if acObj.Type != model.ChannelTypeEmail {
+			return receiver.cache.Publish(ctx, constant.AlertChannelTopicDelete, publish)
+		}
+		return nil
 	})
 }
 

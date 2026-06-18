@@ -1,0 +1,4769 @@
+{
+  "alerts": [
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.136:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "47327f8f156d8081",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=47327f8f156d8081",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.136:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:54:29.378892+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.220:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "189eee92fd422d76",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=189eee92fd422d76",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.220:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:41:35.379144+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.49:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "188b5fdc37f33912",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=188b5fdc37f33912",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.49:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:48:46.379147+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.192:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fed8770602b0b1c0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fed8770602b0b1c0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.192:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:58:59.379153+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.38:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "89a36ceef3c3741e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=89a36ceef3c3741e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.38:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:36:47.379155+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.3:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7717a9e4148fcbfb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7717a9e4148fcbfb",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.3:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:41:40.379158+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.12:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d3ffb49d7a6b3675",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d3ffb49d7a6b3675",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.12:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:22:52.37916+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.247:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3657e87eca8d64cc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3657e87eca8d64cc",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.247:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:34:48.379162+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.18:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6e8100e67e7c3257",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6e8100e67e7c3257",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.18:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:38:48.379164+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.24:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a098c47db900850b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a098c47db900850b",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.24:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:37:06.379167+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.195:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f96ac4a1d5a09d60",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f96ac4a1d5a09d60",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.195:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:49:55.37917+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.155:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "68fa0db9d5c4af0d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=68fa0db9d5c4af0d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.155:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:22:06.379173+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4d031757fa1ba0a0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4d031757fa1ba0a0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:10:17.379175+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.103:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8eff471321490e7e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8eff471321490e7e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.103:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:39:12.379177+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.22:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "03c8996cf922def3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=03c8996cf922def3",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.22:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:44:46.379179+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.183:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "95aac45f2da3b62d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=95aac45f2da3b62d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.183:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:50:52.379182+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.114:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "35dd739ba7a69e0f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=35dd739ba7a69e0f",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.114:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:29:39.379184+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.250:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4b925a61a2d84ec9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4b925a61a2d84ec9",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.250:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:41:38.379186+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.7:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9ffadb1bfdfdfb05",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9ffadb1bfdfdfb05",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.7:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:42:48.379188+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.203:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "284c4c9b8ace6e18",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=284c4c9b8ace6e18",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.203:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:21:06.379191+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.183:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5f537154e3ef1781",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5f537154e3ef1781",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.183:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:31:03.379193+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.148:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e85064220edbef41",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e85064220edbef41",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.148:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:15:21.379195+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.1:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8d43518ce51e5e4e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8d43518ce51e5e4e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.1:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:24:21.379197+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.214:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e13bb5441c5f5e09",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e13bb5441c5f5e09",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.214:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:54:10.379204+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.181:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fee0ea0baa908b9d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fee0ea0baa908b9d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.181:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:28:11.379206+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.179:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "594da90ca7a283aa",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=594da90ca7a283aa",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.179:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:44:25.379208+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.239:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9b61752c2b93ff1e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9b61752c2b93ff1e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.239:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:47:19.379211+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.99:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d37ef65fb53b8072",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d37ef65fb53b8072",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.99:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:24:14.379213+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.29:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f61f3f8a16850e0f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f61f3f8a16850e0f",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.29:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:03:57.379215+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "571cb904bac65182",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=571cb904bac65182",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:43:10.379218+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.228:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b3897467e8e2392d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b3897467e8e2392d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.228:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:14:52.37922+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.33:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "527a2d03cabbfd58",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=527a2d03cabbfd58",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.33:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:30:46.379222+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.57:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "805994b55f295db1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=805994b55f295db1",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.57:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:42:08.379224+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.186:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0bfa3ae26a6def81",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0bfa3ae26a6def81",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.186:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:30:11.379226+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.229:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4fcb70d346b16541",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4fcb70d346b16541",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.229:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:41:44.379228+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.72:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "68202774635856ca",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=68202774635856ca",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.72:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:08:37.37923+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.124:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d3b44d680f08afb8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d3b44d680f08afb8",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.124:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:30:51.379232+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.241:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ee074c274d00d807",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ee074c274d00d807",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.241:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:29:33.379235+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.193:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "30c4dc3140dd45c6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=30c4dc3140dd45c6",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.193:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:49:02.379237+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.210:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e5454e210bc39f3f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e5454e210bc39f3f",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.210:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:17:00.379239+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.99:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7f35f2fe103f9d41",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7f35f2fe103f9d41",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.99:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:13:22.379241+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.70:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ade847d0732d4112",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ade847d0732d4112",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.70:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:58:38.379243+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.30:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "25418a1972060f93",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=25418a1972060f93",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.30:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:25:41.379246+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.196:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ded116244247ebed",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ded116244247ebed",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.196:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:39:00.379249+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.195:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a88e8f12996103be",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a88e8f12996103be",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.195:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:49:16.379251+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.179:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "df977401d65b634f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=df977401d65b634f",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.179:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:11:39.379253+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.111:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "df477fe6da8b8430",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=df477fe6da8b8430",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.111:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:38:07.379255+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.113:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e1028bf984bb29be",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e1028bf984bb29be",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.113:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:14:51.379257+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.37:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "56d263a04b929ea2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=56d263a04b929ea2",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.37:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:34:53.379259+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.209:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "49d2cf730632787d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=49d2cf730632787d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.209:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:54:18.379261+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.158:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b350cbce17ef8ee6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b350cbce17ef8ee6",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.158:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:15:11.379263+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.248:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bdf6e73b5c595e45",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bdf6e73b5c595e45",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.248:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:55:52.379265+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.173:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c16fda0b91907f56",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c16fda0b91907f56",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.173:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:04:48.379267+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.170:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b3316743c822c54b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b3316743c822c54b",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.170:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:27:42.379269+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.174:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ed6aa149045f17a3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ed6aa149045f17a3",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.174:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:43:04.379271+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.52:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d1bda0d8a6a6ec0d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d1bda0d8a6a6ec0d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.52:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:56:52.379273+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.218:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "dacd56edf575bf13",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=dacd56edf575bf13",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.218:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:31:58.379275+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.43:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3baff066e58bd67e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3baff066e58bd67e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.43:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:30:01.37928+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.154:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bf8fdcd104410c6c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bf8fdcd104410c6c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.154:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:32:31.379282+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.162:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c6d078f72fff26bd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c6d078f72fff26bd",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.162:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:06:13.379284+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.94:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "18594db6268d99ce",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=18594db6268d99ce",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.94:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:29:06.379286+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.248:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "30dac0e9a385b767",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=30dac0e9a385b767",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.248:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:14:23.379288+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.112:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6edee456493320ab",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6edee456493320ab",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.112:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:31:21.37929+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.66:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "31a5a8a49c3ace97",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=31a5a8a49c3ace97",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.66:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:26:26.379292+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.145:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ddfe3691f4ae60ae",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ddfe3691f4ae60ae",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.145:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:55:34.379294+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.144:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "85b09cfab089cac6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=85b09cfab089cac6",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.144:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:43:30.379296+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2cd4c2cc22d78e05",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2cd4c2cc22d78e05",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:34:35.379298+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.141:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bee99329deff17f8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bee99329deff17f8",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.141:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:24:05.3793+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.60:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ea3d240f483b38b6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ea3d240f483b38b6",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.60:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:23:45.379302+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.146:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c124da4a636f6fbc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c124da4a636f6fbc",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.146:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:44:54.379304+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.145:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "594f5f256062079d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=594f5f256062079d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.145:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:14:59.379306+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.248:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2bbbb299cb032c38",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2bbbb299cb032c38",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.248:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:38:50.379308+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.41:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b5141af466235d75",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b5141af466235d75",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.41:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:16:19.37931+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.46:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "05ba830e1465e6bd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=05ba830e1465e6bd",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.46:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:04:46.379313+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.244:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "509b6b8bf0df4d82",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=509b6b8bf0df4d82",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.244:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:59:05.379316+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.11:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b54840add3ac92fe",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b54840add3ac92fe",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.11:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:10:23.379318+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.14:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "87ba4b6b8a10b159",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=87ba4b6b8a10b159",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.14:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:24:37.37932+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.85:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e948c61cb73615cb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e948c61cb73615cb",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.85:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:40:57.379323+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.89:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bc62f8d531b64231",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bc62f8d531b64231",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.89:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:53:36.379326+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.51:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "746f2e291205d280",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=746f2e291205d280",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.51:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:57:36.379329+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.35:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "de36eca07638bd0d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=de36eca07638bd0d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.35:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:31:48.379331+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.171:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "085a2db92e3decdd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=085a2db92e3decdd",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.171:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:00:38.379333+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.199:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "58fa869c6c987202",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=58fa869c6c987202",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.199:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:20:51.379335+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.223:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ed7348a5afa994f9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ed7348a5afa994f9",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.223:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T07:58:32.379337+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.164:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d4dd1a61127fa6de",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d4dd1a61127fa6de",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.164:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:36:33.379339+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "10529685d217a525",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=10529685d217a525",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:00:41.379341+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.157:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e3bd2ddee9805d34",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e3bd2ddee9805d34",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.157:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:24:45.379343+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.213:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9afc50f6f2f328e4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9afc50f6f2f328e4",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.213:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:08:41.379346+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.105:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "005f0bc5799a5f7d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=005f0bc5799a5f7d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.105:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:01:55.379348+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.185:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6b182568f76e7cc0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6b182568f76e7cc0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.185:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:05:50.37935+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.189:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7f83fc885dc140ce",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7f83fc885dc140ce",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.189:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:10:21.379352+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.79:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bb764add0374c169",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bb764add0374c169",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.79:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:13:12.379354+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.202:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d5236e758f2cc52a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d5236e758f2cc52a",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.202:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:41:41.379356+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.186:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4a4987b2f9e99e8a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4a4987b2f9e99e8a",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.186:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:14:50.379357+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.207:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5d8fa0c1037cdf3d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5d8fa0c1037cdf3d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.207:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:30:58.379359+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.13:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "66235ab86cbec95d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=66235ab86cbec95d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.13:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:20:14.379361+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.45:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b710174f44ee7e15",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b710174f44ee7e15",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.45:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:59:12.379363+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.251:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "06e8f67f9660b6bb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=06e8f67f9660b6bb",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.251:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:15:46.379365+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.135:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "af57cb823b16d2ed",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=af57cb823b16d2ed",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.135:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:24:09.379366+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.70:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "826d0005f5396152",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=826d0005f5396152",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.70:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:24:12.379368+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.129:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6fa757e9e1134e1a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6fa757e9e1134e1a",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.129:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:29:40.37937+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.165:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "91522a2b61f8f5aa",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=91522a2b61f8f5aa",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.165:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:46:46.379372+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.126:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "cbd066d1c1bd3fa1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=cbd066d1c1bd3fa1",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.126:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:42:41.379373+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.248:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c43be7a28197abb4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c43be7a28197abb4",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.248:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:56:56.379375+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.87:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "dbbeaaea107df4d5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=dbbeaaea107df4d5",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.87:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T07:57:42.379377+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.101:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "596753ffa77a6da3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=596753ffa77a6da3",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.101:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:11:53.379379+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.124:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1187d1393511d26c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1187d1393511d26c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.124:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:02:27.379381+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.116:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ce1434aae889fba0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ce1434aae889fba0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.116:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:14:19.379383+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.105:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "54c410b4e51956c7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=54c410b4e51956c7",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.105:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:39:46.379385+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.46:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7ab31b0e1c41883a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7ab31b0e1c41883a",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.46:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:57:58.379387+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.37:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "82d244485928f8f4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=82d244485928f8f4",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.37:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:14:29.379388+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.161:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fe5957dd2bb104b0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fe5957dd2bb104b0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.161:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T07:58:51.37939+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.86:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e638461f22a18bdb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e638461f22a18bdb",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.86:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:38:44.379392+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.82:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5f6bd43aa65fa76d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5f6bd43aa65fa76d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.82:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:40:54.379397+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.164:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8b81c86f2eeda447",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8b81c86f2eeda447",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.164:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:58:43.379399+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.247:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1c3c3afaf546a5a2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1c3c3afaf546a5a2",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.247:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:36:44.379401+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.90:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c56c8dafdbe3178c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c56c8dafdbe3178c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.90:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:44:17.379403+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.128:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "20b623ede4a2632d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=20b623ede4a2632d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.128:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:31:51.379404+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.86:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8c16665927ef79f3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8c16665927ef79f3",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.86:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:01:55.379406+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.230:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3ec30dea701ea276",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3ec30dea701ea276",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.230:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:39:44.379408+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.166:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9a193946799f244c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9a193946799f244c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.166:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:46:21.37941+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.46:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9e1a9a756f309f72",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9e1a9a756f309f72",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.46:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:49:36.379412+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.43:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "cb95bf5825cc0425",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=cb95bf5825cc0425",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.43:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:54:59.379414+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.249:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8535ddfac9d25c34",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8535ddfac9d25c34",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.249:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:24:42.379416+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.208:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "af28d842761f5dc8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=af28d842761f5dc8",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.208:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:57:01.379418+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.194:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8946b0d60a6024cd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8946b0d60a6024cd",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.194:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:30:02.379419+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.74:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e60b9a2af7cf6ec2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e60b9a2af7cf6ec2",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.74:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:42:33.379421+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.43:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "91bc941ce3bb2491",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=91bc941ce3bb2491",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.43:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:43:47.379423+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.234:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f2898183d99f0c52",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f2898183d99f0c52",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.234:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:51:14.379425+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.44:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f4666488fa01bf7f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f4666488fa01bf7f",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.44:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:28:45.379427+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.198:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a45203ffb5f14fc8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a45203ffb5f14fc8",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.198:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:07:36.379428+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.39:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2abe6e1a96bb8dde",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2abe6e1a96bb8dde",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.39:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:21:24.37943+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.228:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0d8a69abb0a30aa3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0d8a69abb0a30aa3",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.228:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:37:17.379432+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.90:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6a20e6d7b331b0ef",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6a20e6d7b331b0ef",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.90:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:31:46.379434+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.76:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a57f5f94b79598e7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a57f5f94b79598e7",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.76:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:31:20.379435+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.97:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c1bf455b7097a6f9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c1bf455b7097a6f9",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.97:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:36:59.379437+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.57:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "41bea77df5d8bbe5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=41bea77df5d8bbe5",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.57:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:30:41.379439+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.226:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3b4162e3df85280d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3b4162e3df85280d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.226:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:07:37.379441+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.224:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6c895d16bcfa11bf",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6c895d16bcfa11bf",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.224:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:30:44.379443+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.225:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c3521df2efaac9f3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c3521df2efaac9f3",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.225:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:11:53.379444+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.112:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3a7ce096c81c726b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3a7ce096c81c726b",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.112:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:33:17.379446+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.59:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1550186506843ed5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1550186506843ed5",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.59:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:43:07.379448+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.28:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "714ece5d204edbb7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=714ece5d204edbb7",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.28:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:24:42.379449+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.42:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7087ef2e65920fca",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7087ef2e65920fca",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.42:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:38:45.379452+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.122:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1fd88b554b45941a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1fd88b554b45941a",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.122:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:28:15.379453+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.215:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "76fafcd1b60d2787",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=76fafcd1b60d2787",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.215:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:33:16.379455+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.163:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "62f95881f3074dbd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=62f95881f3074dbd",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.163:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:39:00.379457+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.182:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "669bf6ba7a91cd9c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=669bf6ba7a91cd9c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.182:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:12:27.37946+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.218:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6002739afe74c96e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6002739afe74c96e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.218:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:06:47.379462+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.166:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d0c200be7c3ac58c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d0c200be7c3ac58c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.166:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:00:41.379463+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.4:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6d38fae635930045",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6d38fae635930045",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.4:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:31:44.379465+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.132:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "606ecc08ef02ffc9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=606ecc08ef02ffc9",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.132:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:04:34.379467+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.0:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f9465e6305870b4e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f9465e6305870b4e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.0:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:53:12.379469+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.5:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6cfccf4e0641b157",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6cfccf4e0641b157",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.5:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:32:40.37947+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.161:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f7ab3ca58e6e2d8d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f7ab3ca58e6e2d8d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.161:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:27:11.379472+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.3:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a2e8a0b88bc0842f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a2e8a0b88bc0842f",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.3:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:55:26.379474+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.147:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "edf691b10ad9e608",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=edf691b10ad9e608",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.147:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:18:40.379475+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.219:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "30d2d1f5b66a5359",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=30d2d1f5b66a5359",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.219:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:24:16.379478+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.172:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a6ff2218ecf75119",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a6ff2218ecf75119",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.172:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:41:39.379479+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.31:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "912e8cd038e7b1f7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=912e8cd038e7b1f7",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.31:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:26:29.379481+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.47:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "554afa4ae0cfe82e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=554afa4ae0cfe82e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.47:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:27:24.379483+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.79:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f55ea3bf8a46251b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f55ea3bf8a46251b",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.79:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:49:03.379485+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.170:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6ee2e9f8dcecf894",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6ee2e9f8dcecf894",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.170:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:58:15.379486+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.148:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0d317f8ed311a045",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0d317f8ed311a045",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.148:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:34:50.379488+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.55:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bea75e0797f834bb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bea75e0797f834bb",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.55:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:34:45.37949+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.57:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "11672c7f42c1082d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=11672c7f42c1082d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.57:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:17:11.379492+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.250:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "db80d7de4bda50c6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=db80d7de4bda50c6",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.250:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:24:24.379494+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.161:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "37a0005bb0398878",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=37a0005bb0398878",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.161:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:31:07.379495+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.212:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7bca5eece742f8f8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7bca5eece742f8f8",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.212:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:00:24.379497+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.154:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "401361a80524a5b5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=401361a80524a5b5",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.154:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:56:22.379499+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.0:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "995a49ffc0f1b7c2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=995a49ffc0f1b7c2",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.0:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:34:48.379501+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.163:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4c88d9a1e72a5728",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4c88d9a1e72a5728",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.163:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:00:47.379502+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.154:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3fb11ac3d44121b5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3fb11ac3d44121b5",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.154:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:39:55.379504+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 51% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.167:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "42c18e9a860389e1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=42c18e9a860389e1",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.167:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:42:11.379506+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.126:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "929d4705621ca0c7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=929d4705621ca0c7",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.126:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:04:05.379508+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.166:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "be2ca102ec4c00df",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=be2ca102ec4c00df",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.166:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:38:22.37951+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.96:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "15ecd8fdf6d94ab6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=15ecd8fdf6d94ab6",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.96:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:54:12.379511+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.150:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1e5243e3a2ec5a88",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1e5243e3a2ec5a88",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.150:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:04:07.379513+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.118:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9050c00de7eead3c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9050c00de7eead3c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.118:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T08:18:22.379515+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.74:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "cf96f9a180732e4a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=cf96f9a180732e4a",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.74:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:43:04.379517+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.31:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b306ca9fab549015",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b306ca9fab549015",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.31:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:02:56.379518+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.53:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b9ba4da0d1997b31",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b9ba4da0d1997b31",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.53:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:01:12.37952+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.138:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ad93944f947a4aac",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ad93944f947a4aac",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.138:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:47:36.379522+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.95:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9c02c4d67d4c04f6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9c02c4d67d4c04f6",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.95:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:11:37.379525+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.25:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a00ee572b35d6870",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a00ee572b35d6870",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.25:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:59:52.379527+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.56:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "55f0fcb7e7420120",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=55f0fcb7e7420120",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.56:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:53:13.379529+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.31:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "836549045ccb333b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=836549045ccb333b",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.31:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T07:58:03.379531+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.102:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2a82d530796ada95",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2a82d530796ada95",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.102:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:46:03.379533+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.159:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e407235b1505c60f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e407235b1505c60f",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.159:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:29:25.379534+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.214:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c403740fd6864a51",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c403740fd6864a51",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.214:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:23:43.379536+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.29:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a93152069c26ccc5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a93152069c26ccc5",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.29:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:30:32.379538+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.89:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ee68a4a9ede9b0c8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ee68a4a9ede9b0c8",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.89:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:02:40.37954+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.219:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c6d89010aba0c00b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c6d89010aba0c00b",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.219:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:40:08.379542+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.106:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "334051b348f409be",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=334051b348f409be",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.106:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:50:53.379544+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.1:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "592e39d8c3f815b1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=592e39d8c3f815b1",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.1:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:58:52.379546+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3468e1b5ba979c87",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3468e1b5ba979c87",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:54:27.379547+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.78:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "09cdea37144014c0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=09cdea37144014c0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.78:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:30:02.37955+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.51:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "96b27bac43602bf1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=96b27bac43602bf1",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.51:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:40:32.379551+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.234:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ee52f8fb78693dfe",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ee52f8fb78693dfe",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.234:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:14:39.379553+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.70:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "18c949dac03cf962",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=18c949dac03cf962",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.70:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:03:49.379555+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.213:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "83cbd9444f763bc4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=83cbd9444f763bc4",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.213:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:23:09.379557+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.22:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "985ea3a5204d8007",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=985ea3a5204d8007",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.22:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T07:58:54.379559+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.10:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ec7eae3d061d8374",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ec7eae3d061d8374",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.10:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:01:41.379561+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.9:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "000e69c99f537628",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=000e69c99f537628",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.9:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:35:49.379563+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.155:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9af0c7b3fa60ea94",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9af0c7b3fa60ea94",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.155:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:05:05.379564+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.32:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f2a6bb211a9461d7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f2a6bb211a9461d7",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.32:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:36:35.379566+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.51:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a27bd9d560d7e6f0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a27bd9d560d7e6f0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.51:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:32:56.379568+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.14:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7018c261f827f806",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7018c261f827f806",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.14:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:37:23.379569+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.207:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c20865b28edb46f8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c20865b28edb46f8",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.207:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:21:40.379571+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.157:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "21ae73a63f97186f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=21ae73a63f97186f",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.157:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:18:16.379573+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.220:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "88789b5a737327a8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=88789b5a737327a8",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.220:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T10:41:25.379575+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.83:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c375e49b72a04f47",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c375e49b72a04f47",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.83:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:46:09.379576+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.220:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "178d5e8d3c3d9dc2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=178d5e8d3c3d9dc2",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.220:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:10:06.379578+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.122:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "690f91c99a017cb2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=690f91c99a017cb2",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.122:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:11:25.37958+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 51% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.127:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bd7f75e687fba58d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bd7f75e687fba58d",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.127:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:53:20.379582+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.56:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a7e333bca97139d3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a7e333bca97139d3",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.56:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:12:58.379584+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 51% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.108:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "405a0bf0c350aae4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=405a0bf0c350aae4",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.108:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:00:18.379586+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.147:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f17f830a081ae186",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f17f830a081ae186",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.147:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T07:59:14.379588+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.147:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "600ce3c8eb6d76b4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=600ce3c8eb6d76b4",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.147:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:24:01.37959+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.220:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8811bcc03da653b0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8811bcc03da653b0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.220:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:27:20.379592+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.77:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3d84f10f21f9b63c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3d84f10f21f9b63c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.77:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T10:43:43.379593+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.59:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3c7727baaf76fa3a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3c7727baaf76fa3a",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.59:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:41:47.379595+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.30:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "47aa5cbc2b0e15b7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=47aa5cbc2b0e15b7",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.30:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:38:46.379597+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.113:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "10055e4e044106bd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=10055e4e044106bd",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.113:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:32:50.379599+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.31:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bd6bc5d146f858be",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bd6bc5d146f858be",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.31:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:38:35.3796+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.63:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d47f3caab4a2afb3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d47f3caab4a2afb3",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.63:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:43:05.379609+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.44:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4be6fc6f41bfd83a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4be6fc6f41bfd83a",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.44:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:22:27.379611+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.181:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "066ef772cc92d168",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=066ef772cc92d168",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.181:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:18:52.379613+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.8:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3bc73fc77c6cfab5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3bc73fc77c6cfab5",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.8:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:56:25.379615+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.113:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d0e58500b4ca33bf",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d0e58500b4ca33bf",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.113:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:20:15.379617+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.123:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "203e70aea15afbd4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=203e70aea15afbd4",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.123:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:11:12.379619+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.230:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "50448940dcdd3cae",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=50448940dcdd3cae",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.230:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:33:51.37962+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.104:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "17760947213f5103",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=17760947213f5103",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.104:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:18:04.379622+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.134:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "75fe76aed28be17c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=75fe76aed28be17c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.134:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T09:02:13.379624+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.70:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e67b9fb9c865549c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e67b9fb9c865549c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.70:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T10:07:16.379626+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.221:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6b905726f2824ef6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6b905726f2824ef6",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.221:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:19:18.379628+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.79:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4951d723e185356b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4951d723e185356b",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.79:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:38:25.379629+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.151:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5385775969a8b31c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5385775969a8b31c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.151:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:25:24.379631+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.147:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5777497fb064e36c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5777497fb064e36c",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.147:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:26:47.379633+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.200:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "514d3fdfb179b3c0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=514d3fdfb179b3c0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.200:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T09:17:35.379635+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.169:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9d5ddd5a86231721",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9d5ddd5a86231721",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.169:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:27:35.379636+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.159:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "080eceb158efe1df",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=080eceb158efe1df",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.159:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T09:57:00.379638+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.234:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "67fe52284f9b3125",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=67fe52284f9b3125",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.234:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:41:48.37964+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.49:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "926c774dc4a9988b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=926c774dc4a9988b",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.49:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:42:04.379642+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.120:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "db016843bd9410a2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=db016843bd9410a2",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.120:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:56:49.379643+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.183:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "700b4bf9216343bd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=700b4bf9216343bd",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.183:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T08:57:52.379666+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.54:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "32a00c5634a4df06",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=32a00c5634a4df06",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.54:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T08:48:06.379668+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.252:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "dff0d66adc454493",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=dff0d66adc454493",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.252:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T08:07:41.37967+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.100:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "21b5a69f97ea46c0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=21b5a69f97ea46c0",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.100:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T10:05:08.379672+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: CPUThrottlingHigh 在 10.0.0.18:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "434d80860f137b0e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=434d80860f137b0e",
+      "labels": {
+        "alertname": "CPUThrottlingHigh",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.18:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T09:41:19.379673+08:00",
+      "status": "firing"
+    }
+  ],
+  "commonAnnotations": {},
+  "commonLabels": {
+    "alertname": "CPUThrottlingHigh",
+    "cluster": "prod-aliyun-01"
+  },
+  "externalURL": "http://alertmanager.example.com",
+  "groupKey": "{}/{alertname=\"CPUThrottlingHigh\", cluster=\"prod-aliyun-01\"}",
+  "groupLabels": {
+    "alertname": "CPUThrottlingHigh",
+    "cluster": "prod-aliyun-01"
+  },
+  "receiver": "feishu-receiver",
+  "status": "firing",
+  "truncatedAlerts": 0,
+  "version": "4"
+}

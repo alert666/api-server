@@ -3,6 +3,7 @@ package pkg
 import (
 	"github.com/alert666/api-server/pkg/alertinhibit"
 	"github.com/alert666/api-server/pkg/casbin"
+	"github.com/alert666/api-server/pkg/email"
 	"github.com/alert666/api-server/pkg/feishu"
 	"github.com/alert666/api-server/pkg/jwt"
 	localcache "github.com/alert666/api-server/pkg/local_cache"
@@ -20,4 +21,5 @@ var PkgProviderSet = wire.NewSet(
 	oauth.NewOAuth2,
 	localcache.NewCacher,
 	alertinhibit.NewMatchers,
+	email.NewEmailSender,
 )

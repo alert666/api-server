@@ -17,6 +17,7 @@ const (
 	ChannelTypeFeishuApp  ChannelType = "feishuApp"
 	ChannelTypeFeishuBoot ChannelType = "feishuBoot"
 	ChannelTypeWebhook    ChannelType = "webhook"
+	ChannelTypeEmail      ChannelType = "email"
 )
 
 // ChannelStatus 定义告警渠道的状态
@@ -72,7 +73,6 @@ type EmailConfig struct {
 	SMTPPort int      `json:"smtp_port"`
 	Username string   `json:"username"`
 	Password string   `json:"password"`
-	To       []string `json:"to"` // 收件人列表
 }
 
 // GetFeishuAppConfig 获取飞书应用配置

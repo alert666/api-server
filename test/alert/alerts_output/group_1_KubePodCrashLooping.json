@@ -1,0 +1,4769 @@
+{
+  "alerts": [
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.34:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e0d9825d7f2a2643",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e0d9825d7f2a2643",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.34:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T14:26:10.197496+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.162:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1b9814533cfba6d5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1b9814533cfba6d5",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.162:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:03:33.197759+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.138:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2fa0c786e7027ffb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2fa0c786e7027ffb",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.138:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:29:28.197763+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.33:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "927a2139281c9ce5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=927a2139281c9ce5",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.33:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:23:38.197766+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.90:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1f2fd34eccc9ee7a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1f2fd34eccc9ee7a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.90:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:15:39.197769+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.53:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "55bea38e0a86aa52",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=55bea38e0a86aa52",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.53:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:24:54.197771+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.180:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3c605ee11d62ae33",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3c605ee11d62ae33",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.180:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:07:32.197774+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.178:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2f6d4f327738871c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2f6d4f327738871c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.178:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:36:00.197776+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.229:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "74383b159022a2b3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=74383b159022a2b3",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.229:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:30:28.197778+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.236:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "dee591e1f0532bd8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=dee591e1f0532bd8",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.236:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:32:55.197781+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.222:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a3b44d26918012f7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a3b44d26918012f7",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.222:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:11:20.197789+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "20e99669f5e1d2b3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=20e99669f5e1d2b3",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:42:21.197791+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.40:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e7b99043e38dc213",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e7b99043e38dc213",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.40:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:08:39.197794+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.176:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "db89ab9014e31261",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=db89ab9014e31261",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.176:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:56:08.197796+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.99:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "234f4995b1961196",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=234f4995b1961196",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.99:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:45:53.197798+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.96:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c559c8fc3333072f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c559c8fc3333072f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.96:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:33:19.197801+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.106:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6e14869f91a84548",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6e14869f91a84548",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.106:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:09:19.197803+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.232:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a058e34e11fe3427",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a058e34e11fe3427",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.232:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:52:04.197806+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.178:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8ac375a08e97d690",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8ac375a08e97d690",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.178:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:32:31.197808+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.230:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "84e0da614a395f05",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=84e0da614a395f05",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.230:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:17:24.197811+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.54:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ee8cca5f50362795",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ee8cca5f50362795",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.54:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:50:25.197813+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.232:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d58830898ce9c3e4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d58830898ce9c3e4",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.232:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:56:52.197815+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.19:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0f6367a9b4ec5e80",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0f6367a9b4ec5e80",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.19:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:30:17.197817+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.30:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5be12c1a55bb27ee",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5be12c1a55bb27ee",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.30:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:19:03.197819+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.59:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a3ae243974cb518f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a3ae243974cb518f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.59:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:23:34.197822+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.72:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5ceff5242ad54305",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5ceff5242ad54305",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.72:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:58:12.197824+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.121:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b57f8ad929f885e9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b57f8ad929f885e9",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.121:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:39:34.197826+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.53:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "16c0804d3bc3a9ea",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=16c0804d3bc3a9ea",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.53:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:50:00.197828+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.93:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "97256c2045aae33e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=97256c2045aae33e",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.93:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:05:24.19783+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.137:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "edbccbf9c12e5dda",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=edbccbf9c12e5dda",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.137:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:51:13.197833+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.226:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7cb4e79c256646b6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7cb4e79c256646b6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.226:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:58:53.197837+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.16:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6821b60a2446e826",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6821b60a2446e826",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.16:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:43:58.19784+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.175:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3347935a782bbc0d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3347935a782bbc0d",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.175:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:13:46.197842+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.204:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1f2e47d4a0b2f6c6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1f2e47d4a0b2f6c6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.204:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:21:02.197844+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.168:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d1d06b1455944e1c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d1d06b1455944e1c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.168:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:34:12.197847+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.230:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "94c53fbac48fb4f9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=94c53fbac48fb4f9",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.230:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:44:59.197849+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.129:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e2b8725b88f6cba1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e2b8725b88f6cba1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.129:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:31:50.197851+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.73:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7727ad81d999b57c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7727ad81d999b57c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.73:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:06:24.197854+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.116:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f4ade82b694473f6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f4ade82b694473f6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.116:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:10:00.197856+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.79:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6b625351a50edb22",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6b625351a50edb22",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.79:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:03:34.197858+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.97:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8a61e1597a2f9701",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8a61e1597a2f9701",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.97:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:02:30.19786+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.143:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c32b80c34328301f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c32b80c34328301f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.143:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:50:46.197862+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.70:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a0ddc4960c16fbff",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a0ddc4960c16fbff",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.70:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:10:39.197864+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.220:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2b07db5606663760",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2b07db5606663760",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.220:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:04:17.197866+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.250:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "222547e9c985beb2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=222547e9c985beb2",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.250:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:41:38.197868+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.235:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f6ba506eed7a32b0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f6ba506eed7a32b0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.235:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:22:32.197873+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.6:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8d0650d597729dd1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8d0650d597729dd1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.6:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:16:06.197876+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.243:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e11a0e8677e075f0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e11a0e8677e075f0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.243:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:01:51.197878+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.28:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ec6a9efefb5a13cc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ec6a9efefb5a13cc",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.28:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:27:21.19788+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.35:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "21c63a4868f3ecce",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=21c63a4868f3ecce",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.35:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:32:03.197882+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.23:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "cf3ee412b937cc32",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=cf3ee412b937cc32",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.23:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:53:16.197884+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.225:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "07c8e8e2192bc4c2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=07c8e8e2192bc4c2",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.225:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:55:48.197886+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.63:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b35b9705286c1ee2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b35b9705286c1ee2",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.63:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:25:21.197888+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.19:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a14d3a0d3fa53311",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a14d3a0d3fa53311",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.19:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:22:49.19789+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.116:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "90c5ef9e3b66f642",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=90c5ef9e3b66f642",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.116:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:29:59.197892+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.243:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4875d6445ef99241",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4875d6445ef99241",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.243:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:13:19.197894+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.119:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f79c1e6a19898f0d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f79c1e6a19898f0d",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.119:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:41:06.197896+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.152:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8c95daa67e4536b6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8c95daa67e4536b6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.152:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:01:39.197901+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.242:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b130b13ec06fdbf3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b130b13ec06fdbf3",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.242:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:27:47.197903+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.143:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6ebe1ecb019a52ae",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6ebe1ecb019a52ae",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.143:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:28:14.197905+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.252:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0779ae96a3f6b2c6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0779ae96a3f6b2c6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.252:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:47:43.197907+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.18:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "14bba409248059aa",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=14bba409248059aa",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.18:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:49:28.197909+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.185:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1731ddec22f17e1d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1731ddec22f17e1d",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.185:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:48:00.197911+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.6:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "160b6de70417906c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=160b6de70417906c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.6:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:55:15.197913+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.143:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c34272bf171dc950",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c34272bf171dc950",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.143:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:05:00.197915+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.162:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "42258b2940768524",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=42258b2940768524",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.162:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:17:09.197917+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 51% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.48:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "56f08e016b8f4564",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=56f08e016b8f4564",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.48:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:53:32.197919+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.85:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "55e7168f4f95c1b9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=55e7168f4f95c1b9",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.85:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T11:54:31.197922+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.3:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e7e22025c6bd0060",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e7e22025c6bd0060",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.3:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:22:33.197924+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.207:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d927e1492480b13b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d927e1492480b13b",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.207:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:14:32.197926+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 52% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.58:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0b79db29cd0a8401",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0b79db29cd0a8401",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.58:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:35:51.197928+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.59:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e88224abba77713b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e88224abba77713b",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.59:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T14:00:38.19793+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7586de013b844e9a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7586de013b844e9a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:46:18.197932+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.241:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9c5327803bbc7c99",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9c5327803bbc7c99",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.241:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:30:27.197934+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.73:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4a636d85c5f4c6d4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4a636d85c5f4c6d4",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.73:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:31:00.19794+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.148:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3dcad4cc2f0f7c92",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3dcad4cc2f0f7c92",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.148:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:45:49.197942+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.121:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b0251e6b623d46d0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b0251e6b623d46d0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.121:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:01:40.197944+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.143:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f273b3d21fc442a7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f273b3d21fc442a7",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.143:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:48:36.197946+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.175:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b5c2104dd5b50210",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b5c2104dd5b50210",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.175:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:21:29.197948+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.173:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "182c4e678b1d6ccc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=182c4e678b1d6ccc",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.173:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:57:39.19795+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.26:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ec31344d810edbd5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ec31344d810edbd5",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.26:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:13:01.197952+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.115:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a0bd6e0edcfd3add",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a0bd6e0edcfd3add",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.115:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T11:51:33.197954+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.231:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7a66e2702db4de29",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7a66e2702db4de29",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.231:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:01:14.197956+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.164:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6d1d61f772aafe66",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6d1d61f772aafe66",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.164:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:15:26.197958+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.207:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "56e803fa304ae315",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=56e803fa304ae315",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.207:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:18:01.19796+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.14:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ecf3b7a0ff41ea0f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ecf3b7a0ff41ea0f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.14:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:18:34.197962+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 81% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.236:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "80b495f3bf26fa09",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=80b495f3bf26fa09",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.236:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:26:57.197964+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.213:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4129e4595948ab05",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4129e4595948ab05",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.213:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T14:11:20.197967+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.232:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8e83f3575da21b2e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8e83f3575da21b2e",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.232:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:49:22.197969+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.79:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7e8b7ecf71368435",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7e8b7ecf71368435",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.79:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T11:47:38.197971+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.108:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5f4a2e23dbbc7a19",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5f4a2e23dbbc7a19",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.108:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:09:16.197972+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.2:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "52d0df49ddbc0fb0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=52d0df49ddbc0fb0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.2:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:30:06.197975+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.206:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "82628f2625dab1ae",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=82628f2625dab1ae",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.206:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:16:43.197977+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.179:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "da437237d9ffd5e2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=da437237d9ffd5e2",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.179:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:26:52.197979+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.11:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fa7ff55483320e80",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fa7ff55483320e80",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.11:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:10:38.197981+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.242:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6d7c9f81d0264c33",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6d7c9f81d0264c33",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.242:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:10:10.197983+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.186:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3ddf6af869556e41",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3ddf6af869556e41",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.186:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:08:28.197985+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.55:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "14b0e159a8005f9d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=14b0e159a8005f9d",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.55:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:23:26.197987+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.231:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0b00871f96faefc8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0b00871f96faefc8",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.231:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:31:17.197989+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "44a48c01cc431579",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=44a48c01cc431579",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:58:51.197991+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.107:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b761421e7cb0d5fa",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b761421e7cb0d5fa",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.107:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:51:27.197994+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.13:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fa2f225ec1649a40",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fa2f225ec1649a40",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.13:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:52:51.197996+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.102:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "94c497b39c3b64d6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=94c497b39c3b64d6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.102:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T11:54:58.197998+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.125:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "13792ae9a431fe10",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=13792ae9a431fe10",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.125:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:56:42.198+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.228:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "35730f5678bdc289",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=35730f5678bdc289",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.228:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:25:17.198002+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.183:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6086f8d01295910c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6086f8d01295910c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.183:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:02:11.198004+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.53:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7640c1cbeba50bf1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7640c1cbeba50bf1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.53:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T11:48:38.198015+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.213:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "03d7cd714196586a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=03d7cd714196586a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.213:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:18:13.198017+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.159:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "607887e196a780c8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=607887e196a780c8",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.159:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:29:21.198019+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.74:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f16bdce74833907c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f16bdce74833907c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.74:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:30:00.198021+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.124:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4a301b215f040f39",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4a301b215f040f39",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.124:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:42:56.198023+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.27:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "96bce5451a61903d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=96bce5451a61903d",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.27:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:43:07.198026+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.75:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8d1eba4c0243ec7d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8d1eba4c0243ec7d",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.75:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:45:02.198028+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.17:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "66e93157e171c401",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=66e93157e171c401",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.17:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:39:26.198034+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.26:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bb96e930a7be8ea3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bb96e930a7be8ea3",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.26:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:32:34.198037+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.124:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4d129d1bd21c7803",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4d129d1bd21c7803",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.124:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:55:15.198039+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.208:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "436dbd319136c2ca",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=436dbd319136c2ca",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.208:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:18:50.198041+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.218:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "764d9be13631f748",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=764d9be13631f748",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.218:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:41:03.198043+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.61:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3575642d3fb897e5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3575642d3fb897e5",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.61:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:01:03.198045+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.236:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "177e9a8197055ebc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=177e9a8197055ebc",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.236:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:02:16.198047+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.114:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "242983a8c425d930",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=242983a8c425d930",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.114:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:52:03.198049+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.158:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2fb6542e169924dd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2fb6542e169924dd",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.158:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:08:40.198051+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.55:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f364d1d8489cd246",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f364d1d8489cd246",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.55:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:39:49.198053+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.75:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5fabffd454cec0af",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5fabffd454cec0af",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.75:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:14:44.198055+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.114:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "900128a376a1d861",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=900128a376a1d861",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.114:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:54:34.198057+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 96% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.170:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2c37912365dc9be0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2c37912365dc9be0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.170:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:53:29.198059+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 69% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.50:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5653713d81c329e3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5653713d81c329e3",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.50:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:58:55.198061+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.71:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6a4b5c21be0f32c6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6a4b5c21be0f32c6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.71:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:00:16.198063+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.3:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f746e738e74607c1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f746e738e74607c1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.3:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:09:31.198067+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.234:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6d296d56b52b807a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6d296d56b52b807a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.234:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:27:06.19807+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.174:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "346720c32bb1e8a0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=346720c32bb1e8a0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.174:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:50:57.198072+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.243:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ecaf888de397f654",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ecaf888de397f654",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.243:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:29:38.198074+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.74:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "de7601f882dfa1b0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=de7601f882dfa1b0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.74:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:14:23.198076+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 58% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.144:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e4359aab6a7138dc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e4359aab6a7138dc",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.144:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:56:14.198078+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.184:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e141ba143aee984f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e141ba143aee984f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.184:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:40:28.19808+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.228:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b469d0764b00fe15",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b469d0764b00fe15",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.228:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:11:45.198082+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 88% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.207:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "488f6fc56383404f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=488f6fc56383404f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.207:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:10:01.198084+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 74% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.39:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "34c54e72a8eb4dea",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=34c54e72a8eb4dea",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.39:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:51:53.198086+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.212:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b4b9ef41c31b4040",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b4b9ef41c31b4040",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.212:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:57:03.198088+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.201:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "aa1b1fb4011dfd87",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=aa1b1fb4011dfd87",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.201:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:02:28.19809+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.104:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4ac396290bd2bfe3",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4ac396290bd2bfe3",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.104:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:34:50.198092+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.8:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "68f844fb8c9b644c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=68f844fb8c9b644c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.8:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:04:44.198094+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 86% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.157:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b68d0143dd99918a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b68d0143dd99918a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.157:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:13:15.198096+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 50% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.242:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "10427c094bb93bf5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=10427c094bb93bf5",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.242:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:14:50.198098+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.141:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "441d832565940195",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=441d832565940195",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.141:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:28:52.1981+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.208:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f9411e1fff50b13f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f9411e1fff50b13f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.208:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:02:09.198102+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.137:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bf05d1cb2df1d3a8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bf05d1cb2df1d3a8",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.137:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T11:48:59.198104+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.24:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2f7d688a5c54f22c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2f7d688a5c54f22c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.24:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:24:06.198108+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.197:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7d7b293a8f95d221",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7d7b293a8f95d221",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.197:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:25:27.19811+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 51% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.47:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d86552bc701d9327",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d86552bc701d9327",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.47:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:06:41.198112+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.247:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ecdafbfad32876c8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ecdafbfad32876c8",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.247:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:26:47.198114+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.222:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a5238f2838f2b24a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a5238f2838f2b24a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.222:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:04:03.198116+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 90% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.209:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b377a6ceafef18d6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b377a6ceafef18d6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.209:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:42:08.198118+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.54:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3c5b77a8e1cadb1c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3c5b77a8e1cadb1c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.54:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:33:02.19812+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.182:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "3ca86861a2a00511",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=3ca86861a2a00511",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.182:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:02:00.198122+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.53:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b77e8ea7fadf2284",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b77e8ea7fadf2284",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.53:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:24:55.198124+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 94% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.138:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "291d057a7145e776",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=291d057a7145e776",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.138:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:19:16.198126+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.210:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "cd0fc1d37f3f1253",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=cd0fc1d37f3f1253",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.210:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:01:18.198128+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.157:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ee6c995429b6df2c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ee6c995429b6df2c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.157:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:49:59.19813+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.29:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "43ac3bbbd3ee8fe6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=43ac3bbbd3ee8fe6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.29:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:53:38.198132+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.224:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "728e2bec27bdb5ff",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=728e2bec27bdb5ff",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.224:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:03:38.198135+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.6:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d36577efd23f1f42",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d36577efd23f1f42",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.6:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T11:49:43.198137+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.139:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ad24e86ec9d83f38",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ad24e86ec9d83f38",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.139:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:23:34.198139+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.44:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ed5769e2c8386f39",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ed5769e2c8386f39",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.44:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:02:01.198141+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.72:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4eeb36399c86fa8b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4eeb36399c86fa8b",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.72:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:50:55.198143+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.93:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a7b3173944f6117c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a7b3173944f6117c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.93:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:11:22.198145+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 68% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.235:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f26eeaab7e02ded0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f26eeaab7e02ded0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.235:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:28:00.198147+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.235:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "1801edba77c38c2c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=1801edba77c38c2c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.235:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:38:43.198148+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 71% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.99:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "812b7a5c9b5fbe5f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=812b7a5c9b5fbe5f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.99:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:41:53.19815+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.63:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f7c3f0d3ce335b3d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f7c3f0d3ce335b3d",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.63:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:44:08.198153+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 56% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.48:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "487fe8ea6e7cf4e1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=487fe8ea6e7cf4e1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.48:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:45:19.198155+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.45:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6a38059e73251a54",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6a38059e73251a54",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.45:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:02:45.198157+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.38:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f4e21bd7918c4d00",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f4e21bd7918c4d00",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.38:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:03:39.198159+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.207:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7d778d6e031dff08",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7d778d6e031dff08",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.207:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:51:47.198161+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.51:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c02fbd40d7156d68",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c02fbd40d7156d68",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.51:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:54:29.198163+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.62:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "05dbcc82e149f97a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=05dbcc82e149f97a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.62:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:06:30.198165+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.131:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a6556be83c6f695a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a6556be83c6f695a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.131:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:36:40.198167+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.67:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5beb8edbdf468c62",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5beb8edbdf468c62",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.67:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:59:14.198169+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.82:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d06e3dcb98155e00",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d06e3dcb98155e00",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.82:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:47:43.198171+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.139:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "206edfb9b50548c6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=206edfb9b50548c6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.139:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:50:46.198173+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.177:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0d54a4bbf75be7fd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0d54a4bbf75be7fd",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.177:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:02:31.198175+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.161:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "33d94132d5f15c49",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=33d94132d5f15c49",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.161:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:32:57.198177+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.48:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "755e665d502442f7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=755e665d502442f7",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.48:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:26:40.198182+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.159:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "24ce7cea9bce6ce1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=24ce7cea9bce6ce1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.159:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:27:40.198184+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 75% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.134:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e85b0d88952224f4",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e85b0d88952224f4",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.134:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:31:54.198186+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.183:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "49dc01a3d85646f1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=49dc01a3d85646f1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.183:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:46:58.198189+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 54% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.49:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5f6dc80ff13fe6b0",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5f6dc80ff13fe6b0",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.49:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T14:24:36.198191+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 59% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.241:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a5b7e8959b32a4cb",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a5b7e8959b32a4cb",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.241:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:31:44.198193+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.124:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c46a23fff3be997e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c46a23fff3be997e",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.124:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:52:45.198195+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 89% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.251:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "8efb07da5485e735",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=8efb07da5485e735",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.251:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:35:23.198197+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.201:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a49b920b1b88477c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a49b920b1b88477c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.201:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:29:53.198199+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 63% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.251:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b9428778c5564415",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b9428778c5564415",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.251:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:19:55.198201+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.238:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e6eee2017dc757ef",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e6eee2017dc757ef",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.238:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T11:50:12.198203+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.28:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0d26bf469b83e8a6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0d26bf469b83e8a6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.28:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:31:33.198205+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 61% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.80:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "690fc470fdb77f73",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=690fc470fdb77f73",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.80:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:10:29.198207+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 91% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.209:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "23f3973e5fabc817",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=23f3973e5fabc817",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.209:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:15:02.198209+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.176:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fd724b9d08364f4a",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fd724b9d08364f4a",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.176:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:16:55.198211+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.44:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "93cb0dbae06ce152",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=93cb0dbae06ce152",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.44:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:09:20.198213+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.70:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d1f7ac7b6c4ee6bc",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d1f7ac7b6c4ee6bc",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.70:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:45:47.198216+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.45:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "234b9396d640c578",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=234b9396d640c578",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.45:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:19:33.198224+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 79% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.216:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a5cfefb6cabf5ca7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a5cfefb6cabf5ca7",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.216:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:09:11.198226+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.113:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "18900efac054f639",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=18900efac054f639",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.113:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:35:17.198228+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.165:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bc35c7b98ac2f8e2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bc35c7b98ac2f8e2",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.165:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:13:53.19823+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.40:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "51dc1722d0fbd788",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=51dc1722d0fbd788",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.40:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T14:00:12.198232+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.249:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "f2cc2e0703282ff1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=f2cc2e0703282ff1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.249:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:17:15.198234+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.118:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6435df7750c76f58",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6435df7750c76f58",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.118:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:20:58.198237+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 70% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.235:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2369f3a9740cd202",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2369f3a9740cd202",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.235:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T14:30:38.198239+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 66% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.39:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "216e4aeab432b54f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=216e4aeab432b54f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.39:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:54:23.198241+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.33:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "542de5575004c267",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=542de5575004c267",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.33:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:30:02.198243+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.92:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2d8a43a1e439daaf",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2d8a43a1e439daaf",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.92:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:26:04.198245+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.11:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "7ee04a43f3f432f1",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=7ee04a43f3f432f1",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.11:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:21:07.198247+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.70:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "bdf19768d89f478c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=bdf19768d89f478c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.70:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:22:00.198249+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.42:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ec5bb2a685b5b694",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ec5bb2a685b5b694",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.42:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:57:21.198251+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.79:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "10ff38d10055c5de",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=10ff38d10055c5de",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.79:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:23:53.198253+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.130:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "16fa4fb4bbc0800e",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=16fa4fb4bbc0800e",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.130:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:30:42.198255+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.245:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "a2215c3355c0c806",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=a2215c3355c0c806",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.245:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:11:00.198257+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.246:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "25e3d406d30ee996",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=25e3d406d30ee996",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.246:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:42:52.19826+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 64% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.176:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b280ee69864db17d",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b280ee69864db17d",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.176:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:48:56.198262+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 92% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.193:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "983621c373df56b8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=983621c373df56b8",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.193:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:36:07.198264+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.128:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4d1be1050d85b231",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4d1be1050d85b231",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.128:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:17:53.198266+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 93% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.40:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "813e4c5ab78fc8a5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=813e4c5ab78fc8a5",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.40:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:01:02.198269+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.83:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9f875de2418cf685",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9f875de2418cf685",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.83:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:00:43.198271+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 73% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.245:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "4ba8ccfaf4a409b5",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=4ba8ccfaf4a409b5",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.245:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:16:05.198273+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 82% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.24:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "acb6bac216077a98",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=acb6bac216077a98",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.24:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:54:34.198275+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 80% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.217:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "d7c28299b2bf8a5f",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=d7c28299b2bf8a5f",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.217:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:00:47.198277+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 67% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.76:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2e78cbcbe4fb79a7",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2e78cbcbe4fb79a7",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.76:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:12:31.198287+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.121:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "91510bc9146410cf",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=91510bc9146410cf",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.121:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T14:09:13.198289+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.89:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fb4bdf6ca12a5541",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fb4bdf6ca12a5541",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.89:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:11:59.198291+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 77% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.202:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "9f6b2bfb10c99d69",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=9f6b2bfb10c99d69",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.202:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:58:57.198294+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 78% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.79:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "0f3afcbecacb9e24",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=0f3afcbecacb9e24",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.79:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:05:07.198296+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 97% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.29:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "46a4ca1566420653",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=46a4ca1566420653",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.29:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T11:52:30.198298+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.53:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "477ae53ce0849d06",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=477ae53ce0849d06",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.53:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:13:19.1983+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 65% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.176:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "064fb059fa6a69dd",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=064fb059fa6a69dd",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.176:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:28:13.198302+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 57% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.86:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "e38a12b9b0a16563",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=e38a12b9b0a16563",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.86:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T14:19:35.198304+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.103:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "6aabdbe96db66227",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=6aabdbe96db66227",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.103:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:08:38.198306+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.107:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b0f3eb957df18d41",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b0f3eb957df18d41",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.107:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:00:39.198308+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 72% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.96:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "27b1def3ada3a98b",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=27b1def3ada3a98b",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.96:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:27:06.198309+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 85% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.180:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "2d1a38eaa1a84b04",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=2d1a38eaa1a84b04",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.180:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T12:13:39.198312+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 53% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.95:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c6df284451bafdc2",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c6df284451bafdc2",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.95:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:32:20.198314+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 62% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.232:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "858775f62bb2e069",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=858775f62bb2e069",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.232:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T12:08:46.198316+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 55% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.33:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "84619ace36b1c4d8",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=84619ace36b1c4d8",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.33:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:33:54.198323+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 95% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.63:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "fd014a081b2189f9",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=fd014a081b2189f9",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.63:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:40:47.198325+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.88:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "ef574805a0c39252",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=ef574805a0c39252",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.88:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T13:02:44.198327+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 60% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.4:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "83227eb1f1cc4357",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=83227eb1f1cc4357",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.4:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "devops"
+      },
+      "startsAt": "2026-06-18T13:35:55.198329+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 98% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.24:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "456d6fdf7392fb77",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=456d6fdf7392fb77",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.24:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T13:50:18.198331+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 83% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.241:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "45ed060f3072e832",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=45ed060f3072e832",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.241:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:12:14.198333+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 87% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.77:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "dbaa70ee0cb88d24",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=dbaa70ee0cb88d24",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.77:9100",
+        "job": "node-exporter",
+        "severity": "info",
+        "team": "dba"
+      },
+      "startsAt": "2026-06-18T12:49:04.198345+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 84% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.240:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "5a3ec5ec7d0dbd85",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=5a3ec5ec7d0dbd85",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.240:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "backend"
+      },
+      "startsAt": "2026-06-18T12:18:10.198347+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 99% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.213:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "b200f2d5a54c94c6",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=b200f2d5a54c94c6",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.213:9100",
+        "job": "node-exporter",
+        "severity": "warning",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T14:01:49.198349+08:00",
+      "status": "firing"
+    },
+    {
+      "annotations": {
+        "description": "检测到当前值 76% 超过阈值",
+        "summary": "告警触发: KubePodCrashLooping 在 10.0.0.15:9100"
+      },
+      "endsAt": "0001-01-01T00:00:00Z",
+      "fingerprint": "c7a2c8d508f29d2c",
+      "generatorURL": "http://vmalert:8080/vmalert/alert?id=c7a2c8d508f29d2c",
+      "labels": {
+        "alertname": "KubePodCrashLooping",
+        "device": "/dev/sda1",
+        "instance": "10.0.0.15:9100",
+        "job": "node-exporter",
+        "severity": "critical",
+        "team": "infrastructure"
+      },
+      "startsAt": "2026-06-18T13:58:39.198351+08:00",
+      "status": "firing"
+    }
+  ],
+  "commonAnnotations": {},
+  "commonLabels": {
+    "alertname": "KubePodCrashLooping",
+    "cluster": "prod-aliyun-01"
+  },
+  "externalURL": "http://alertmanager.example.com",
+  "groupKey": "{}/{alertname=\"KubePodCrashLooping\", cluster=\"prod-aliyun-01\"}",
+  "groupLabels": {
+    "alertname": "KubePodCrashLooping",
+    "cluster": "prod-aliyun-01"
+  },
+  "receiver": "feishu-receiver",
+  "status": "firing",
+  "truncatedAlerts": 0,
+  "version": "4"
+}

@@ -6,7 +6,7 @@ import (
 
 type AlertChannelCreateRequest struct {
 	Name              string         `json:"name" binding:"required,max=15"`
-	Type              string         `json:"type" binding:"required,oneof=feishuApp feishuBoot webhook"`
+	Type              string         `json:"type" binding:"required,oneof=feishuApp feishuBoot webhook email"`
 	Status            *int           `json:"status" binding:"required,oneof=0 1"`
 	AggregationStatus *int           `json:"aggregationStatus" binding:"oneof=0 1"`
 	Config            map[string]any `json:"config" binding:"required"`
@@ -15,7 +15,7 @@ type AlertChannelCreateRequest struct {
 
 type AlertChannelUpdateRequest struct {
 	*IDRequest
-	Type              string         `json:"type" binding:"required,oneof=feishuApp feishuBoot webhook"`
+	Type              string         `json:"type" binding:"required,oneof=feishuApp feishuBoot webhook email"`
 	Status            *int           `json:"status" binding:"required,oneof=0 1"`
 	AggregationStatus *int           `json:"aggregationStatus" binding:"required,oneof=0 1"`
 	Config            map[string]any `json:"config" binding:"required"`
@@ -25,7 +25,7 @@ type AlertChannelUpdateRequest struct {
 type AlertChannelListRequest struct {
 	*Pagination
 	Name      string `form:"name"`
-	Type      string `form:"type" binding:"omitempty,oneof=feishuApp feishuBoot webhook"`
+	Type      string `form:"type" binding:"omitempty,oneof=feishuApp feishuBoot webhook email"`
 	Sort      string `form:"sort" binding:"omitempty,oneof=id name created_at updated_at"`
 	Direction string `form:"direction" binding:"omitempty,oneof=asc desc"`
 }
