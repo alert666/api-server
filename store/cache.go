@@ -33,10 +33,12 @@ const (
 	AlertNameType     CacheType = "alertName"
 	AgentClusterType  CacheType = "agentCluster"
 	AgentServerType   CacheType = "agentServer"
+	AlertSilenceType  CacheType = "alertSilence"
 )
 
 type CacheStorer interface {
 	DelKey(ctx context.Context, cacheType CacheType, cacheKey any) error
+	ScanKeys(ctx context.Context, cacheType CacheType) ([]string, error)
 	CacheSeter
 	CacheStringer
 	CacheSuber
@@ -260,6 +262,25 @@ func (c *CacheStore) RemSet(ctx context.Context, cacheType CacheType, cacheKey a
 	}
 	saveKey := c.buildCacheKey(cacheType, key)
 	return c.client.SRem(ctx, saveKey, members...).Err()
+}
+
+func (c *CacheStore) ScanKeys(ctx context.Context, cacheType CacheType) ([]string, error) {
+	pattern := c.buildCacheKey(cacheType, "*")
+	var fullKeys []string
+	iter := c.client.Scan(ctx, 0, pattern, 0).Iterator()
+	for iter.Next(ctx) {
+		fullKeys = append(fullKeys, iter.Val())
+	}
+	if err := iter.Err(); err != nil {
+		return nil, err
+	}
+
+	prefix := c.buildCacheKey(cacheType, "")
+	var keys []string
+	for _, fullKey := range fullKeys {
+		keys = append(keys, strings.TrimPrefix(fullKey, prefix))
+	}
+	return keys, nil
 }
 
 func (c *CacheStore) buildCacheKey(cacheType CacheType, key string) string {

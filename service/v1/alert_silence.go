@@ -26,12 +26,14 @@ type AlertSilenceServicer interface {
 }
 
 type alertSilenceService struct {
-	jwtImpl jwt.JwtInterface
+	jwtImpl   jwt.JwtInterface
+	cacheImpl store.CacheStorer
 }
 
-func NewAlertSilenceServicer(jwt jwt.JwtInterface) AlertSilenceServicer {
+func NewAlertSilenceServicer(cache store.CacheStorer, jwt jwt.JwtInterface) AlertSilenceServicer {
 	return &alertSilenceService{
-		jwtImpl: jwt,
+		cacheImpl: cache,
+		jwtImpl:   jwt,
 	}
 }
 
@@ -54,7 +56,7 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 	obj.Cluster = tenant
 	obj.CreatedBy = mc.UserName
 
-	return store.Q.Transaction(func(tx *store.Query) error {
+	err = store.Q.Transaction(func(tx *store.Query) error {
 		if req.Type != model.SilenceTypeIdentity {
 			tx.AlertSilence.WithContext(ctx).UnderlyingDB().Where(
 				"cluster = ? AND matchers = ? AND status = 1 AND ends_at > ?",
@@ -85,6 +87,13 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
+	if err := recevicer.cacheImpl.DelKey(ctx, store.AlertSilenceType, tenant); err != nil {
+		zap.L().Error("静默规则缓存清理失败", zap.Error(err))
+	}
+	return nil
 }
 
 func (recevicer *alertSilenceService) DeleteSilence(ctx context.Context, req *types.IDRequest) error {
@@ -106,6 +115,9 @@ func (recevicer *alertSilenceService) DeleteSilence(ctx context.Context, req *ty
 	// 如果没有行受影响，说明 ID 不存在或者不属于该租户
 	if info.RowsAffected == 0 {
 		return fmt.Errorf("ID %d alertSilence 不存在或者 tenant 不匹配", req.ID)
+	}
+	if err := recevicer.cacheImpl.DelKey(ctx, store.AlertSilenceType, tenant); err != nil {
+		zap.L().Error("静默规则缓存清理失败", zap.Error(err))
 	}
 	return nil
 }
@@ -248,11 +260,24 @@ func (recevicer *CleanExpiredSilence) CleanExpiredSilencesTask() {
 		zap.L().Debug("[定时任务] CleanExpiredSilencesTask 清理过期静默规则任务正在其他节点运行，本次跳过")
 		return
 	}
+
 	zap.L().Debug("[定时任务] 成功获取锁，开始清理过期静默规则")
 
 	now := time.Now()
-	// --- 逻辑 A: 将已过期的规则状态从 1 改为 0 ---
+	// 将已过期的规则状态从 1 改为 0 ---
 	// 逻辑：如果结束时间早于现在，且状态还是“启用”，则更新为“禁用/过期”
+
+	// 先查询受影响的集群，用于清理缓存
+	var expiredClusters []string
+	if err := aSilenceStore.WithContext(ctx).
+		Select(aSilenceStore.Cluster).
+		Where(aSilenceStore.Status.Eq(model.SilenceEnabled)).
+		Where(aSilenceStore.EndsAt.Lt(now)).
+		Distinct().
+		Scan(&expiredClusters); err != nil {
+		zap.L().Error("[定时任务] 查询过期静默规则集群失败", zap.Error(err))
+	}
+
 	info, err := aSilenceStore.WithContext(ctx).
 		Where(aSilenceStore.Status.Eq(model.SilenceEnabled)).
 		Where(aSilenceStore.EndsAt.Lt(now)).
@@ -262,20 +287,16 @@ func (recevicer *CleanExpiredSilence) CleanExpiredSilencesTask() {
 		zap.L().Error("[定时任务] 更新过期静默规则状态失败", zap.Error(err))
 	} else if info.RowsAffected > 0 {
 		zap.L().Debug("[定时任务] 成功将过期静默规则置为失效", zap.Int64("count", info.RowsAffected))
+		for _, cluster := range expiredClusters {
+			if err := recevicer.cacheImpl.DelKey(ctx, store.AlertSilenceType, cluster); err != nil {
+				zap.L().Error("[定时任务] 清理过期静默规则缓存失败", zap.Error(err))
+			}
+		}
 	}
 
-	// // --- 逻辑 B: (可选) 物理删除过期很久的记录 (例如 30 天前) ---
-	// // 这样可以防止数据表无限增长
-	// thirtyDaysAgo := now.AddDate(0, 0, -30)
-	// // 使用 Unscoped 进行硬删除，或者不加 Unscoped 进行软删除
-	// delInfo, err := aSilence.WithContext(ctx).
-	// 	Unscoped().
-	// 	Where(aSilence.EndsAt.Lt(thirtyDaysAgo)).
-	// 	Delete()
-
-	// if err != nil {
-	// 	zap.L().Error("[定时任务] 硬删除久远静默记录失败", zap.Error(err))
-	// } else if delInfo.RowsAffected > 0 {
-	// 	zap.L().Info("[定时任务] 物理清理久远静默记录成功", zap.Int64("count", delInfo.RowsAffected))
-	// }
+	for _, cluster := range expiredClusters {
+		if err := recevicer.cacheImpl.DelKey(ctx, store.AlertSilenceType, cluster); err != nil {
+			zap.L().Error("[定时任务] 清理过期静默规则缓存失败", zap.Error(err))
+		}
+	}
 }

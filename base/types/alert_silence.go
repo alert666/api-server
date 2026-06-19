@@ -1,4 +1,4 @@
-package types
+﻿package types
 
 import (
 	"encoding/json"
@@ -37,7 +37,7 @@ func (receiver *AlertSilenceCreateRequest) TOMolelAlertSilence() (*model.AlertSi
 
 type AlertSilenceListRequest struct {
 	*Pagination
-	Status    *int            `form:"status" binding:"required,oneof=0 1"`
+	Status    *int            `form:"status" binding:"omitempty,oneof=0 1 2"`
 	StartsAt  *int64          `form:"startsAt"`
 	EndsAt    *int64          `form:"endsAt" binding:"omitempty,gtfield=StartsAt"`
 	Matchers  []model.Matcher `form:"matchers" binding:"omitempty,gt=0"`
