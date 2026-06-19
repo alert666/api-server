@@ -29,6 +29,7 @@ func NewAlertManagerController(alertService v1.AlertsServicer) AlertManagerContr
 // @Param templateName query string true "告警模板名称"
 // @Param data body types.AlertReceiveReq true "Alertmanager Webhook JSON 数据"
 // @Success 200 {object} types.Response "接收成功"
+// @Security BearerAuth
 // @Router /api/v1/alerts [post]
 func (receiver *alertManagerController) ReceiveAlerts(c *gin.Context) {
 	bind.ResponseOnlySuccess(c, receiver.alertService.SendAlert, bind.BindTypeQuery, bind.BindTypeJson)

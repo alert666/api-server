@@ -1096,6 +1096,8 @@ paths:
           description: 接收成功
           schema:
             $ref: '#/definitions/types.Response'
+      security:
+      - BearerAuth: []
       summary: 接收 Alertmanager 告警
       tags:
       - 告警管理
@@ -1844,4 +1846,9 @@ paths:
       summary: 用户更新自己的信息
       tags:
       - 用户管理
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

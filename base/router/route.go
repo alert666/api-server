@@ -172,6 +172,7 @@ func (r *Router) registerClusterRouter(apiGroup *gin.RouterGroup) {
 func (r *Router) registerAlertmanagerRouter(apiGroup *gin.RouterGroup) {
 	baseGroup := apiGroup.Group("/alerts")
 	{
+		baseGroup.Use(r.middleware.AlertReceiveAuth())
 		baseGroup.POST("", r.alert.ReceiveAlerts)
 	}
 }
@@ -246,7 +247,7 @@ func (r *Router) registerAgentCommandRouter(apiGroup *gin.RouterGroup) {
 
 func (r *Router) registerInternalRouter(engine *gin.Engine) {
 	internalGroup := engine.Group("/internal/v1")
-	internalGroup.Use(controller.InternalAuthMiddleware())
+	internalGroup.Use(r.middleware.InternalAuth())
 	{
 		internalGroup.POST("/forward-command", r.internalForward.HandleForward)
 	}

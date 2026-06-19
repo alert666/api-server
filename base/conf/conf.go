@@ -1,4 +1,4 @@
-package conf
+﻿package conf
 
 import (
 	"fmt"
@@ -292,6 +292,17 @@ func GetAlertTenantKey() string {
 		return tenantKey
 	}
 	return "cluster"
+}
+
+// GetAlertReceiveToken 获取告警接收认证 token
+// 配置后，Alertmanager webhook 请求必须携带 Authorization: Bearer <token>
+// 未配置时打印警告日志，不校验认证
+func GetAlertReceiveToken() string {
+	token := viper.GetString("alert.receiveToken")
+	if token == "" {
+		zap.S().Warn("alert.receiveToken is empty, alert receiving endpoint is unprotected")
+	}
+	return token
 }
 
 func GetAlertRepeatInterval() time.Duration {
