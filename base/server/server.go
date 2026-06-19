@@ -43,7 +43,7 @@ func NewServer(server *gin.Engine) *Server {
 }
 
 func (s *Server) Start() (err error) {
-	zap.S().Infof("http server listening on: %s", s.server.Addr)
+	zap.L().Info("http server listening", zap.String("addr", s.server.Addr))
 	if err = s.server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}

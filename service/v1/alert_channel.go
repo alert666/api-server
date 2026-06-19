@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
@@ -35,6 +36,7 @@ func NewChannelServicer(cache store.CacheStorer) AlertChannelServicer {
 }
 
 func (receiver *alertChannelService) CreateAlerChannel(ctx context.Context, req *types.AlertChannelCreateRequest) error {
+	log.WithRequestID(ctx).Debug("CreateAlerChannel", zap.String("name", req.Name), zap.String("type", req.Type))
 	_, err := aChannelStore.WithContext(ctx).Where(aChannelStore.Name.Eq(req.Name)).First()
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -63,14 +65,14 @@ func (receiver *alertChannelService) CreateAlerChannel(ctx context.Context, req 
 			return err
 		}
 		if err := receiver.cache.SetObject(ctx, store.AlertChannelType, obj.ID, obj, store.NeverExpires); err != nil {
-			zap.L().Error("cache AlertChannel failed", zap.Int("id", obj.ID), zap.Error(err))
+		log.WithRequestID(ctx).Error("cache AlertChannel failed", zap.Int("id", obj.ID), zap.Error(err))
 		}
 		if obj.Type == model.ChannelTypeFeishuApp {
 			config, err := obj.GetFeishuAppConfig()
 			if err == nil {
 				publish := fmt.Sprintf("%s:%s:%s", obj.Name, config.AppID, config.AppSecret)
 				if err := receiver.cache.Publish(ctx, constant.AlertChannelTopicUpdate, publish); err != nil {
-					zap.L().Error("publish channel create event failed", zap.Error(err))
+			log.WithRequestID(ctx).Error("publish channel create event failed", zap.Error(err))
 				}
 			}
 		}
@@ -80,6 +82,7 @@ func (receiver *alertChannelService) CreateAlerChannel(ctx context.Context, req 
 }
 
 func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *types.AlertChannelUpdateRequest) error {
+	log.WithRequestID(ctx).Debug("UpdateChannel", zap.Int("id", int(req.ID)))
 	sql := aChannelStore.WithContext(ctx)
 
 	// 1. 加载旧数据
@@ -138,6 +141,7 @@ func (receiver *alertChannelService) UpdateChannel(ctx context.Context, req *typ
 }
 
 func (receiver *alertChannelService) DeleteChannel(ctx context.Context, req *types.IDRequest) error {
+	log.WithRequestID(ctx).Debug("DeleteChannel", zap.Int("id", int(req.ID)))
 	sql := aChannelStore.WithContext(ctx)
 
 	acObj, err := sql.Where(aChannelStore.ID.Eq(int(req.ID))).First()
@@ -195,7 +199,7 @@ func (receiver *alertChannelService) QueryChannel(ctx context.Context, req *type
 		return nil, err
 	}
 	if err := receiver.cache.SetObject(ctx, store.AlertChannelType, obj.ID, obj, store.NeverExpires); err != nil {
-		zap.L().Error("cache AlertChannel failed", zap.Int("id", obj.ID), zap.Error(err))
+		log.WithRequestID(ctx).Error("cache AlertChannel failed", zap.Int("id", obj.ID), zap.Error(err))
 	}
 	return obj, nil
 }

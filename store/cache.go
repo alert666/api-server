@@ -87,7 +87,15 @@ func (c *CacheStore) SetNX(ctx context.Context, cacheType CacheType, cacheKey an
 	saveKey := c.buildCacheKey(cacheType, key)
 
 	// 使用 Redis 的 SetNX 命令
-	return c.client.SetNX(ctx, saveKey, value, expiration).Result()
+	result, err := c.client.SetNX(ctx, saveKey, value, expiration).Result()
+	if err != nil {
+		return false, err
+	}
+	zap.L().Debug("cache SetNX",
+		zap.String("key", saveKey),
+		zap.Bool("acquired", result),
+	)
+	return result, nil
 }
 
 type CacheSeter interface {
@@ -109,6 +117,11 @@ func (c *CacheStore) GetSet(ctx context.Context, cacheType CacheType, cacheKey a
 			return nil, nil
 		}
 		return nil, fmt.Errorf("get set error: %w", err)
+	}
+	if len(result) == 0 {
+		zap.L().Debug("cache GetSet miss", zap.String("key", saveKey))
+	} else {
+		zap.L().Debug("cache GetSet hit", zap.String("key", saveKey), zap.Int("member_count", len(result)))
 	}
 	return result, nil
 }
@@ -155,6 +168,8 @@ func (c *CacheStore) SetObject(ctx context.Context, cacheType CacheType, cacheKe
 	}
 	saveKey := c.buildCacheKey(cacheType, key)
 
+	zap.L().Debug("cache SetObject", zap.String("key", saveKey))
+
 	data, err := json.Marshal(value)
 	if err != nil {
 		return fmt.Errorf("setObject marshal object error: %w", err)
@@ -177,10 +192,14 @@ func (c *CacheStore) GetObject(ctx context.Context, cacheType CacheType, cacheKe
 	data, err := c.client.Get(ctx, saveKey).Bytes()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
+			zap.L().Debug("cache GetObject miss", zap.String("key", saveKey))
 			return false, nil
 		}
+		zap.L().Debug("cache GetObject error", zap.String("key", saveKey), zap.Error(err))
 		return false, fmt.Errorf("cache get object error: %w", err)
 	}
+
+	zap.L().Debug("cache GetObject hit", zap.String("key", saveKey))
 
 	if err := json.Unmarshal(data, target); err != nil {
 		return false, fmt.Errorf("unmarshal object error: %w", err)
@@ -248,6 +267,7 @@ func (c *CacheStore) DelKey(ctx context.Context, cacheType CacheType, cacheKey a
 		return err
 	}
 	delKey := c.buildCacheKey(cacheType, key)
+	zap.L().Debug("cache DelKey", zap.String("key", delKey))
 	if err := c.client.Del(ctx, delKey).Err(); err != nil {
 		return fmt.Errorf("cache delKey error: %w", err)
 	}

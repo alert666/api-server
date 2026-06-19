@@ -67,6 +67,7 @@ func NewUserService(cacheStore store.CacheStorer, jwt jwt.JwtInterface, feishuOa
 }
 
 func (receiver *UserService) Login(ctx context.Context, req *types.UserLoginRequest) (*types.UserLoginResponse, error) {
+	log.WithRequestID(ctx).Debug("Login", zap.String("email", req.Email))
 	user, err := userStore.WithContext(ctx).Where(userStore.Email.Eq(req.Email), userStore.Status.Eq(1)).Preload(userStore.Roles).First()
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -116,6 +117,7 @@ func (receiver *UserService) Logout(ctx context.Context) error {
 }
 
 func (receiver *UserService) CreateUser(ctx context.Context, req *types.UserCreateRequest) (err error) {
+	log.WithRequestID(ctx).Debug("CreateUser", zap.String("name", req.Name), zap.String("email", req.Email))
 	var (
 		user  *model.User
 		roles []*model.Role

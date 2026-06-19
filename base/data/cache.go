@@ -51,7 +51,7 @@ func initSingleRedis(ctx context.Context) (*redis.Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("redis connect failed: %w", err)
 	}
-	zap.S().Info("redis connect success")
+	zap.L().Info("redis connect success")
 	return rdb, nil
 }
 
@@ -93,6 +93,6 @@ func initSentinelRedis(ctx context.Context) (*redis.Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("redis sentinel connect failed: %w", err)
 	}
-	zap.S().Info("redis sentinel connect success")
+	zap.L().Info("redis sentinel connect success")
 	return rdb, nil
 }

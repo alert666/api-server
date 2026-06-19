@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/alert666/api-server/base/helper"
+	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/store"
@@ -108,7 +109,7 @@ func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, re
 
 	// 缓存新创建的模板
 	if err := receiver.cache.SetObject(ctx, store.AlertTemplateType, saveObj.Name, saveObj, store.NeverExpires); err != nil {
-		zap.L().Error("cache AlertTemplate failed", zap.String("name", saveObj.Name), zap.Error(err))
+		log.WithRequestID(ctx).Error("cache AlertTemplate failed", zap.String("name", saveObj.Name), zap.Error(err))
 	}
 	return nil
 }
@@ -178,7 +179,7 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 	}
 	// 更新缓存
 	if err := receiver.cache.SetObject(ctx, store.AlertTemplateType, obj.Name, obj, store.NeverExpires); err != nil {
-		zap.L().Error("cache AlertTemplate update failed", zap.String("name", obj.Name), zap.Error(err))
+		log.WithRequestID(ctx).Error("cache AlertTemplate update failed", zap.String("name", obj.Name), zap.Error(err))
 	}
 	return nil
 }
@@ -194,7 +195,7 @@ func (receiver *alertTemplateService) DeleteTemplate(ctx context.Context, req *t
 	}
 
 	if err := receiver.cache.DelKey(ctx, store.AlertTemplateType, obj.Name); err != nil {
-		zap.L().Error("delete AlertTemplate cache failed", zap.String("name", obj.Name), zap.Error(err))
+		log.WithRequestID(ctx).Error("delete AlertTemplate cache failed", zap.String("name", obj.Name), zap.Error(err))
 	}
 	return nil
 
@@ -243,7 +244,7 @@ func (receiver *alertTemplateService) CopyTemplate(ctx context.Context, req *typ
 
 	// 缓存
 	if err := receiver.cache.SetObject(ctx, store.AlertTemplateType, newObj.Name, newObj, store.NeverExpires); err != nil {
-		zap.L().Error("cache copied AlertTemplate failed", zap.String("name", newObj.Name), zap.Error(err))
+		log.WithRequestID(ctx).Error("cache copied AlertTemplate failed", zap.String("name", newObj.Name), zap.Error(err))
 	}
 	return newObj, nil
 }

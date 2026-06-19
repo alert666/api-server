@@ -1,4 +1,4 @@
-package v1
+﻿package v1
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
+	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/pkg/jwt"
 
@@ -91,7 +92,7 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 		return err
 	}
 	if err := recevicer.cacheImpl.DelKey(ctx, store.AlertSilenceType, tenant); err != nil {
-		zap.L().Error("静默规则缓存清理失败", zap.Error(err))
+		log.WithRequestID(ctx).Error("静默规则缓存清理失败", zap.Error(err))
 	}
 	return nil
 }
@@ -117,7 +118,7 @@ func (recevicer *alertSilenceService) DeleteSilence(ctx context.Context, req *ty
 		return fmt.Errorf("ID %d alertSilence 不存在或者 tenant 不匹配", req.ID)
 	}
 	if err := recevicer.cacheImpl.DelKey(ctx, store.AlertSilenceType, tenant); err != nil {
-		zap.L().Error("静默规则缓存清理失败", zap.Error(err))
+		log.WithRequestID(ctx).Error("静默规则缓存清理失败", zap.Error(err))
 	}
 	return nil
 }
