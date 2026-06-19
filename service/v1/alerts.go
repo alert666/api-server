@@ -1,4 +1,4 @@
-﻿package v1
+package v1
 
 import (
 	"context"
@@ -231,17 +231,28 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 		return nil, err
 	}
 
-	// TODO 从 Redis 中获取
-	// 查询静默规则
-	err = aSilenceStore.WithContext(ctx).
-		UnderlyingDB().
-		Where(tenantWhere, tenantValue).
-		Where(aSilenceStore.Status.Eq(model.SilenceEnabled)).
-		Where(aSilenceStore.EndsAt.Gte(now)).
-		Where(aSilenceStore.StartsAt.Lte(now)).
-		Find(&activeSilences).Error
+	// 从缓存中获取静默规则
+	var found bool
+	found, err = receiver.cacheImpl.GetObject(ctx, store.AlertSilenceType, tenantValue, &activeSilences)
 	if err != nil {
-		zap.L().Error("查询静默规则失败", zap.Error(err))
+		zap.L().Error("获取静默规则缓存失败", zap.Error(err))
+	}
+
+	if !found || err != nil {
+		err = aSilenceStore.WithContext(ctx).
+			UnderlyingDB().
+			Where(tenantWhere, tenantValue).
+			Where(aSilenceStore.Status.Eq(model.SilenceEnabled)).
+			Where(aSilenceStore.EndsAt.Gte(now)).
+			Where(aSilenceStore.StartsAt.Lte(now)).
+			Find(&activeSilences).Error
+		if err != nil {
+			zap.L().Error("查询静默规则失败", zap.Error(err))
+		} else {
+			if err := receiver.cacheImpl.SetObject(ctx, store.AlertSilenceType, tenantValue, activeSilences, 1*time.Hour); err != nil {
+				zap.L().Error("写入静默规则缓存失败", zap.Error(err))
+			}
+		}
 	}
 
 	// 转换历史记录为 Map 方便对比
@@ -576,6 +587,8 @@ func (receiver *alertsService) CleanDuplicateFiringAlertsTask() {
 		return
 	}
 
+	zap.L().Debug("[定时任务] cleanDuplicateFiringAlertsTask 成功获取锁")
+
 	// 1. 查询所有正在告警（ends_at 为空）且状态为 firing 的记录
 	// 按照 StartsAt 降序排列，确保后续切片中索引 0 是最新的
 	alertHistories, err := al.Where(
@@ -685,6 +698,8 @@ func (receiver *alertsService) CleanRepeatIntervalAlertsTask() {
 		zap.L().Debug("[定时任务] cleanRepeatIntervalAlertsTask 任务正在其他节点运行，本次跳过")
 		return
 	}
+
+	zap.L().Debug("[定时任务] cleanRepeatIntervalAlertsTask 成功获取锁")
 
 	// 1. 查询所有正在告警（ends_at 为空）且状态为 firing 的记录
 	// 按照 StartsAt 降序排列，确保后续切片中索引 0 是最新的

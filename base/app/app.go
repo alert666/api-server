@@ -1,4 +1,4 @@
-﻿package app
+package app
 
 import (
 	"context"
@@ -243,12 +243,13 @@ func NewApplication(
 	cleanExpiredSilencer v1.CleanExpiredSilencer,
 	cleanInhibitAlert v1.AlertInhibiter,
 	cacheAlertNameOptioner v1.CacheAlertNameOptioner,
+	cleanStaleCacher v1.CleanStaleCacher,
 	grpcSrv *grpcserver.GRPCServer,
 ) *Application {
 	return newApp(
 		WithServer(
 			server.NewServer(e),
-			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert, cacheAlertNameOptioner),
+			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert, cacheAlertNameOptioner, cleanStaleCacher),
 			grpcSrv,
 		),
 		WithInit(redis, feishu),

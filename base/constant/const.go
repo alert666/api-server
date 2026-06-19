@@ -34,4 +34,5 @@ const (
 	AlertCleanExpiredSilencesLockKey       = "alert:clean:expired:silences"
 	AlertCleanInhibitLockKey               = "alert:clean:expired:inhibit"
 	AlertNamesOptionsLockKey               = "alert:clean:expired:inhibit"
+	AlertCleanStaleCacheLockKey            = "clean:stale:cache" // 删除数据库已经不存在 key 的锁
 )

@@ -81,7 +81,7 @@ func InitApplication() (*app.Application, func(), error) {
 	alertChannelController := controller.NewAlertChannelController(alertChannelServicer)
 	alertHistoryServicer := v1.NewHistoryServicer(cacheStore)
 	alertHistoryController := controller.NewAlertHistoryController(alertHistoryServicer)
-	alertSilenceServicer := v1.NewAlertSilenceServicer(generateToken)
+	alertSilenceServicer := v1.NewAlertSilenceServicer(cacheStore, generateToken)
 	alertSilenceController := controller.NewAlertSilenceController(alertSilenceServicer)
 	dataTunnelServicer := v1.NewDataTunnelService(cacheStore)
 	agentCommandController := controller.NewAgentCommandController(dataTunnelServicer)
@@ -103,6 +103,7 @@ func InitApplication() (*app.Application, func(), error) {
 	}
 	alertInhibiter := v1.NewalertInhibit(v, cacheStore)
 	cacheAlertNameOptioner := v1.NewCacheAlertNameOptioner(cacheStore)
+	cleanStaleCacher := v1.NewCleanStaleCacher(cacheStore)
 	string2 := NewGRPCBindAddress()
 	tunnelHandler := handler.NewTunnelHandler(dataTunnelServicer)
 	grpcServer, err := server2.NewGRPCServer(string2, tunnelHandler)
@@ -111,7 +112,7 @@ func InitApplication() (*app.Application, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter, cacheAlertNameOptioner, grpcServer)
+	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter, cacheAlertNameOptioner, cleanStaleCacher, grpcServer)
 	return application, func() {
 		cleanup2()
 		cleanup()
