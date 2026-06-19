@@ -10,8 +10,13 @@ type UserLoginRequest struct {
 }
 
 type UserLoginResponse struct {
-	User  *model.User `json:"user"`
-	Token string      `json:"token"`
+	User         *model.User `json:"user"`
+	Token        string      `json:"token"`
+	RefreshToken string      `json:"refreshToken,omitempty"`
+}
+
+type RefreshTokenRequest struct {
+	RefreshToken string `json:"refreshToken" binding:"required"`
 }
 
 type UserCreateRequest struct {
@@ -86,10 +91,15 @@ type OAuthActivateRequest struct {
 	ConfirmPassword string `json:"confirmPassword"`
 }
 
-func NewUserLoginResponse(user *model.User, token string) *UserLoginResponse {
+func NewUserLoginResponse(user *model.User, token string, refreshToken ...string) *UserLoginResponse {
+	rt := ""
+	if len(refreshToken) > 0 {
+		rt = refreshToken[0]
+	}
 	return &UserLoginResponse{
-		User:  user,
-		Token: token,
+		User:         user,
+		Token:        token,
+		RefreshToken: rt,
 	}
 }
 

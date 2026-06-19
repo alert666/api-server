@@ -213,9 +213,11 @@ func (receiver *alertChannelService) ListChannel(ctx context.Context, req *types
 	)
 
 	if req.Name != "" {
-		sql = sql.Where(aChannelStore.Name.Like("%" + req.Name + "%"))
-	} else if req.Type != "" {
-		sql.Where(aChannelStore.Type.Like("%" + req.Type + "%"))
+		sql = sql.Where(aChannelStore.Name.Like(req.Name + "%"))
+	}
+
+	if req.Type != "" {
+		sql = sql.Where(aChannelStore.Type.Eq(req.Type))
 	}
 
 	if total, err = sql.Count(); err != nil {

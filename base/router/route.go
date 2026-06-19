@@ -1,4 +1,4 @@
-﻿package router
+package router
 
 import (
 	"time"
@@ -117,6 +117,7 @@ func (r *Router) registerUserRouter(apiGroup *gin.RouterGroup) {
 	userGroup := apiGroup.Group("/user")
 	{
 		userGroup.POST("/login", r.userRouter.UserLoginController)
+		userGroup.POST("/refresh", r.userRouter.RefreshTokenController)
 		userGroup.Use(r.middleware.Auth())
 		userGroup.POST("/logout", r.userRouter.UserLogoutController)
 		userGroup.GET("/info", r.userRouter.UserInfoController)

@@ -9,27 +9,32 @@ import (
 	"github.com/alert666/api-server/base/conf"
 	"github.com/alert666/api-server/base/constant"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 type JwtInterface interface {
 	GenerateToken(id int64, userName string) (token string, err error)
+	GenerateRefreshToken(userID int64, userName string, tokenVersion int64) (refreshToken string, err error)
 	ParseToken(tokenString string) (jwtClaims *JwtClaims, err error)
 	GetUser(ctx context.Context) (*JwtClaims, error)
-	GetExpire() time.Duration
+	GetAccessExpire() time.Duration
+	GetRefreshExpire() time.Duration
 }
 
 type GenerateToken struct {
-	secret string
-	issuer string
-	expire time.Duration
+	secret        string
+	issuer        string
+	expire        time.Duration
+	refreshExpire time.Duration
 }
 
 func NewGenerateToken() (*GenerateToken, error) {
 	var (
-		secret string
-		expire time.Duration
-		issuer string
-		err    error
+		secret        string
+		expire        time.Duration
+		refreshExpire time.Duration
+		issuer        string
+		err           error
 	)
 	if secret, err = conf.GetJwtSecret(); err != nil {
 		return nil, err
@@ -37,13 +42,18 @@ func NewGenerateToken() (*GenerateToken, error) {
 
 	issuer = conf.GetJwtIssuer()
 
-	if expire, err = conf.GetJwtExpirationTime(); err != nil {
+	if expire, err = conf.GetJwtAccessExpirationTime(); err != nil {
+		return nil, err
+	}
+
+	if refreshExpire, err = conf.GetJwtRefreshExpirationTime(); err != nil {
 		return nil, err
 	}
 	return &GenerateToken{
-		secret: secret,
-		expire: expire,
-		issuer: issuer,
+		secret:        secret,
+		expire:        expire,
+		refreshExpire: refreshExpire,
+		issuer:        issuer,
 	}, nil
 }
 
@@ -77,6 +87,11 @@ func (j *GenerateToken) GenerateToken(id int64, userName string) (token string, 
 	return token, nil
 }
 
+// GenerateRefreshToken generates an opaque refresh token (UUID).
+func (j *GenerateToken) GenerateRefreshToken(userID int64, userName string, tokenVersion int64) (refreshToken string, err error) {
+	return uuid.New().String(), nil
+}
+
 // ParseToken 解析token
 func (j *GenerateToken) ParseToken(tokenString string) (jwtClaims *JwtClaims, err error) {
 	jwtClaims = &JwtClaims{}
@@ -104,6 +119,10 @@ func (j *GenerateToken) GetUser(ctx context.Context) (*JwtClaims, error) {
 	return jwtClaims, nil
 }
 
-func (j *GenerateToken) GetExpire() (expire time.Duration) {
+func (j *GenerateToken) GetAccessExpire() (expire time.Duration) {
 	return j.expire
+}
+
+func (j *GenerateToken) GetRefreshExpire() (expire time.Duration) {
+	return j.refreshExpire
 }

@@ -1,4 +1,4 @@
-﻿package controller
+package controller
 
 import (
 	"context"
@@ -28,6 +28,7 @@ type UserController interface {
 	OAuth2CallbackController(c *gin.Context)
 	OAuth2ProviderController(c *gin.Context)
 	OAuth2ActivateController(c *gin.Context)
+	RefreshTokenController(c *gin.Context)
 	GetUserOption(c *gin.Context)
 }
 
@@ -63,7 +64,7 @@ func (receiver *UserControllerImpl) UserLoginController(c *gin.Context) {
 // @Success 200 {object} types.Response "注销成功"
 // @Router /api/v1/user/logout [post]
 func (receiver *UserControllerImpl) UserLogoutController(c *gin.Context) {
-	bind.ResponseNoBind(c, receiver.userServicer.Logout)
+	bind.ResponseOnlySuccess(c, receiver.userServicer.Logout, bind.BindTypeJson)
 }
 
 // UserCreateController 用户创建
@@ -267,6 +268,20 @@ func (receiver *UserControllerImpl) OAuth2ActivateController(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} types.Response{} "查询成功"
 // @Router /api/v1/user/options [get]
+
+// RefreshTokenController 刷新 Token
+// @Summary 刷新 Token
+// @Description 使用 refresh token 换取新的 access token 和 refresh token
+// @Tags 用户管理
+// @Accept json
+// @Produce json
+// @Param data body types.RefreshTokenRequest true "刷新请求参数"
+// @Success 200 {object} types.Response{} "刷新成功"
+// @Router /api/v1/user/refresh [post]
+func (receiver *UserControllerImpl) RefreshTokenController(c *gin.Context) {
+	bind.ResponseWithData(c, receiver.userServicer.RefreshToken, bind.BindTypeJson)
+}
+
 func (receiver *UserControllerImpl) GetUserOption(c *gin.Context) {
 	bind.ResponseWithDataNoBind(c, receiver.userServicer.GetUserOptions)
 }

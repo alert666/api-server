@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
@@ -38,7 +39,8 @@ type OAuthServicer interface {
 
 type GeneralUserServicer interface {
 	Login(ctx context.Context, req *types.UserLoginRequest) (*types.UserLoginResponse, error)
-	Logout(ctx context.Context) error
+	RefreshToken(ctx context.Context, req *types.RefreshTokenRequest) (*types.UserLoginResponse, error)
+	Logout(ctx context.Context, req *types.RefreshTokenRequest) error
 	Info(ctx context.Context) (*model.User, error)
 	CreateUser(ctx context.Context, req *types.UserCreateRequest) error
 	UpdateUserByAdmin(ctx context.Context, req *types.UserUpdateAdminRequest) error
@@ -88,7 +90,7 @@ func (receiver *UserService) Login(ctx context.Context, req *types.UserLoginRequ
 		return nil, err
 	}
 
-	tokenExpire := receiver.jwt.GetExpire()
+	tokenExpire := receiver.jwt.GetAccessExpire()
 	if len(user.Roles) == 0 {
 		if err := receiver.cacheImpl.SetSet(ctx, store.RoleType, user.ID, []any{constant.EmptyRoleSentinel}, &tokenExpire); err != nil {
 			log.WithRequestID(ctx).
@@ -105,14 +107,34 @@ func (receiver *UserService) Login(ctx context.Context, req *types.UserLoginRequ
 		}
 	}
 
-	return types.NewUserLoginResponse(user, token), nil
+	// Generate refresh token
+	refreshToken, err := receiver.jwt.GenerateRefreshToken(user.ID, user.Name, user.TokenVersion)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshExpire := receiver.jwt.GetRefreshExpire()
+	refreshValue := fmt.Sprintf("%d:%s:%d", user.ID, user.Name, user.TokenVersion)
+	if err := receiver.cacheImpl.SetObject(ctx, store.RefreshTokenType, refreshToken, refreshValue, refreshExpire); err != nil {
+		log.WithRequestID(ctx).Error("login cache refresh token error", zap.Int64("userID", user.ID), zap.Error(err))
+		return nil, err
+	}
+
+	return types.NewUserLoginResponse(user, token, refreshToken), nil
 }
 
-func (receiver *UserService) Logout(ctx context.Context) error {
+func (receiver *UserService) Logout(ctx context.Context, req *types.RefreshTokenRequest) error {
 	mc, err := receiver.jwt.GetUser(ctx)
 	if err != nil {
 		return err
 	}
+
+	if req.RefreshToken != "" {
+		if err := receiver.cacheImpl.DelKey(ctx, store.RefreshTokenType, req.RefreshToken); err != nil {
+			log.WithRequestID(ctx).Warn("failed to delete refresh token", zap.Error(err))
+		}
+	}
+
 	return receiver.cacheImpl.DelKey(ctx, store.RoleType, mc.UserID)
 }
 
@@ -330,6 +352,7 @@ func (receiver *UserService) updateUser(ctx context.Context, user *model.User, r
 		}
 	}
 
+	tokenVersionChanged := false
 	if req.UserUpdateSelfRequest != nil {
 
 		user.Name = req.UserUpdateSelfRequest.Name
@@ -344,13 +367,20 @@ func (receiver *UserService) updateUser(ctx context.Context, user *model.User, r
 				return err
 			}
 			user.Password = hashedPassword
+			tokenVersionChanged = true
 		}
 	}
 
 	if req.Status != 0 {
 		user.Status = &req.Status
+		if req.Status == model.UserStatusDisabled {
+			tokenVersionChanged = true
+		}
 	}
 
+	if tokenVersionChanged {
+		user.TokenVersion++
+	}
 	if _, err := userStore.WithContext(ctx).Where(userStore.ID.Eq(user.ID)).Updates(user); err != nil {
 		return err
 	}
@@ -412,6 +442,64 @@ func (receiver *UserService) updateRole(ctx context.Context, req *types.UserUpda
 }
 
 // hashPassword 对密码进行 Bcrypt 哈希
+func (receiver *UserService) RefreshToken(ctx context.Context, req *types.RefreshTokenRequest) (*types.UserLoginResponse, error) {
+	if req.RefreshToken == "" {
+		return nil, constant.ErrRefreshInvalid
+	}
+
+	var cachedValue string
+	found, err := receiver.cacheImpl.GetObject(ctx, store.RefreshTokenType, req.RefreshToken, &cachedValue)
+	if err != nil {
+		return nil, err
+	}
+	if !found {
+		return nil, constant.ErrRefreshExpired
+	}
+
+	parts := strings.SplitN(cachedValue, ":", 3)
+	if len(parts) != 3 {
+		return nil, constant.ErrRefreshInvalid
+	}
+	userID, err := strconv.ParseInt(parts[0], 10, 64)
+	if err != nil {
+		return nil, constant.ErrRefreshInvalid
+	}
+	_ = parts[1]
+	cachedVersion, err := strconv.ParseInt(parts[2], 10, 64)
+	if err != nil {
+		return nil, constant.ErrRefreshInvalid
+	}
+
+	user, err := userStore.WithContext(ctx).Where(userStore.ID.Eq(userID)).First()
+	if err != nil {
+		return nil, constant.ErrRefreshExpired
+	}
+
+	if user.TokenVersion != cachedVersion {
+		return nil, constant.ErrRefreshRevoked
+	}
+
+	if err := receiver.cacheImpl.DelKey(ctx, store.RefreshTokenType, req.RefreshToken); err != nil {
+		log.WithRequestID(ctx).Warn("failed to delete old refresh token", zap.Error(err))
+	}
+
+	newToken, err := receiver.jwt.GenerateToken(user.ID, user.Name)
+	if err != nil {
+		return nil, err
+	}
+	newRefreshToken, err := receiver.jwt.GenerateRefreshToken(user.ID, user.Name, user.TokenVersion)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshExpire := receiver.jwt.GetRefreshExpire()
+	newRefreshValue := fmt.Sprintf("%d:%s:%d", user.ID, user.Name, user.TokenVersion)
+	if err := receiver.cacheImpl.SetObject(ctx, store.RefreshTokenType, newRefreshToken, newRefreshValue, refreshExpire); err != nil {
+		log.WithRequestID(ctx).Error("cache new refresh token error", zap.Int64("userID", user.ID), zap.Error(err))
+	}
+
+	return types.NewUserLoginResponse(user, newToken, newRefreshToken), nil
+}
 func (receiver *UserService) hashPassword(password string) (string, error) {
 	// bcrypt.DefaultCost 是一个合理的默认值，如果需要更高的安全性可以增加
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -462,6 +550,10 @@ func (receiver *UserService) OAuth2Callback(ctx context.Context, req *types.OAut
 		log.WithRequestID(ctx).Info("oauth2 user not activated", zap.Int64("userID", oauth2User.User.ID))
 		return &types.UserLoginResponse{User: oauth2User.User, Token: ""}, nil
 	}
+	if *oauth2User.User.Status == model.UserStatusDisabled {
+		log.WithRequestID(ctx).Warn("oauth2 login rejected: user is disabled", zap.Int64("userID", oauth2User.User.ID))
+		return nil, errors.New("user account is disabled")
+	}
 
 	token, err := receiver.jwt.GenerateToken(oauth2User.User.ID, oauth2User.User.Name)
 	if err != nil {
@@ -489,7 +581,18 @@ func (receiver *UserService) OAuth2Callback(ctx context.Context, req *types.OAut
 		}
 	}
 
-	return &types.UserLoginResponse{User: oauth2User.User, Token: token}, nil
+	// Generate refresh token
+	refreshToken, err := receiver.jwt.GenerateRefreshToken(oauth2User.User.ID, oauth2User.User.Name, oauth2User.User.TokenVersion)
+	if err != nil {
+		return nil, err
+	}
+	refreshExpire := receiver.jwt.GetRefreshExpire()
+	refreshValue := fmt.Sprintf("%d:%s:%d", oauth2User.User.ID, oauth2User.User.Name, oauth2User.User.TokenVersion)
+	if err := receiver.cacheImpl.SetObject(ctx, store.RefreshTokenType, refreshToken, refreshValue, refreshExpire); err != nil {
+		log.WithRequestID(ctx).Error("oauth2 callback cache refresh token error", zap.Int64("userID", oauth2User.User.ID), zap.Error(err))
+		return nil, err
+	}
+	return types.NewUserLoginResponse(oauth2User.User, token, refreshToken), nil
 }
 
 // oauth2GetUser 获取或创建 OAuth2 用户及对应的系统用户
@@ -605,6 +708,7 @@ func (receiver *UserService) OAuth2Activate(ctx context.Context, req *types.OAut
 
 	user.Password = password
 	user.Status = helper.Int(model.UserStatusActive)
+	user.TokenVersion++
 
 	if _, err := sql.Updates(user); err != nil {
 		return nil, fmt.Errorf("update user error: %v", err)
@@ -614,7 +718,18 @@ func (receiver *UserService) OAuth2Activate(ctx context.Context, req *types.OAut
 	if err != nil {
 		return nil, err
 	}
-	return types.NewUserLoginResponse(user, token), nil
+	// Generate refresh token
+	refreshToken, err := receiver.jwt.GenerateRefreshToken(user.ID, user.Name, user.TokenVersion)
+	if err != nil {
+		return nil, err
+	}
+	refreshExpire := receiver.jwt.GetRefreshExpire()
+	refreshValue := fmt.Sprintf("%d:%s:%d", user.ID, user.Name, user.TokenVersion)
+	if err := receiver.cacheImpl.SetObject(ctx, store.RefreshTokenType, refreshToken, refreshValue, refreshExpire); err != nil {
+		log.WithRequestID(ctx).Error("oauth2 activate cache refresh token error", zap.Int64("userID", user.ID), zap.Error(err))
+		return nil, err
+	}
+	return types.NewUserLoginResponse(user, token, refreshToken), nil
 }
 
 func (receiver *UserService) GetUserOptions(ctx context.Context) ([]types.Option, error) {

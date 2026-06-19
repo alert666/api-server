@@ -55,7 +55,7 @@ api-server 是一个告警管理后端服务，配合[前端 UI](https://github.
 ### 平台能力
 
 - **多租户（集群）管理** — 租户粒度的告警隔离，每个租户对应一个集群
-- **用户管理** — 用户 CRUD，JWT 认证
+- **用户管理** — 用户 CRUD，JWT 认证（支持 Refresh Token 续期与登出失效）
 - **角色管理** — 角色定义与分配
 - **接口权限管理** — 基于 Casbin 的 RBAC 细粒度 API 访问控制
 - **OAuth2 登录** — 支持飞书、Keycloak 等多种 OAuth2 Provider
@@ -195,7 +195,8 @@ redis:
 jwt:
   issuer: api-server          # 签发者（默认 api-server）
   secret: "your-secret-key"   # 签名密钥（必填）
-  expireTime: 1h              # Token 过期时间（默认 1h）
+  accessExpireTime: 30h       # Token 过期时间（默认 30h）
+  refreshExpireTime: 168h     # Refresh Token 过期时间（默认 168h，7 天）
 
 oauth2:
   enable: true                # 是否启用 OAuth2
@@ -256,7 +257,7 @@ route:
     authorization:
       type: Bearer
       credentials: '<your-global-token>'
-      
+
 receivers:
   - name: 'api-server'
     webhook_configs:
@@ -286,6 +287,7 @@ http://localhost:8080/swagger/index.html
 | 告警模板         | `/api/v1/alertTemplate` | 通知模板管理      |
 | 集群（租户）管理 | `/api/v1/cluster`       | 多租户管理        |
 | 用户管理         | `/api/v1/user`          | 用户 CRUD         |
+| Token 刷新       | `/api/v1/user/refresh`  | 刷新 Access Token |
 | 角色管理         | `/api/v1/role`          | 角色 CRUD         |
 | 接口权限         | `/api/v1/api`           | API 权限管理      |
 | Agent 命令       | `/api/v1/agentCommand`  | 下发命令到 Agent  |

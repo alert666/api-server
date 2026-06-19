@@ -34,6 +34,7 @@ const (
 	AgentClusterType  CacheType = "agentCluster"
 	AgentServerType   CacheType = "agentServer"
 	AlertSilenceType  CacheType = "alertSilence"
+	RefreshTokenType  CacheType = "refreshToken"
 )
 
 type CacheStorer interface {

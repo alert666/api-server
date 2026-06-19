@@ -1,4 +1,4 @@
-﻿package conf
+package conf
 
 import (
 	"fmt"
@@ -12,13 +12,14 @@ import (
 )
 
 const (
-	defaultLoglevel        = "info"
-	defaultLogEncoder      = "console"
-	defaultServerBind      = "0.0.0.0:8080"
-	defaultServerTimeZone  = "Asia/Shanghai"
-	defaultJwtIssuer       = "api-server"
-	defaultJwtExpireTime   = "1h"
-	defaultRedisExpireTime = "1h"
+	defaultLoglevel             = "info"
+	defaultLogEncoder           = "console"
+	defaultServerBind           = "0.0.0.0:8080"
+	defaultServerTimeZone       = "Asia/Shanghai"
+	defaultJwtIssuer            = "api-server"
+	defaultJwtAccessExpireTime  = "15m"
+	defaultJwtRefreshExpireTime = "168h"
+	defaultRedisExpireTime      = "1h"
 )
 
 // 加载配置
@@ -124,12 +125,24 @@ func GetJwtIssuer() string {
 	return issuer
 }
 
-func GetJwtExpirationTime() (time.Duration, error) {
-	expireTime := viper.GetDuration("jwt.expireTime")
+func GetJwtAccessExpirationTime() (time.Duration, error) {
+	expireTime := viper.GetDuration("jwt.accessExpireTime")
 	if expireTime == 0 {
-		expire, err := time.ParseDuration(defaultJwtExpireTime)
+		expire, err := time.ParseDuration(defaultJwtAccessExpireTime)
 		if err != nil {
-			return 0, fmt.Errorf("failed to parser jwt.expireTime err: %v", err)
+			return 0, fmt.Errorf("failed to parse jwt.accessExpireTime err: %v", err)
+		}
+		return expire, nil
+	}
+	return expireTime, nil
+}
+
+func GetJwtRefreshExpirationTime() (time.Duration, error) {
+	expireTime := viper.GetDuration("jwt.refreshExpireTime")
+	if expireTime == 0 {
+		expire, err := time.ParseDuration(defaultJwtRefreshExpireTime)
+		if err != nil {
+			return 0, fmt.Errorf("failed to parse jwt.refreshExpireTime err: %v", err)
 		}
 		return expire, nil
 	}
