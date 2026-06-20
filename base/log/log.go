@@ -1,4 +1,4 @@
-package log
+﻿package log
 
 import (
 	"context"
@@ -37,6 +37,7 @@ func NewLogger() {
 		CallerKey:      "caller",
 		MessageKey:     "msg",
 		StacktraceKey:  "stacktrace",
+		EncodeLevel:    zapcore.CapitalLevelEncoder,
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeTime: func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
@@ -76,7 +77,7 @@ func WithRequestID(ctx context.Context) *zap.Logger {
 	return zap.L().With(zap.String("request-id", GetRequestIDFromContext(ctx)))
 }
 
-// GetRequestIDFromContext 从上下文中获取请求 ID
+// GetRequestIDFromContext 浠庝笂涓嬫枃涓幏鍙栬姹?ID
 func GetRequestIDFromContext(ctx context.Context) string {
 	if reqID, ok := ctx.Value(constant.RequestIDContextKey).(string); ok {
 		return reqID
