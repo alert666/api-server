@@ -22,7 +22,7 @@ func NewDB() (*gorm.DB, func(), error) {
 	if viper.GetBool("mysql.debug") || conf.GetLogLevel() == "debug" {
 		// dbLogger = newGormLogger(zap.L())
 		dbLogger = logger.Default.LogMode(logger.Info)
-		zap.S().Info("enable debug mode on the database")
+		zap.L().Info("enable debug mode on the database")
 	}
 
 	dbInstance, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
@@ -49,7 +49,7 @@ func NewDB() (*gorm.DB, func(), error) {
 	sqlDB.SetMaxIdleConns(conf.GetMysqlMaxIdleConns())
 	sqlDB.SetConnMaxLifetime(conf.GetMysqlMaxLifetime())
 
-	zap.S().Info("db connect success")
+	zap.L().Info("db connect success")
 	store.SetDefault(dbInstance)
 	return dbInstance, func() { _ = sqlDB.Close() }, nil
 }

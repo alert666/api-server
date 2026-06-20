@@ -49,6 +49,6 @@ func NewEnforcer(db *gorm.DB) (enforcer *casbin.Enforcer, err error) {
 		return nil, fmt.Errorf("failed to load policy, %w", err)
 	}
 
-	zap.S().Info("casbin init success")
+	zap.L().Info("casbin init success")
 	return enforcer, nil
 }

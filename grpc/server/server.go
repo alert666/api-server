@@ -103,7 +103,7 @@ func NewGRPCServer(addr string, tunnelHandler *handler.TunnelHandler) (*GRPCServ
 }
 
 func (s *GRPCServer) Start() error {
-	zap.S().Infof("grpc server listening on %s", s.addr)
+	zap.L().Info("grpc server listening", zap.String("addr", s.addr))
 	return s.server.Serve(s.listener)
 }
 

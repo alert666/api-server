@@ -286,7 +286,7 @@ func (app *Application) Stop() {
 		go func(s server.ServerInterface) {
 			defer app.wg.Done()
 			if err := s.Stop(); err != nil {
-				zap.S().Errorf("stop server error %v", err)
+				zap.L().Error("stop server error", zap.Error(err))
 			}
 		}(s)
 	}

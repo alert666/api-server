@@ -118,7 +118,7 @@ func GetJwtSecret() (string, error) {
 func GetJwtIssuer() string {
 	issuer := viper.GetString("jwt.issuer")
 	if issuer == "" {
-		zap.S().Infof("jwt.issuer is empty, set default jwt.issuer: %s", defaultJwtIssuer)
+		zap.L().Info("jwt.issuer is empty, set default", zap.String("jwt.issuer", defaultJwtIssuer))
 		return defaultJwtIssuer
 	}
 	return issuer
@@ -271,7 +271,7 @@ func GetRedisExpireTime() (time.Duration, error) {
 		if err != nil {
 			return 0, fmt.Errorf("failed to parser defaultRedisExpireTime err: %v", err)
 		}
-		zap.S().Infof("redis.expireTime is empty, set default expireTime: %s", defaultRedisExpireTime)
+		zap.L().Info("redis.expireTime is empty, set default", zap.String("expireTime", defaultRedisExpireTime))
 		return duration, nil
 	}
 
@@ -300,7 +300,7 @@ func GetAlertTenantKey() string {
 func GetAlertReceiveToken() string {
 	token := viper.GetString("alert.receiveToken")
 	if token == "" {
-		zap.S().Warn("alert.receiveToken is empty, alert receiving endpoint is unprotected")
+		zap.L().Warn("alert.receiveToken is empty, alert receiving endpoint is unprotected")
 	}
 	return token
 }

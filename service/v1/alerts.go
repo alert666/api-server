@@ -1,4 +1,4 @@
-package v1
+﻿package v1
 
 import (
 	"context"
@@ -107,7 +107,7 @@ func (receiver *alertsService) getTemplate(ctx context.Context, templateName str
 	var template model.AlertTemplate
 	found, err := receiver.cacheImpl.GetObject(ctx, store.AlertTemplateType, templateName, &template)
 	if err != nil {
-		zap.L().Error("get template from cache failed", zap.String("name", templateName), zap.Error(err))
+		log.WithRequestID(ctx).Error("get template from cache failed", zap.String("name", templateName), zap.Error(err))
 		return nil, err
 	}
 
@@ -235,7 +235,7 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 	var found bool
 	found, err = receiver.cacheImpl.GetObject(ctx, store.AlertSilenceType, tenantValue, &activeSilences)
 	if err != nil {
-		zap.L().Error("获取静默规则缓存失败", zap.Error(err))
+		log.WithRequestID(ctx).Error("获取静默规则缓存失败", zap.Error(err))
 	}
 
 	if !found || err != nil {
@@ -247,10 +247,10 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 			Where(aSilenceStore.StartsAt.Lte(now)).
 			Find(&activeSilences).Error
 		if err != nil {
-			zap.L().Error("查询静默规则失败", zap.Error(err))
+			log.WithRequestID(ctx).Error("查询静默规则失败", zap.Error(err))
 		} else {
 			if err := receiver.cacheImpl.SetObject(ctx, store.AlertSilenceType, tenantValue, activeSilences, 1*time.Hour); err != nil {
-				zap.L().Error("写入静默规则缓存失败", zap.Error(err))
+				log.WithRequestID(ctx).Error("写入静默规则缓存失败", zap.Error(err))
 			}
 		}
 	}
@@ -272,7 +272,7 @@ func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tena
 			alerts[i].IsSilenced = true
 			alerts[i].SilenceID = silenceID
 			silencedAlertMap[key] = alerts[i]
-			zap.L().Info("告警被静默", zap.String("fingerprint", alerts[i].Fingerprint), zap.Int("silenceID", silenceID))
+			log.WithRequestID(ctx).Info("告警被静默", zap.String("fingerprint", alerts[i].Fingerprint), zap.Int("silenceID", silenceID))
 
 			// 处理 time 类型默认值,防止数据库保存失败
 			if alerts[i].Status == constant.AlertStatusFiring {
