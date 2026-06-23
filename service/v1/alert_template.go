@@ -165,7 +165,8 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 		}
 	}
 
-	if err := aTemlpateStore.WithContext(ctx).Save(obj); err != nil {
+	// 后半段修改为：
+	if _, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.ID.Eq(obj.ID)).Updates(obj); err != nil {
 		return err
 	}
 	// 更新缓存
