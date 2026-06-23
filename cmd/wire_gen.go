@@ -71,7 +71,12 @@ func InitApplication() (*app.Application, func(), error) {
 	clusterController := controller.NewClusterController(tenantServicer)
 	feishuer := feishu.NewFeiShu()
 	emailer := email.NewEmailSender()
-	alertsServicer := v1.NewAlertsServicer(cacheStore, feishuer, emailer)
+	alertsServicer, err := v1.NewAlertsServicer(cacheStore, feishuer, emailer)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
 	alertManagerController := controller.NewAlertManagerController(alertsServicer)
 	authChecker := casbin.NewAuthChecker(enforcer)
 	middlewareMiddleware := middleware.NewMiddleware(generateToken, authChecker, cacheStore)

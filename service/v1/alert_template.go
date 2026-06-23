@@ -1,7 +1,6 @@
 ﻿package v1
 
 import (
-	"encoding/json"
 	"context"
 	"encoding/base64"
 	"errors"
@@ -73,15 +72,11 @@ func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, re
 		}
 	}
 
-	receiveIdBytes, err := json.Marshal(req.ReceiveId)
-	if err != nil {
-		return fmt.Errorf("序列化 ReceiveId 失败, %s", err)
-	}
 	saveObj := &model.AlertTemplate{
 		Name:                req.Name,
 		AlertChannelID:      req.AlertChannelID,
 		ReceiveIdType:       req.ReceiveIdType,
-		ReceiveId:           string(receiveIdBytes),
+		ReceiveId:           req.ReceiveId,
 		Description:         req.Description,
 		Template:            string(templateBy),
 		AggregationTemplate: string(aggTemplateBy),
@@ -136,11 +131,7 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 	obj.Template = string(templateBy)
 	obj.AggregationTemplate = string(aggTemplateBy)
 	obj.ReceiveIdType = req.ReceiveIdType
-	receiveIdBytes, err := json.Marshal(req.ReceiveId)
-	if err != nil {
-		return fmt.Errorf("序列化 ReceiveId 失败, %s", err)
-	}
-	obj.ReceiveId = string(receiveIdBytes)
+	obj.ReceiveId = req.ReceiveId
 	obj.AlertChannelID = req.AlertChannelID
 	obj.Description = req.Description
 
@@ -223,18 +214,14 @@ func (receiver *alertTemplateService) CopyTemplate(ctx context.Context, req *typ
 		Name:                newName,
 		AlertChannelID:      src.AlertChannelID,
 		ReceiveIdType:       src.ReceiveIdType,
-		ReceiveId:           src.ReceiveId,
+		ReceiveId:           append([]string{}, src.ReceiveId...),
 		Description:         src.Description,
 		Template:            src.Template,
 		AggregationTemplate: src.AggregationTemplate,
 	}
 
 	// 校验接收者配置
-	var copyReceiveIds []string
-	if err := json.Unmarshal([]byte(src.ReceiveId), &copyReceiveIds); err != nil {
-		return nil, fmt.Errorf("反序列化 ReceiveId 失败, %s", err)
-	}
-	if err := helper.ValidateTemplateRecipient(src.ReceiveIdType, copyReceiveIds); err != nil {
+	if err := helper.ValidateTemplateRecipient(src.ReceiveIdType, src.ReceiveId); err != nil {
 		return nil, fmt.Errorf("接收者配置校验失败: %s", err)
 	}
 

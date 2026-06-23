@@ -19,8 +19,8 @@ import (
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
-	"github.com/alert666/api-server/pkg/email"
 	"github.com/alert666/api-server/pkg/alertinhibit"
+	"github.com/alert666/api-server/pkg/email"
 	"github.com/alert666/api-server/pkg/feishu"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/alert666/api-server/store"
@@ -410,8 +410,11 @@ func TestIsSilenced(t *testing.T) {
 	// 	Matchers:    matchersBy1,
 	// })
 
-	alertsServicer := v1.NewAlertsServicer(nil, nil, email.Emailer(nil))
-	err := conf.LoadConfig("../../config.yaml")
+	alertsServicer, err := v1.NewAlertsServicer(nil, nil, email.Emailer(nil))
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = conf.LoadConfig("../../config.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}

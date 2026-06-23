@@ -34,7 +34,7 @@ func newAlertTemplate(db *gorm.DB, opts ...gen.DOOption) alertTemplate {
 	_alertTemplate.DeletedAt = field.NewField(tableName, "deleted_at")
 	_alertTemplate.Name = field.NewString(tableName, "name")
 	_alertTemplate.ReceiveIdType = field.NewString(tableName, "receive_id_type")
-	_alertTemplate.ReceiveId = field.NewString(tableName, "receive_id")
+	_alertTemplate.ReceiveId = field.NewField(tableName, "receive_id")
 	_alertTemplate.AlertChannelID = field.NewInt(tableName, "alert_channel_id")
 	_alertTemplate.Description = field.NewString(tableName, "description")
 	_alertTemplate.Template = field.NewString(tableName, "template")
@@ -60,7 +60,7 @@ type alertTemplate struct {
 	DeletedAt           field.Field
 	Name                field.String // 模板名称
 	ReceiveIdType       field.String // 接收者类型(open_id/user_id/email/chat_id/空-Webhook类无需指定)
-	ReceiveId           field.String // 接收者ID列表(JSON 数组)
+	ReceiveId           field.Field  // 接收者ID列表(JSON 数组)
 	AlertChannelID      field.Int    // 关联的告警渠道ID
 	Description         field.String
 	Template            field.String // 单个告警(Markdown/HTML)模板
@@ -88,7 +88,7 @@ func (a *alertTemplate) updateTableName(table string) *alertTemplate {
 	a.DeletedAt = field.NewField(table, "deleted_at")
 	a.Name = field.NewString(table, "name")
 	a.ReceiveIdType = field.NewString(table, "receive_id_type")
-	a.ReceiveId = field.NewString(table, "receive_id")
+	a.ReceiveId = field.NewField(table, "receive_id")
 	a.AlertChannelID = field.NewInt(table, "alert_channel_id")
 	a.Description = field.NewString(table, "description")
 	a.Template = field.NewString(table, "template")
