@@ -12,6 +12,7 @@ import (
 // AlertReceiveReq 是 Alertmanager 发送的 Webhook 顶层 JSON 结构
 type AlertReceiveReq struct {
 	TemplateName      string            `form:"templateName" binding:"required"`
+	ExtraSync         string            `form:"extraSync"` // 将告警额外同步到某个或多个接收者
 	Receiver          string            `json:"receiver"`
 	Status            string            `json:"status"` // "firing" or "resolved"
 	Alerts            []*Alert          `json:"alerts"`
@@ -45,11 +46,11 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 
 	return &AlertReceiveReq{
 		TemplateName: "feishu",
-		Receiver:    "feishu-receiver",
-		Status:      "firing",
-		Version:     "4",
-		ExternalURL: "http://alertmanager.qqlx.net",
-		GroupKey:    "{}/{}:{alertname=\"NodeDiskUsageHigh\", cluster=\"local\"}",
+		Receiver:     "feishu-receiver",
+		Status:       "firing",
+		Version:      "4",
+		ExternalURL:  "http://alertmanager.qqlx.net",
+		GroupKey:     "{}/{}:{alertname=\"NodeDiskUsageHigh\", cluster=\"local\"}",
 		GroupLabels: map[string]string{
 			"alertname": "NodeDiskUsageHigh",
 			"cluster":   "local",

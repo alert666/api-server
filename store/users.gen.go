@@ -40,6 +40,7 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.Avatar = field.NewString(tableName, "avatar")
 	_user.Mobile = field.NewString(tableName, "mobile")
 	_user.Status = field.NewInt(tableName, "status")
+	_user.TokenVersion = field.NewInt64(tableName, "token_version")
 	_user.Oauth2User = userHasOneOauth2User{
 		db: db.Session(&gorm.Session{}),
 
@@ -117,20 +118,21 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 type user struct {
 	userDo
 
-	ALL        field.Asterisk
-	ID         field.Int64
-	CreatedAt  field.Time
-	UpdatedAt  field.Time
-	DeletedAt  field.Field
-	Name       field.String // 用户名称
-	NickName   field.String // 用户昵称
-	Department field.String // 用户部门
-	Email      field.String // 邮箱
-	Password   field.String // 用户密码
-	Avatar     field.String // 用户头像
-	Mobile     field.String // 用户手机号
-	Status     field.Int    // 用户状态,1可用,2禁用,3未激活
-	Oauth2User userHasOneOauth2User
+	ALL          field.Asterisk
+	ID           field.Int64
+	CreatedAt    field.Time
+	UpdatedAt    field.Time
+	DeletedAt    field.Field
+	Name         field.String // 用户名称
+	NickName     field.String // 用户昵称
+	Department   field.String // 用户部门
+	Email        field.String // 邮箱
+	Password     field.String // 用户密码
+	Avatar       field.String // 用户头像
+	Mobile       field.String // 用户手机号
+	Status       field.Int    // 用户状态,1可用,2禁用,3未激活
+	TokenVersion field.Int64
+	Oauth2User   userHasOneOauth2User
 
 	Roles userManyToManyRoles
 
@@ -161,6 +163,7 @@ func (u *user) updateTableName(table string) *user {
 	u.Avatar = field.NewString(table, "avatar")
 	u.Mobile = field.NewString(table, "mobile")
 	u.Status = field.NewInt(table, "status")
+	u.TokenVersion = field.NewInt64(table, "token_version")
 
 	u.fillFieldMap()
 
@@ -177,7 +180,7 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 14)
+	u.fieldMap = make(map[string]field.Expr, 15)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["created_at"] = u.CreatedAt
 	u.fieldMap["updated_at"] = u.UpdatedAt
@@ -190,6 +193,7 @@ func (u *user) fillFieldMap() {
 	u.fieldMap["avatar"] = u.Avatar
 	u.fieldMap["mobile"] = u.Mobile
 	u.fieldMap["status"] = u.Status
+	u.fieldMap["token_version"] = u.TokenVersion
 
 }
 

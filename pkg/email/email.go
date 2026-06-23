@@ -61,11 +61,8 @@ func (e *emailSender) Notify(ctx context.Context, notifyReq *types.NotifyReq) (*
 		cfg.SMTPPort = 25
 	}
 
-	// 2. 解析收件人列表
-	var receiveIds []string
-	if err := json.Unmarshal([]byte(alertTemplate.ReceiveId), &receiveIds); err != nil {
-		return nil, fmt.Errorf("解析收件人列表失败: %w", err)
-	}
+	// 2. 收件人列表
+	receiveIds := alertTemplate.ReceiveId
 	if len(receiveIds) == 0 {
 		return nil, fmt.Errorf("收件人列表为空")
 	}

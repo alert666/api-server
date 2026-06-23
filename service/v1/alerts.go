@@ -32,21 +32,28 @@ type CleanDuplicateFiringer interface {
 }
 
 type alertsService struct {
-	cacheImpl   store.CacheStorer
-	feishuImpl  feishu.Feishuer
-	emailImpl   email.Emailer
-	tenantKey   string
-	dbTenantKey string
+	cacheImpl     store.CacheStorer
+	feishuImpl    feishu.Feishuer
+	emailImpl     email.Emailer
+	tenantKey     string
+	dbTenantKey   string
+	extraSyncConf *conf.ExtraSyncConf
 }
 
-func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer, emailImpl email.Emailer) AlertsServicer {
-	return &alertsService{
-		emailImpl:   emailImpl,
-		cacheImpl:   cache,
-		feishuImpl:  feishuImpl,
-		tenantKey:   conf.GetAlertTenantKey(),
-		dbTenantKey: constant.AlertDBTenantKey,
+func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer, emailImpl email.Emailer) (AlertsServicer, error) {
+	e, err := conf.GetAlertExtraSync()
+	if err != nil {
+		return nil, err
 	}
+
+	return &alertsService{
+		emailImpl:     emailImpl,
+		cacheImpl:     cache,
+		feishuImpl:    feishuImpl,
+		tenantKey:     conf.GetAlertTenantKey(),
+		dbTenantKey:   constant.AlertDBTenantKey,
+		extraSyncConf: e,
+	}, nil
 }
 
 func NewCleanDuplicateFiringer(cache store.CacheStorer) CleanDuplicateFiringer {
@@ -63,10 +70,16 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 		log.WithRequestID(ctx).Error("获取告警模板失败", zap.Error(err))
 		return err
 	}
+	tenantValue := req.CommonLabels[receiver.tenantKey]
+	if tenantValue == "" {
+		log.WithRequestID(ctx).Warn("CommonLabels 中未找到 " + receiver.tenantKey + ", 回退到 Alerts[0].Labels 获取")
+		tenantValue = req.Alerts[0].Labels[receiver.tenantKey]
+	}
+
+	alertTemplate = receiver.appendReceiver(ctx, tenantValue, req.ExtraSync, alertTemplate)
 
 	alertChannel := alertTemplate.AlertChannel
 
-	tenantValue := req.Alerts[0].Labels[receiver.tenantKey]
 	notifyReq, err := receiver.aggregatedAlarmGrouping(ctx, tenantValue, req.Alerts)
 	if err != nil {
 		log.WithRequestID(ctx).Error("告警分组失败", zap.Error(err))
@@ -82,12 +95,12 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	case model.ChannelTypeEmail:
 		sendResult, err = receiver.emailImpl.Notify(ctx, notifyReq)
 		if err != nil {
-			return err
+			log.WithRequestID(ctx).Error("邮箱告警发送失败", zap.Error(err))
 		}
 	case model.ChannelTypeFeishuApp:
 		sendResult, err = receiver.feishuImpl.Notify(ctx, notifyReq)
 		if err != nil {
-			return err
+			log.WithRequestID(ctx).Error("飞书告警发送失败", zap.Error(err))
 		}
 	default:
 		return fmt.Errorf("不支持的发送类型")
@@ -871,4 +884,26 @@ func (receiver *alertsService) processSilencedAlerts(notifyReq *types.NotifyReq)
 		}
 	}
 	return
+}
+
+// appendReceiver 追加额外的接收者
+func (receiver *alertsService) appendReceiver(ctx context.Context, tenantValue, extraSync string, alertTemplate *model.AlertTemplate) *model.AlertTemplate {
+
+	if extraSync == "" || receiver.extraSyncConf == nil {
+		return alertTemplate
+	}
+
+	e, err := receiver.extraSyncConf.GetConfig(extraSync)
+	if err != nil {
+		log.WithRequestID(ctx).Warn(extraSync)
+		return alertTemplate
+	}
+
+	c, ok := e[tenantValue]
+	if !ok {
+		return alertTemplate
+	}
+
+	alertTemplate.ReceiveId = append(alertTemplate.ReceiveId, c...)
+	return alertTemplate
 }

@@ -1,12 +1,14 @@
 package conf
 
 import (
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
 	"path/filepath"
 	"time"
 
+	"github.com/alert666/api-server/base/constant"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
@@ -305,6 +307,34 @@ func GetAlertTenantKey() string {
 		return tenantKey
 	}
 	return "cluster"
+}
+
+type ExtraSyncConf map[string]map[string][]string
+
+func (e ExtraSyncConf) GetConfig(name string) (map[string][]string, error) {
+	if config, ok := e[name]; ok {
+		return config, nil
+	}
+	return nil, fmt.Errorf("name: %s, %w", name, constant.ErrExtraSyncConfNotFound)
+}
+
+// GetAlertExtraSync 获取额外同步配置
+func GetAlertExtraSync() (*ExtraSyncConf, error) {
+	extraSyncConf := viper.GetStringMap("alert.extraSync")
+	if extraSyncConf == nil {
+		return nil, nil
+	}
+	extraSyncConfBy, err := json.Marshal(&extraSyncConf)
+	if err != nil {
+		return nil, fmt.Errorf("alert.extraSync marshal failed, %w", err)
+	}
+
+	var e ExtraSyncConf
+	if err := json.Unmarshal(extraSyncConfBy, &e); err != nil {
+		return nil, fmt.Errorf("alert.extraSync umarshal failed, %w", err)
+	}
+
+	return &e, nil
 }
 
 // GetAlertReceiveToken 获取告警接收认证 token

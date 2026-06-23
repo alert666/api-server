@@ -300,9 +300,16 @@ func (receiver *FeishuCard) Build(ctx context.Context, receiveIdType, receiveId,
 
 	// 服务端错误处理
 	if !resp.Success() {
-		log.WithRequestID(ctx).Error("发起请求发送飞书卡片时服务发生错误", zap.String("logId", resp.RequestId()), zap.Error(err), zap.String("错误响应", larkcore.Prettify(resp.CodeError)))
-		reqID := log.GetRequestIDFromContext(ctx)
-		return fmt.Errorf("错误响应, 请查看日志, requestID: %v", reqID)
+		log.WithRequestID(ctx).Error(
+			"发起请求发送飞书卡片时服务发生错误",
+			zap.String("logId", resp.RequestId()),
+			zap.String("codeError", larkcore.Prettify(resp.CodeError)),
+			zap.Error(err),
+		)
+		reqID := fmt.Sprintf("requestID: %v", log.GetRequestIDFromContext(ctx))
+		codeError := fmt.Sprintf("codeError: %v", larkcore.Prettify(resp.CodeError))
+		sendErr := fmt.Sprintf("err: %v", err)
+		return fmt.Errorf("%v \n%v\n%v", reqID, codeError, sendErr)
 	}
 
 	// // 业务处理
@@ -374,10 +381,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 	// 聚合发送告警
 	if *notifyReq.AlertChannel.AggregationStatus == model.AggregationEnabled {
 		log.WithRequestID(ctx).Debug("聚合发送告警")
-		var receiveIds []string
-		if err := json.Unmarshal([]byte(notifyReq.AlertTemplate.ReceiveId), &receiveIds); err != nil {
-			return nil, fmt.Errorf("解析 ReceiveId 失败: %w", err)
-		}
+		receiveIds := notifyReq.AlertTemplate.ReceiveId
 		if len(alertArry.FiringAlertArry) > 0 {
 			newReq := notifyReq.AlertReceiveReq.DeepCopy()
 			newReq.Alerts = alertArry.FiringAlertArry
@@ -385,7 +389,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 				err = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, rid, newReq, notifyReq.AlertTemplate.AggregationTemplate, "red")
 				if err != nil {
 					firingErr = err
-					log.WithRequestID(ctx).Error("聚合发送告警卡片失败", zap.Error(err))
+					// log.WithRequestID(ctx).Error("聚合发送告警卡片失败", zap.String("templateName", notifyReq.AlertTemplate.Name), zap.String("reveiverID", rid), zap.Error(err))
 				}
 			}
 		}
@@ -397,7 +401,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 				err = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, rid, newReq, notifyReq.AlertTemplate.AggregationTemplate, "green")
 				if err != nil {
 					resolvedErr = err
-					log.WithRequestID(ctx).Error("聚合发送恢复卡片失败", zap.Error(err))
+					// log.WithRequestID(ctx).Error("聚合发送恢复卡片失败", zap.String("templateName", notifyReq.AlertTemplate.Name), zap.String("reveiverID", rid), zap.Error(err))
 				}
 			}
 		}
@@ -414,10 +418,7 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 	if *notifyReq.AlertChannel.AggregationStatus == model.AggregationDisabled {
 		// 非聚合发送
 		receiveIdType := notifyReq.AlertTemplate.ReceiveIdType
-		var receiveIds []string
-		if err := json.Unmarshal([]byte(notifyReq.AlertTemplate.ReceiveId), &receiveIds); err != nil {
-			return nil, fmt.Errorf("解析 ReceiveId 失败: %w", err)
-		}
+		receiveIds := notifyReq.AlertTemplate.ReceiveId
 		normalSendResult, err := receiver.singleSend(ctx, larkCli, receiveIdType, receiveIds, notifyReq.AlertTemplate, alertArry)
 		if err != nil {
 			return nil, err

@@ -14,7 +14,7 @@ type AlertTemplate struct {
 	DeletedAt           gorm.DeletedAt `gorm:"column:deleted_at;index" json:"-"`
 	Name                string         `gorm:"column:name;type:varchar(100);not null;index;comment:模板名称" json:"name"`
 	ReceiveIdType       string         `gorm:"column:receive_id_type;type:varchar(50);not null;default:'';comment:接收者类型(open_id/user_id/email/chat_id/空-Webhook类无需指定)" json:"receiveIdType"`
-	ReceiveId           string         `gorm:"column:receive_id;type:text;not null;default:'';comment:接收者ID列表(JSON 数组)" json:"receiveId"`
+	ReceiveId           []string       `gorm:"column:receive_id;type:varchar(2000);serializer:json;not null;default:'[]';comment:接收者ID列表(JSON 数组)" json:"receiveId"`
 	AlertChannelID      int            `gorm:"column:alert_channel_id;index;not null;comment:关联的告警渠道ID" json:"alertChannelID"`
 	AlertChannel        *AlertChannel  `gorm:"foreignKey:AlertChannelID" json:"alertChannel,omitempty"`
 	Description         string         `gorm:"column:description;type:text" json:"description"`
