@@ -104,13 +104,24 @@ func (s *DataTunnelService) refreshServerAddr() {
 
 		// Refresh server address TTL.
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-		_ = s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, conf.GetInternalAdvertiseAddr(), serverAddrTTL)
+		if err := s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, conf.GetInternalAdvertiseAddr(), serverAddrTTL); err != nil {
+			zap.L().Warn("refreshServerAddr failed",
+				zap.String("cacheType", string(store.AgentServerType)),
+				zap.String("serverID", s.serverID),
+			)
+		}
 		cancel()
 
 		// Refresh cluster set TTL for every active cluster.
 		for _, cid := range activeClusters {
 			ctx2, cancel2 := context.WithTimeout(context.Background(), 2*time.Second)
-			_ = s.cacheStore.SetSet(ctx2, store.AgentClusterType, cid, []any{s.serverID}, &serverAddrTTL)
+			if err := s.cacheStore.SetSet(ctx2, store.AgentClusterType, cid, []any{s.serverID}, &serverAddrTTL); err != nil {
+				zap.L().Warn("refreshServerAddr failed",
+					zap.String("cacheType", string(store.AgentClusterType)),
+					zap.String("serverID", s.serverID),
+					zap.String("clusterID", cid),
+				)
+			}
 			cancel2()
 		}
 	}
@@ -143,6 +154,7 @@ func (s *DataTunnelService) RegisterAgent(ctx context.Context, init *pb.Init) (c
 	})
 	s.mu.Unlock()
 
+	_ = s.cacheStore.DelKey(ctx, store.AgentClusterType, clusterID)
 	_ = s.cacheStore.SetSet(ctx, store.AgentClusterType, clusterID, []any{s.serverID}, &serverAddrTTL)
 	_ = s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, conf.GetInternalAdvertiseAddr(), serverAddrTTL)
 
