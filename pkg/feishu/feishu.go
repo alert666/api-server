@@ -386,10 +386,18 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 			newReq := notifyReq.AlertReceiveReq.DeepCopy()
 			newReq.Alerts = alertArry.FiringAlertArry
 			for _, rid := range receiveIds {
-				err = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, rid, newReq, notifyReq.AlertTemplate.AggregationTemplate, "red")
+				// 重写 at 人
+				_rid, _template := helper.OverrideAt(rid, notifyReq.AlertTemplate.AggregationTemplate)
+				err = receiver.renderAndSend(
+					ctx,
+					larkCli, notifyReq.AlertTemplate.ReceiveIdType,
+					_rid,
+					newReq,
+					_template,
+					"red",
+				)
 				if err != nil {
 					firingErr = err
-					// log.WithRequestID(ctx).Error("聚合发送告警卡片失败", zap.String("templateName", notifyReq.AlertTemplate.Name), zap.String("reveiverID", rid), zap.Error(err))
 				}
 			}
 		}
@@ -398,10 +406,19 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 			newReq := notifyReq.AlertReceiveReq.DeepCopy()
 			newReq.Alerts = alertArry.ResolvedAlertArry
 			for _, rid := range receiveIds {
-				err = receiver.renderAndSend(ctx, larkCli, notifyReq.AlertTemplate.ReceiveIdType, rid, newReq, notifyReq.AlertTemplate.AggregationTemplate, "green")
+				// 重写 at 人
+				_rid, _template := helper.OverrideAt(rid, notifyReq.AlertTemplate.AggregationTemplate)
+				err = receiver.renderAndSend(
+					ctx,
+					larkCli,
+					notifyReq.AlertTemplate.ReceiveIdType,
+					_rid,
+					newReq,
+					_template,
+					"green",
+				)
 				if err != nil {
 					resolvedErr = err
-					// log.WithRequestID(ctx).Error("聚合发送恢复卡片失败", zap.String("templateName", notifyReq.AlertTemplate.Name), zap.String("reveiverID", rid), zap.Error(err))
 				}
 			}
 		}
@@ -447,8 +464,11 @@ func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, re
 			if v.Status == constant.AlertStatusResolved {
 				color = "green"
 			}
-			err := receiver.renderAndSend(ctx, larkCli, receiveIdType, rid, v, alertTemplate.Template, color)
 
+			// 重写 at 人
+			_rid, _template := helper.OverrideAt(rid, alertTemplate.Template)
+
+			err := receiver.renderAndSend(ctx, larkCli, receiveIdType, _rid, v, _template, color)
 			results = append(results, &types.SingleSendResult{
 				Alert:   v,
 				SendErr: err,

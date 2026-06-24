@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"regexp"
 	"strings"
 	"text/template"
 	"time"
@@ -261,7 +262,6 @@ func ValidateYamlTemplate(ctx context.Context, aggregation bool, alertTpl string
 }
 
 // ValidateTemplateSyntax 仅校验模板语法（解析+渲染），不做 YAML 结构校验，用于 HTML/Markdown 模板（如邮件）
-// ValidateTemplateSyntax 仅校验模板语法（解析+渲染），不做 YAML 结构校验，用于 HTML/Markdown 模板（如邮件）
 func ValidateTemplateSyntax(ctx context.Context, aggregation bool, alertTpl string) error {
 	req := types.NewTestAlertReceiveReq()
 	tmpl, err := template.New("validate").Funcs(FuncMap).Parse(alertTpl)
@@ -287,4 +287,14 @@ func ValidateTemplateSyntax(ctx context.Context, aggregation bool, alertTpl stri
 		}
 	}
 	return nil
+}
+
+func OverrideAt(receive, template string) (receiveID, result string) {
+	rs := strings.Split(receive, ";;")
+	if len(rs) > 1 && rs[1] != "" {
+		re := regexp.MustCompile(`<at [^>]*></at>`)
+		result = re.ReplaceAllString(template, rs[1])
+		return rs[0], result
+	}
+	return rs[0], template
 }
