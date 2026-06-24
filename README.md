@@ -45,12 +45,12 @@ api-server 是一个告警管理后端服务，配合[前端 UI](https://github.
 
 ### 告警管理
 
-- **告警接收** — 作为 Alertmanager Webhook 接收方，接收并持久化告警数据
+- **告警接收** — 作为 Alertmanager Webhook 接收方，接收并持久化告警数据。支持通过 `extraSync` 参数为告警模板额外追加接收者，支持在飞书应用消息中覆盖 @ 提醒对象
 - **告警历史** — 追踪告警生命周期（firing → resolved），支持多维筛选与分页查询
 - **告警静默** — 按标签匹配创建静默规则，支持定时生效/失效，按租户统计活跃静默数
 - **告警抑制** — 自定义抑制规则引擎，通过定时任务自动清理被抑制的告警，弥补 Alertmanager 原生抑制在恢复场景下的状态不一致问题
 - **告警通道** — 管理通知渠道（飞书、邮件等），支持 CRUD
-- **告警模板** — 基于 Go template 的通知模板，支持一键复制模板
+- **告警模板** — 基于 Go template 的通知模板，支持一键复制模板。新增 remote 接收者类型，从远程 HTTP 接口动态获取接收者列表并按租户过滤去重，接收者配置格式为 `url;;token;;receiveType`
 
 ### 平台能力
 
@@ -223,6 +223,24 @@ alert:
   # receiveToken: "a8f5c2e3-9b1d-4f6e-8c2a-1d3e5f7a9b0c"
   tenantKey: cluster          # 租户标签键名，从告警 label 中提取（默认 cluster）
   repeatInterval: 4h          # 告警重复发送间隔
+  extraSync:
+    # alerts 接口 extraSync url 参数的值
+    # 注意事项: 当前告警发送的 TemplateName 绑定的 AlertChannel 必须有权限发送消息至这个接收者
+    # 假如: A TemplateName 绑定了 A AlertChannel, 那么 A AlertChannel 必须能发送至这个接收者
+    idc:
+      # 类型: map[string]string.
+
+      # key: alert.labels.["cluster"], 作用是将指定集群的告警发送至指定的接收这个.
+
+      # value: 发送给对应的接收的信息, 支持覆盖模板中的 at 用户
+      # 格式: receiveID;;<at id=xxx></>
+      # receiveID 如飞书群 id 或 邮箱发送时的接受者的邮箱.
+      # <at id=xxx></> 仅支持飞书卡片, 可选
+
+      # 效果: 当告警的 cluster 标签匹配 cn-henan-2 之后, 会额外发送告警至 oc_f63570b503b00bce9155bf92539b5dac 接收者。
+      cn-henan-2:
+        - oc_f63570b503b00bce9155bf92539b5dac
+        # - oc_f63570b503b00bce9155bf92539b5dac;;<at id=userID></at>
   inhibit_rules:              # 告警抑制规则列表（详见「告警抑制说明」）
     - source_matchers:
         - alertname = "节点磁盘空间不足"
