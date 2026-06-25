@@ -129,6 +129,9 @@ func expandLabelVars(desc string, labels map[string]string) string {
 			if key == "cluster" {
 				return store.GetTenantLabel(val)
 			}
+			if key == "cluster_name" {
+				return mapingKarmadaClusterName(val)
+			}
 			return val
 		}
 		return match
@@ -386,4 +389,33 @@ func GetRemoteReceive(ctx context.Context, tenantValue string, alertTemplate *mo
 		}
 	}
 	return nil
+}
+
+// mapingKarmadaClusterName 特殊适配
+// TODO 以后可以删除
+func mapingKarmadaClusterName(clusterName string) string {
+	switch clusterName {
+	case "fjsq":
+		return "cn-fujian-4"
+	case "henan-xc-p1":
+		return "cn-henan-2"
+	case "njdx-p1":
+		return "cn-jiangsu-2"
+	case "of-p1":
+		return "cn-xinjiang-1"
+	case "scws-p1":
+		return "cn-sichuan-3"
+	case "sh2q-p1":
+		return "cn-shanghai-2"
+	case "tj1q":
+		return "cn-tianjin-1"
+	case "zjsx-p1":
+		return "cn-zhejiang-4"
+	case "xinzhi-wuhu":
+		return "cn-anhui-1"
+	case "youfu":
+		return "cn-shanghai-1"
+	default:
+		return clusterName
+	}
 }
