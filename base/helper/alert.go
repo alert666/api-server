@@ -115,6 +115,26 @@ func GetAlertMapKey(fingerprint string, startAt time.Time) string {
 	return fmt.Sprintf("%s-%d", fingerprint, startAt.UnixNano())
 }
 
+// labelVarRe 匹配 $labels.xxx 模板变量
+var labelVarRe = regexp.MustCompile(`\$labels\.(\w+)`)
+
+// expandLabelVars 将描述中的 $labels.xxx 替换为 labels 中对应的值
+func expandLabelVars(desc string, labels map[string]string) string {
+	if !strings.Contains(desc, "$labels.") {
+		return desc
+	}
+	return labelVarRe.ReplaceAllStringFunc(desc, func(match string) string {
+		key := match[len("$labels."):]
+		if val, ok := labels[key]; ok {
+			if key == "cluster" {
+				return store.GetTenantLabel(val)
+			}
+			return val
+		}
+		return match
+	})
+}
+
 var FuncMap = template.FuncMap{
 	"timeFormat": func(t time.Time) string {
 		var cstZone = time.FixedZone("CST", 8*3600)
@@ -199,7 +219,7 @@ var FuncMap = template.FuncMap{
 			if desc == "" {
 				return "_无详细描述_"
 			}
-			// return fmt.Sprintf("```yaml\n%s\n```", strings.TrimSpace(desc))
+			desc = expandLabelVars(desc, d.Labels)
 			return strings.TrimSpace(desc)
 
 		case []*types.Alert:
@@ -216,7 +236,7 @@ var FuncMap = template.FuncMap{
 
 				sb.WriteString(fmt.Sprintf("<font color='red'>**告警实例 #%d**\n</font>", i+1))
 				desc := v.Annotations["description"]
-				// sb.WriteString("```yaml\n")
+				desc = expandLabelVars(desc, v.Labels)
 				sb.WriteString(strings.TrimSpace(desc))
 				sb.WriteString("\n\n")
 			}
