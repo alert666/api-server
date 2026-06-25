@@ -396,26 +396,26 @@ func GetRemoteReceive(ctx context.Context, tenantValue string, alertTemplate *mo
 func mapingKarmadaClusterName(clusterName string) string {
 	switch clusterName {
 	case "fjsq":
-		return "cn-fujian-4"
+		return "福建四区"
 	case "henan-xc-p1":
-		return "cn-henan-2"
+		return "河南二区"
 	case "njdx-p1":
-		return "cn-jiangsu-2"
+		return "江苏二区"
 	case "of-p1":
-		return "cn-xinjiang-1"
+		return "新疆一区"
 	case "scws-p1":
-		return "cn-sichuan-3"
+		return "四川三区"
 	case "sh2q-p1":
-		return "cn-shanghai-2"
+		return "上海二区"
 	case "tj1q":
-		return "cn-tianjin-1"
+		return "天津一区"
 	case "zjsx-p1":
-		return "cn-zhejiang-4"
+		return "浙江四区"
 	case "xinzhi-wuhu":
-		return "cn-anhui-1"
+		return "安徽一区"
 	case "youfu":
-		return "cn-shanghai-1"
+		return "上海一区"
 	default:
-		return clusterName
+		return store.GetTenantLabel(clusterName)
 	}
 }

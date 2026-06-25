@@ -1,5 +1,8 @@
 ARG GO_VERSION=1.26.4
-FROM registry.cn-beijing.aliyuncs.com/qqlx/golang:${GO_VERSION}-alpine-otel AS builder
+ARG BASE_TAG=alpine-otel
+FROM registry.cn-beijing.aliyuncs.com/qqlx/golang:${GO_VERSION}-${BASE_TAG} AS builder
+
+ARG OTEL=true
 
 ARG MAIN_PATH=cmd/apiserver/main.go
 WORKDIR /app
@@ -20,7 +23,11 @@ COPY . .
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     export GOPROXY=https://goproxy.cn,direct && \
-    otel go build -o apiserver -ldflags="-s -w" ${MAIN_PATH}
+    if [ "${OTEL}" = "true" ]; then \
+        otel go build -o apiserver -ldflags="-s -w" ${MAIN_PATH}; \
+    else \
+        go build -o apiserver -ldflags="-s -w" ${MAIN_PATH}; \
+    fi
 
 FROM registry.cn-beijing.aliyuncs.com/qqlx/alpine:3.17
 WORKDIR /app

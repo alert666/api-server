@@ -19,8 +19,7 @@ func NewDB() (*gorm.DB, func(), error) {
 	}
 	var dbLogger logger.Interface
 	// 开启mysql日志
-	if viper.GetBool("mysql.debug") || conf.GetLogLevel() == "debug" {
-		// dbLogger = newGormLogger(zap.L())
+	if viper.GetBool("mysql.debug") {
 		dbLogger = logger.Default.LogMode(logger.Info)
 		zap.L().Info("enable debug mode on the database")
 	}

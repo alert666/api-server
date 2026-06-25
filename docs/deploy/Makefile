@@ -1,5 +1,9 @@
 .PHONY: build push start init all
 
+# --- OpenTelemetry 控制 ---
+# make build OTEL=false  使用非 otel 基础镜像和 go build（不注入 OpenTelemetry）
+OTEL ?= true
+
 # --- 配置变量 ---
 DOCKER_HUB = registry.cn-beijing.aliyuncs.com
 BASE_IMAGE = $(DOCKER_HUB)/qqlx/api-server
@@ -24,8 +28,13 @@ BUILD_CONTEXT = ../
 
 # --- 构建目标 ---
 build:
-	@echo "--- 开始构建 Docker 镜像 ---"
-	docker build -t $(FULL_IMAGE_NAME) -f $(DOCKERFILE_PATH) $(BUILD_CONTEXT)
+ifeq ($(OTEL),true)
+	@echo "--- 构建 OpenTelemetry 注入版本 ---"
+	docker build 		--build-arg OTEL=true -t $(FULL_IMAGE_NAME) -f $(DOCKERFILE_PATH) $(BUILD_CONTEXT)
+else
+	@echo "--- 构建无 OpenTelemetry 版本 ---"
+	docker build 		--build-arg OTEL=false -t $(FULL_IMAGE_NAME) -f $(DOCKERFILE_PATH) $(BUILD_CONTEXT)
+endif
 	sed -i "s#image: .*api-server.*#image: $(FULL_IMAGE_NAME)#" docker-compose.yaml
 	@echo "--- Docker 镜像构建完成: $(FULL_IMAGE_NAME) ---"
 
