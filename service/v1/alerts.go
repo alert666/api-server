@@ -86,6 +86,10 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	}
 
 	alertTemplate = receiver.appendReceiver(ctx, tenantValue, req.ExtraSync, alertTemplate)
+	if len(alertTemplate.ReceiveId) == 0 {
+		log.WithRequestID(ctx).Debug("alertTemplate.ReceiveId 为空")
+		return nil
+	}
 	alertChannel := alertTemplate.AlertChannel
 
 	notifyReq, err := receiver.aggregatedAlarmGrouping(ctx, tenantValue, req.Alerts)
