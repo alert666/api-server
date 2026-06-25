@@ -70,14 +70,22 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 		log.WithRequestID(ctx).Error("获取告警模板失败", zap.Error(err))
 		return err
 	}
+
+	// 获取 tenant value
 	tenantValue := req.CommonLabels[receiver.tenantKey]
 	if tenantValue == "" {
 		log.WithRequestID(ctx).Warn("CommonLabels 中未找到 " + receiver.tenantKey + ", 回退到 Alerts[0].Labels 获取")
 		tenantValue = req.Alerts[0].Labels[receiver.tenantKey]
 	}
 
-	alertTemplate = receiver.appendReceiver(ctx, tenantValue, req.ExtraSync, alertTemplate)
+	// 从远程获取配置
+	if alertTemplate.ReceiveIdType == string(model.Remote) {
+		if err := helper.GetRemoteReceive(ctx, tenantValue, alertTemplate); err != nil {
+			return err
+		}
+	}
 
+	alertTemplate = receiver.appendReceiver(ctx, tenantValue, req.ExtraSync, alertTemplate)
 	alertChannel := alertTemplate.AlertChannel
 
 	notifyReq, err := receiver.aggregatedAlarmGrouping(ctx, tenantValue, req.Alerts)

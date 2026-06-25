@@ -17,6 +17,7 @@ import (
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/store"
+	"github.com/go-resty/resty/v2"
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v2"
 )
@@ -40,7 +41,7 @@ func ValidateTemplateRecipient(receiveIdType string, receiveIds []string) error 
 	}
 	for _, receiveId := range receiveIds {
 		switch receiveIdType {
-		case "open_id", "user_id", "email", "chat_id":
+		case "open_id", "user_id", "email", "chat_id", string(model.Remote):
 			if receiveId == "" {
 				return fmt.Errorf("接收者类型为 %s 时, receiveId 不能为空", receiveIdType)
 			}
@@ -297,4 +298,72 @@ func OverrideAt(receive, template string) (receiveID, result string) {
 		return rs[0], result
 	}
 	return rs[0], template
+}
+
+func GetRemoteReceive(ctx context.Context, tenantValue string, alertTemplate *model.AlertTemplate) error {
+	client := resty.New()
+	remoteReceives := make([]types.RemoteReceives, 0, len(alertTemplate.ReceiveId))
+
+	for _, rid := range alertTemplate.ReceiveId {
+		// rid = url;;token;;receiveType
+		rs := strings.Split(rid, ";;")
+
+		var url, token string
+		if len(rs) == 3 {
+			url = rs[0]
+			token = "Bearer " + rs[1]
+			alertTemplate.ReceiveIdType = rs[2]
+		} else {
+			url = rid
+		}
+
+		req := client.R()
+		if token != "" {
+			req.SetHeader("Authorization", token)
+		}
+
+		resp, err := req.Get(url)
+		if err != nil {
+			return fmt.Errorf("从远端获取 receive 失败, %w", err)
+		}
+
+		var res types.Response
+		if err := json.Unmarshal(resp.Body(), &res); err != nil {
+			return fmt.Errorf("解析 remote receive 响应失败, %w", err)
+		}
+
+		log.WithRequestID(ctx).Info("从远程获取 receiveIds 成功", zap.Any("data", res))
+
+		if res.Code != 0 {
+			return fmt.Errorf("获取 remote receive 失败, code %d", res.Code)
+		}
+
+		dataBytes, err := json.Marshal(res.Data)
+		if err != nil {
+			return fmt.Errorf("序列化 remote Data 失败, %w", err)
+		}
+
+		var rc []types.RemoteReceives
+		if err := json.Unmarshal(dataBytes, &rc); err != nil {
+			return fmt.Errorf("解析 RemoteReceives 失败, %w", err)
+		}
+		remoteReceives = append(remoteReceives, rc...)
+	}
+
+	receiveIds := make([]string, 0, 10)
+	for _, v := range remoteReceives {
+		if InArray(v.Clusters, tenantValue) {
+			receiveIds = append(receiveIds, v.Receives...)
+		}
+	}
+
+	alertTemplate.ReceiveId = alertTemplate.ReceiveId[:0]
+	receiveIdSet := make(map[string]struct{}, len(receiveIds))
+	for _, v := range receiveIds {
+		if _, ok := receiveIdSet[v]; !ok {
+			receiveIdSet[v] = struct{}{}
+			alertTemplate.ReceiveId = append(alertTemplate.ReceiveId, v)
+		}
+	}
+	return nil
 }

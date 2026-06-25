@@ -202,3 +202,9 @@ type SingleSendResult struct {
 	Alert   *Alert
 	SendErr error
 }
+
+type RemoteReceives struct {
+	Msg      string   `json:"msg"`
+	Clusters []string `json:"clusters"`
+	Receives []string `json:"receives"`
+}
