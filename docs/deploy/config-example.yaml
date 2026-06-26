@@ -1,54 +1,70 @@
 server:
-  bind: 0.0.0.0:8080          # 监听地址
-  timeZone: "Asia/Shanghai"   # 时区
+  bind: 0.0.0.0:8080          # HTTP 监听地址（默认 0.0.0.0:8080）
+  timeZone: "Asia/Shanghai"   # 时区（默认 Asia/Shanghai）
 
 log:
-  level: debug                # 日志级别
+  level: info                 # 日志级别：debug / info / warn / error（默认 info）
+  encoder: console            # 日志格式：console（文本）/ json（默认 console）
 
 grpc:
-  bind: 0.0.0.0:50051
-  tls:
-    caFile: D:\Data\git\alert666\api-server\deploy\certs\ca.crt
-    certFile: D:\Data\git\alert666\api-server\deploy\certs\server.crt
-    keyFile: D:\Data\git\alert666\api-server\deploy\certs\server.key
+  bind: 0.0.0.0:9090          # gRPC 监听地址（默认 0.0.0.0:9090）
+  tls:                        # 可选，配置后启用 TLS
+    certFile: /path/to/server.crt   # 服务端证书
+    keyFile:  /path/to/server.key   # 服务端私钥
+    caFile:   /path/to/ca.crt       # 可选，配置后启用 mTLS（双向认证）
 
 mysql:
-  debug: false                # 是否打印 SQL
-  username: root
-  password: ""
-  host: 127.0.0.1
-  port: 3306
-  database: alert
-  maxIdleConns: 10
-  maxOpenConns: 20
-  maxLifetime: 30m
+  debug: false                # 是否打印 SQL 日志
+  username: root              # 必填
+  password: ""                # 必填
+  host: 127.0.0.1             # 必填
+  port: 3306                  # 必填
+  database: alert             # 必填
+  maxIdleConns: 10            # 最大空闲连接数（默认 10）
+  maxOpenConns: 30            # 最大打开连接数（默认 30）
+  maxLifetime: 30m            # 连接最大存活时间（默认 30m）
 
 redis:
-  mode: single                # single | sentinel
-  host: 127.0.0.1:6379
-  password: ""
-  expireTime: 300s
-  keyPrefix: alert
-  db: 0
-  poolSize: 20
-  minIdleConns: 10
-  connMaxLifetime: 30m
+  mode: single                # single 或 sentinel
+  host: 127.0.0.1:6379        # single 模式必填
+  username: ""                # Redis 6+ ACL 用户名（可选）
+  password: ""                # 必填
+  expireTime: 1h              # 缓存过期时间（默认 1h）
+  keyPrefix: alert            # Redis key 前缀（必填）
+  db: 0                       # 数据库编号
+  poolSize: 50                # 连接池大小（默认 50）
+  minIdleConns: 20            # 最小空闲连接数（默认 20）
+  connMaxLifetime: 30m        # 连接最大存活时间（默认 30m）
+  sentinel:                   # mode=sentinel 时必填
+    hosts:                    #   Sentinel 节点列表
+      - 10.0.0.1:26379
+      - 10.0.0.2:26379
+    masterName: mymaster      #   主节点名称
+    password: ""              #   Sentinel 密码
 
 jwt:
-  issuer: alert
-  secret: "your-secret-key"
-  expireTime: 9999h
+  issuer: api-server          # 签发者（默认 api-server）
+  secret: "your-secret-key"   # 签名密钥（必填）
+  accessExpireTime: 30h       # Token 过期时间（默认 30h）
+  refreshExpireTime: 168h     # Refresh Token 过期时间（默认 168h，7 天）
 
+# oauth2 登录配置
 oauth2:
   enable: true
   providers:
+    # 飞书 oauth2 登录配置
     feishu:
+      # 飞书 appid
       clientId: ""
+      # 飞书 app secret
       clientSecret: ""
+      # 固定链接, 不用修改
       authUrl: https://accounts.feishu.cn/open-apis/authen/v1/authorize
       tokenUrl: https://open.feishu.cn/open-apis/authen/v2/oauth/token
       userInfoUrl: https://open.feishu.cn/open-apis/authen/v1/user_info
+      # 前端登录验证接口
       redirectUrl: http://localhost:5173/oauth/login
+    # keycloak oauth2 登录配置
     keycloak:
       clientId: ""
       clientSecret: ""
@@ -59,63 +75,43 @@ oauth2:
       redirectUrl: http://localhost:5173/oauth/login
 
 alert:
-  tenantKey: cluster
-  repeatInterval: 4h
+  receiveToken: ""            # 告警接收认证 token（不配置则不校验认证）
+  # 示例（Alertmanager 侧需配置对应的 Authorization 头）：
+  # receiveToken: "a8f5c2e3-9b1d-4f6e-8c2a-1d3e5f7a9b0c"
+  tenantKey: cluster          # 租户标签键名，从告警 label 中提取（默认 cluster）
+  repeatInterval: 4h          # 告警重复发送间隔
+  extraSync:
+    # alerts 接口 extraSync url 参数的值
+    # 注意事项: 当前告警发送的 TemplateName 绑定的 AlertChannel 必须有权限发送消息至这个接收者
+    # 假如: A TemplateName 绑定了 A AlertChannel, 那么 A AlertChannel 必须能发送至这个接收者
+    idc:
+      # 类型: map[string]string.
+
+      # key: alert.labels.["cluster"], 作用是将指定集群的告警发送至指定的接收这个.
+
+      # value: 发送给对应的接收的信息, 支持覆盖模板中的 at 用户
+      # 格式: receiveID;;<at id=xxx></>
+      # receiveID 如飞书群 id 或 邮箱发送时的接受者的邮箱.
+      # <at id=xxx></> 仅支持飞书卡片, 可选
+
+      # 效果: 当告警的 cluster 标签匹配 cn-henan-2 之后, 会额外发送告警至 oc_f63570b503b00bce9155bf92539b5dac 接收者。
+      cn-henan-2:
+        - xxx
+        # - oc_xxx;;<at id=userID></at>
+  # alertmanager 的抑制策略, 可以直接从 alertmanager 直接复制过来
+  # 防止被抑制的告警一直处于未恢复的状态
   inhibit_rules:
-    # 1. 磁盘空间抑制
     - source_matchers:
-      - alertname = "节点磁盘空间不足"
-      - severity = "critical"
+        - alertname = "节点磁盘空间不足"
+        - severity = "critical"
       target_matchers:
-        - alertname="节点磁盘空间不足"
+        - alertname = "节点磁盘空间不足"
         - severity = "warning"
       equal:
-      - instance
-      - device
-      - mountpoint
-
-    # 2. 网络接口抑制
-    - source_matchers:
-      - alertname = "主机网络接口宕机"
-      target_matchers:
-      - alertname = "网络接口波动"
-      equal:
-      - instance
-      - device
-
-    # 3. 节点宕机抑制 Pod
-    - source_matchers:
-      - alertname = "KubeNodeNotReady"
-      target_matchers:
-        - alert_scope = "pod"
-      equal:
-      - node
-
-    # 4. Pod 根因抑制
-    - source_matchers:
-      - alertname = "KubePodCrashLooping"
-      target_matchers:
-      - alertname = "KubePodNotReady"
-      equal:
-      - namespace
-      - pod
-
-    # 5. Pod 状态抑  
-    - source_matchers:
-      - alertname = "KubePodNotHealthy"
-      target_matchers:
-        - alertname = "KubePodNotReady"
-      equal:
-      - namespace
-      - pod
-
-    # 6. Pod 抑制 workload
-    - source_matchers:
-        - alert_scope = "pod"
-      target_matchers:
-        - alert_scope = "workload"
-      equal:
-      - workload
+        - instance
+        - device
+        - mountpoint
 
 internal:
-  token: internal-shared-secret
+  token: internal-shared-secret   # 内部 API 认证 token（用于跨副本命令转发）
+  advertiseAddr: ""               # 可选，手动指定本实例广播地址（默认自动探测）

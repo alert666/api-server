@@ -1,0 +1,356 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager-ui
+  namespace: ops
+  labels:
+    app: alertmanager-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: alertmanager-ui
+  template:
+    metadata:
+      labels:
+        app: alertmanager-ui
+    spec:
+      containers:
+      - name: nginx
+        image: registry.cn-beijing.aliyuncs.com/qqlx/alertmanagerui:main-9f6f636-20260625-100611
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: TZ
+          value: "Asia/Shanghai"
+        securityContext:
+          capabilities:
+            add: ["SYS_NICE"]
+        ports:
+        - containerPort: 80
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager-ui
+  namespace: ops
+spec:
+  type: ClusterIP
+  selector:
+    app: alertmanager-ui
+  ports:
+    - name: http-80
+      port: 80
+      targetPort: 80
+---
+apiVersion: v1
+data:
+  ca.crt: xxx
+  server.crt: xxx
+  server.key: xxxx
+kind: Secret
+metadata:
+  name: grpc-tls
+  namespace: ops
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-apiserver-config
+  namespace: ops
+data:
+  config.yaml: |-
+    server:
+      bind: 0.0.0.0:8080
+      timeZone: "Asia/Shanghai"
+
+    log:
+      encoder: json
+      level: debug
+
+    grpc:
+      bind: 0.0.0.0:50051
+      tls:
+        caFile: /app/certs/ca.crt
+        certFile: /app/certs/server.crt
+        keyFile: /app/certs/server.key
+
+    mysql:
+      username: xxx
+      password: xxx
+      host: xxx
+      port: 3306
+      database: xxx
+      maxIdleConns: 5
+      maxOpenConns: 10
+      maxLifetime: 30m
+      # debug: true
+
+    # redis配置
+    redis:
+      # single sentinel
+      mode: single
+      host: xxx:6379
+      password: xxx
+      # 过期时间 3s 3m 3h
+      expireTime: 300s
+      keyPrefix: tutu
+      db: 0
+      poolSize: 20
+      minIdleConns: 10
+      connMaxLifetime: 30m
+
+    jwt:
+      issuer: xxx
+      secret: xxx
+      accessExpireTime: 15m
+      refreshExpireTime: 168h
+
+    oauth2:
+      enable: true
+      providers:
+        feishu:
+          clientId: xxx
+          clientSecret: xxx
+          authUrl: https://accounts.feishu.cn/open-apis/authen/v1/authorize
+          tokenUrl: https://open.feishu.cn/open-apis/authen/v2/oauth/token
+          userInfoUrl: https://open.feishu.cn/open-apis/authen/v1/user_info
+          redirectUrl: https://xxx/oauth/login
+
+    alert:
+      tenantKey: cluster
+      receiveToken: xxxx
+      extraSync:
+        idc:
+          cn-henan-2:
+            - xxxx
+      repeatInterval: 4h
+      inhibit_rules:
+        # 磁盘空间抑制
+        - source_matchers:
+          - alertname = "节点磁盘空间不足"
+          - severity = "critical"
+          target_matchers:
+            - alertname="节点磁盘空间不足"
+            - severity = "warning"
+          equal:
+          - instance
+          - device
+          - mountpoint
+
+        # 网络接口抑制
+        - source_matchers:
+          - alertname = "主机网络接口宕机"
+          target_matchers:
+          - alertname = "网络接口波动"
+          equal:
+          - instance
+          - device
+
+        # 节点宕机抑制 Pod
+        - source_matchers:
+          - alertname = "KubeNodeNotReady"
+          target_matchers:
+            - alert_scope = "pod"
+          equal:
+          - node
+
+        # 抑制相关的 job
+        - source_matchers:
+          - alertname = "KubeNodeNotReady"
+          target_matchers:
+            - alert_scope = "job"
+          equal:
+          - node
+
+        # Pod 根因抑制
+        - source_matchers:
+          - alertname = "KubePodCrashLooping"
+          target_matchers:
+          - alertname = "KubePodNotReady"
+          equal:
+          - namespace
+          - pod
+
+        # Pod 状态抑制
+        - source_matchers:
+          - alertname = "KubePodNotHealthy"
+          target_matchers:
+            - alertname = "KubePodNotReady"
+          equal:
+          - namespace
+          - pod
+
+        # Pod 抑制 workload
+        - source_matchers:
+            - alert_scope = "pod"
+          target_matchers:
+            - alert_scope = "workload"
+          equal:
+          - workload
+    internal:
+      token: xxxx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager-apiserver
+  namespace: ops
+  labels:
+    app: alertmanager-apiserver
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+  replicas: 2
+  selector:
+    matchLabels:
+      app: alertmanager-apiserver
+  template:
+    metadata:
+      labels:
+        app: alertmanager-apiserver
+    spec:
+      containers:
+      - name: alertmanager-apiserver
+        image: registry.cn-beijing.aliyuncs.com/qqlx/alertmanager:main-ffef71e-20260626-091452
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /api/v1/healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/v1/healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: "1"
+            memory: 1Gi
+        env:
+        - name: SERVICE_NAME
+          value: "api-server"
+        - name: API_SERVER_SERVER_BIND
+          value: ":8080"
+        - name: API_SERVER_CONFIG_PATH
+          value: "/app/config.yaml"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://10.10.10.10:30001"
+        - name: OTEL_EXPORTER_OTLP_PROTOCOL
+          value: "grpc"
+        - name: OTEL_SERVICE_NAME
+          value: "alertmanager-api-server"
+        - name: OTEL_METRICS_EXPORTER
+          value: "prometheus"
+        - name: OTEL_EXPORTER_PROMETHEUS_PORT
+          value: "9464"
+        - name: OTEL_EXPORTER_PROMETHEUS_HOST
+          value: "0.0.0.0"
+        ports:
+        - containerPort: 8080
+          name: api-port
+        - containerPort: 50051
+          name: grpc-port
+        - containerPort: 9464
+          name: metrics
+        volumeMounts:
+        - name: app-config-volume
+          mountPath: /app/config.yaml
+          subPath: config.yaml
+        - name: tls-certs-volume
+          mountPath: /app/certs
+          readOnly: true
+      volumes:
+      - name: app-config-volume
+        configMap:
+          name: alertmanager-apiserver-config
+      - name: tls-certs-volume
+        secret:
+          secretName: grpc-tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager-apiserver-svc
+  namespace: ops
+  labels:
+    app: alertmanager-apiserver
+spec:
+  type: NodePort
+  selector:
+    app: alertmanager-apiserver
+  ports:
+    - name: http-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: grpc-50051
+      protocol: TCP
+      port: 50051
+      targetPort: 50051
+    - name: metrics
+      protocol: TCP
+      port: 9464
+      targetPort: 9464
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: alertmanager-apiserver
+  namespace: ops
+  labels:
+    app: alertmanager-apiserver
+spec:
+  endpoints:
+  - interval: 15s
+    port: metrics
+    path: /metrics
+  selector:
+    matchLabels:
+      app: alertmanager-apiserver
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: cloud-alertmanager
+  namespace: ops
+spec:
+  gateways:
+  - istio-system/ops-https
+  - istio-system/ops-http
+  hosts:
+  - xxx
+  http:
+  - name: api-routes
+    match:
+    - uri:
+        prefix: /api
+    route:
+    - destination:
+        host: alertmanager-apiserver.ops.svc.cluster.local
+        port:
+          number: 8080
+
+  - name: ui-routes
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: alertmanager-ui.ops.svc.cluster.local
+        port:
+          number: 80

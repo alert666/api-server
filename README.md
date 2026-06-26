@@ -1,344 +1,289 @@
-﻿# api-server
+﻿# api-server — 告警管理 API 服务
 
-基于 Go 的告警管理 API 服务 — 接收、静默、抑制、路由、通知，覆盖告警全生命周期。
-
+[![Go Version](https://img.shields.io/github/go-mod/go-version/alert666/api-server)](https://go.dev)
 [![Build](https://img.shields.io/github/actions/workflow/status/alert666/api-server/docker-publish.yml?branch=main)](https://github.com/alert666/api-server/actions)
 [![License](https://img.shields.io/github/license/alert666/api-server)](https://github.com/alert666/api-server/blob/main/LICENSE)
-[![Go Version](https://img.shields.io/github/go-mod/go-version/alert666/api-server)](https://go.dev)
 
-## 目录
-
-- [api-server](#api-server)
-  - [目录](#目录)
-  - [简介](#简介)
-  - [功能](#功能)
-    - [告警管理](#告警管理)
-    - [平台能力](#平台能力)
-  - [技术栈](#技术栈)
-  - [项目结构](#项目结构)
-  - [快速开始](#快速开始)
-    - [前置依赖](#前置依赖)
-    - [本地运行](#本地运行)
-  - [配置说明](#配置说明)
-    - [Alertmanager 对接示例](#alertmanager-对接示例)
-  - [API 文档](#api-文档)
-  - [部署](#部署)
-    - [Docker Compose](#docker-compose)
-    - [Docker 镜像](#docker-镜像)
-  - [可观测性](#可观测性)
-    - [环境变量](#环境变量)
-  - [告警抑制说明](#告警抑制说明)
-  - [开发指南](#开发指南)
-    - [添加新模块](#添加新模块)
-    - [运行测试](#运行测试)
-    - [提交规范](#提交规范)
-  - [相关项目](#相关项目)
-  - [License](#license)
-
-## 简介
-
-api-server 是一个告警管理后端服务，配合[前端 UI](https://github.com/alert666/ui) 使用，提供从告警接收、静默、抑制、模板渲染到多渠道通知的完整能力。
+基于 Go + Gin + GORM 构建的告警管理后端服务。配合[前端 UI](https://github.com/alert666/ui)，提供从告警接收、静默、抑制、模板渲染到多渠道通知的完整能力，同时支持多租户隔离、RBAC 权限控制、Agent 命令下发等平台级功能。
 
 在线预览：[qqlx.net](https://qqlx.net/)（只读账号：`readonly@qqlx.net` / `12345678`）
 
+
+## 简介
+
+api-server 覆盖告警管理全生命周期：
+
+1. **接收** — 作为 Prometheus Alertmanager Webhook Receiver，接收并持久化告警
+2. **静默** — 基于标签匹配的静默规则，支持定时生效/失效
+3. **抑制** — 自定义抑制规则引擎，解决 Alertmanager 原生抑制在告警恢复场景下的缺陷
+4. **路由** — 多维度告警分发，支持模板化通知内容
+5. **通知** — 多渠道推送（飞书应用消息/群机器人、邮件），支持 @ 提醒与富文本卡片
+6. **Agent 通道** — 通过 gRPC Data Tunnel 向 Agent 下发命令并获取执行结果
+7. **内部转发** — 多副本间通过内部 API 转发 Agent 命令，支持横向扩展
+
+
 ## 功能
 
-### 告警管理
-
-- **告警接收** — 作为 Alertmanager Webhook 接收方，接收并持久化告警数据。支持通过 `extraSync` 参数为告警模板额外追加接收者，支持在飞书应用消息中覆盖 @ 提醒对象
-- **告警历史** — 追踪告警生命周期（firing → resolved），支持多维筛选与分页查询
-- **告警静默** — 按标签匹配创建静默规则，支持定时生效/失效，按租户统计活跃静默数
-- **告警抑制** — 自定义抑制规则引擎，通过定时任务自动清理被抑制的告警，弥补 Alertmanager 原生抑制在恢复场景下的状态不一致问题
-- **告警通道** — 管理通知渠道（飞书、邮件等），支持 CRUD
-- **告警模板** — 基于 Go template 的通知模板，支持一键复制模板。新增 remote 接收者类型，从远程 HTTP 接口动态获取接收者列表并按租户过滤去重，接收者配置格式为 `url;;token;;receiveType`
+| 模块           | 说明                                                                                            |
+| -------------- | ----------------------------------------------------------------------------------------------- |
+| **告警接收**   | Alertmanager Webhook 回调，支持 `extraSync` 为告警追加额外接收者，支持飞书消息中覆盖 @ 提醒对象 |
+| **告警历史**   | 追踪告警完整生命周期（firing → resolved），多维筛选与分页查询                                   |
+| **告警静默**   | 按标签匹配创建静默规则，支持定时生效/失效，按租户统计活跃静默数                                 |
+| **告警抑制**   | 自定义抑制规则引擎，解决 Alertmanager 原生抑制在告警恢复场景下的缺陷                            |
+| **告警通道**   | 支持飞书应用消息、飞书群机器人、邮件等多种通知渠道                                              |
+| **告警模板**   | Go 模板引擎自定义通知内容，支持标签动态渲染与模板复制                                           |
+| **Agent 命令** | 通过 gRPC Data Tunnel 向 Agent 下发命令并同步等待结果，支持跨副本转发                           |
 
 ### 平台能力
 
-- **多租户（集群）管理** — 租户粒度的告警隔离，每个租户对应一个集群
-- **用户管理** — 用户 CRUD，JWT 认证（支持 Refresh Token 续期与登出失效）
-- **角色管理** — 角色定义与分配
-- **接口权限管理** — 基于 Casbin 的 RBAC 细粒度 API 访问控制
-- **OAuth2 登录** — 支持飞书、Keycloak 等多种 OAuth2 Provider
-- **gRPC 数据隧道** — 双向流式 RPC，实现服务端与 Agent 的实时命令下发与结果回传
-- **Agent 命令** — 通过 HTTP API 向 Agent 下发命令并同步等待结果
-- **跨副本转发** — 多副本部署时自动将命令转发至目标 Agent 所在副本执行
+| 功能           | 说明                                                |
+| -------------- | --------------------------------------------------- |
+| **多租户**     | 租户级告警数据隔离，独立配置告警接收 token          |
+| **RBAC**       | 基于 Casbin 的细粒度角色权限控制，支持 API 级别授权 |
+| **OAuth2**     | 集成飞书、Keycloak 等第三方身份认证                 |
+| **用户管理**   | 用户 CRUD、登录/登出、Token 刷新、头像管理          |
+| **Swagger**    | 自动生成 API 文档，启动后访问 `/swagger/index.html` |
+| **可观测性**   | 基于 OpenTelemetry 的分布式追踪与 Prometheus 指标   |
+| **多副本支持** | 内部 API + gRPC Data Tunnel 支持服务横向扩展        |
+
+> 告警模板的详细语法、变量、自定义函数及各渠道差异说明，参见 [docs/alertTemplate/README.md](docs/alertTemplate/README.md)。
+
+
 
 ## 技术栈
 
-| 类别     | 技术                                                   |
-| -------- | ------------------------------------------------------ |
-| Web 框架 | [Gin](https://github.com/gin-gonic/gin)                |
-| ORM      | [GORM](https://gorm.io/) + [gen](https://gorm.io/gen/) |
-| 依赖注入 | [Wire](https://github.com/google/wire)                 |
-| 访问控制 | [Casbin](https://casbin.org/)                          |
-| 缓存     | [go-redis](https://redis.uptrace.dev/)                 |
-| 日志     | [Zap](https://github.com/uber-go/zap)                  |
-| 配置管理 | [Viper](https://github.com/spf13/viper)                |
-| CLI      | [Cobra](https://github.com/spf13/cobra)                |
-| 认证     | JWT + OAuth2（飞书 / Keycloak）                        |
-| gRPC     | [google.golang.org/grpc](https://grpc.io/)             |
-| 可观测性 | OpenTelemetry（Traces）+ Prometheus（Metrics）         |
-| API 文档 | [Swagger](https://github.com/swaggo/swag)              |
-| 数据库   | MySQL                                                  |
-| 容器化   | Docker / Docker Compose                                |
+**语言与框架**
+- Go 1.25 + Gin 路由框架 + GORM ORM + Wire 依赖注入
+- gRPC 用于 Agent 数据通道
+- Casbin 提供 RBAC 权限控制
+
+**数据层**
+- MySQL 持久化存储
+- Redis 缓存（告警模板、频道、Token、Session）
+- go-cache 本地缓存
+
+**中间件/集成**
+- JWT + OAuth2（飞书、Keycloak）身份认证
+- Viper 配置管理 + Cobra 命令行
+- Zap 日志 + OpenTelemetry 可观测性
+- Cron 定时任务（缓存清理、抑制规则轮询）v
+- Swagger 自动 API 文档
+
+**通知渠道**
+- 飞书应用消息 & 群机器人
+- 邮件（SMTP）
+
+**部署**
+- Docker / Docker Compose
+- CI/CD：GitHub Actions → 阿里云 ACR + GitHub Container Registry
+
 
 ## 项目结构
 
-```bash
+```
 .
-├── cmd/apiserver/     # 入口 + Wire 依赖注入
-├── base/              # 核心框架：server、middleware、config、logger、types
-├── controller/        # HTTP 请求处理层
-├── service/v1/        # 业务逻辑层
-├── store/             # 数据访问层（GORM + Redis）
-├── model/             # GORM 数据模型
-├── grpc/              # gRPC 服务端、拦截器、handler
-├── pkg/               # 可复用包
-│   ├── alertinhibit/  #   告警抑制引擎
-│   ├── casbin/        #   Casbin 适配
-│   ├── email/         #   邮件发送
-│   ├── feishu/        #   飞书 SDK 封装
-│   ├── jwt/           #   JWT 工具
-│   ├── local_cache/   #   本地缓存
-│   └── oauth/         #   OAuth2 集成
-├── test/              # 测试（按 domain 分子目录）
-├── docs/              # 文档、截图、部署配置
-├── scripts/           # 工具脚本（gRPC 证书生成等）
-└── gormgen/           # GORM gen 代码生成配置
+├── cmd/            # 应用入口 + Wire 依赖注入
+├── base/           # 框架层
+│   ├── app/        #   Application 定义与初始化
+│   ├── bind/       #   请求参数绑定
+│   ├── conf/       #   配置管理
+│   ├── constant/   #   常量
+│   ├── data/       #   数据库与 Redis 连接
+│   ├── helper/     #   工具函数
+│   ├── log/        #   日志初始化
+│   ├── middleware/ #   HTTP 中间件（认证、鉴权、租户）
+│   ├── router/     #   路由注册
+│   ├── server/     #   服务生命周期管理
+│   └── types/      #   共享类型定义
+├── controller/     # HTTP 请求处理器
+├── service/v1/     # 业务逻辑层
+├── store/          # 数据访问层（GORM gen + Redis 缓存）
+├── model/          # GORM 数据模型
+├── grpc/           # gRPC 服务端
+│   ├── handler/    #   gRPC 处理器
+│   ├── interceptor/#   gRPC 拦截器
+│   └── server/     #   gRPC 服务
+├── pkg/            # 可复用包
+│   ├── alertinhibit#   告警抑制引擎
+│   ├── casbin/     #   RBAC 权限控制
+│   ├── email/      #   邮件发送
+│   ├── feishu/     #   飞书消息推送
+│   ├── jwt/        #   JWT 令牌
+│   ├── local_cache/#   本地缓存
+│   └── oauth/      #   OAuth2 认证
+├── test/           # 按领域组织的测试
+├── docs/           # 文档、Swagger 部署文件
+│   ├── deploy/     #   Docker、Nginx、SQL 脚本
+│   │   ├── certs/  #   gRPC TLS 证书
+│   │   └── nginx/  #   Nginx 配置
+│   └── img/        #   截图
+├── scripts/        # 工具脚本
+├── gormgen/        # GORM gen 代码生成模板
+└── .github/workflows/ # CI/CD 流水线
 ```
 
-调用链路：`controller → service/v1 → store`，依赖通过 Wire 注入。
 
 ## 快速开始
 
-### 前置依赖
+需要以下依赖运行完整服务：
 
 - Go 1.25+
 - MySQL 8.0+
 - Redis 7+
 
-### 本地运行
+### 1. 克隆与配置
 
 ```bash
-# 克隆仓库
 git clone https://github.com/alert666/api-server.git
 cd api-server
 
-# 安装依赖
-go mod download
+# 导入数据库 schema
+mysql -u root -p < docs/deploy/schema.sql
 
-# 初始化数据库（使用 deploy 目录下的 schema.sql）
-mysql -h 127.0.0.1 -P 3306 -u root -p < docs/deploy/schema.sql
+# 复制并编辑配置
+cp docs/deploy/config-example.yaml config.yaml
+# 修改 config.yaml 中的 mysql.host、redis.host 等连接信息
+```
 
-# 准备配置文件
-cp config-example.yaml config.yaml
-# 编辑 config.yaml，填入数据库连接信息
+### 2. 运行
 
-# 生成 Wire 依赖注入代码
-wire ./cmd/
-
-# 运行
+```bash
+# 启动服务（默认监听 :8080）
 go run ./cmd/apiserver -c config.yaml
 ```
 
-服务默认监听 `0.0.0.0:8080`。
+首次启动会自动初始化，创建以下默认数据：
+
+| 用户名  | 密码       | 角色  | 说明                      |
+| ------- | ---------- | ----- | ------------------------- |
+| `admin` | `12345678` | admin | 超级管理员，全部 API 权限 |
+
+### 3. 使用 `init` 命令
+
+仅执行数据库初始化（创建默认 API、角色、管理员用户），不启动 HTTP 服务：
+
+```bash
+go run ./cmd/apiserver init -c config.yaml
+```
+
 
 ## 配置说明
 
-所有配置项均支持环境变量覆盖，环境变量前缀由 `SERVICE_NAME` 决定（默认 `API_SERVER`）。例如 `API_SERVER_SERVER_BIND=:9090` 等价于 `server.bind: ":9090"`。配置文件使用 YAML 格式，时间单位支持 `ns`、`us`（或 `µs`）、`ms`、`s`、`m`、`h`。
+使用 `config.yaml` 配置，基于 Viper 加载，支持环境变量覆盖。完整参考 `docs/deploy/config-example.yaml`。
 
 ```yaml
 server:
-  bind: 0.0.0.0:8080          # HTTP 监听地址（默认 0.0.0.0:8080）
-  timeZone: "Asia/Shanghai"   # 时区（默认 Asia/Shanghai）
-
-log:
-  level: info                 # 日志级别：debug / info / warn / error（默认 info）
-  encoder: console            # 日志格式：console（文本）/ json（默认 console）
-
-grpc:
-  bind: 0.0.0.0:9090          # gRPC 监听地址（默认 0.0.0.0:9090）
-  tls:                        # 可选，配置后启用 TLS
-    certFile: /path/to/server.crt   # 服务端证书
-    keyFile:  /path/to/server.key   # 服务端私钥
-    caFile:   /path/to/ca.crt       # 可选，配置后启用 mTLS（双向认证）
-
-mysql:
-  debug: false                # 是否打印 SQL 日志
-  username: root              # 必填
-  password: ""                # 必填
-  host: 127.0.0.1             # 必填
-  port: 3306                  # 必填
-  database: alert             # 必填
-  maxIdleConns: 10            # 最大空闲连接数（默认 10）
-  maxOpenConns: 30            # 最大打开连接数（默认 30）
-  maxLifetime: 30m            # 连接最大存活时间（默认 30m）
+  bind: 0.0.0.0:8080
+  timeZone: "Asia/Shanghai"
 
 redis:
-  mode: single                # single 或 sentinel
-  host: 127.0.0.1:6379        # single 模式必填
-  username: ""                # Redis 6+ ACL 用户名（可选）
-  password: ""                # 必填
-  expireTime: 1h              # 缓存过期时间（默认 1h）
-  keyPrefix: alert            # Redis key 前缀（必填）
-  db: 0                       # 数据库编号
-  poolSize: 50                # 连接池大小（默认 50）
-  minIdleConns: 20            # 最小空闲连接数（默认 20）
-  connMaxLifetime: 30m        # 连接最大存活时间（默认 30m）
-  sentinel:                   # mode=sentinel 时必填
-    hosts:                    #   Sentinel 节点列表
-      - 10.0.0.1:26379
-      - 10.0.0.2:26379
-    masterName: mymaster      #   主节点名称
-    password: ""              #   Sentinel 密码
+  mode: single          # single / sentinel / cluster
+  host: localhost:6379
+  expireTime: 300s
+  keyPrefix: tutu
 
-jwt:
-  issuer: api-server          # 签发者（默认 api-server）
-  secret: "your-secret-key"   # 签名密钥（必填）
-  accessExpireTime: 30h       # Token 过期时间（默认 30h）
-  refreshExpireTime: 168h     # Refresh Token 过期时间（默认 168h，7 天）
-
-oauth2:
-  enable: true                # 是否启用 OAuth2
-  providers:
-    feishu:
-      clientId: ""
-      clientSecret: ""
-      authUrl: https://accounts.feishu.cn/open-apis/authen/v1/authorize
-      tokenUrl: https://open.feishu.cn/open-apis/authen/v2/oauth/token
-      userInfoUrl: https://open.feishu.cn/open-apis/authen/v1/user_info
-      redirectUrl: http://localhost:5173/oauth/login
-    keycloak:
-      clientId: ""
-      clientSecret: ""
-      scopes: ["openid", "email", "profile"]
-      authUrl: https://keycloak.example.com/realms/myrealm/protocol/openid-connect/auth
-      tokenUrl: https://keycloak.example.com/realms/myrealm/protocol/openid-connect/token
-      userInfoUrl: https://keycloak.example.com/realms/myrealm/protocol/openid-connect/userinfo
-      redirectUrl: http://localhost:5173/oauth/login
-
-alert:
-  receiveToken: ""            # 告警接收认证 token（不配置则不校验认证）
-  # 示例（Alertmanager 侧需配置对应的 Authorization 头）：
-  # receiveToken: "a8f5c2e3-9b1d-4f6e-8c2a-1d3e5f7a9b0c"
-  tenantKey: cluster          # 租户标签键名，从告警 label 中提取（默认 cluster）
-  repeatInterval: 4h          # 告警重复发送间隔
-  extraSync:
-    # alerts 接口 extraSync url 参数的值
-    # 注意事项: 当前告警发送的 TemplateName 绑定的 AlertChannel 必须有权限发送消息至这个接收者
-    # 假如: A TemplateName 绑定了 A AlertChannel, 那么 A AlertChannel 必须能发送至这个接收者
-    idc:
-      # 类型: map[string]string.
-
-      # key: alert.labels.["cluster"], 作用是将指定集群的告警发送至指定的接收这个.
-
-      # value: 发送给对应的接收的信息, 支持覆盖模板中的 at 用户
-      # 格式: receiveID;;<at id=xxx></>
-      # receiveID 如飞书群 id 或 邮箱发送时的接受者的邮箱.
-      # <at id=xxx></> 仅支持飞书卡片, 可选
-
-      # 效果: 当告警的 cluster 标签匹配 cn-henan-2 之后, 会额外发送告警至 oc_f63570b503b00bce9155bf92539b5dac 接收者。
-      cn-henan-2:
-        - oc_f63570b503b00bce9155bf92539b5dac
-        # - oc_f63570b503b00bce9155bf92539b5dac;;<at id=userID></at>
-  inhibit_rules:              # 告警抑制规则列表（详见「告警抑制说明」）
-    - source_matchers:
-        - alertname = "节点磁盘空间不足"
-        - severity = "critical"
-      target_matchers:
-        - alertname = "节点磁盘空间不足"
-        - severity = "warning"
-      equal:
-        - instance
-        - device
-        - mountpoint
-
-internal:
-  token: internal-shared-secret   # 内部 API 认证 token（用于跨副本命令转发）
-  advertiseAddr: ""               # 可选，手动指定本实例广播地址（默认自动探测）
-
+# ... 更多配置项见 config-example.yaml
 ```
 
 ### Alertmanager 对接示例
 
-Prometheus Alertmanager 配置 webhook receiver 示例（token 需与 config.yaml 中 `alert.receiveToken` 一致）：
+在 Prometheus Alertmanager 中配置 Webhook Receiver：
 
 ```yaml
-# alertmanager.yml
 route:
   receiver: 'api-server'
-  group_by: ['alertname', 'cluster']
+  group_by: ['alertname', 'cluster', 'severity']
   group_wait: 10s
   group_interval: 10s
   repeat_interval: 4h
-  http_config:
-    authorization:
-      type: Bearer
-      credentials: '<your-global-token>'
 
 receivers:
   - name: 'api-server'
     webhook_configs:
-      - url: 'http://<api-server-host>:8080/api/v1/alerts?templateName=<template-name>'
+      - url: 'http://<api-server>:8080/api/v1/alerts?templateName=<模板名称>'
         http_config:
           authorization:
             type: Bearer
-            credentials: <token from config.yaml alert.receiveToken>
+            credentials: <config.yaml 中 alert.receiveToken>
 ```
+
+`templateName` 为必填 query 参数，指定该路由下的告警使用哪个通知模板。
+
+> 告警数据按 `alert.receiveToken` 字段校验；若为空白字符串则不校验认证（仅建议开发环境使用）。
+
 
 ## API 文档
 
-项目集成了 Swagger 自动文档。启动服务后访问：
+服务启动后访问 Swagger UI：
 
 ```bash
 http://localhost:8080/swagger/index.html
 ```
 
-主要 API 分组：
+### 主要 API 分组
 
-| 分组             | 路径前缀                | 说明              |
-| ---------------- | ----------------------- | ----------------- |
-| 告警接收         | `/api/v1/alerts`        | Alertmanager 回调 |
-| 告警历史         | `/api/v1/alertHistory`  | 告警生命周期查询  |
-| 告警静默         | `/api/v1/alertSilence`  | 静默规则管理      |
-| 告警通道         | `/api/v1/alertChannel`  | 通知渠道管理      |
-| 告警模板         | `/api/v1/alertTemplate` | 通知模板管理      |
-| 集群（租户）管理 | `/api/v1/cluster`       | 多租户管理        |
-| 用户管理         | `/api/v1/user`          | 用户 CRUD         |
-| Token 刷新       | `/api/v1/user/refresh`  | 刷新 Access Token |
-| 角色管理         | `/api/v1/role`          | 角色 CRUD         |
-| 接口权限         | `/api/v1/api`           | API 权限管理      |
-| Agent 命令       | `/api/v1/agentCommand`  | 下发命令到 Agent  |
+| 分组       | 路径                                | 认证           | 说明                      |
+| ---------- | ----------------------------------- | -------------- | ------------------------- |
+| 告警接收   | `POST /api/v1/alerts`               | Bearer Token   | Alertmanager Webhook 回调 |
+| 告警历史   | `/api/v1/alertHistory`              | JWT + RBAC     | 告警生命周期查询          |
+| 告警静默   | `/api/v1/alertSilence`              | JWT + RBAC     | 静默规则 CRUD             |
+| 告警通道   | `/api/v1/alertChannel`              | JWT + RBAC     | 通知渠道 CRUD             |
+| 告警模板   | `/api/v1/alertTemplate`             | JWT + RBAC     | 通知模板 CRUD             |
+| 租户管理   | `/api/v1/tenant`                    | JWT + RBAC     | 多租户 CRUD               |
+| 用户管理   | `/api/v1/user`                      | JWT + RBAC     | 用户 CRUD、登录/登出      |
+| Token 刷新 | `POST /api/v1/user/refresh`         | Bearer Token   | 刷新 Access Token         |
+| 角色管理   | `/api/v1/role`                      | JWT + RBAC     | 角色 CRUD                 |
+| API 权限   | `/api/v1/api`                       | JWT + RBAC     | 接口权限定义              |
+| Agent 命令 | `/api/v1/agents/commands/wait`      | JWT + RBAC     | 下发命令并等待结果        |
+| OAuth2     | `/api/v1/oauth2`                    | Session        | 飞书/Keycloak 登录        |
+| 健康检查   | `GET /api/v1/healthz`               | 无             | 服务健康状态              |
+| 内部转发   | `POST /internal/v1/forward-command` | Internal Token | 跨副本命令转发            |
+
 
 ## 部署
 
-### Docker Compose
+### Docker Compose（推荐）
 
 ```bash
-# 构建前端资源
-git clone -b main https://github.com/yiran15/ui.git
-cd ui && make deploy
-
-# 构建并启动服务
 git clone https://github.com/alert666/api-server.git
 cd api-server/docs/deploy
+
 cp config-example.yaml config.yaml
-# 修改 config.yaml 中的数据库和 Redis 配置
+# 修改 config.yaml 中 MySQL 和 Redis 连接信息
 docker compose up -d
 ```
 
 ### Docker 镜像
 
-预构建镜像可从以下仓库获取：
+预构建镜像（CI/CD 自动推送）：
 
-- GitHub Container Registry: `ghcr.io/alert666/api-server:latest`
-- 阿里云容器镜像: `registry.cn-beijing.aliyuncs.com/qqlx/alertmanager:latest`
+- **GitHub Container Registry** — `ghcr.io/alert666/api-server:latest`
+- **阿里云容器镜像服务** — `registry.cn-beijing.aliyuncs.com/qqlx/alertmanager:latest`
+
+镜像标签格式：`{branch}-{short-sha}-{timestamp}`。
+
 
 ## 可观测性
 
-基于 OpenTelemetry 提供分布式追踪（Traces）和指标（Metrics）。
+### 构建时自动插桩
 
-### 环境变量
+本项目使用**阿里云开源的 OpenTelemetry 自动插桩工具**（`otel`）在编译阶段自动注入可观测性能力，无需修改业务代码即可获得分布式追踪、指标和日志。
+
+构建时通过 `OTEL` 参数控制：
+
+```bash
+# 启用 OpenTelemetry 插桩（默认）
+docker build --build-arg OTEL=true -t api-server .
+
+# 不启用 OpenTelemetry
+docker build --build-arg OTEL=false -t api-server .
+```
+
+CI/CD 流水线始终使用 `OTEL=true` 构建。
+
+### 运行时配置
+
+编译注入的 OpenTelemetry 组件通过以下环境变量配置：
 
 | 变量                            | 说明                | 示例值                     |
 | ------------------------------- | ------------------- | -------------------------- |
@@ -349,65 +294,114 @@ docker compose up -d
 | `OTEL_EXPORTER_PROMETHEUS_PORT` | Prometheus 指标端口 | `9464`                     |
 | `OTEL_EXPORTER_PROMETHEUS_HOST` | Prometheus 指标主机 | `0.0.0.0`                  |
 
-每次请求都会生成唯一的 `requestId`，通过它可以在日志和 Trace 系统中快速定位问题链路。
+### 请求链路
+
+无论是否开启 OTEL，每个 HTTP 请求都会自动生成唯一 `requestId`，通过它可在日志和 Trace 系统中快速定位问题链路。
+
 
 ## 告警抑制说明
 
-Alertmanager 原生抑制在告警恢复场景下存在已知问题：当 source 告警恢复后，target 告警的 recovery 通知也会被抑制，导致数据库中 target 告警状态与 Alertmanager 中的实际状态不一致。
+Alertmanager 原生抑制存在已知问题：当 source 告警恢复后，target 告警的 recovery 通知也被抑制，导致数据库与 Alertmanager 状态不一致。
 
 本服务通过自定义抑制规则引擎解决此问题：
 
-1. 将 Alertmanager 的所有抑制规则配置到本服务的抑制规则表中
-2. 定时任务定期轮询抑制规则，检查 `source_matchers` 匹配的 firing 告警
-3. 若存在 firing 的 source 告警，则查找符合 `target_matchers` 的 resolved 告警
-4. 对满足 `equal` 标签匹配条件的 target 告警，自动标记为 resolved
-
-抑制规则模型：
+1. 将抑制规则配置存储在数据库中
+2. 定时任务轮询规则，检查 `sourceMatchers` 是否匹配到当前 firing 的告警
+3. 如果存在 firing 的 source 告警，查找匹配 `targetMatchers` 且已 resolved 的 target 告警
+4. 对满足 `equal`（标签相等）条件的 target 告警自动标记为 resolved
 
 | 字段             | 说明                                                 |
 | ---------------- | ---------------------------------------------------- |
-| `sourceMatchers` | 源告警匹配器（抑制者），格式同 Prometheus 标签匹配器 |
+| `sourceMatchers` | 源告警匹配器（抑制者），同 Prometheus 标签匹配器格式 |
 | `targetMatchers` | 目标告警匹配器（被抑制者）                           |
-| `equalLabels`    | 必须相等的标签列表                                   |
+| `equalLabels`    | 抑制生效需相等的标签键列表                           |
+
+配置示例：
+
+```yaml
+alert:
+  inhibit_rules:
+    - source_matchers:
+        - alertname = "节点磁盘空间不足"
+        - severity = "critical"
+      target_matchers:
+        - alertname = "节点磁盘空间不足"
+        - severity = "warning"
+      equal:
+        - instance
+        - device
+        - mountpoint
+```
+
+
+## Agent 数据通道
+
+通过 gRPC 双向流实现服务端与 Agent 之间的命令下发通道：
+
+- Agent 启动后通过 gRPC 注册到 api-server，建立长连接
+- 服务端通过 `POST /api/v1/agents/commands/wait` 下发命令并同步等待结果
+- 多副本场景下，通过内部 API `POST /internal/v1/forward-command` 将命令转发到 Agent 所连接的实例
+
+**证书生成：**
+
+```bash
+bash scripts/gen-certs.sh
+```
+
+gRPC 使用 TLS 双向认证，证书文件路径在 `config.yaml` 的 `grpc.tls` 中配置。
+
 
 ## 开发指南
 
-### 添加新模块
+### 分层架构
 
-遵循分层架构，新增功能时按以下顺序添加代码：
+代码严格分层：**controller → service/v1 → store → model**。
 
-1. `model/` — 定义数据模型
-2. `store/` — 实现数据访问（使用 GORM gen 生成基础 CRUD）
-3. `service/v1/` — 实现业务逻辑
+新增功能的开发流程：
+
+1. `model/` — 定义 GORM 数据模型
+2. `store/` — 使用 GORM gen 生成基础 CRUD 方法，实现缓存逻辑
+3. `service/v1/` — 实现业务逻辑，定义 Service 接口
 4. `controller/` — 实现 HTTP handler（添加 Swagger 注解）
-5. `cmd/apiserver/` — 在 Wire 中注册 Provider，运行 `wire ./cmd/` 重新生成
+5. `cmd/wire.go` — 在 Wire 中注册 Provider
+6. 运行 `wire ./cmd/` 重新生成依赖注入代码
+
+### GORM gen
+
+`.gen.go` 文件由 GORM gen 工具生成，提供类型安全的数据库查询方法。生成的代码在 `store/` 目录中，勿手动编辑。
+
+生成器定义位于 `gormgen/` 目录。
 
 ### 运行测试
 
 ```bash
-# 全部测试
+# 运行全部测试
 go test ./...
 
-# 指定 domain 测试
+# 指定领域测试
 go test ./test/alert/
 go test ./test/store/
+go test ./test/cache/
 ```
 
 ### 提交规范
 
-使用 Conventional Commits（中文描述）：
+遵循 Conventional Commits，使用中文描述：
 
 ```bash
 feat: 添加告警模板复制功能
 fix: 修复静默恢复告警逻辑
 refactor: 完成告警模块重构
+update: 更新 Dockerfile 基础镜像
 ```
+
 
 ## 相关项目
 
-- 前端 UI：[alert666/ui](https://github.com/alert666/ui)
-- Alertmanager Proto：[alert666/alertmanager-proto](https://github.com/alert666/alertmanager-proto)
+- **前端 UI** — [alert666/ui](https://github.com/alert666/ui)（Vue 3 + TypeScript）
+- **gRPC Proto** — [alert666/alertmanager-proto](https://github.com/alert666/alertmanager-proto)（Agent 数据通道协议定义）
 
 ## License
 
 [MIT](LICENSE)
+
