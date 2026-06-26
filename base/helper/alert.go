@@ -237,7 +237,7 @@ var FuncMap = template.FuncMap{
 					break
 				}
 
-				sb.WriteString(fmt.Sprintf("<font color='red'>**告警实例 #%d**\n</font>", i+1))
+				sb.WriteString(fmt.Sprintf("<font color='red'>**实例 #%d**\n</font>", i+1))
 				desc := v.Annotations["description"]
 				desc = expandLabelVars(desc, v.Labels)
 				sb.WriteString(strings.TrimSpace(desc))
