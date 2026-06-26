@@ -1,107 +1,107 @@
- # Repository Guidelines
- 
- ## Project Structure & Module Organization
- 
- This is a Go web API server built with Gin, GORM, and Wire. The source is organized into layered packages:
- 
- | Directory     | Purpose                                                                        |
- | ------------- | ------------------------------------------------------------------------------ |
- | `cmd/`        | Application entry point and Wire dependency injection                          |
- | `base/`       | Core framework — server setup, middleware, types, logging, config              |
- | `controller/` | HTTP request handlers                                                          |
- | `service/v1/` | Business logic layer                                                           |
- | `store/`      | Data access (GORM queries and cache logic)                                     |
- | `model/`      | GORM data models                                                               |
- | `grpc/`       | gRPC server and handlers                                                       |
- | `pkg/`        | Reusable packages (Casbin, Feishu, JWT, OAuth2, alert inhibition, local cache) |
- | `test/`       | Tests organized by domain subdirectory                                         |
- | `deploy/`     | Dockerfile, docker-compose.yaml, nginx.conf, schema.sql                        |
- | `scripts/`    | Utility scripts (e.g., gRPC certificate generation)                            |
- | `docs/`       | Documentation and screenshots                                                  |
- | `gormgen/`    | GORM model code generation                                                     |
- 
- ## Build, Test, and Development Commands
- 
- ```bash
- # Run all tests
- go test ./...
- 
- # Run tests in a specific domain directory
- go test ./test/alert/
- 
- # Build the binary
- go build ./cmd/apiserver
- 
- # Run the server locally (requires config.yaml and a running MySQL/Redis)
- go run ./cmd/apiserver -c config.yaml
- 
- # Update Wire dependency injection
- wire ./cmd/
- 
- # Docker build (from deploy/ directory)
- cd deploy && make build
- ```
- 
- ## Coding Style & Naming Conventions
- 
- - **Language**: Go, using `gofmt` (or `goimports`) for formatting.
- - **Indentation**: Tabs (Go standard).
- - **Naming**:
-   - Files: `snake_case.go`.
-   - Types, functions, exported fields: PascalCase.
-   - Unexported fields, local variables: camelCase.
-   - Constants: PascalCase or camelCase depending on export scope.
- - **Error handling**: Errors are returned explicitly; `log.Fatal` is reserved for initialization failures only.
- - **Imports**: Grouped into stdlib, third-party, and internal (`github.com/alert666/api-server/...`) blocks separated by blank lines.
- - **Linting**: No project-wide linter config is checked in; follow Go's own `go vet` and standard conventions.
- 
- ## Testing Guidelines
- 
- - **Framework**: Standard Go `testing` package.
- - **Location**: Tests live in the `test/` directory, organized in subdirectories by domain (e.g., `test/alert/`, `test/store/`, `test/casbin/`).
- - **Names**: Test functions use the pattern `TestXxx`, where `Xxx` describes the unit under test.
- - **Coverage**: No formal coverage threshold; contributors are expected to cover new logic with domain-level tests.
- - **Running tests**: Use `go test ./test/<domain>/` or `go test ./...` for the full suite.
- 
- ## Commit & Pull Request Guidelines
- 
- This project uses **Conventional Commits** with Chinese descriptions. Examples from the repository:
- 
- ```
- feat: add alertname Options interface
- fix: resolve silence recovery alert logic
- refactor: complete alert refactoring
- update: update Dockerfile
- ```
- 
- **PR requirements**:
- - Base branch: `main` (or `refactor/alert` for large feature branches).
- - Title and description should clearly state the change and the problem it solves.
- - Link related GitHub issues where applicable.
- - Include screenshots for UI or API changes.
- - CI (GitHub Actions) must pass before merging.
- 
- ## CI/CD Pipeline
- 
- GitHub Actions builds and pushes Docker images on every push to `main` or `refactor/alert`. Images are published to both Alibaba Cloud Container Registry (`registry.cn-beijing.aliyuncs.com/qqlx/alertmanager`) and GitHub Container Registry (`ghcr.io/alert666/api-server`). Tags are generated from the branch name, short commit SHA, and timestamp.
- 
- ## Observability
- 
- The server exposes OpenTelemetry traces and Prometheus-formatted metrics. Configure these via environment variables:
- 
- - `OTEL_EXPORTER_OTLP_ENDPOINT` — OTLP collector address
- - `OTEL_EXPORTER_OTLP_PROTOCOL` — transport protocol (grpc/http)
- - `OTEL_SERVICE_NAME` — service identifier
- - `OTEL_METRICS_EXPORTER` — set to `prometheus` to enable metrics
- - `OTEL_EXPORTER_PROMETHEUS_PORT` — metrics HTTP port
- 
- ## Agent-Specific Instructions
- 
- When contributing to this repository via an AI agent:
- 
- - Read the existing codebase to understand layered architecture (controller → service/v1 → store → model).
- - Respect Wire's dependency injection: add new providers to `cmd/wire.go` and regenerate with `wire ./cmd/`.
- - Place new Go source files in the appropriate layer directory, not a flat layout.
- - Keep new packages inside `pkg/` unless they are layer-specific.
- - Use GORM for database operations and go-redis for caching; avoid raw SQL without justification.
- - For API changes, ensure Swagger annotations are updated alongside the controller code.
+﻿# 仓库指南
+
+## 项目结构与模块组织
+
+这是一个基于 Gin、GORM 和 Wire 构建的 Go Web API 服务。源码按分层包组织：
+
+| 目录          | 说明                                                      |
+| ------------- | --------------------------------------------------------- |
+| `cmd/`        | 应用入口与 Wire 依赖注入                                  |
+| `base/`       | 核心框架 — 服务启动、中间件、类型定义、日志、配置         |
+| `controller/` | HTTP 请求处理器                                           |
+| `service/v1/` | 业务逻辑层                                                |
+| `store/`      | 数据访问层（GORM 查询与缓存逻辑）                         |
+| `model/`      | GORM 数据模型                                             |
+| `grpc/`       | gRPC 服务器与处理器                                       |
+| `pkg/`        | 可复用包（Casbin、飞书、JWT、OAuth2、告警抑制、本地缓存） |
+| `test/`       | 按领域子目录组织的测试                                    |
+| `deploy/`     | Dockerfile、docker-compose.yaml、nginx.conf、schema.sql   |
+| `scripts/`    | 工具脚本（如 gRPC 证书生成）                              |
+| `docs/`       | 文档与截图                                                |
+| `gormgen/`    | GORM 模型代码生成                                         |
+
+## 构建、测试与开发命令
+
+```bash
+# 运行所有测试
+go test ./...
+
+# 运行指定领域目录的测试
+go test ./test/alert/
+
+# 编译二进制
+go build ./cmd/apiserver
+
+# 本地运行服务（需要 config.yaml 和运行中的 MySQL/Redis）
+go run ./cmd/apiserver -c config.yaml
+
+# 更新 Wire 依赖注入
+wire ./cmd/
+
+# Docker 构建（从 deploy/ 目录执行）
+cd deploy && make build
+```
+
+## 编码风格与命名规范
+
+- **语言**: Go，使用 `gofmt`（或 `goimports`）格式化。
+- **缩进**: Tab（Go 标准）。
+- **命名**:
+  - 文件：`snake_case.go`。
+  - 类型、函数、导出字段：PascalCase。
+  - 非导出字段、局部变量：camelCase。
+  - 常量：根据导出范围使用 PascalCase 或 camelCase。
+- **错误处理**: 错误显式返回；`log.Fatal` 仅用于初始化失败。
+- **导入分组**: 按标准库、第三方库、内部库（`github.com/alert666/api-server/...`）分组，各组间空行分隔。
+- **Linting**: 没有项目级 linter 配置；遵循 Go 自身的 `go vet` 和标准惯例。
+
+## 测试指南
+
+- **框架**: Go 标准 `testing` 包。
+- **位置**: 测试位于 `test/` 目录，按领域子目录组织（如 `test/alert/`、`test/store/`、`test/casbin/`）。
+- **命名**: 测试函数使用 `TestXxx` 模式，`Xxx` 描述被测单元。
+- **覆盖率**: 无正式的覆盖率阈值；贡献者应对新逻辑编写领域级测试。
+- **运行测试**: 使用 `go test ./test/<domain>/` 或 `go test ./...` 运行全量测试。
+
+## 提交与 PR 规范
+
+本项目使用带中文描述的 **Conventional Commits**。示例：
+
+```
+feat: 添加 alertname 下拉选项接口
+fix: 修复静默恢复告警逻辑
+refactor: 完成告警模块重构
+update: 更新 Dockerfile
+```
+
+**PR 要求**：
+- 目标分支：`main`（大型功能分支可使用 `refactor/alert`）
+- 标题和描述应清晰说明变更内容及解决的问题
+- 关联相关的 GitHub Issue
+- UI 或 API 变更需附带截图
+- CI（GitHub Actions）必须通过后方可合并
+
+## CI/CD 流水线
+
+每次推送到 `main` 或 `refactor/alert` 分支时，GitHub Actions 自动构建并推送 Docker 镜像。镜像同时发布到阿里云容器镜像服务（`registry.cn-beijing.aliyuncs.com/qqlx/alertmanager`）和 GitHub Container Registry（`ghcr.io/alert666/api-server`）。标签由分支名、短 commit SHA 和时间戳生成。
+
+## 可观测性
+
+服务暴露 OpenTelemetry 追踪和 Prometheus 格式指标。通过以下环境变量配置：
+
+- `OTEL_EXPORTER_OTLP_ENDPOINT` — OTLP 收集器地址
+- `OTEL_EXPORTER_OTLP_PROTOCOL` — 传输协议（grpc/http）
+- `OTEL_SERVICE_NAME` — 服务标识
+- `OTEL_METRICS_EXPORTER` — 设为 `prometheus` 启用指标
+- `OTEL_EXPORTER_PROMETHEUS_PORT` — 指标 HTTP 端口
+
+## 面向 AI Agent 的特别说明
+
+当通过 AI Agent 为本仓库贡献代码时：
+
+- 阅读现有代码库，理解分层架构（controller → service/v1 → store → model）。
+- 遵循 Wire 依赖注入：在 `cmd/wire.go` 中添加新 Provider，并用 `wire ./cmd/` 重新生成。
+- 将新的 Go 源文件放在对应的分层目录中，不要平铺。
+- 新包放在 `pkg/` 中，除非它是特定层级的。
+- 使用 GORM 进行数据库操作，使用 go-redis 进行缓存；无正当理由避免使用原生 SQL。
+- 对于 API 变更，确保 Swagger 注解随 controller 代码一同更新。
