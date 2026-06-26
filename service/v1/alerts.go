@@ -80,7 +80,7 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 
 	// 从远程获取配置
 	if alertTemplate.ReceiveIdType == string(model.Remote) {
-		if err := helper.GetRemoteReceive(ctx, tenantValue, alertTemplate); err != nil {
+		if err := helper.GetRemoteReceive(ctx, req, tenantValue, alertTemplate); err != nil {
 			return err
 		}
 	}

@@ -8,6 +8,7 @@ import (
 
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/log"
+	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 )
 
@@ -41,7 +42,9 @@ func TestGetRemoteReceive(t *testing.T) {
 		// ReceiveId:     []string{"https://gongjiyun-business-data.suanlene.cn/api/v1/tenant/node-pod-region;;4045d6c1da2ab78e2fc21e6956bb79f4a5678b75d09d2eddaa8f838399043969;;chat_id"},
 	}
 
-	if err := helper.GetRemoteReceive(context.Background(), "cn-henan-2", te); err != nil {
+	req := types.NewTestAlertReceiveReq()
+
+	if err := helper.GetRemoteReceive(context.Background(), req, "cn-henan-2", te); err != nil {
 		t.Fatal(err)
 	}
 
