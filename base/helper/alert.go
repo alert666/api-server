@@ -323,7 +323,7 @@ func OverrideAt(receive, template string) (receiveID, result string) {
 	return rs[0], template
 }
 
-func GetRemoteReceive(ctx context.Context, tenantValue string, alertTemplate *model.AlertTemplate) error {
+func GetRemoteReceive(ctx context.Context, body *types.AlertReceiveReq, tenantValue string, alertTemplate *model.AlertTemplate) error {
 	client := resty.New()
 	remoteReceives := make([]types.RemoteReceives, 0, len(alertTemplate.ReceiveId))
 
@@ -345,7 +345,11 @@ func GetRemoteReceive(ctx context.Context, tenantValue string, alertTemplate *mo
 			req.SetHeader("Authorization", token)
 		}
 
-		resp, err := req.Get(url)
+		if body != nil {
+			req.SetBody(body)
+		}
+
+		resp, err := req.Post(url)
 		if err != nil {
 			return fmt.Errorf("从远端获取 receive 失败, %w", err)
 		}
