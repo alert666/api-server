@@ -246,8 +246,8 @@ func (receiver *FeiShu) renderAndSend(ctx context.Context, larkCli *lark.Client,
 		zap.String("receiveIdType", receiveIdType),
 		zap.String("receiveId", receiveId),
 		zap.String("tpl", tpl),
-		zap.Any("data", data),
 	)
+
 	// 1. 渲染模板
 	content, err := RenderingAlertContent().Build(ctx, data, tpl)
 	if err != nil {
@@ -390,7 +390,8 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 				_rid, _template := helper.OverrideAt(rid, notifyReq.AlertTemplate.AggregationTemplate)
 				err = receiver.renderAndSend(
 					ctx,
-					larkCli, notifyReq.AlertTemplate.ReceiveIdType,
+					larkCli,
+					notifyReq.AlertTemplate.ReceiveIdType,
 					_rid,
 					newReq,
 					_template,

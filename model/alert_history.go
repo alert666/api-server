@@ -17,7 +17,7 @@ type AlertHistory struct {
 	Cluster           string           `gorm:"column:cluster;type:varchar(128);not null;default:'default';uniqueIndex:uk_alert_identity,priority:3;index:idx_status_cluster,priority:2;comment:租户" json:"cluster"`
 	Status            string           `gorm:"column:status;type:varchar(32);not null;index:idx_status_cluster,priority:1;comment:告警状态" json:"status"`
 	EndsAt            *time.Time       `gorm:"column:ends_at;type:datetime;index:idx_ends_at;comment:告警恢复时间" json:"endsAt"`
-	AlertChannelID    int              `gorm:"column:alert_channel_id;not null;index:idx_channel_id;comment:关联通道ID" json:"alertChannelId"`
+	AlertTemplateID   int              `gorm:"column:alert_template_id;not null;index:idx_template_id;comment:关联模板ID" json:"alertTemplateId"`
 	AlertSendRecordID *int             `gorm:"column:alert_send_record_id;index:idx_send_record_id;comment:关联发送记录ID和分组ID" json:"alertSendRecordID"`
 	AlertSilenceID    *int             `gorm:"column:alert_silence_id;index:idx_history_silence_id;comment:关联静默规则ID" json:"alertSilenceID"`
 	Alertname         string           `gorm:"column:alertname;type:varchar(255);not null" json:"alertname"`
@@ -27,7 +27,7 @@ type AlertHistory struct {
 	Annotations       datatypes.JSON   `gorm:"column:annotations;type:json" json:"annotations"`
 	SendCount         int              `gorm:"column:send_count;type:int;size:3" json:"sendCount"`
 	IsSilenced        bool             `gorm:"column:is_silenced;default:false" json:"isSilenced"`
-	AlertChannel      *AlertChannel    `gorm:"foreignKey:AlertChannelID" json:"alertChannel"`
+	AlertTemplate     *AlertTemplate   `gorm:"foreignKey:AlertTemplateID" json:"alertTemplate"`
 	AlertSendRecord   *AlertSendRecord `gorm:"foreignKey:AlertSendRecordID" json:"alertSendRecord"`
 	AlertSilence      *AlertSilence    `gorm:"foreignKey:AlertSilenceID" json:"alertSilence"`
 }

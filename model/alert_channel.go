@@ -69,10 +69,10 @@ type DingTalkConfig struct {
 
 // EmailConfig 邮件配置
 type EmailConfig struct {
-	SMTPHost string   `json:"smtp_host"`
-	SMTPPort int      `json:"smtp_port"`
-	Username string   `json:"username"`
-	Password string   `json:"password"`
+	SMTPHost string `json:"smtp_host"`
+	SMTPPort int    `json:"smtp_port"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 // GetFeishuAppConfig 获取飞书应用配置
