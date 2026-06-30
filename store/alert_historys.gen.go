@@ -36,7 +36,7 @@ func newAlertHistory(db *gorm.DB, opts ...gen.DOOption) alertHistory {
 	_alertHistory.Cluster = field.NewString(tableName, "cluster")
 	_alertHistory.Status = field.NewString(tableName, "status")
 	_alertHistory.EndsAt = field.NewTime(tableName, "ends_at")
-	_alertHistory.AlertChannelID = field.NewInt(tableName, "alert_channel_id")
+	_alertHistory.AlertTemplateID = field.NewInt(tableName, "alert_template_id")
 	_alertHistory.AlertSendRecordID = field.NewInt(tableName, "alert_send_record_id")
 	_alertHistory.AlertSilenceID = field.NewInt(tableName, "alert_silence_id")
 	_alertHistory.Alertname = field.NewString(tableName, "alertname")
@@ -46,10 +46,15 @@ func newAlertHistory(db *gorm.DB, opts ...gen.DOOption) alertHistory {
 	_alertHistory.Annotations = field.NewField(tableName, "annotations")
 	_alertHistory.SendCount = field.NewInt(tableName, "send_count")
 	_alertHistory.IsSilenced = field.NewBool(tableName, "is_silenced")
-	_alertHistory.AlertChannel = alertHistoryBelongsToAlertChannel{
+	_alertHistory.AlertTemplate = alertHistoryBelongsToAlertTemplate{
 		db: db.Session(&gorm.Session{}),
 
-		RelationField: field.NewRelation("AlertChannel", "model.AlertChannel"),
+		RelationField: field.NewRelation("AlertTemplate", "model.AlertTemplate"),
+		AlertChannel: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("AlertTemplate.AlertChannel", "model.AlertChannel"),
+		},
 	}
 
 	_alertHistory.AlertSendRecord = alertHistoryBelongsToAlertSendRecord{
@@ -58,7 +63,7 @@ func newAlertHistory(db *gorm.DB, opts ...gen.DOOption) alertHistory {
 		RelationField: field.NewRelation("AlertSendRecord", "model.AlertSendRecord"),
 		AlertHistory: struct {
 			field.RelationField
-			AlertChannel struct {
+			AlertTemplate struct {
 				field.RelationField
 			}
 			AlertSendRecord struct {
@@ -69,10 +74,10 @@ func newAlertHistory(db *gorm.DB, opts ...gen.DOOption) alertHistory {
 			}
 		}{
 			RelationField: field.NewRelation("AlertSendRecord.AlertHistory", "model.AlertHistory"),
-			AlertChannel: struct {
+			AlertTemplate: struct {
 				field.RelationField
 			}{
-				RelationField: field.NewRelation("AlertSendRecord.AlertHistory.AlertChannel", "model.AlertChannel"),
+				RelationField: field.NewRelation("AlertSendRecord.AlertHistory.AlertTemplate", "model.AlertTemplate"),
 			},
 			AlertSendRecord: struct {
 				field.RelationField
@@ -110,7 +115,7 @@ type alertHistory struct {
 	Cluster           field.String // 租户
 	Status            field.String // 告警状态
 	EndsAt            field.Time   // 告警恢复时间
-	AlertChannelID    field.Int    // 关联通道ID
+	AlertTemplateID   field.Int    // 关联模板ID
 	AlertSendRecordID field.Int    // 关联发送记录ID和分组ID
 	AlertSilenceID    field.Int    // 关联静默规则ID
 	Alertname         field.String
@@ -120,7 +125,7 @@ type alertHistory struct {
 	Annotations       field.Field
 	SendCount         field.Int
 	IsSilenced        field.Bool
-	AlertChannel      alertHistoryBelongsToAlertChannel
+	AlertTemplate     alertHistoryBelongsToAlertTemplate
 
 	AlertSendRecord alertHistoryBelongsToAlertSendRecord
 
@@ -149,7 +154,7 @@ func (a *alertHistory) updateTableName(table string) *alertHistory {
 	a.Cluster = field.NewString(table, "cluster")
 	a.Status = field.NewString(table, "status")
 	a.EndsAt = field.NewTime(table, "ends_at")
-	a.AlertChannelID = field.NewInt(table, "alert_channel_id")
+	a.AlertTemplateID = field.NewInt(table, "alert_template_id")
 	a.AlertSendRecordID = field.NewInt(table, "alert_send_record_id")
 	a.AlertSilenceID = field.NewInt(table, "alert_silence_id")
 	a.Alertname = field.NewString(table, "alertname")
@@ -184,7 +189,7 @@ func (a *alertHistory) fillFieldMap() {
 	a.fieldMap["cluster"] = a.Cluster
 	a.fieldMap["status"] = a.Status
 	a.fieldMap["ends_at"] = a.EndsAt
-	a.fieldMap["alert_channel_id"] = a.AlertChannelID
+	a.fieldMap["alert_template_id"] = a.AlertTemplateID
 	a.fieldMap["alert_send_record_id"] = a.AlertSendRecordID
 	a.fieldMap["alert_silence_id"] = a.AlertSilenceID
 	a.fieldMap["alertname"] = a.Alertname
@@ -199,8 +204,8 @@ func (a *alertHistory) fillFieldMap() {
 
 func (a alertHistory) clone(db *gorm.DB) alertHistory {
 	a.alertHistoryDo.ReplaceConnPool(db.Statement.ConnPool)
-	a.AlertChannel.db = db.Session(&gorm.Session{Initialized: true})
-	a.AlertChannel.db.Statement.ConnPool = db.Statement.ConnPool
+	a.AlertTemplate.db = db.Session(&gorm.Session{Initialized: true})
+	a.AlertTemplate.db.Statement.ConnPool = db.Statement.ConnPool
 	a.AlertSendRecord.db = db.Session(&gorm.Session{Initialized: true})
 	a.AlertSendRecord.db.Statement.ConnPool = db.Statement.ConnPool
 	a.AlertSilence.db = db.Session(&gorm.Session{Initialized: true})
@@ -210,19 +215,23 @@ func (a alertHistory) clone(db *gorm.DB) alertHistory {
 
 func (a alertHistory) replaceDB(db *gorm.DB) alertHistory {
 	a.alertHistoryDo.ReplaceDB(db)
-	a.AlertChannel.db = db.Session(&gorm.Session{})
+	a.AlertTemplate.db = db.Session(&gorm.Session{})
 	a.AlertSendRecord.db = db.Session(&gorm.Session{})
 	a.AlertSilence.db = db.Session(&gorm.Session{})
 	return a
 }
 
-type alertHistoryBelongsToAlertChannel struct {
+type alertHistoryBelongsToAlertTemplate struct {
 	db *gorm.DB
 
 	field.RelationField
+
+	AlertChannel struct {
+		field.RelationField
+	}
 }
 
-func (a alertHistoryBelongsToAlertChannel) Where(conds ...field.Expr) *alertHistoryBelongsToAlertChannel {
+func (a alertHistoryBelongsToAlertTemplate) Where(conds ...field.Expr) *alertHistoryBelongsToAlertTemplate {
 	if len(conds) == 0 {
 		return &a
 	}
@@ -235,32 +244,32 @@ func (a alertHistoryBelongsToAlertChannel) Where(conds ...field.Expr) *alertHist
 	return &a
 }
 
-func (a alertHistoryBelongsToAlertChannel) WithContext(ctx context.Context) *alertHistoryBelongsToAlertChannel {
+func (a alertHistoryBelongsToAlertTemplate) WithContext(ctx context.Context) *alertHistoryBelongsToAlertTemplate {
 	a.db = a.db.WithContext(ctx)
 	return &a
 }
 
-func (a alertHistoryBelongsToAlertChannel) Session(session *gorm.Session) *alertHistoryBelongsToAlertChannel {
+func (a alertHistoryBelongsToAlertTemplate) Session(session *gorm.Session) *alertHistoryBelongsToAlertTemplate {
 	a.db = a.db.Session(session)
 	return &a
 }
 
-func (a alertHistoryBelongsToAlertChannel) Model(m *model.AlertHistory) *alertHistoryBelongsToAlertChannelTx {
-	return &alertHistoryBelongsToAlertChannelTx{a.db.Model(m).Association(a.Name())}
+func (a alertHistoryBelongsToAlertTemplate) Model(m *model.AlertHistory) *alertHistoryBelongsToAlertTemplateTx {
+	return &alertHistoryBelongsToAlertTemplateTx{a.db.Model(m).Association(a.Name())}
 }
 
-func (a alertHistoryBelongsToAlertChannel) Unscoped() *alertHistoryBelongsToAlertChannel {
+func (a alertHistoryBelongsToAlertTemplate) Unscoped() *alertHistoryBelongsToAlertTemplate {
 	a.db = a.db.Unscoped()
 	return &a
 }
 
-type alertHistoryBelongsToAlertChannelTx struct{ tx *gorm.Association }
+type alertHistoryBelongsToAlertTemplateTx struct{ tx *gorm.Association }
 
-func (a alertHistoryBelongsToAlertChannelTx) Find() (result *model.AlertChannel, err error) {
+func (a alertHistoryBelongsToAlertTemplateTx) Find() (result *model.AlertTemplate, err error) {
 	return result, a.tx.Find(&result)
 }
 
-func (a alertHistoryBelongsToAlertChannelTx) Append(values ...*model.AlertChannel) (err error) {
+func (a alertHistoryBelongsToAlertTemplateTx) Append(values ...*model.AlertTemplate) (err error) {
 	targetValues := make([]interface{}, len(values))
 	for i, v := range values {
 		targetValues[i] = v
@@ -268,7 +277,7 @@ func (a alertHistoryBelongsToAlertChannelTx) Append(values ...*model.AlertChanne
 	return a.tx.Append(targetValues...)
 }
 
-func (a alertHistoryBelongsToAlertChannelTx) Replace(values ...*model.AlertChannel) (err error) {
+func (a alertHistoryBelongsToAlertTemplateTx) Replace(values ...*model.AlertTemplate) (err error) {
 	targetValues := make([]interface{}, len(values))
 	for i, v := range values {
 		targetValues[i] = v
@@ -276,7 +285,7 @@ func (a alertHistoryBelongsToAlertChannelTx) Replace(values ...*model.AlertChann
 	return a.tx.Replace(targetValues...)
 }
 
-func (a alertHistoryBelongsToAlertChannelTx) Delete(values ...*model.AlertChannel) (err error) {
+func (a alertHistoryBelongsToAlertTemplateTx) Delete(values ...*model.AlertTemplate) (err error) {
 	targetValues := make([]interface{}, len(values))
 	for i, v := range values {
 		targetValues[i] = v
@@ -284,15 +293,15 @@ func (a alertHistoryBelongsToAlertChannelTx) Delete(values ...*model.AlertChanne
 	return a.tx.Delete(targetValues...)
 }
 
-func (a alertHistoryBelongsToAlertChannelTx) Clear() error {
+func (a alertHistoryBelongsToAlertTemplateTx) Clear() error {
 	return a.tx.Clear()
 }
 
-func (a alertHistoryBelongsToAlertChannelTx) Count() int64 {
+func (a alertHistoryBelongsToAlertTemplateTx) Count() int64 {
 	return a.tx.Count()
 }
 
-func (a alertHistoryBelongsToAlertChannelTx) Unscoped() *alertHistoryBelongsToAlertChannelTx {
+func (a alertHistoryBelongsToAlertTemplateTx) Unscoped() *alertHistoryBelongsToAlertTemplateTx {
 	a.tx = a.tx.Unscoped()
 	return &a
 }
@@ -304,7 +313,7 @@ type alertHistoryBelongsToAlertSendRecord struct {
 
 	AlertHistory struct {
 		field.RelationField
-		AlertChannel struct {
+		AlertTemplate struct {
 			field.RelationField
 		}
 		AlertSendRecord struct {

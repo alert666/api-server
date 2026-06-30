@@ -11,8 +11,8 @@ import (
 
 // AlertReceiveReq 是 Alertmanager 发送的 Webhook 顶层 JSON 结构
 type AlertReceiveReq struct {
-	TemplateName      string            `form:"templateName" binding:"required"`
-	ExtraSync         string            `form:"extraSync"` // 将告警额外同步到某个或多个接收者
+	TemplateName      string            `form:"templateName" binding:"required" json:"templateName"` // 告警模板名称
+	ExtraSync         string            `form:"extraSync" json:"extraSync"`                          // 将告警额外同步到某个或多个接收者
 	Receiver          string            `json:"receiver"`
 	Status            string            `json:"status"` // "firing" or "resolved"
 	Alerts            []*Alert          `json:"alerts"`
@@ -109,7 +109,7 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 }
 
 // 辅助函数：将业务 Alert 转换为 DB Model
-func ConvertToModel(tenantKey string, a *Alert, channelID int) (*model.AlertHistory, error) {
+func ConvertToModel(tenantKey string, a *Alert, templateID int) (*model.AlertHistory, error) {
 	labelByte, err := json.Marshal(a.Labels)
 	if err != nil {
 		return nil, err
@@ -119,18 +119,18 @@ func ConvertToModel(tenantKey string, a *Alert, channelID int) (*model.AlertHist
 		return nil, err
 	}
 	return &model.AlertHistory{
-		Fingerprint:    a.Fingerprint,
-		StartsAt:       a.StartsAt,
-		Cluster:        a.Labels[tenantKey], // 获取告警数据里 tenantKey 对应的值, 用于存储到数据库中区分租户
-		EndsAt:         a.EndsAt,
-		Status:         a.Status,
-		Alertname:      a.Labels["alertname"],
-		Severity:       a.Labels["severity"],
-		Instance:       a.Labels["instance"],
-		Labels:         datatypes.JSON(labelByte),
-		Annotations:    datatypes.JSON(annotationsByte),
-		AlertChannelID: channelID,
-		SendCount:      1,
+		Fingerprint:     a.Fingerprint,
+		StartsAt:        a.StartsAt,
+		Cluster:         a.Labels[tenantKey], // 获取告警数据里 tenantKey 对应的值, 用于存储到数据库中区分租户
+		EndsAt:          a.EndsAt,
+		Status:          a.Status,
+		Alertname:       a.Labels["alertname"],
+		Severity:        a.Labels["severity"],
+		Instance:        a.Labels["instance"],
+		Labels:          datatypes.JSON(labelByte),
+		Annotations:     datatypes.JSON(annotationsByte),
+		AlertTemplateID: templateID,
+		SendCount:       1,
 	}, nil
 }
 

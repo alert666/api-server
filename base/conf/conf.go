@@ -348,6 +348,10 @@ func GetAlertReceiveToken() string {
 	return token
 }
 
+func GetAlertPrintReceivedData() bool {
+	return viper.GetBool("alert.printReceivedData")
+}
+
 func GetAlertRepeatInterval() time.Duration {
 	return viper.GetDuration("alert.repeatInterval")
 }

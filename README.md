@@ -182,6 +182,12 @@ redis:
   expireTime: 300s
   keyPrefix: tutu
 
+alert:
+  receiveToken: ""            # Alertmanager webhook 认证 token，空值表示不校验
+  tenantKey: cluster          # 从告警 label 中提取租户值的键名
+  printReceivedData: false    # 是否打印 Alertmanager 发送来的完整告警数据
+  repeatInterval: 4h          # 告警重复发送间隔
+
 # ... 更多配置项见 config-example.yaml
 ```
 
@@ -210,6 +216,7 @@ receivers:
 `templateName` 为必填 query 参数，指定该路由下的告警使用哪个通知模板。
 
 > 告警数据按 `alert.receiveToken` 字段校验；若为空白字符串则不校验认证（仅建议开发环境使用）。
+> 如需排查 Alertmanager Webhook 原始数据，可将 `alert.printReceivedData` 设为 `true`；默认关闭，避免日志中持续输出完整告警内容。
 
 
 ## API 文档
@@ -297,7 +304,6 @@ CI/CD 流水线始终使用 `OTEL=true` 构建。
 ### 请求链路
 
 无论是否开启 OTEL，每个 HTTP 请求都会自动生成唯一 `requestId`，通过它可在日志和 Trace 系统中快速定位问题链路。
-
 
 ## 告警抑制说明
 

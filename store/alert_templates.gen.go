@@ -59,7 +59,7 @@ type alertTemplate struct {
 	UpdatedAt           field.Time
 	DeletedAt           field.Field
 	Name                field.String // 模板名称
-	ReceiveIdType       field.String // 接收者类型(open_id/user_id/email/chat_id/空-Webhook类无需指定)
+	ReceiveIdType       field.String // 接收者类型(open_id/user_id/email/chat_id/remote/空-Webhook类无需指定)
 	ReceiveId           field.Field  // 接收者ID列表(JSON 数组)
 	AlertChannelID      field.Int    // 关联的告警渠道ID
 	Description         field.String

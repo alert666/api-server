@@ -1,4 +1,4 @@
-﻿package v1
+package v1
 
 import (
 	"context"
@@ -63,7 +63,9 @@ func NewCleanDuplicateFiringer(cache store.CacheStorer) CleanDuplicateFiringer {
 }
 
 func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertReceiveReq) error {
-	log.WithRequestID(ctx).Debug("接收告警数据", zap.Any("data", req))
+	if conf.GetAlertPrintReceivedData() {
+		log.WithRequestID(ctx).Info("received alertManager body", zap.Any("data", req))
+	}
 	// 通过 templateName 获取告警模板（含关联的 Channel）
 	alertTemplate, err := receiver.getTemplate(ctx, req.TemplateName)
 	if err != nil {
@@ -366,9 +368,9 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 		allCreateSendRecords []*model.AlertSendRecord
 		allUpdateSendRecords []*model.AlertSendRecord
 		allUpdateAlerts      []*model.AlertHistory
+		sharedAggRecord      []*model.AlertSendRecord
 	)
 
-	var sharedAggRecord []*model.AlertSendRecord
 	batches := []map[string]*types.Alert{notifyReq.AlertMap.FiringAlertMap, notifyReq.AlertMap.ResolvedAlertMap}
 	for _, batchMap := range batches {
 		if len(batchMap) == 0 {
@@ -393,7 +395,7 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 	silenceCreate, silenceUpdate := receiver.processSilencedAlerts(notifyReq)
 	allUpdateAlerts = append(allUpdateAlerts, silenceUpdate...)
 
-	// 批量创建带有发送流水的告警 (Firing/Resolved)
+	// 创建 CreateSendRecords 的时候批量创建带有发送流水的告警 (Firing/Resolved)
 	if len(allCreateSendRecords) > 0 {
 		if err := aSendStore.WithContext(ctx).Create(allCreateSendRecords...); err != nil {
 			log.WithRequestID(ctx).Error("批量创建告警历史记录失败", zap.String("tenant", tenant), zap.Error(err))
@@ -430,6 +432,16 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 				"is_silenced":      updateAlert.IsSilenced,
 				"alert_silence_id": updateAlert.AlertSilenceID,
 			}
+
+			log.WithRequestID(ctx).Info(
+				"更新告警记录",
+				zap.Int("alertHistoryID", updateAlert.ID),
+				zap.Int("alertTemplateID", updateAlert.AlertTemplateID),
+				zap.String("Fingerprint", updateAlert.Fingerprint),
+				zap.String("alertHistoryName", updateAlert.Alertname),
+				zap.String("tenant", tenant),
+			)
+
 			if _, err := aHistoryStore.WithContext(timeoutCtx).Where(aHistoryStore.ID.Eq(updateAlert.ID)).Updates(upMap); err != nil {
 				log.WithRequestID(ctx).Error("批量更新告警历史记录失败", zap.String("tenant", tenant), zap.Error(err))
 				continue
@@ -437,7 +449,29 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 		}
 	}
 
-	log.WithRequestID(ctx).Info("告警记录持久化完成", zap.String("tenant", tenant))
+	for _, record := range allCreateSendRecords {
+		// 防御性检查：防止切片中包含 nil 指针
+		if record == nil {
+			continue
+		}
+
+		// 直接遍历子切片，Go 会自动处理 len(record.AlertHistory) == 0 的情况
+		for _, history := range record.AlertHistory {
+			if history == nil {
+				continue
+			}
+
+			log.WithRequestID(ctx).Info(
+				"创建告警记录",
+				zap.Int("alertHistoryID", history.ID),
+				zap.Int("alertTemplateID", history.AlertTemplateID),
+				zap.String("Fingerprint", history.Fingerprint),
+				zap.String("alertHistoryName", history.Alertname),
+				zap.String("tenant", tenant),
+			)
+		}
+	}
+
 }
 
 type processAlertsReq struct {
@@ -460,11 +494,12 @@ func (receiver *alertsService) processAlerts(ctx context.Context, req *processAl
 		aggregationStatus     = *req.notifyReq.AlertChannel.AggregationStatus
 		aggregationSendResult = req.sendResult.AggregationSendResult
 		singleSendResult      map[string]error
-		sharedAggRecord       *model.AlertSendRecord
-		createSendRecords     = make([]*model.AlertSendRecord, 0, alertsLen)
-		updateSendRecords     = make([]*model.AlertSendRecord, 0, alertsLen)
-		updateAlerts          = make([]*model.AlertHistory, 0, alertsLen)
-		updatedRecordIDs      = make(map[int]struct{}, alertsLen)
+		// sharedAggRecord 聚合模式下的公共发送记录, 用于挂载所有告警历史, 利用 gorm 的关联机制一次性插入到数据库
+		sharedAggRecord   *model.AlertSendRecord
+		createSendRecords = make([]*model.AlertSendRecord, 0, alertsLen)
+		updateSendRecords = make([]*model.AlertSendRecord, 0, alertsLen)
+		updateAlerts      = make([]*model.AlertHistory, 0, alertsLen)
+		updatedRecordIDs  = make(map[int]struct{}, alertsLen)
 	)
 
 	// 转换单次发送告警记录的发送状态
@@ -542,7 +577,7 @@ func (receiver *alertsService) processAlerts(ctx context.Context, req *processAl
 
 		// !exist 创建 AlertSendRecord 记录
 		if !exist {
-			alertHistory, err := types.ConvertToModel(receiver.tenantKey, alert, req.notifyReq.AlertChannel.ID)
+			alertHistory, err := types.ConvertToModel(receiver.tenantKey, alert, req.notifyReq.AlertTemplate.ID)
 			if err != nil {
 				log.WithRequestID(ctx).Error("转换告警模型失败", zap.Error(err), zap.Any("data", alertHistory))
 				continue
@@ -883,7 +918,7 @@ func (receiver *alertsService) processSilencedAlerts(notifyReq *types.NotifyReq)
 			updateAlerts = append(updateAlerts, storeHistory)
 		} else {
 			// 新告警即被静默
-			alertHistory, err := types.ConvertToModel(receiver.tenantKey, alert, notifyReq.AlertChannel.ID)
+			alertHistory, err := types.ConvertToModel(receiver.tenantKey, alert, notifyReq.AlertTemplate.ID)
 			if err != nil {
 				zap.L().Error("转换静默告警模型失败", zap.Error(err))
 				continue

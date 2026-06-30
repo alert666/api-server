@@ -38,10 +38,18 @@ func newAlertSendRecord(db *gorm.DB, opts ...gen.DOOption) alertSendRecord {
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("AlertHistory", "model.AlertHistory"),
-		AlertChannel: struct {
+		AlertTemplate: struct {
 			field.RelationField
+			AlertChannel struct {
+				field.RelationField
+			}
 		}{
-			RelationField: field.NewRelation("AlertHistory.AlertChannel", "model.AlertChannel"),
+			RelationField: field.NewRelation("AlertHistory.AlertTemplate", "model.AlertTemplate"),
+			AlertChannel: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("AlertHistory.AlertTemplate.AlertChannel", "model.AlertChannel"),
+			},
 		},
 		AlertSendRecord: struct {
 			field.RelationField
@@ -145,8 +153,11 @@ type alertSendRecordHasManyAlertHistory struct {
 
 	field.RelationField
 
-	AlertChannel struct {
+	AlertTemplate struct {
 		field.RelationField
+		AlertChannel struct {
+			field.RelationField
+		}
 	}
 	AlertSendRecord struct {
 		field.RelationField
