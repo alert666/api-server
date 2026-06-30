@@ -1,4 +1,4 @@
-﻿package v1
+package v1
 
 import (
 	"context"
@@ -63,7 +63,9 @@ func NewCleanDuplicateFiringer(cache store.CacheStorer) CleanDuplicateFiringer {
 }
 
 func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertReceiveReq) error {
-	log.WithRequestID(ctx).Debug("接收告警数据", zap.Any("data", req))
+	if conf.GetAlertPrintReceivedData() {
+		log.WithRequestID(ctx).Info("接收告警数据", zap.Any("data", req))
+	}
 	// 通过 templateName 获取告警模板（含关联的 Channel）
 	alertTemplate, err := receiver.getTemplate(ctx, req.TemplateName)
 	if err != nil {

@@ -105,3 +105,4 @@ update: 更新 Dockerfile
 - 新包放在 `pkg/` 中，除非它是特定层级的。
 - 使用 GORM 进行数据库操作，使用 go-redis 进行缓存；无正当理由避免使用原生 SQL。
 - 对于 API 变更，确保 Swagger 注解随 controller 代码一同更新。
+- 任务结束后自动 commit

@@ -79,6 +79,7 @@ alert:
   # 示例（Alertmanager 侧需配置对应的 Authorization 头）：
   # receiveToken: "a8f5c2e3-9b1d-4f6e-8c2a-1d3e5f7a9b0c"
   tenantKey: cluster          # 租户标签键名，从告警 label 中提取（默认 cluster）
+  printReceivedData: false    # 是否打印 Alertmanager 发送来的完整告警数据（默认 false）
   repeatInterval: 4h          # 告警重复发送间隔
   extraSync:
     # alerts 接口 extraSync url 参数的值
