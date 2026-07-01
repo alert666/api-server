@@ -105,27 +105,31 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	notifyReq.AlertReceiveReq = req
 
 	var sendResult *types.NotifySendResult
+	defer func() {
+		if sendResult == nil {
+			return
+		}
+		asyncCtx := context.WithoutCancel(ctx)
+		go receiver.saveAlerts(asyncCtx, tenantValue, notifyReq, sendResult)
+	}()
+
+	// 根据告警渠道类型发送告警
 	switch alertChannel.Type {
 	case model.ChannelTypeEmail:
 		sendResult, err = receiver.emailImpl.Notify(ctx, notifyReq)
 		if err != nil {
-			log.WithRequestID(ctx).Error("邮箱告警发送失败", zap.Error(err))
+			return err
 		}
 	case model.ChannelTypeFeishuApp:
 		sendResult, err = receiver.feishuImpl.Notify(ctx, notifyReq)
 		if err != nil {
-			log.WithRequestID(ctx).Error("飞书告警发送失败", zap.Error(err))
+			return err
 		}
 	default:
 		return fmt.Errorf("不支持的发送类型")
 	}
 
-	log.WithRequestID(ctx).Info("持久化告警数据", zap.String("tenant", tenantValue))
-	if sendResult != nil {
-		asyncCtx := context.WithoutCancel(ctx)
-		go receiver.saveAlerts(asyncCtx, tenantValue, notifyReq, sendResult)
-	}
-	return nil
+	return err
 }
 
 // getTemplate 通过模板名称获取告警模板（含关联的 Channel 和已初始化的 SDK 客户端）
@@ -195,30 +199,30 @@ func (receiver *alertsService) getTemplate(ctx context.Context, templateName str
 			if err := receiver.cacheImpl.SetObject(ctx, store.AlertChannelType, channel.ID, channel, store.NeverExpires); err != nil {
 				return nil, err
 			}
+
+			// channel cache miss means the in-memory SDK client may also be missing.
+			switch channel.Type {
+			case model.ChannelTypeEmail:
+			case model.ChannelTypeFeishuApp:
+				appid, appSecret, err := helper.VerificationAlertFeishuConfig(&channel)
+				if err != nil {
+					return nil, err
+				}
+				receiver.feishuImpl.Init(channel.Name, appid, appSecret)
+			default:
+				return nil, fmt.Errorf("unsupported channel type: %s", channel.Type)
+			}
 		}
 		if *channel.Status != model.StatusEnabled {
 			return nil, fmt.Errorf("channel [%s] for template %s is disabled", channel.Name, templateName)
 		}
 		template.AlertChannel = &channel
-
-		// init feishu SDK client
-		switch channel.Type {
-		case model.ChannelTypeEmail:
-		case model.ChannelTypeFeishuApp:
-			appid, appSecret, err := helper.VerificationAlertFeishuConfig(&channel)
-			if err != nil {
-				return nil, err
-			}
-			receiver.feishuImpl.Init(channel.Name, appid, appSecret)
-		default:
-			return nil, fmt.Errorf("unsupported channel type: %s", channel.Type)
-		}
 	}
 
 	return &template, nil
 }
 func (receiver *alertsService) aggregatedAlarmGrouping(ctx context.Context, tenantValue string, alerts []*types.Alert) (*types.NotifyReq, error) {
-	log.WithRequestID(ctx).Info("告警分组", zap.String("tenant", tenantValue))
+	log.WithRequestID(ctx).Debug("告警分组", zap.String("tenant", tenantValue))
 	alertLen := len(alerts)
 	if alertLen == 0 {
 		return nil, fmt.Errorf("alerts 为空, 告警分组失败")
@@ -368,7 +372,6 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 		allCreateSendRecords []*model.AlertSendRecord
 		allUpdateSendRecords []*model.AlertSendRecord
 		allUpdateAlerts      []*model.AlertHistory
-		sharedAggRecord      []*model.AlertSendRecord
 	)
 
 	batches := []map[string]*types.Alert{notifyReq.AlertMap.FiringAlertMap, notifyReq.AlertMap.ResolvedAlertMap}
@@ -388,7 +391,6 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 		allCreateSendRecords = append(allCreateSendRecords, res.createSendRecords...)
 		allUpdateSendRecords = append(allUpdateSendRecords, res.updateSendRecords...)
 		allUpdateAlerts = append(allUpdateAlerts, res.updateAlerts...)
-		sharedAggRecord = append(sharedAggRecord, res.sharedAggRecord)
 	}
 
 	// --- 单独处理静默告警 ---
@@ -436,7 +438,6 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 			log.WithRequestID(ctx).Info(
 				"更新告警记录",
 				zap.Int("alertHistoryID", updateAlert.ID),
-				zap.Int("alertTemplateID", updateAlert.AlertTemplateID),
 				zap.String("Fingerprint", updateAlert.Fingerprint),
 				zap.String("alertHistoryName", updateAlert.Alertname),
 				zap.String("tenant", tenant),
@@ -464,7 +465,6 @@ func (receiver *alertsService) saveAlerts(ctx context.Context, tenant string, no
 			log.WithRequestID(ctx).Info(
 				"创建告警记录",
 				zap.Int("alertHistoryID", history.ID),
-				zap.Int("alertTemplateID", history.AlertTemplateID),
 				zap.String("Fingerprint", history.Fingerprint),
 				zap.String("alertHistoryName", history.Alertname),
 				zap.String("tenant", tenant),
@@ -566,7 +566,8 @@ func (receiver *alertsService) processAlerts(ctx context.Context, req *processAl
 					}
 
 					if targetErr != nil {
-						storeHistory.AlertSendRecord.ErrorMessage += "\n" + targetErr.Error()
+						errMsg := targetErr.Error()
+						storeHistory.AlertSendRecord.ErrorMessage = &errMsg
 						updateSendRecords = append(updateSendRecords, storeHistory.AlertSendRecord)
 						updatedRecordIDs[recordID] = struct{}{} // 标记已更新，本 ID 下一条跳过
 					}

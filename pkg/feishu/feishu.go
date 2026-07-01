@@ -71,13 +71,14 @@ func (receiver *FeiShu) Init(alertChannelName, appid, appSecret string) {
 	receiver.lock.Lock()
 	defer receiver.lock.Unlock()
 
-	zap.L().Info("缓存飞书 app", zap.String("alertChannelName", alertChannelName), zap.String("appid", appid), zap.String("appSecret", appSecret))
-
 	// 判断客户端是否存在
 	hashStr := helper.HashFeishuAppConfig(appid, appSecret)
-	if _, ok := feishuStruct.clients[hashStr]; ok {
+	if _, ok := receiver.clients[hashStr]; ok {
+		zap.L().Debug("飞书客户端已存在，跳过初始化", zap.String("alertChannelName", alertChannelName), zap.String("appid", appid))
 		return
 	}
+
+	zap.L().Info("缓存飞书 app", zap.String("alertChannelName", alertChannelName), zap.String("appid", appid))
 
 	// 创建新的客户端并缓存
 	cli, wsCli, cancelFn := newFeishuClient(alertChannelName, appid, appSecret)
@@ -196,6 +197,11 @@ func (receiver *FeiShu) UpdateCli(alertChannelName, appid, appSecret string) {
 	// 2. 局部锁：检查并提取旧客户端，然后立即更新/删除
 	receiver.lock.Lock()
 	oldClient, exists := receiver.clients[hashStr]
+	if exists && oldClient != nil {
+		receiver.lock.Unlock()
+		zap.L().Debug("飞书客户端配置未变化，跳过更新", zap.String("alertChannelName", alertChannelName), zap.String("appid", appid))
+		return
+	}
 	// 这里先不创建新客户端，先处理旧的逻辑
 	receiver.lock.Unlock()
 
@@ -307,9 +313,9 @@ func (receiver *FeishuCard) Build(ctx context.Context, receiveIdType, receiveId,
 			zap.Error(err),
 		)
 		reqID := fmt.Sprintf("requestID: %v", log.GetRequestIDFromContext(ctx))
-		codeError := fmt.Sprintf("codeError: %v", larkcore.Prettify(resp.CodeError))
+		codeError := fmt.Sprintf("codeError: %v", resp.CodeError.Err)
 		sendErr := fmt.Sprintf("err: %v", err)
-		return fmt.Errorf("%v \n%v\n%v", reqID, codeError, sendErr)
+		return fmt.Errorf("%v, %v, %v", reqID, codeError, sendErr)
 	}
 
 	// // 业务处理
@@ -388,6 +394,13 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 			for _, rid := range receiveIds {
 				// 重写 at 人
 				_rid, _template := helper.OverrideAt(rid, notifyReq.AlertTemplate.AggregationTemplate)
+
+				log.WithRequestID(ctx).Info(
+					"发送告警",
+					zap.String("templateName", notifyReq.AlertTemplate.Name),
+					zap.String("receiveId", _rid),
+				)
+
 				err = receiver.renderAndSend(
 					ctx,
 					larkCli,
@@ -409,6 +422,13 @@ func (receiver *FeiShu) Notify(ctx context.Context, notifyReq *types.NotifyReq) 
 			for _, rid := range receiveIds {
 				// 重写 at 人
 				_rid, _template := helper.OverrideAt(rid, notifyReq.AlertTemplate.AggregationTemplate)
+
+				log.WithRequestID(ctx).Info(
+					"发送告警",
+					zap.String("templateName", notifyReq.AlertTemplate.Name),
+					zap.String("receiveId", _rid),
+				)
+
 				err = receiver.renderAndSend(
 					ctx,
 					larkCli,
@@ -468,6 +488,12 @@ func (receiver *FeiShu) singleSend(ctx context.Context, larkCli *lark.Client, re
 
 			// 重写 at 人
 			_rid, _template := helper.OverrideAt(rid, alertTemplate.Template)
+
+			log.WithRequestID(ctx).Info(
+				"发送告警",
+				zap.String("templateName", alertTemplate.Name),
+				zap.String("receiveId", _rid),
+			)
 
 			err := receiver.renderAndSend(ctx, larkCli, receiveIdType, _rid, v, _template, color)
 			results = append(results, &types.SingleSendResult{
