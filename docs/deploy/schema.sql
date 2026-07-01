@@ -120,8 +120,8 @@ CREATE TABLE `alert_templates` (
   `updated_at` DATETIME(3) NOT NULL,
   `deleted_at` DATETIME(3),
   `name` VARCHAR(100) NOT NULL COMMENT '模板名称',
-  `receive_id_type` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '接收者类型(open_id/user_id/email/chat_id/空-Webhook类无需指定)',
-  `receive_id` TEXT NOT NULL COMMENT '接收者ID列表(JSON 数组)',
+  `receive_id_type` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '接收者类型(open_id/user_id/email/chat_id/remote/空-Webhook类无需指定)',
+  `receive_id` VARCHAR(2000) NOT NULL DEFAULT '[]' COMMENT '接收者ID列表(JSON 数组)',
   `alert_channel_id` INT NOT NULL COMMENT '关联的告警渠道ID',
   `description` TEXT COMMENT '描述',
   `template` TEXT NOT NULL COMMENT '单个告警(Markdown/HTML)模板',
@@ -141,7 +141,7 @@ CREATE TABLE `alert_historys` (
   `cluster` VARCHAR(128) NOT NULL DEFAULT 'default' COMMENT '租户',
   `status` VARCHAR(32) NOT NULL COMMENT '告警状态',
   `ends_at` DATETIME(3) COMMENT '告警恢复时间',
-  `alert_channel_id` INT NOT NULL COMMENT '关联通道ID',
+  `alert_template_id` INT NOT NULL COMMENT '关联模板ID',
   `alert_send_record_id` INT COMMENT '关联发送记录ID和分组ID',
   `alert_silence_id` INT COMMENT '关联静默规则ID',
   `alertname` VARCHAR(255) NOT NULL,
@@ -154,7 +154,7 @@ CREATE TABLE `alert_historys` (
   UNIQUE KEY `uk_alert_identity` (`fingerprint`, `starts_at`, `cluster`),
   INDEX `idx_status_cluster` (`status`, `cluster`),
   INDEX `idx_ends_at` (`ends_at`),
-  INDEX `idx_channel_id` (`alert_channel_id`),
+  INDEX `idx_template_id` (`alert_template_id`),
   INDEX `idx_send_record_id` (`alert_send_record_id`),
   INDEX `idx_history_silence_id` (`alert_silence_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
