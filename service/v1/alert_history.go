@@ -49,8 +49,7 @@ func (recevicer *alertHistoryService) QueryHistory(ctx context.Context, req *typ
 	return aHistoryStore.
 		WithContext(ctx).
 		Preload(aHistoryStore.AlertSilence).
-		// Preload(aHistory.AlertChannel).
-		// Preload(aHistory.AlertChannel.AlertTemplate).
+		Preload(aHistoryStore.AlertTemplate).
 		Preload(aHistoryStore.AlertSendRecord).
 		Where(aHistoryStore.ID.Eq(int(req.ID))).
 		Where(aHistoryStore.Cluster.Eq(tenant)).
