@@ -1,20 +1,24 @@
+{{- $cluster := .Labels.cluster -}}
 # 飞书卡片 id
-template_id: "AAqty0YBOvteV"
+template_id: "xxx"
 # 飞书卡片版本
 template_version_name: "1.0.1"
 template_variable:
-  alertName: {{ index .Labels "alertname" | printf "%q" }}
-  alertDescribe: {{ getDescript . | printf "%q" }}
-  alertCluster: {{ getClusterLabel (index .Labels "cluster") }}
-  alertLevel: {{ index .Labels "severity" | printf "%q" }}
+  alertName: {{ .Labels.alertname | printf "%q" }}
+  alertLevel: {{ .Labels.severity | printf "%q" }}
+  alertCluster: {{ getClusterLabel $cluster }}
   alertStartTime: {{ timeFormat .StartsAt | printf "%q" }}
   alertEndTime: {{ getEndTime .EndsAt "告警未恢复" | printf "%q" }}
   # @用户的 id
-  alertUser: "<at id=uid></at>"
-  # 获取 grafana 的地址
+  alertUser: "<at id=xxx></at>"
+  alertDescribe: {{ getDescript . | printf "%q" }}
+  # 获取 grafana 的地址, 通常只需要修改 grafana 的地址 和数据源名称
   # https://xxx 为 grafana 的地址
+  # $cluster 是附件到 PromQL 的 cluster 标签，为空时会忽略
+  # .GeneratorURL 是告警的生成器 URL，通常是 Prometheus 的 URL
   # thanos 是 需要跳转 grafana 的数据源
-  grafanaLink: {{ newViewLink (getGrafanaExploreLink "https://xxx" .GeneratorURL "thanos" ) }}
-  # 获取当前平台的地址
-  # index .Labels "cluster" 跳转到对应租户告警历史页面，对应 url 参数中的 tenant
-  alertmanagerAddr: {{ newAlertManagerLink "https://xxx/workspace/alert/history?page=1&pageSize=15&status=firing" (index .Labels "cluster") }}
+  grafanaLink: {{ newViewLink (getGrafanaExploreLink "http://kp-grafana.prod.karmada.suanleme.local" $cluster .GeneratorURL "thanos") }}
+  # 获取当前平台的地址, 通常只需要修改平台的地址
+  # https://xxx 为平台的地址
+  # $cluster 跳转到对应租户告警历史页面，对应 url 参数中的 tenant
+  alertmanagerAddr: {{ newAlertManagerLink "https://xxx/workspace/alert/history?page=1&pageSize=15&status=firing" $cluster }}

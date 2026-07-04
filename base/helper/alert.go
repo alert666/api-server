@@ -13,6 +13,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/alert666/api-server/base/conf"
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
@@ -138,9 +139,117 @@ func expandLabelVars(desc string, labels map[string]string) string {
 	})
 }
 
+// appendClusterToPromQL 纯标准库实现：精准识别 PromQL 中的大括号并安全注入动态 cluster 标签
+func appendClusterToPromQL(promQL, cluster string) string {
+	if cluster == "" {
+		return promQL
+	}
+
+	var result strings.Builder
+	remaining := promQL
+
+	// 从配置中动态获取集群/租户的 Key 名（例如 "cluster"、"tenant_id"）
+	clusterKey := conf.GetAlertTenantKey()
+	targetLabel := fmt.Sprintf(`%s=%q`, clusterKey, cluster)
+
+	for {
+		// 1. 定位大括号的起始位置
+		start := strings.Index(remaining, "{")
+		if start == -1 {
+			result.WriteString(remaining)
+			break
+		}
+		// 把大括号前的内容（指标名、操作符等）原样写入
+		result.WriteString(remaining[:start])
+		remaining = remaining[start:]
+
+		// 2. 定位闭合大括号
+		end := strings.Index(remaining, "}")
+		if end == -1 {
+			result.WriteString(remaining)
+			break
+		}
+
+		// 提取出大括号内部的标签文本
+		inside := remaining[1:end]
+		remaining = remaining[end+1:]
+
+		// 3. 智能解析并重构内部标签
+		var newLabels []string
+
+		if len(strings.TrimSpace(inside)) > 0 {
+			parts := strings.Split(inside, ",")
+			hasCluster := false
+
+			for _, part := range parts {
+				part = strings.TrimSpace(part)
+				if part == "" {
+					continue
+				}
+
+				// 寻找 PromQL 标签中可能出现的四种比较符：=~, !~, =, !=
+				idx := -1
+				if i := strings.Index(part, "=~"); i != -1 {
+					idx = i
+				}
+				if i := strings.Index(part, "!~"); i != -1 && (idx == -1 || i < idx) {
+					idx = i
+				}
+				if i := strings.Index(part, "!="); i != -1 && (idx == -1 || i < idx) {
+					idx = i
+				}
+				if i := strings.Index(part, "="); i != -1 && (idx == -1 || i < idx) {
+					idx = i
+				}
+
+				// 如果找到了比较符，切出前面的 Key 名字进行【精准比对】
+				if idx != -1 {
+					currentKey := strings.TrimSpace(part[:idx])
+					if currentKey == clusterKey {
+						// 名字完全一致，执行替换
+						newLabels = append(newLabels, targetLabel)
+						hasCluster = true
+						continue
+					}
+				}
+
+				// 如果找到了比较符，切出前面的 Key 名字进行【精准比对】
+				if idx != -1 {
+					currentKey := strings.TrimSpace(part[:idx])
+					if currentKey == clusterKey {
+						// 名字完全一致，执行替换
+						newLabels = append(newLabels, targetLabel)
+						hasCluster = true
+						continue
+					}
+				}
+				// ===================================================
+
+				// 不是我们要找的 clusterKey，原样保留
+				newLabels = append(newLabels, part)
+			}
+
+			// 如果循环结束发现原本没有该标签，则追加
+			if !hasCluster {
+				newLabels = append(newLabels, targetLabel)
+			}
+		} else {
+			// 原本是大括号为空 `{}` 的情况
+			newLabels = append(newLabels, targetLabel)
+		}
+
+		// 4. 将重构后的标签重新组合并高效写入结果（消灭 Inefficient string concatenation 警告）
+		result.WriteByte('{')
+		result.WriteString(strings.Join(newLabels, ","))
+		result.WriteByte('}')
+	}
+
+	return result.String()
+}
+
 var FuncMap = template.FuncMap{
 	"timeFormat": func(t time.Time) string {
-		var cstZone = time.FixedZone("CST", 8*3600)
+		var cstZone = time.FixedZone(conf.GetServerTimeZone(), 8*3600)
 		return t.In(cstZone).Format("2006-01-02 15:04:05")
 	},
 	"getClusterLabel": func(cluster string) string {
@@ -153,11 +262,11 @@ var FuncMap = template.FuncMap{
 		if endTime == nil || endTime.IsZero() {
 			return msg
 		}
-		var cstZone = time.FixedZone("CST", 8*3600)
+		var cstZone = time.FixedZone(conf.GetServerTimeZone(), 8*3600)
 		return endTime.In(cstZone).Format("2006-01-02 15:04:05")
 	},
 	// 当告警源为 prometheus 时，生成 Grafana Explore 链接
-	"getGrafanaExploreLink": func(grafanaAddr, genURL, datasource string) string {
+	"getGrafanaExploreLink": func(grafanaAddr, cluster, genURL, datasource string) string {
 		if genURL == "" {
 			return grafanaAddr + "/explore"
 		}
@@ -170,6 +279,10 @@ var FuncMap = template.FuncMap{
 		promQL := u.Query().Get("g0.expr")
 		if promQL == "" {
 			return grafanaAddr + "/explore"
+		}
+
+		if cluster != "" {
+			promQL = appendClusterToPromQL(promQL, cluster)
 		}
 
 		stateJSON := fmt.Sprintf(

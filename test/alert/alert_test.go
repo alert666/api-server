@@ -248,9 +248,118 @@ template_variable:
 	fmt.Println(string(by))
 }
 
+// appendClusterToPromQL 纯标准库实现：精准识别 PromQL 中的大括号并安全注入动态 cluster 标签
+func appendClusterToPromQL(promQL, cluster string) string {
+	if cluster == "" {
+		return promQL
+	}
+
+	var result strings.Builder
+	remaining := promQL
+
+	// 从配置中动态获取集群/租户的 Key 名（例如 "cluster"、"tenant_id"）
+	clusterKey := conf.GetAlertTenantKey()
+	targetLabel := fmt.Sprintf(`%s=%q`, clusterKey, cluster)
+
+	for {
+		// 1. 定位大括号的起始位置
+		start := strings.Index(remaining, "{")
+		if start == -1 {
+			result.WriteString(remaining)
+			break
+		}
+		// 把大括号前的内容（指标名、操作符等）原样写入
+		result.WriteString(remaining[:start])
+		remaining = remaining[start:]
+
+		// 2. 定位闭合大括号
+		end := strings.Index(remaining, "}")
+		if end == -1 {
+			result.WriteString(remaining)
+			break
+		}
+
+		// 提取出大括号内部的标签文本
+		inside := remaining[1:end]
+		remaining = remaining[end+1:]
+
+		// 3. 智能解析并重构内部标签
+		var newLabels []string
+
+		if len(strings.TrimSpace(inside)) > 0 {
+			parts := strings.Split(inside, ",")
+			hasCluster := false
+
+			for _, part := range parts {
+				part = strings.TrimSpace(part)
+				if part == "" {
+					continue
+				}
+
+				// =================== 核心修复逻辑 ===================
+				// 寻找 PromQL 标签中可能出现的四种比较符：=~, !~, =, !=
+				idx := -1
+				if i := strings.Index(part, "=~"); i != -1 {
+					idx = i
+				}
+				if i := strings.Index(part, "!~"); i != -1 && (idx == -1 || i < idx) {
+					idx = i
+				}
+				if i := strings.Index(part, "!="); i != -1 && (idx == -1 || i < idx) {
+					idx = i
+				}
+				if i := strings.Index(part, "="); i != -1 && (idx == -1 || i < idx) {
+					idx = i
+				}
+
+				// 如果找到了比较符，切出前面的 Key 名字进行【精准比对】
+				if idx != -1 {
+					currentKey := strings.TrimSpace(part[:idx])
+					if currentKey == clusterKey {
+						// 名字完全一致，执行替换
+						newLabels = append(newLabels, targetLabel)
+						hasCluster = true
+						continue
+					}
+				}
+
+				// 如果找到了比较符，切出前面的 Key 名字进行【精准比对】
+				if idx != -1 {
+					currentKey := strings.TrimSpace(part[:idx])
+					if currentKey == clusterKey {
+						// 名字完全一致，执行替换
+						newLabels = append(newLabels, targetLabel)
+						hasCluster = true
+						continue
+					}
+				}
+				// ===================================================
+
+				// 不是我们要找的 clusterKey，原样保留
+				newLabels = append(newLabels, part)
+			}
+
+			// 如果循环结束发现原本没有该标签，则追加
+			if !hasCluster {
+				newLabels = append(newLabels, targetLabel)
+			}
+		} else {
+			// 原本是大括号为空 `{}` 的情况
+			newLabels = append(newLabels, targetLabel)
+		}
+
+		// 4. 将重构后的标签重新组合并高效写入结果（消灭 Inefficient string concatenation 警告）
+		result.WriteByte('{')
+		result.WriteString(strings.Join(newLabels, ","))
+		result.WriteByte('}')
+	}
+
+	return result.String()
+}
+
 func TestParserUrl(t *testing.T) {
 	// 1. 定义匿名函数逻辑
-	generateGrafanaURL := func(grafanaAddr, genURL, datasource string) string {
+	generateGrafanaURL := func(grafanaAddr, cluster, genURL, datasource string) string {
 		if genURL == "" {
 			return grafanaAddr + "/explore"
 		}
@@ -264,23 +373,127 @@ func TestParserUrl(t *testing.T) {
 		if promQL == "" {
 			return grafanaAddr + "/explore"
 		}
+
+		if cluster != "" {
+			promQL = appendClusterToPromQL(promQL, cluster)
+		}
+
+		fmt.Println("promQL", promQL)
+
 		stateJSON := fmt.Sprintf(
 			`{"datasource":%q,"queries":[{"expr":%q,"refId":"A"}],"range":{"from":"now-1h","to":"now"}}`,
 			datasource,
 			promQL,
 		)
+
 		// 3. 拼接并返回
 		return grafanaAddr + "/explore?left=" + url.QueryEscape(stateJSON)
 	}
 
+	req := types.NewTestAlertReceiveReq()
+	cluster := req.GroupLabels["cluster"]
+	// cluster := ""
 	// 2. 测试调用
 	grafanaBase := "https://kp-grafana.prod.karmada.suanleme.local"
-	prometheusGenURL := `http://prometheus-k8s-0:9090/graph?g0.expr=kube_pod_status_phase%7Bnamespace%3D%22jb8ppchug27a2uhoyre7efcfbok2w0ct-4583%22%2Cphase%21~%22Running%7CSucceeded%22%7D+%3D%3D+1&g0.tab=1`
+	prometheusGenURL := `http://prometheus-k8s-0:9090/graph?g0.expr=%28%28kube_node_spec_taint%7Bjob%3D%22kube-state-metrics%22%7D+unless+on+%28node%2C+key%2C+value%2C+effect%29+kube_node_spec_taint%7Bjob%3D%22kube-state-metrics%22%2Ckey%3D%22node.kubernetes.io%2Ftencent-cloud-node-termination%22%7D%29+unless+on+%28node%29+%28kube_node_labels%7Blabel_gongjiyun_com_ignore_unschedule%3D%22true%22%7D%29%29+%2A+on+%28node%29+group_left+%28internal_ip%2C+hostname%29+max+by+%28node%2C+internal_ip%2C+hostname%29+%28kube_node_info%7Bjob%3D%22kube-state-metrics%22%7D%29&g0.tab=1`
 
-	finalURL := generateGrafanaURL(grafanaBase, prometheusGenURL, "thanos")
-
+	finalURL := generateGrafanaURL(grafanaBase, cluster, prometheusGenURL, "thanos")
 	fmt.Println("生成的地址:")
 	fmt.Println(finalURL)
+}
+
+func TestAppendClusterToPromQL_Scenarios(t *testing.T) {
+	clusterKey := "cluster" // 假设 conf.GetAlertTenantKey() 返回 "cluster"
+	targetCluster := "karmada-cluster-01"
+
+	tests := []struct {
+		name        string
+		rawURL      string
+		wantContain []string // 期待修改后的 PromQL 包含这些特征
+		wantExclude []string // 期待修改后的 PromQL 绝对不能包含这些特征
+	}{
+		{
+			name:   "场景 1：标准覆盖测试（原 PromQL 没有任何 cluster 标签，期待全部追加）",
+			rawURL: `http://prometheus-k8s-0:9090/graph?g0.expr=%28%28kube_node_spec_taint%7Bjob%3D%22kube-state-metrics%22%7D+unless+on+%28node%2C+key%2C+value%2C+effect%29+kube_node_spec_taint%7Bjob%3D%22kube-state-metrics%22%2Ckey%3D%22node.kubernetes.io%2Ftencent-cloud-node-termination%22%7D%29+unless+on+%28node%29+%28kube_node_labels%7Blabel_gongjiyun_com_ignore_unschedule%3D%22true%22%7D%29%29+%2A+on+%28node%29+group_left+%28internal_ip%2C+hostname%29+max+by+%28node%2C+internal_ip%2C+hostname%29+%28kube_node_info%7Bjob%3D%22kube-state-metrics%22%7D%29`,
+			wantContain: []string{
+				`kube_node_spec_taint{job="kube-state-metrics",cluster="karmada-cluster-01"}`,
+				`kube_node_info{job="kube-state-metrics",cluster="karmada-cluster-01"}`,
+			},
+		},
+		{
+			name:   "场景 2：防止误伤测试（原 PromQL 带有 cluster_id 和 cluster_name，期待保留它们并追加 cluster）",
+			rawURL: `http://prometheus-k8s-0:9090/graph?g0.expr=kube_node_info%7Bjob%3D%22ksm%22%2Ccluster_id%3D%22123%22%2Ccluster_name%3D%22prod%22%7D`,
+			wantContain: []string{
+				`cluster_id="123"`,
+				`cluster_name="prod"`,
+				`cluster="karmada-cluster-01"`, // 正确追加了 cluster
+			},
+		},
+		{
+			name:   "场景 3：旧值强擦覆盖测试（原 PromQL 已经带了旧的 cluster='old'，期待将其替换为新值）",
+			rawURL: `http://prometheus-k8s-0:9090/graph?g0.expr=kube_node_info%7Bjob%3D%22ksm%22%2Ccluster%3D%22old-cluster-value%22%7D`,
+			wantContain: []string{
+				`cluster="karmada-cluster-01"`, // 替换成功
+			},
+			wantExclude: []string{
+				`old-cluster-value`, // 旧值必须消失
+			},
+		},
+		{
+			name:   "场景 4：复杂操作符测试（原 PromQL 包含了正则匹配 =~ 和 不等于 != 的 cluster 标签，期待全部强制覆盖）",
+			rawURL: `http://prometheus-k8s-0:9090/graph?g0.expr=kube_node_info%7Bcluster%3D~%22karmada-.*%22%7D+unless+kube_node_labels%7Bcluster%21%3D%22offline%22%7D`,
+			wantContain: []string{
+				`kube_node_info{cluster="karmada-cluster-01"}`,
+				`kube_node_labels{cluster="karmada-cluster-01"}`,
+			},
+			wantExclude: []string{
+				`cluster=~`,
+				`cluster!=`,
+			},
+		},
+		{
+			name:   "场景 5：空大括号异常测试（原 PromQL 带有空大括号对如 up{}，期待能正常塞入新标签）",
+			rawURL: `http://prometheus-k8s-0:9090/graph?g0.expr=up%7B%7D+%2A+kube_node_info%7B%7D`,
+			wantContain: []string{
+				`up{cluster="karmada-cluster-01"}`,
+				`kube_node_info{cluster="karmada-cluster-01"}`,
+			},
+		},
+	}
+
+	fmt.Printf("======= 开始跑 PQL 注入算法压测（测试 Key: %s）=======\n\n", clusterKey)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// 1. 解析 URL 拿到原始 PromQL
+			u, err := url.Parse(tt.rawURL)
+			if err != nil {
+				t.Fatalf("测试数据构建失败，URL 无法解析: %v", err)
+			}
+			rawPromQL := u.Query().Get("g0.expr")
+
+			// 2. 运行你的算法
+			gotPromQL := appendClusterToPromQL(rawPromQL, targetCluster)
+
+			// 3. 验证包含项
+			for _, contain := range tt.wantContain {
+				if !strings.Contains(gotPromQL, contain) {
+					t.Errorf("\n【测试失败】: %s\n期待包含: %s\n实际输出: %s\n", tt.name, contain, gotPromQL)
+					return
+				}
+			}
+
+			// 4. 验证排除项
+			for _, exclude := range tt.wantExclude {
+				if strings.Contains(gotPromQL, exclude) {
+					t.Errorf("\n【测试失败】: %s\n不应包含: %s\n实际输出: %s\n", tt.name, exclude, gotPromQL)
+					return
+				}
+			}
+
+			fmt.Printf("✅ 通过 -> %s\n", tt.name)
+		})
+	}
 }
 
 var testData = `{"ChannelName":"feishu","receiver":"prometheusalert","status":"resolved","alerts":[{"status":"resolved","labels":{"alertname":"DaemonSet滚动更新卡住","area":"chengde","belong":"idc","component":"daemonset","container":"kube-rbac-proxy-main","daemonset":"pod-mgr-igde-p-1-worker-10","failure_type":"rollout_stuck","impact_level":"high","index":"01","instance":"172.20.5.178:8443","job":"kube-state-metrics","namespace":"system","prometheus":"monitoring/k8s","provider":"chengde","range":"cluster","severity":"warning","type":"prod"},"annotations":{"description":"【Kubernetes守护进程集更新异常】\n命名空间: system\nDaemonSet名称: pod-mgr-igde-p-1-worker-10\n集群: \n\n当前状态:\n- 期望调度Pod数: 1\n- 实际调度Pod数: 1\n- 错误调度Pod数: 0\n- 已更新Pod数: 1\n- 可用Pod数: 0","runbook_url":"https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubedaemonsetrolloutstuck","summary":"DaemonSetpod-mgr-igde-p-1-worker-10 更新停滞 (命名空间: system)"},"startsAt":"2026-04-09T12:58:46.012Z","endsAt":"2026-04-09T13:14:16.012Z","generatorURL":"http://prometheus-k8s-0:9090/graph?g0.expr=...","fingerprint":"28c89c4f51cb8e24","isSilenced":false,"silenceID":0},{"status":"resolved","labels":{"alertname":"DaemonSet滚动更新卡住","area":"chengde","belong":"idc","component":"daemonset","container":"kube-rbac-proxy-main","daemonset":"pod-shutdown-operator","failure_type":"rollout_stuck","impact_level":"high","index":"01","instance":"172.20.5.178:8443","job":"kube-state-metrics","namespace":"system","prometheus":"monitoring/k8s","provider":"chengde","range":"cluster","severity":"warning","type":"prod"},"annotations":{"description":"【Kubernetes守护进程集更新异常】\n命名空间: system\nDaemonSet名称: pod-shutdown-operator\n集群: \n\n当前状态:\n- 期望调度Pod数: 4\n- 实际调度Pod数: 4\n- 错误调度Pod数: 0\n- 已更新Pod数: 4\n- 可用Pod数: 3","runbook_url":"https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubedaemonsetrolloutstuck","summary":"DaemonSet pod-shutdown-operator 更新停滞 (命名空间: system)"},"startsAt":"2026-04-09T12:59:16.012Z","endsAt":"2026-04-09T13:14:16.012Z","generatorURL":"http://prometheus-k8s-0:9090/graph?g0.expr=...","fingerprint":"f083a4a194dcd965","isSilenced":false,"silenceID":0}],"groupLabels":{"alertname":"DaemonSet滚动更新卡住","instance":"172.20.5.178:8443","namespace":"system"},"commonLabels":{"alertname":"DaemonSet滚动更新卡住","area":"chengde","belong":"idc","component":"daemonset","container":"kube-rbac-proxy-main","failure_type":"rollout_stuck","impact_level":"high","index":"01","instance":"172.20.5.178:8443","job":"kube-state-metrics","namespace":"system","prometheus":"monitoring/k8s","provider":"chengde","range":"cluster","severity":"warning","type":"prod"},"commonAnnotations":{"runbook_url":"https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubedaemonsetrolloutstuck"},"externalURL":"http://alertmanager-main-0:9093","version":"4","groupKey":"{}:{alertname=\"DaemonSet滚动更新卡住\", instance=\"172.20.5.178:8443\", namespace=\"system\"}","truncatedAlerts":0}`
