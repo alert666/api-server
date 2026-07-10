@@ -555,12 +555,12 @@ const docTemplate = `{
                     {
                         "enum": [
                             0,
-                            1
+                            1,
+                            2
                         ],
                         "type": "integer",
                         "name": "status",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1203,6 +1203,109 @@ const docTemplate = `{
                         "description": "查询成功",
                         "schema": {
                             "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kubernetesEvent": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Kubernetes Event"
+                ],
+                "summary": "接收 Kubernetes Event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "集群名称",
+                        "name": "X-Tenant-Id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Kubernetes Event",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.KubernetesEventReceiveReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kubernetesEvent/getPulledImageDuration": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "查询指定时间范围内，Kubernetes 集群中镜像拉取的耗时统计信息，包括镜像名称、拉取耗时、镜像大小等",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Kubernetes Event"
+                ],
+                "summary": "查询镜像拉取耗时统计",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1721779200,
+                        "description": "开始时间戳",
+                        "name": "startTimestamp",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "example": 1721865599,
+                        "description": "结束时间戳",
+                        "name": "endTimestamp",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/types.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/types.QueryImagePullDurationRes"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -2011,9 +2114,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/user/options": {
-            "get": {
-                "description": "获取用户 Options",
+        "/api/v1/user/refresh": {
+            "post": {
+                "description": "使用 refresh token 换取新的 access token 和 refresh token",
                 "consumes": [
                     "application/json"
                 ],
@@ -2023,10 +2126,21 @@ const docTemplate = `{
                 "tags": [
                     "用户管理"
                 ],
-                "summary": "获取用户 Options",
+                "summary": "刷新 Token",
+                "parameters": [
+                    {
+                        "description": "刷新请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.RefreshTokenRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "查询成功",
+                        "description": "刷新成功",
                         "schema": {
                             "$ref": "#/definitions/types.Response"
                         }
@@ -2292,6 +2406,10 @@ const docTemplate = `{
                 "externalURL": {
                     "type": "string"
                 },
+                "extraSync": {
+                    "description": "将告警额外同步到某个或多个接收者",
+                    "type": "string"
+                },
                 "groupKey": {
                     "type": "string"
                 },
@@ -2309,6 +2427,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "templateName": {
+                    "description": "告警模板名称",
                     "type": "string"
                 },
                 "truncatedAlerts": {
@@ -2412,7 +2531,8 @@ const docTemplate = `{
                         "open_id",
                         "user_id",
                         "email",
-                        "chat_id"
+                        "chat_id",
+                        "remote"
                     ]
                 },
                 "template": {
@@ -2453,7 +2573,8 @@ const docTemplate = `{
                         "open_id",
                         "user_id",
                         "email",
-                        "chat_id"
+                        "chat_id",
+                        "remote"
                     ]
                 },
                 "template": {
@@ -2523,6 +2644,50 @@ const docTemplate = `{
                 }
             }
         },
+        "types.KubernetesEventReceiveReq": {
+            "type": "object",
+            "properties": {
+                "apiVersion": {
+                    "type": "string"
+                },
+                "eventTime": {
+                    "type": "string"
+                },
+                "firstTimestamp": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "lastTimestamp": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "metadataName": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "reportingComponent": {
+                    "type": "string"
+                },
+                "reportingInstance": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "types.OAuthActivateRequest": {
             "type": "object",
             "properties": {
@@ -2533,6 +2698,54 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.PulledImageEvent": {
+            "type": "object",
+            "properties": {
+                "durationSeconds": {
+                    "type": "integer"
+                },
+                "imageName": {
+                    "type": "string"
+                },
+                "sizeByte": {
+                    "type": "integer"
+                }
+            }
+        },
+        "types.QueryImagePullDurationRes": {
+            "type": "object",
+            "properties": {
+                "durationSeconds": {
+                    "type": "integer"
+                },
+                "endTime": {
+                    "type": "integer"
+                },
+                "pulledImageEvents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.PulledImageEvent"
+                    }
+                },
+                "sizeByte": {
+                    "type": "integer"
+                },
+                "startTime": {
+                    "type": "integer"
+                }
+            }
+        },
+        "types.RefreshTokenRequest": {
+            "type": "object",
+            "required": [
+                "refreshToken"
+            ],
+            "properties": {
+                "refreshToken": {
                     "type": "string"
                 }
             }
@@ -2788,7 +3001,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "0.0.0.0:8080",
+	Host:             "127.0.0.1:8080",
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "api-server — 告警管理 API",

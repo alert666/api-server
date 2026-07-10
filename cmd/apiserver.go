@@ -10,7 +10,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	baselog "github.com/alert666/api-server/base/log"
 	v1 "github.com/alert666/api-server/service/v1"
@@ -59,12 +59,12 @@ func runApp(_ *cobra.Command, _ []string) error {
 	if cf == "" {
 		return errors.New("config file path is empty")
 	}
-	err := conf.LoadConfig(cf)
+	err := config.LoadConfig(cf)
 	if err != nil {
 		return fmt.Errorf("load config file faild: %w", err)
 	}
 	baselog.NewLogger()
-	zap.L().Debug("config loaded", zap.Any("config", conf.AllConfig()))
+	zap.L().Debug("config loaded", zap.Any("config", config.AllConfig()))
 
 	ctx, stop := signal.NotifyContext(context.TODO(), syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	defer stop()

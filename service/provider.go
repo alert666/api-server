@@ -1,11 +1,13 @@
 package service
 
 import (
+	"github.com/alert666/api-server/base/config"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/google/wire"
 )
 
 var ServiceProviderSet = wire.NewSet(
+	config.GetKubernetesEvents,
 	v1.NewUserService,
 	v1.NewRoleService,
 	v1.NewApiServicer,
@@ -21,4 +23,5 @@ var ServiceProviderSet = wire.NewSet(
 	v1.NewalertInhibit,
 	v1.NewCacheAlertNameOptioner,
 	v1.NewDataTunnelService,
+	v1.NewKubernetesEventServicer,
 )

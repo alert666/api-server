@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/data"
 	apitypes "github.com/alert666/api-server/base/types"
@@ -32,7 +32,7 @@ func NewInitCmd() *cobra.Command {
 			if cf == "" {
 				zap.L().Fatal("config file path is empty")
 			}
-			err := conf.LoadConfig(cf)
+			err := config.LoadConfig(cf)
 			if err != nil {
 				zap.L().Fatal("load config file faild", zap.String("path", cf), zap.Error(err))
 			}

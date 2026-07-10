@@ -1,4 +1,4 @@
-package conf
+package config
 
 import (
 	"encoding/json"
@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
@@ -299,6 +300,23 @@ func GetRedisKeyPrefix() (string, error) {
 		return "", fmt.Errorf("redis.keyPrefix is empty")
 	}
 	return prefix, nil
+}
+
+type KubernetesEventsConfig struct {
+	PrintReceivedData bool          `mapstructure:"printReceivedData"`
+	Exclude           ExcludeConfig `mapstructure:"exclude"`
+}
+
+type ExcludeConfig map[string]string
+
+// GetKubernetesEvents 获取 kubernetes event 配置
+func GetKubernetesEvents() (*KubernetesEventsConfig, error) {
+	var config KubernetesEventsConfig
+	excludeMap := viper.GetStringMap("kubernetesEvents")
+	if err := mapstructure.Decode(excludeMap, &config); err != nil {
+		return nil, fmt.Errorf("kubernetesEvents Invalid, %w", err)
+	}
+	return &config, nil
 }
 
 // GetAlertTenantKey 获取租户标签的键

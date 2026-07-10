@@ -1,4 +1,4 @@
-﻿package controller
+package controller
 
 import "github.com/google/wire"
 
@@ -14,4 +14,5 @@ var ControllerProviderSet = wire.NewSet(
 	NewAlertSilenceController,
 	NewAgentCommandController,
 	NewInternalForwardController,
+	NewKubernetesEventController,
 )

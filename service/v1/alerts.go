@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/log"
@@ -37,11 +37,11 @@ type alertsService struct {
 	emailImpl     email.Emailer
 	tenantKey     string
 	dbTenantKey   string
-	extraSyncConf *conf.ExtraSyncConf
+	extraSyncConf *config.ExtraSyncConf
 }
 
 func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer, emailImpl email.Emailer) (AlertsServicer, error) {
-	e, err := conf.GetAlertExtraSync()
+	e, err := config.GetAlertExtraSync()
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func NewAlertsServicer(cache store.CacheStorer, feishuImpl feishu.Feishuer, emai
 		emailImpl:     emailImpl,
 		cacheImpl:     cache,
 		feishuImpl:    feishuImpl,
-		tenantKey:     conf.GetAlertTenantKey(),
+		tenantKey:     config.GetAlertTenantKey(),
 		dbTenantKey:   constant.AlertDBTenantKey,
 		extraSyncConf: e,
 	}, nil
@@ -63,7 +63,7 @@ func NewCleanDuplicateFiringer(cache store.CacheStorer) CleanDuplicateFiringer {
 }
 
 func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertReceiveReq) error {
-	if conf.GetAlertPrintReceivedData() {
+	if config.GetAlertPrintReceivedData() {
 		log.WithRequestID(ctx).Info("received alertManager body", zap.Any("data", req))
 	}
 	// 通过 templateName 获取告警模板（含关联的 Channel）
@@ -778,7 +778,7 @@ func (receiver *alertsService) CleanRepeatIntervalAlertsTask() {
 		return
 	}
 
-	repeatInterval := conf.GetAlertRepeatInterval()
+	repeatInterval := config.GetAlertRepeatInterval()
 	if repeatInterval == 0 {
 		return
 	}
