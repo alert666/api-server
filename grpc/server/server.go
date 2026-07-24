@@ -9,7 +9,7 @@ import (
 	"time"
 
 	pb "github.com/alert666/alertmanager-proto/gen/go/data_tunnel/v1"
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/grpc/handler"
 	"github.com/alert666/api-server/grpc/interceptor"
 	"go.uber.org/zap"
@@ -35,8 +35,8 @@ func NewGRPCServer(addr string, tunnelHandler *handler.TunnelHandler) (*GRPCServ
 	var serverOpts []grpc.ServerOption
 
 	// 加载 TLS / mTLS
-	certFile := conf.GetGrpcTLSCertFile()
-	keyFile := conf.GetGrpcTLSKeyFile()
+	certFile := config.GetGrpcTLSCertFile()
+	keyFile := config.GetGrpcTLSKeyFile()
 	if certFile != "" && keyFile != "" {
 		cert, err := tls.LoadX509KeyPair(certFile, keyFile)
 		if err != nil {
@@ -48,7 +48,7 @@ func NewGRPCServer(addr string, tunnelHandler *handler.TunnelHandler) (*GRPCServ
 			MinVersion:   tls.VersionTLS12,
 		}
 
-		if caFile := conf.GetGrpcTLSCAFile(); caFile != "" {
+		if caFile := config.GetGrpcTLSCAFile(); caFile != "" {
 			caPEM, err := os.ReadFile(caFile)
 			if err != nil {
 				return nil, fmt.Errorf("failed to read CA cert: %w", err)

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/data"
 	"github.com/alert666/api-server/base/log"
@@ -25,7 +25,7 @@ func init() {
 	var (
 		err error
 	)
-	conf.LoadConfig("../../config.yaml")
+	config.LoadConfig("../../config.yaml")
 	redisClient, err = data.NewRDB()
 	if err != nil {
 		panic(err)

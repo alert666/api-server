@@ -4,42 +4,42 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/alert666/api-server/base/config"
 	"github.com/redis/go-redis/v9"
-	"github.com/alert666/api-server/base/conf"
 	"go.uber.org/zap"
 )
 
 func NewRDB() (*redis.Client, error) {
 	ctx := context.TODO()
-	switch conf.GetRedisMode() {
+	switch config.GetRedisMode() {
 	case "sentinel":
 		return initSentinelRedis(ctx)
 	case "single":
 		return initSingleRedis(ctx)
 	default:
-		return nil, fmt.Errorf("redis.mode is not supported: %s", conf.GetRedisMode())
+		return nil, fmt.Errorf("redis.mode is not supported: %s", config.GetRedisMode())
 	}
 }
 
 func initSingleRedis(ctx context.Context) (*redis.Client, error) {
-	host, err := conf.GetRedisHost()
+	host, err := config.GetRedisHost()
 	if err != nil {
 		return nil, err
 	}
-	password, err := conf.GetRedisPassword()
+	password, err := config.GetRedisPassword()
 	if err != nil {
 		return nil, err
 	}
 
-	user := conf.GetRedisUser()
+	user := config.GetRedisUser()
 
 	opts := &redis.Options{
 		Addr:            host,
 		Password:        password,
-		DB:              conf.GetRedisDB(),
-		PoolSize:        conf.GetRedisPoolSize(),
-		MinIdleConns:    conf.GetRedisMinIdleConns(),
-		ConnMaxLifetime: conf.GetRedisConnMaxLifetime(),
+		DB:              config.GetRedisDB(),
+		PoolSize:        config.GetRedisPoolSize(),
+		MinIdleConns:    config.GetRedisMinIdleConns(),
+		ConnMaxLifetime: config.GetRedisConnMaxLifetime(),
 	}
 
 	if user != "" {
@@ -56,33 +56,33 @@ func initSingleRedis(ctx context.Context) (*redis.Client, error) {
 }
 
 func initSentinelRedis(ctx context.Context) (*redis.Client, error) {
-	sentinelHosts, err := conf.GetRedisSentinelHosts()
+	sentinelHosts, err := config.GetRedisSentinelHosts()
 	if err != nil {
 		return nil, err
 	}
-	masterName, err := conf.GetRedisMasterName()
+	masterName, err := config.GetRedisMasterName()
 	if err != nil {
 		return nil, err
 	}
-	password, err := conf.GetRedisPassword()
+	password, err := config.GetRedisPassword()
 	if err != nil {
 		return nil, err
 	}
-	sentPassword, err := conf.GetRedisSentinelPassword()
+	sentPassword, err := config.GetRedisSentinelPassword()
 	if err != nil {
 		return nil, err
 	}
-	user := conf.GetRedisUser()
+	user := config.GetRedisUser()
 	opts := &redis.FailoverOptions{
 		MasterName:       masterName,
 		SentinelAddrs:    sentinelHosts,
 		Password:         password,
 		SentinelPassword: sentPassword,
 		RouteByLatency:   true,
-		DB:               conf.GetRedisDB(),
-		PoolSize:         conf.GetRedisPoolSize(),        // 最多50个连接
-		MinIdleConns:     conf.GetRedisMinIdleConns(),    // 最少20个空闲连接
-		ConnMaxLifetime:  conf.GetRedisConnMaxLifetime(), // 强制重连以避免连接老化
+		DB:               config.GetRedisDB(),
+		PoolSize:         config.GetRedisPoolSize(),        // 最多50个连接
+		MinIdleConns:     config.GetRedisMinIdleConns(),    // 最少20个空闲连接
+		ConnMaxLifetime:  config.GetRedisConnMaxLifetime(), // 强制重连以避免连接老化
 	}
 	if user != "" {
 		opts.Username = user

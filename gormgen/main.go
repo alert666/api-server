@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/data"
 	"github.com/alert666/api-server/model"
 	"gorm.io/gen"
@@ -12,7 +12,7 @@ func main() {
 		OutPath: "./store",
 		Mode:    gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
 	})
-	conf.LoadConfig("./config.yaml")
+	config.LoadConfig("./config.yaml")
 	db, clear, err := data.NewDB()
 	if err != nil {
 		panic(err)
@@ -25,6 +25,7 @@ func main() {
 		model.AlertTemplate{},
 		model.AlertSendRecord{},
 		model.AlertSilence{},
+		model.KubernetesEvent{},
 	)
 	g.UseDB(db)
 	g.ApplyBasic(
@@ -39,6 +40,7 @@ func main() {
 		model.AlertTemplate{},
 		model.AlertSendRecord{},
 		model.AlertSilence{},
+		model.KubernetesEvent{},
 	)
 	g.Execute()
 }

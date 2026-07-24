@@ -14,7 +14,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/data"
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
@@ -258,7 +258,7 @@ func appendClusterToPromQL(promQL, cluster string) string {
 	remaining := promQL
 
 	// 从配置中动态获取集群/租户的 Key 名（例如 "cluster"、"tenant_id"）
-	clusterKey := conf.GetAlertTenantKey()
+	clusterKey := config.GetAlertTenantKey()
 	targetLabel := fmt.Sprintf(`%s=%q`, clusterKey, cluster)
 
 	for {
@@ -627,7 +627,7 @@ func TestIsSilenced(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = conf.LoadConfig("../../config.yaml")
+	err = config.LoadConfig("../../config.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -719,7 +719,7 @@ func AllMatchersMatch(matchers []*model.Matcher, alertLabels map[string]string) 
 }
 
 func TestAlertInhibitRulesConfig(t *testing.T) {
-	err := conf.LoadConfig("../../config.yaml")
+	err := config.LoadConfig("../../config.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -759,5 +759,5 @@ func TestIntAddress(t *testing.T) {
 
 	fmt.Println(b)
 
-	fmt.Println(conf.GetOutboundIP())
+	fmt.Println(config.GetOutboundIP())
 }

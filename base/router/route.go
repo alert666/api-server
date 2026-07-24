@@ -35,6 +35,7 @@ type Router struct {
 	alertSilence       controller.AlertSilenceController
 	agentCommandRouter controller.AgentCommandController
 	internalForward    *controller.InternalForwardController
+	kubernetesEvent    controller.KubernetesEventController
 }
 
 func NewRouter(
@@ -50,6 +51,7 @@ func NewRouter(
 	alertSilence controller.AlertSilenceController,
 	agentCommandRouter controller.AgentCommandController,
 	internalForward *controller.InternalForwardController,
+	kubernetesEvent controller.KubernetesEventController,
 ) *Router {
 	return &Router{
 		userRouter:         userRouter,
@@ -64,6 +66,7 @@ func NewRouter(
 		alertSilence:       alertSilence,
 		agentCommandRouter: agentCommandRouter,
 		internalForward:    internalForward,
+		kubernetesEvent:    kubernetesEvent,
 	}
 }
 
@@ -111,6 +114,13 @@ func (r *Router) RegisterRouter(engine *gin.Engine) {
 	r.registerAlertSilenceRouter(apiGroup)
 	r.registerAgentCommandRouter(apiGroup)
 	r.registerInternalRouter(engine)
+	r.registerKubernetesEventRouter(apiGroup)
+}
+
+func (r *Router) registerKubernetesEventRouter(apiGroup *gin.RouterGroup) {
+	eventGroup := apiGroup.Group("/kubernetesEvent")
+	eventGroup.POST("", r.middleware.AlertReceiveAuth(), r.kubernetesEvent.ReceiveEvent)
+	eventGroup.GET("/getPulledImageDuration", r.middleware.AlertReceiveAuth(), r.kubernetesEvent.QueryImagePullDuration)
 }
 
 func (r *Router) registerUserRouter(apiGroup *gin.RouterGroup) {

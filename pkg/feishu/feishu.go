@@ -16,7 +16,7 @@ import (
 	"go.uber.org/zap"
 	"gopkg.in/yaml.v3"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/log"
@@ -153,7 +153,7 @@ func newFeishuClient(alertChannelName, appid, appSecret string) (*lark.Client, *
 	// 创建Client
 
 	var larkLogLevel larkcore.LogLevel
-	if conf.GetLogLevel() == "debug" {
+	if config.GetLogLevel() == "debug" {
 		larkLogLevel = larkcore.LogLevelDebug
 	} else {
 		larkLogLevel = larkcore.LogLevelInfo

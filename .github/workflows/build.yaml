@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - main
-      # - test
-      - refactor/*
-      - feature/*
+      - test
     tags:
       - "v*"
   pull_request:

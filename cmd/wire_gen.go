@@ -8,7 +8,7 @@ package cmd
 
 import (
 	"github.com/alert666/api-server/base/app"
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/data"
 	"github.com/alert666/api-server/base/middleware"
 	"github.com/alert666/api-server/base/router"
@@ -91,7 +91,15 @@ func InitApplication() (*app.Application, func(), error) {
 	dataTunnelServicer := v1.NewDataTunnelService(cacheStore)
 	agentCommandController := controller.NewAgentCommandController(dataTunnelServicer)
 	internalForwardController := controller.NewInternalForwardController(dataTunnelServicer)
-	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController, agentCommandController, internalForwardController)
+	kubernetesEventsConfig, err := config.GetKubernetesEvents()
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	kubernetesEventServicer := v1.NewKubernetesEventServicer(kubernetesEventsConfig)
+	kubernetesEventController := controller.NewKubernetesEventController(kubernetesEventServicer)
+	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController, agentCommandController, internalForwardController, kubernetesEventController)
 	engine, err := server.NewHttpServer(routerRouter)
 	if err != nil {
 		cleanup2()
@@ -128,5 +136,5 @@ func InitApplication() (*app.Application, func(), error) {
 
 // NewGRPCBindAddress 提供 gRPC 监听地址
 func NewGRPCBindAddress() string {
-	return conf.GetGRPCBind()
+	return config.GetGRPCBind()
 }
