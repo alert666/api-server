@@ -13,7 +13,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
@@ -149,7 +149,7 @@ func appendClusterToPromQL(promQL, cluster string) string {
 	remaining := promQL
 
 	// 从配置中动态获取集群/租户的 Key 名（例如 "cluster"、"tenant_id"）
-	clusterKey := conf.GetAlertTenantKey()
+	clusterKey := config.GetAlertTenantKey()
 	targetLabel := fmt.Sprintf(`%s=%q`, clusterKey, cluster)
 
 	for {
@@ -249,7 +249,7 @@ func appendClusterToPromQL(promQL, cluster string) string {
 
 var FuncMap = template.FuncMap{
 	"timeFormat": func(t time.Time) string {
-		var cstZone = time.FixedZone(conf.GetServerTimeZone(), 8*3600)
+		var cstZone = time.FixedZone(config.GetServerTimeZone(), 8*3600)
 		return t.In(cstZone).Format("2006-01-02 15:04:05")
 	},
 	"getClusterLabel": func(cluster string) string {
@@ -262,7 +262,7 @@ var FuncMap = template.FuncMap{
 		if endTime == nil || endTime.IsZero() {
 			return msg
 		}
-		var cstZone = time.FixedZone(conf.GetServerTimeZone(), 8*3600)
+		var cstZone = time.FixedZone(config.GetServerTimeZone(), 8*3600)
 		return endTime.In(cstZone).Format("2006-01-02 15:04:05")
 	},
 	// 当告警源为 prometheus 时，生成 Grafana Explore 链接

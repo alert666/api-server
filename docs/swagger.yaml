@@ -129,6 +129,9 @@ definitions:
         type: object
       externalURL:
         type: string
+      extraSync:
+        description: 将告警额外同步到某个或多个接收者
+        type: string
       groupKey:
         type: string
       groupLabels:
@@ -141,6 +144,7 @@ definitions:
         description: '"firing" or "resolved"'
         type: string
       templateName:
+        description: 告警模板名称
         type: string
       truncatedAlerts:
         type: integer
@@ -211,6 +215,7 @@ definitions:
         - user_id
         - email
         - chat_id
+        - remote
         type: string
       template:
         type: string
@@ -240,6 +245,7 @@ definitions:
         - user_id
         - email
         - chat_id
+        - remote
         type: string
       template:
         type: string
@@ -292,6 +298,35 @@ definitions:
     required:
     - id
     type: object
+  types.KubernetesEventReceiveReq:
+    properties:
+      apiVersion:
+        type: string
+      eventTime:
+        type: string
+      firstTimestamp:
+        type: string
+      kind:
+        type: string
+      lastTimestamp:
+        type: string
+      message:
+        type: string
+      metadataName:
+        type: string
+      name:
+        type: string
+      namespace:
+        type: string
+      reason:
+        type: string
+      reportingComponent:
+        type: string
+      reportingInstance:
+        type: string
+      type:
+        type: string
+    type: object
   types.OAuthActivateRequest:
     properties:
       confirmPassword:
@@ -300,6 +335,37 @@ definitions:
         type: integer
       password:
         type: string
+    type: object
+  types.PulledImageEvent:
+    properties:
+      durationSeconds:
+        type: integer
+      imageName:
+        type: string
+      sizeByte:
+        type: integer
+    type: object
+  types.QueryImagePullDurationRes:
+    properties:
+      durationSeconds:
+        type: integer
+      endTime:
+        type: integer
+      pulledImageEvents:
+        items:
+          $ref: '#/definitions/types.PulledImageEvent'
+        type: array
+      sizeByte:
+        type: integer
+      startTime:
+        type: integer
+    type: object
+  types.RefreshTokenRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
     type: object
   types.Response:
     properties:
@@ -461,7 +527,7 @@ definitions:
         minLength: 8
         type: string
     type: object
-host: 0.0.0.0:8080
+host: 127.0.0.1:8080
 info:
   contact: {}
   description: 告警管理后端服务 API 文档，支持告警接收、静默、抑制、通知、多租户管理、RBAC 权限控制等功能。
@@ -824,9 +890,9 @@ paths:
       - enum:
         - 0
         - 1
+        - 2
         in: query
         name: status
-        required: true
         type: integer
       produces:
       - application/json
@@ -1258,6 +1324,69 @@ paths:
       summary: 获取所有api
       tags:
       - API管理
+  /api/v1/kubernetesEvent:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 集群名称
+        in: header
+        name: X-Tenant-Id
+        required: true
+        type: string
+      - description: Kubernetes Event
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.KubernetesEventReceiveReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Response'
+      security:
+      - BearerAuth: []
+      summary: 接收 Kubernetes Event
+      tags:
+      - Kubernetes Event
+  /api/v1/kubernetesEvent/getPulledImageDuration:
+    get:
+      consumes:
+      - application/json
+      description: 查询指定时间范围内，Kubernetes 集群中镜像拉取的耗时统计信息，包括镜像名称、拉取耗时、镜像大小等
+      parameters:
+      - description: 开始时间戳
+        example: 1721779200
+        in: query
+        name: startTimestamp
+        required: true
+        type: integer
+      - description: 结束时间戳
+        example: 1721865599
+        in: query
+        name: endTimestamp
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/types.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/types.QueryImagePullDurationRes'
+              type: object
+      security:
+      - BearerAuth: []
+      summary: 查询镜像拉取耗时统计
+      tags:
+      - Kubernetes Event
   /api/v1/oauth2/:id:
     post:
       consumes:
@@ -1787,19 +1916,26 @@ paths:
       summary: 用户注销
       tags:
       - 用户管理
-  /api/v1/user/options:
-    get:
+  /api/v1/user/refresh:
+    post:
       consumes:
       - application/json
-      description: 获取用户 Options
+      description: 使用 refresh token 换取新的 access token 和 refresh token
+      parameters:
+      - description: 刷新请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/types.RefreshTokenRequest'
       produces:
       - application/json
       responses:
         "200":
-          description: 查询成功
+          description: 刷新成功
           schema:
             $ref: '#/definitions/types.Response'
-      summary: 获取用户 Options
+      summary: 刷新 Token
       tags:
       - 用户管理
   /api/v1/user/register:

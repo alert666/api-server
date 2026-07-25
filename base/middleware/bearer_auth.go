@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -34,10 +34,10 @@ func (m *Middleware) bearerAuth(tokenFunc func() string, configKey string) gin.H
 
 // AlertReceiveAuth validates the alert receive token for Alertmanager webhook callbacks.
 func (m *Middleware) AlertReceiveAuth() gin.HandlerFunc {
-	return m.bearerAuth(conf.GetAlertReceiveToken, "alert.receiveToken")
+	return m.bearerAuth(config.GetAlertReceiveToken, "alert.receiveToken")
 }
 
 // InternalAuth validates the shared internal token for cross-replica forwarding.
 func (m *Middleware) InternalAuth() gin.HandlerFunc {
-	return m.bearerAuth(conf.GetInternalToken, "internal.token")
+	return m.bearerAuth(config.GetInternalToken, "internal.token")
 }

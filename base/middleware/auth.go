@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/alert666/api-server/base/constant"
 	"github.com/gin-contrib/requestid"
 	"github.com/gin-gonic/gin"
-	"github.com/alert666/api-server/base/constant"
 	"go.uber.org/zap"
 )
 

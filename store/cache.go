@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/types"
 	"github.com/redis/go-redis/v9"
@@ -53,14 +53,14 @@ type CacheStore struct {
 }
 
 func NewCacheStore(redisClient *redis.Client) (*CacheStore, func(), error) {
-	expireTime, err := conf.GetRedisExpireTime()
+	expireTime, err := config.GetRedisExpireTime()
 	if err != nil {
 		return nil, nil, err
 	}
 	closeup := func() {
 		_ = redisClient.Close()
 	}
-	prefix, err := conf.GetRedisKeyPrefix()
+	prefix, err := config.GetRedisKeyPrefix()
 	if err != nil {
 		return nil, nil, err
 	}

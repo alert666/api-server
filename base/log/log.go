@@ -6,12 +6,22 @@ import (
 	"os"
 	"time"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
+
+var ServerLocation *time.Location
+
+// GetLocation 获取服务器时区
+func GetLocation() *time.Location {
+	if ServerLocation == nil {
+		return time.Local
+	}
+	return ServerLocation
+}
 
 func NewLogger() {
 	var (
@@ -19,9 +29,9 @@ func NewLogger() {
 		writer   zapcore.WriteSyncer
 		logLevel zapcore.Level
 	)
-	logLevelStr := conf.GetLogLevel()
-	timeZone := conf.GetServerTimeZone()
-	logEncoder := conf.GetLogEncoder()
+	logLevelStr := config.GetLogLevel()
+	timeZone := config.GetServerTimeZone()
+	logEncoder := config.GetLogEncoder()
 	cst, err := time.LoadLocation(timeZone)
 	if err != nil {
 		golog.Printf("failed to load location %s: %v, use local time instead", timeZone, err)
@@ -29,6 +39,7 @@ func NewLogger() {
 	}
 	// 修改全局时区
 	time.Local = cst
+	ServerLocation = cst
 
 	config := zapcore.EncoderConfig{
 		TimeKey:        "time",

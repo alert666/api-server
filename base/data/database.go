@@ -3,7 +3,7 @@ package data
 import (
 	"fmt"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/store"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -13,7 +13,7 @@ import (
 )
 
 func NewDB() (*gorm.DB, func(), error) {
-	dsn, err := conf.GetMysqlDsn()
+	dsn, err := config.GetMysqlDsn()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -44,9 +44,9 @@ func NewDB() (*gorm.DB, func(), error) {
 		return nil, nil, fmt.Errorf("unable to obtain database connection, %w", err)
 	}
 
-	sqlDB.SetMaxOpenConns(conf.GetMysqlMaxOpenConns())
-	sqlDB.SetMaxIdleConns(conf.GetMysqlMaxIdleConns())
-	sqlDB.SetConnMaxLifetime(conf.GetMysqlMaxLifetime())
+	sqlDB.SetMaxOpenConns(config.GetMysqlMaxOpenConns())
+	sqlDB.SetMaxIdleConns(config.GetMysqlMaxIdleConns())
+	sqlDB.SetConnMaxLifetime(config.GetMysqlMaxLifetime())
 
 	zap.L().Info("db connect success")
 	store.SetDefault(dbInstance)

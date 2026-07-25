@@ -24,6 +24,7 @@ var (
 	AlertTemplate   *alertTemplate
 	Api             *api
 	CasbinRule      *casbinRule
+	KubernetesEvent *kubernetesEvent
 	Oauth2User      *oauth2User
 	Role            *role
 	Tenant          *tenant
@@ -39,6 +40,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	AlertTemplate = &Q.AlertTemplate
 	Api = &Q.Api
 	CasbinRule = &Q.CasbinRule
+	KubernetesEvent = &Q.KubernetesEvent
 	Oauth2User = &Q.Oauth2User
 	Role = &Q.Role
 	Tenant = &Q.Tenant
@@ -55,6 +57,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		AlertTemplate:   newAlertTemplate(db, opts...),
 		Api:             newApi(db, opts...),
 		CasbinRule:      newCasbinRule(db, opts...),
+		KubernetesEvent: newKubernetesEvent(db, opts...),
 		Oauth2User:      newOauth2User(db, opts...),
 		Role:            newRole(db, opts...),
 		Tenant:          newTenant(db, opts...),
@@ -72,6 +75,7 @@ type Query struct {
 	AlertTemplate   alertTemplate
 	Api             api
 	CasbinRule      casbinRule
+	KubernetesEvent kubernetesEvent
 	Oauth2User      oauth2User
 	Role            role
 	Tenant          tenant
@@ -90,6 +94,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		AlertTemplate:   q.AlertTemplate.clone(db),
 		Api:             q.Api.clone(db),
 		CasbinRule:      q.CasbinRule.clone(db),
+		KubernetesEvent: q.KubernetesEvent.clone(db),
 		Oauth2User:      q.Oauth2User.clone(db),
 		Role:            q.Role.clone(db),
 		Tenant:          q.Tenant.clone(db),
@@ -115,6 +120,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		AlertTemplate:   q.AlertTemplate.replaceDB(db),
 		Api:             q.Api.replaceDB(db),
 		CasbinRule:      q.CasbinRule.replaceDB(db),
+		KubernetesEvent: q.KubernetesEvent.replaceDB(db),
 		Oauth2User:      q.Oauth2User.replaceDB(db),
 		Role:            q.Role.replaceDB(db),
 		Tenant:          q.Tenant.replaceDB(db),
@@ -130,6 +136,7 @@ type queryCtx struct {
 	AlertTemplate   IAlertTemplateDo
 	Api             IApiDo
 	CasbinRule      ICasbinRuleDo
+	KubernetesEvent IKubernetesEventDo
 	Oauth2User      IOauth2UserDo
 	Role            IRoleDo
 	Tenant          ITenantDo
@@ -145,6 +152,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		AlertTemplate:   q.AlertTemplate.WithContext(ctx),
 		Api:             q.Api.WithContext(ctx),
 		CasbinRule:      q.CasbinRule.WithContext(ctx),
+		KubernetesEvent: q.KubernetesEvent.WithContext(ctx),
 		Oauth2User:      q.Oauth2User.WithContext(ctx),
 		Role:            q.Role.WithContext(ctx),
 		Tenant:          q.Tenant.WithContext(ctx),

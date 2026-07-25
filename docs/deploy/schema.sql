@@ -201,6 +201,63 @@ CREATE TABLE `alert_inhibition_rules` (
   `status` TINYINT DEFAULT 1 COMMENT '1启用 0禁用'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Kubernetes Event latest-state table
+CREATE TABLE `kubernetes_events` (
+  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+  `created_at` DATETIME(3) NOT NULL,
+  `updated_at` DATETIME(3) NOT NULL,
+  `cluster` VARCHAR(128) NOT NULL,
+  `event_uid` VARCHAR(128) NOT NULL,
+  `event_name` VARCHAR(255),
+  `type` VARCHAR(32) NOT NULL,
+  `reason` VARCHAR(128),
+  `message` TEXT,
+  `count` INT NOT NULL DEFAULT 1,
+  `first_timestamp` DATETIME(3),
+  `last_timestamp` DATETIME(3) NOT NULL,
+  `event_time` DATETIME(3),
+  `action` VARCHAR(128),
+  `source_component` VARCHAR(128),
+  `source_host` VARCHAR(255),
+  `reporting_controller` VARCHAR(255),
+  `reporting_instance` VARCHAR(255),
+  `namespace` VARCHAR(128),
+  `involved_object_kind` VARCHAR(128),
+  `involved_object_name` VARCHAR(255),
+  `involved_object_uid` VARCHAR(128),
+  `involved_object_api_version` VARCHAR(64),
+  `involved_object_resource_version` VARCHAR(64),
+  `involved_object_field_path` VARCHAR(255),
+  `raw_payload` JSON NOT NULL,
+  UNIQUE KEY `uk_kubernetes_event_identity` (`cluster`, `event_uid`),
+  INDEX `idx_kubernetes_event_time` (`cluster`, `last_timestamp`),
+  INDEX `idx_kubernetes_event_type_time` (`cluster`, `type`, `last_timestamp`),
+  INDEX `idx_kubernetes_event_reason_time` (`cluster`, `reason`, `last_timestamp`),
+  INDEX `idx_kubernetes_event_namespace_time` (`cluster`, `namespace`, `last_timestamp`),
+  INDEX `idx_kubernetes_event_object_time` (`cluster`, `namespace`, `involved_object_kind`, `involved_object_name`, `last_timestamp`),
+  INDEX `idx_kubernetes_event_source_time` (`cluster`, `source_component`, `last_timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Kubernetes Event alert rules. Empty cluster means global scope.
+CREATE TABLE `kubernetes_event_rules` (
+  `id` BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `created_at` DATETIME(3) NOT NULL,
+  `updated_at` DATETIME(3) NOT NULL,
+  `deleted_at` DATETIME(3),
+  `name` VARCHAR(100) NOT NULL,
+  `cluster` VARCHAR(128) NOT NULL DEFAULT '',
+  `status` TINYINT NOT NULL DEFAULT 1,
+  `matchers` JSON NOT NULL,
+  `severity` VARCHAR(32) NOT NULL,
+  `alert_template_id` INT NOT NULL,
+  `description` VARCHAR(255),
+  `created_by` VARCHAR(64),
+  UNIQUE KEY `uk_kubernetes_event_rule_name` (`cluster`, `name`),
+  INDEX `idx_kubernetes_event_rule_effective` (`status`, `cluster`),
+  INDEX `idx_kubernetes_event_rule_template` (`alert_template_id`),
+  INDEX `idx_kubernetes_event_rule_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- 租户表
 CREATE TABLE `tenants` (
   `id` BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,

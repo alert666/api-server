@@ -13,7 +13,7 @@ COPY go.mod go.sum ./
 # ✅ 缓存依赖目录，加速 go mod download
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    export GOPROXY=https://goproxy.cn,direct && \
+    # export GOPROXY=https://goproxy.cn,direct && \
     go mod download
 
 # 再复制全部代码
@@ -22,7 +22,7 @@ COPY . .
 # ✅ 构建可复用缓存的构建命令
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    export GOPROXY=https://goproxy.cn,direct && \
+    # export GOPROXY=https://goproxy.cn,direct && \
     if [ "${OTEL}" = "true" ]; then \
         otel go build -o apiserver -ldflags="-s -w" ${MAIN_PATH}; \
     else \

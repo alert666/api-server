@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/alert666/api-server/base/bind"
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/router"
 	apitypes "github.com/alert666/api-server/base/types"
@@ -36,7 +36,7 @@ func NewServer(server *gin.Engine) *Server {
 	return &Server{
 		shutdown: defaultShutdownTimeout,
 		server: &http.Server{
-			Addr:    conf.GetServerBind(),
+			Addr:    config.GetServerBind(),
 			Handler: server,
 		},
 	}
@@ -57,7 +57,7 @@ func (s *Server) Stop() error {
 }
 
 func NewHttpServer(r router.RouterInterface) (*gin.Engine, error) {
-	if conf.GetLogLevel() == "debug" {
+	if config.GetLogLevel() == "debug" {
 		gin.SetMode(gin.DebugMode)
 	} else {
 		gin.SetMode(gin.ReleaseMode)

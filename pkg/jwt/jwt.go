@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	jwtv5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
@@ -36,17 +36,17 @@ func NewGenerateToken() (*GenerateToken, error) {
 		issuer        string
 		err           error
 	)
-	if secret, err = conf.GetJwtSecret(); err != nil {
+	if secret, err = config.GetJwtSecret(); err != nil {
 		return nil, err
 	}
 
-	issuer = conf.GetJwtIssuer()
+	issuer = config.GetJwtIssuer()
 
-	if expire, err = conf.GetJwtAccessExpirationTime(); err != nil {
+	if expire, err = config.GetJwtAccessExpirationTime(); err != nil {
 		return nil, err
 	}
 
-	if refreshExpire, err = conf.GetJwtRefreshExpirationTime(); err != nil {
+	if refreshExpire, err = config.GetJwtRefreshExpirationTime(); err != nil {
 		return nil, err
 	}
 	return &GenerateToken{

@@ -10,7 +10,7 @@ import (
 	"time"
 
 	pb "github.com/alert666/alertmanager-proto/gen/go/data_tunnel/v1"
-	"github.com/alert666/api-server/base/conf"
+	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/log"
@@ -75,7 +75,7 @@ func NewDataTunnelService(cacheStore store.CacheStorer) DataTunnelServicer {
 
 	zap.L().Info("DataTunnelService created",
 		zap.String("serverID", serverID),
-		zap.String("advertiseAddr", conf.GetInternalAdvertiseAddr()),
+		zap.String("advertiseAddr", config.GetInternalAdvertiseAddr()),
 	)
 
 	go s.refreshServerAddr()
@@ -104,7 +104,7 @@ func (s *DataTunnelService) refreshServerAddr() {
 
 		// Refresh server address TTL.
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-		if err := s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, conf.GetInternalAdvertiseAddr(), serverAddrTTL); err != nil {
+		if err := s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, config.GetInternalAdvertiseAddr(), serverAddrTTL); err != nil {
 			zap.L().Warn("refreshServerAddr failed",
 				zap.String("cacheType", string(store.AgentServerType)),
 				zap.String("serverID", s.serverID),
@@ -133,7 +133,7 @@ func generateServerID() string {
 	if err != nil {
 		host = "unknown"
 	}
-	grpcBind := conf.GetGRPCBind()
+	grpcBind := config.GetGRPCBind()
 	_, port, err := net.SplitHostPort(grpcBind)
 	if err != nil {
 		port = grpcBind
@@ -156,7 +156,7 @@ func (s *DataTunnelService) RegisterAgent(ctx context.Context, init *pb.Init) (c
 
 	_ = s.cacheStore.DelKey(ctx, store.AgentClusterType, clusterID)
 	_ = s.cacheStore.SetSet(ctx, store.AgentClusterType, clusterID, []any{s.serverID}, &serverAddrTTL)
-	_ = s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, conf.GetInternalAdvertiseAddr(), serverAddrTTL)
+	_ = s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, config.GetInternalAdvertiseAddr(), serverAddrTTL)
 
 	zap.L().Info("agent registered",
 		zap.String("agentID", agentID),
@@ -357,7 +357,7 @@ func (s *DataTunnelService) forwardToPeer(ctx context.Context, req *types.Intern
 	var peerResp types.Response
 	resp, err := s.restyClient.R().
 		SetContext(ctx).
-		SetHeader("Authorization", "Bearer "+conf.GetInternalToken()).
+		SetHeader("Authorization", "Bearer "+config.GetInternalToken()).
 		SetHeader(constant.RequestIDHeader, log.GetRequestIDFromContext(ctx)).
 		SetBody(reqBody).
 		SetResult(&peerResp).

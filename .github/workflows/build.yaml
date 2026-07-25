@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - main
-      # - test
-      - refactor/*
-      - feature/*
+      - test
     tags:
       - "v*"
   pull_request:
@@ -58,6 +56,7 @@ jobs:
           file: docs/deploy/Dockerfile
           build-args: |
             OTEL=true
+            GO_VERSION=1.26.5
           push: true
           tags: |
             ${{ vars.DOCKER_HUB }}/qqlx/alertmanager:${{ steps.vars.outputs.IMAGE_TAG }}
