@@ -74,6 +74,13 @@ oauth2:
       userInfoUrl: https://keycloak.example.com/realms/myrealm/protocol/openid-connect/userinfo
       redirectUrl: http://localhost:5173/oauth/login
 
+# 接收 kubernetes event 事件配置
+# 接收 kubernetes event 事件需要鉴权 token为 alert.receiveToken
+kubernetesEvents:
+  # 排除 message 包含 ^Container image .* already present on machine$ 的事件, 正则表达式
+  exclude:
+    message: "^Container image .* already present on machine$"
+
 alert:
   receiveToken: ""            # 告警接收认证 token（不配置则不校验认证）
   # 示例（Alertmanager 侧需配置对应的 Authorization 头）：
