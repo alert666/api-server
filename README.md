@@ -8,8 +8,42 @@
 
 在线预览：[qqlx.net](https://qqlx.net/)（只读账号：`readonly@qqlx.net` / `12345678`）
 
+- [api-server — 告警管理 API 服务](#api-server--告警管理-api-服务)
+  - [1. 简介](#1-简介)
+  - [2. 功能](#2-功能)
+    - [2.1. 平台能力](#21-平台能力)
+  - [3. 技术栈](#3-技术栈)
+  - [4. 项目结构](#4-项目结构)
+  - [5. 快速开始](#5-快速开始)
+    - [5.1. 克隆与配置](#51-克隆与配置)
+    - [5.2. 运行](#52-运行)
+    - [5.3. 使用 `init` 命令](#53-使用-init-命令)
+  - [6. 配置说明](#6-配置说明)
+    - [6.1. Alertmanager 对接示例](#61-alertmanager-对接示例)
+  - [7. API 文档](#7-api-文档)
+    - [7.1. 主要 API 分组](#71-主要-api-分组)
+  - [8. 部署](#8-部署)
+    - [8.1. alertmanager](#81-alertmanager)
+      - [8.1.1. Docker Compose（推荐）](#811-docker-compose推荐)
+      - [8.1.2. Docker 镜像](#812-docker-镜像)
+      - [8.1.3. helm-charts](#813-helm-charts)
+    - [8.2. kube-event 部署](#82-kube-event-部署)
+  - [9. 可观测性](#9-可观测性)
+    - [9.1. 构建时自动插桩](#91-构建时自动插桩)
+    - [9.2. 运行时配置](#92-运行时配置)
+    - [9.3. 请求链路](#93-请求链路)
+  - [10. 告警抑制说明](#10-告警抑制说明)
+  - [11. Agent 数据通道](#11-agent-数据通道)
+  - [12. 开发指南](#12-开发指南)
+    - [12.1. 分层架构](#121-分层架构)
+    - [12.2. GORM gen](#122-gorm-gen)
+    - [12.3. 运行测试](#123-运行测试)
+    - [12.4. 提交规范](#124-提交规范)
+  - [13. 相关项目](#13-相关项目)
+  - [14. License](#14-license)
 
-## 简介
+
+## 1. 简介
 
 api-server 覆盖告警管理全生命周期：
 
@@ -21,20 +55,20 @@ api-server 覆盖告警管理全生命周期：
 6. **Agent 通道** — 通过 gRPC Data Tunnel 向 Agent 下发命令并获取执行结果
 7. **内部转发** — 多副本间通过内部 API 转发 Agent 命令，支持横向扩展
 
+## 2. 功能
 
-## 功能
+| 模块                    | 说明                                                                                            |
+| ----------------------- | ----------------------------------------------------------------------------------------------- |
+| **告警接收**            | Alertmanager Webhook 回调，支持 `extraSync` 为告警追加额外接收者，支持飞书消息中覆盖 @ 提醒对象 |
+| **告警历史**            | 追踪告警完整生命周期（firing → resolved），多维筛选与分页查询                                   |
+| **告警静默**            | 按标签匹配创建静默规则，支持定时生效/失效，按租户统计活跃静默数                                 |
+| **告警抑制**            | 自定义抑制规则引擎，解决 Alertmanager 原生抑制在告警恢复场景下的缺陷                            |
+| **告警通道**            | 支持飞书应用消息、飞书群机器人、邮件等多种通知渠道                                              |
+| **告警模板**            | Go 模板引擎自定义通知内容，支持标签动态渲染与模板复制                                           |
+| **Agent 命令**          | 通过 gRPC Data Tunnel 向 Agent 下发命令并同步等待结果，支持跨副本转发                           |
+| **kubernetes 事件接收** | 接收阿里云开源 [kube-event](https://github.com/AliyunContainerService/kube-eventer) 发送的事件  |
 
-| 模块           | 说明                                                                                            |
-| -------------- | ----------------------------------------------------------------------------------------------- |
-| **告警接收**   | Alertmanager Webhook 回调，支持 `extraSync` 为告警追加额外接收者，支持飞书消息中覆盖 @ 提醒对象 |
-| **告警历史**   | 追踪告警完整生命周期（firing → resolved），多维筛选与分页查询                                   |
-| **告警静默**   | 按标签匹配创建静默规则，支持定时生效/失效，按租户统计活跃静默数                                 |
-| **告警抑制**   | 自定义抑制规则引擎，解决 Alertmanager 原生抑制在告警恢复场景下的缺陷                            |
-| **告警通道**   | 支持飞书应用消息、飞书群机器人、邮件等多种通知渠道                                              |
-| **告警模板**   | Go 模板引擎自定义通知内容，支持标签动态渲染与模板复制                                           |
-| **Agent 命令** | 通过 gRPC Data Tunnel 向 Agent 下发命令并同步等待结果，支持跨副本转发                           |
-
-### 平台能力
+### 2.1. 平台能力
 
 | 功能           | 说明                                                |
 | -------------- | --------------------------------------------------- |
@@ -48,21 +82,22 @@ api-server 覆盖告警管理全生命周期：
 
 > 告警模板的详细语法、变量、自定义函数及各渠道差异说明，参见 [docs/alertTemplate/README.md](docs/alertTemplate/README.md)。
 
-
-
-## 技术栈
+## 3. 技术栈
 
 **语言与框架**
-- Go 1.25 + Gin 路由框架 + GORM ORM + Wire 依赖注入
+
+- Go 1.26.5 + Gin 路由框架 + GORM ORM + Wire 依赖注入
 - gRPC 用于 Agent 数据通道
 - Casbin 提供 RBAC 权限控制
 
 **数据层**
+
 - MySQL 持久化存储
 - Redis 缓存（告警模板、频道、Token、Session）
 - go-cache 本地缓存
 
 **中间件/集成**
+
 - JWT + OAuth2（飞书、Keycloak）身份认证
 - Viper 配置管理 + Cobra 命令行
 - Zap 日志 + OpenTelemetry 可观测性
@@ -70,15 +105,17 @@ api-server 覆盖告警管理全生命周期：
 - Swagger 自动 API 文档
 
 **通知渠道**
+
 - 飞书应用消息 & 群机器人
 - 邮件（SMTP）
 
 **部署**
+
 - Docker / Docker Compose
 - CI/CD：GitHub Actions → 阿里云 ACR + GitHub Container Registry
 
 
-## 项目结构
+## 4. 项目结构
 
 ```
 .
@@ -122,8 +159,7 @@ api-server 覆盖告警管理全生命周期：
 └── .github/workflows/ # CI/CD 流水线
 ```
 
-
-## 快速开始
+## 5. 快速开始
 
 需要以下依赖运行完整服务：
 
@@ -131,7 +167,7 @@ api-server 覆盖告警管理全生命周期：
 - MySQL 8.0+
 - Redis 7+
 
-### 1. 克隆与配置
+### 5.1. 克隆与配置
 
 ```bash
 git clone https://github.com/alert666/api-server.git
@@ -145,7 +181,7 @@ cp docs/deploy/config-example.yaml config.yaml
 # 修改 config.yaml 中的 mysql.host、redis.host 等连接信息
 ```
 
-### 2. 运行
+### 5.2. 运行
 
 ```bash
 # 启动服务（默认监听 :8080）
@@ -158,7 +194,7 @@ go run ./cmd/apiserver -c config.yaml
 | ------- | ---------- | ----- | ------------------------- |
 | `admin` | `12345678` | admin | 超级管理员，全部 API 权限 |
 
-### 3. 使用 `init` 命令
+### 5.3. 使用 `init` 命令
 
 仅执行数据库初始化（创建默认 API、角色、管理员用户），不启动 HTTP 服务：
 
@@ -166,8 +202,7 @@ go run ./cmd/apiserver -c config.yaml
 go run ./cmd/apiserver init -c config.yaml
 ```
 
-
-## 配置说明
+## 6. 配置说明
 
 使用 `config.yaml` 配置，基于 Viper 加载，支持环境变量覆盖。完整参考 `docs/deploy/config-example.yaml`。
 
@@ -191,7 +226,7 @@ alert:
 # ... 更多配置项见 config-example.yaml
 ```
 
-### Alertmanager 对接示例
+### 6.1. Alertmanager 对接示例
 
 在 Prometheus Alertmanager 中配置 Webhook Receiver：
 
@@ -218,8 +253,7 @@ receivers:
 > 告警数据按 `alert.receiveToken` 字段校验；若为空白字符串则不校验认证（仅建议开发环境使用）。
 > 如需排查 Alertmanager Webhook 原始数据，可将 `alert.printReceivedData` 设为 `true`；默认关闭，避免日志中持续输出完整告警内容。
 
-
-## API 文档
+## 7. API 文档
 
 服务启动后访问 Swagger UI：
 
@@ -227,7 +261,7 @@ receivers:
 http://localhost:8080/swagger/index.html
 ```
 
-### 主要 API 分组
+### 7.1. 主要 API 分组
 
 | 分组       | 路径                                | 认证           | 说明                      |
 | ---------- | ----------------------------------- | -------------- | ------------------------- |
@@ -246,10 +280,11 @@ http://localhost:8080/swagger/index.html
 | 健康检查   | `GET /api/v1/healthz`               | 无             | 服务健康状态              |
 | 内部转发   | `POST /internal/v1/forward-command` | Internal Token | 跨副本命令转发            |
 
+## 8. 部署
 
-## 部署
+### 8.1. alertmanager
 
-### Docker Compose（推荐）
+#### 8.1.1. Docker Compose（推荐）
 
 ```bash
 git clone https://github.com/alert666/api-server.git
@@ -260,7 +295,7 @@ cp config-example.yaml config.yaml
 docker compose up -d
 ```
 
-### Docker 镜像
+#### 8.1.2. Docker 镜像
 
 预构建镜像（CI/CD 自动推送）：
 
@@ -269,10 +304,52 @@ docker compose up -d
 
 镜像标签格式：`{branch}-{short-sha}-{timestamp}`。
 
+#### 8.1.3. helm-charts
 
-## 可观测性
+```bash
+# 登录 harbor
+helm registry login $host -u $user -p $password
 
-### 构建时自动插桩
+# 打包 chart
+helm package helm/alertmanager/
+
+# push chart
+helm push alertmanager-5.0.1.tgz oci://$host/charts
+
+# 删除本地 chart
+rm -fr alertmanager-5.0.1.tgz
+
+# 安装 alertmanager
+# helm -n test-ops upgrade -i alertmanager oci://$host/charts/alertmanager --version 5.0.1 \
+# --set service.apiserver-grpc.enabled=false \
+# --set rawResources.alertmanager.manifest.spec.hosts[0]="test-cloud.suanlene.cn" \
+# --set controllers.apiserver.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanager" \
+# --set controllers.apiserver.containers.app.image.tag="main-7f94fee-20260725-080653" \
+# --set controllers.apiserver.containers.app.env.OTEL_EXPORTER_OTLP_ENDPOINT="http://10.10.10.10:3000111" \
+# --set controllers.ui.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanagerui" \
+# --set controllers.ui.containers.app.image.tag="main-9f6f636-20260625-100611"
+
+helm -n ops upgrade -i alertmanager oci://$host/charts/alertmanager --version 5.0.1 \
+--set controllers.apiserver.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanager" \
+--set controllers.apiserver.containers.app.image.tag="main-7f94fee-20260725-080653" \
+--set controllers.apiserver.containers.app.env.OTEL_EXPORTER_OTLP_ENDPOINT="http://10.10.10.10:3000111" \
+--set controllers.ui.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanagerui" \
+--set controllers.ui.containers.app.image.tag="main-9f6f636-20260625-100611"
+```
+
+### 8.2. kube-event 部署
+
+```bash
+# Bearer%20$token, %20 为空格的转义符
+helm -n kube-system upgrade -i kube-eventer helm/kube-eventer \
+--set-string controllers.kube-eventer.containers.app.env.WEBHOOK_URL="https://$host/api/v1/kubernetesEvent" \
+--set-string controllers.kube-eventer.containers.app.env.TOKEN="Bearer%20$token" \
+--set-string controllers.kube-eventer.containers.app.env.CLUSTER="cn-zhejiang-4"
+```
+
+## 9. 可观测性
+
+### 9.1. 构建时自动插桩
 
 本项目使用**阿里云开源的 OpenTelemetry 自动插桩工具**（`otel`）在编译阶段自动注入可观测性能力，无需修改业务代码即可获得分布式追踪、指标和日志。
 
@@ -288,7 +365,7 @@ docker build --build-arg OTEL=false -t api-server .
 
 CI/CD 流水线始终使用 `OTEL=true` 构建。
 
-### 运行时配置
+### 9.2. 运行时配置
 
 编译注入的 OpenTelemetry 组件通过以下环境变量配置：
 
@@ -301,11 +378,11 @@ CI/CD 流水线始终使用 `OTEL=true` 构建。
 | `OTEL_EXPORTER_PROMETHEUS_PORT` | Prometheus 指标端口 | `9464`                     |
 | `OTEL_EXPORTER_PROMETHEUS_HOST` | Prometheus 指标主机 | `0.0.0.0`                  |
 
-### 请求链路
+### 9.3. 请求链路
 
 无论是否开启 OTEL，每个 HTTP 请求都会自动生成唯一 `requestId`，通过它可在日志和 Trace 系统中快速定位问题链路。
 
-## 告警抑制说明
+## 10. 告警抑制说明
 
 Alertmanager 原生抑制存在已知问题：当 source 告警恢复后，target 告警的 recovery 通知也被抑制，导致数据库与 Alertmanager 状态不一致。
 
@@ -339,8 +416,7 @@ alert:
         - mountpoint
 ```
 
-
-## Agent 数据通道
+## 11. Agent 数据通道
 
 通过 gRPC 双向流实现服务端与 Agent 之间的命令下发通道：
 
@@ -356,10 +432,9 @@ bash scripts/gen-certs.sh
 
 gRPC 使用 TLS 双向认证，证书文件路径在 `config.yaml` 的 `grpc.tls` 中配置。
 
+## 12. 开发指南
 
-## 开发指南
-
-### 分层架构
+### 12.1. 分层架构
 
 代码严格分层：**controller → service/v1 → store → model**。
 
@@ -372,13 +447,13 @@ gRPC 使用 TLS 双向认证，证书文件路径在 `config.yaml` 的 `grpc.tls
 5. `cmd/wire.go` — 在 Wire 中注册 Provider
 6. 运行 `wire ./cmd/` 重新生成依赖注入代码
 
-### GORM gen
+### 12.2. GORM gen
 
 `.gen.go` 文件由 GORM gen 工具生成，提供类型安全的数据库查询方法。生成的代码在 `store/` 目录中，勿手动编辑。
 
 生成器定义位于 `gormgen/` 目录。
 
-### 运行测试
+### 12.3. 运行测试
 
 ```bash
 # 运行全部测试
@@ -390,7 +465,7 @@ go test ./test/store/
 go test ./test/cache/
 ```
 
-### 提交规范
+### 12.4. 提交规范
 
 遵循 Conventional Commits，使用中文描述：
 
@@ -401,13 +476,11 @@ refactor: 完成告警模块重构
 update: 更新 Dockerfile 基础镜像
 ```
 
-
-## 相关项目
+## 13. 相关项目
 
 - **前端 UI** — [alert666/ui](https://github.com/alert666/ui)（Vue 3 + TypeScript）
 - **gRPC Proto** — [alert666/alertmanager-proto](https://github.com/alert666/alertmanager-proto)（Agent 数据通道协议定义）
 
-## License
+## 14. License
 
 [MIT](LICENSE)
-

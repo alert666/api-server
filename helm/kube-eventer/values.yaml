@@ -1,0 +1,112 @@
+global:
+  labels:
+    app: kube-eventer
+    app.kubernetes.io/controller: kube-eventer
+    app.kubernetes.io/instance: kube-eventer
+    app.kubernetes.io/name: kube-eventer
+
+fullnameOverride: kube-eventer
+
+defaultPodOptions:
+  automountServiceAccountToken: true
+
+serviceAccount:
+  kube-eventer:
+    enabled: true
+
+rbac:
+  roles:
+    kube-eventer:
+      type: ClusterRole
+      rules:
+        - apiGroups:
+            - ""
+          resources:
+            - events
+            - configmaps
+          verbs:
+            - get
+            - list
+            - watch
+
+  bindings:
+    kube-eventer:
+      type: ClusterRoleBinding
+      roleRef:
+        identifier: kube-eventer
+        kind: ClusterRole
+      subjects:
+        - identifier: kube-eventer
+          kind: ServiceAccount
+
+controllers:
+  kube-eventer:
+    type: deployment
+    replicas: 1
+    serviceAccount:
+      identifier: kube-eventer
+    pod:
+      labels:
+        app: kube-eventer
+    containers:
+      app:
+        image:
+          repository: registry.aliyuncs.com/acs/kube-eventer
+          tag: v1.2.7-ca03be0-aliyun
+        command:
+          - /kube-eventer
+          - --source=kubernetes:https://kubernetes.default
+          - --sink=webhook:$(WEBHOOK_URL)?method=POST&reason=$(REASON)&header=X-Tenant-Id=$(CLUSTER)&header=Authorization=$(TOKEN)&header=Content-Type=application/json&custom_body_configmap=custom-webhook-body&custom_body_configmap_namespace=$(NAMESPACE)
+        env:
+          CLUSTER: "default"
+          TZ: Asia/Shanghai
+          WEBHOOK_URL: "http://10.0.0.1:8080/event"
+          TOKEN: "token"
+          REASON: "(Pulled|Failed|ErrImagePull|ImagePullBackOff|BackOff|Unhealthy|FailedScheduling|FailedMount|FailedAttachVolume|Evicted|NodeNotReady|NodeHasDiskPressure|NodeHasMemoryPressure|FailedCreate)"
+          NAMESPACE:
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 250Mi
+
+configMaps:
+  custom-webhook-body:
+    forceRename: "custom-webhook-body"
+    data:
+      content: |-
+        {
+          "metadataName": "{{ "{{ .Name }}" }}",
+          "firstTimestamp": "{{ "{{ .FirstTimestamp }}" }}",
+          "lastTimestamp": "{{ "{{ .LastTimestamp }}" }}",
+          "eventTime": "{{ "{{ .EventTime }}" }}",
+          "name": "{{ "{{ .InvolvedObject.Name }}" }}",
+          "namespace": "{{ "{{ .InvolvedObject.Namespace }}" }}",
+          "apiVersion": "{{ "{{ .InvolvedObject.APIVersion }}" }}",
+          "kind": "{{ "{{ .InvolvedObject.Kind }}" }}",
+          "type": "{{ "{{ .Type }}" }}",
+          "reason": "{{ "{{ .Reason }}" }}",
+          "reportingComponent": "{{ "{{ .ReportingController }}" }}",
+          "reportingInstance": "{{ "{{ .ReportingInstance }}" }}",
+          "message": "{{ "{{ .Message }}" }}"
+        }
+
+persistence:
+  localtime:
+    type: hostPath
+    hostPath: /etc/localtime
+    globalMounts:
+      - path: /etc/localtime
+        readOnly: true
+
+  zoneinfo:
+    type: hostPath
+    hostPath: /usr/share/zoneinfo
+    globalMounts:
+      - path: /usr/share/zoneinfo
+        readOnly: true
