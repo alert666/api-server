@@ -333,6 +333,7 @@ helm -n ops upgrade -i alertmanager oci://$host/charts/alertmanager --version 5.
 --set controllers.apiserver.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanager" \
 --set controllers.apiserver.containers.app.image.tag="main-7f94fee-20260725-080653" \
 --set controllers.apiserver.containers.app.env.OTEL_EXPORTER_OTLP_ENDPOINT="http://10.10.10.10:3000111" \
+--set controllers.apiserver.containers.app.env.OTEL_METRICS_EXPORTER="prometheus" \
 --set controllers.ui.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanagerui" \
 --set controllers.ui.containers.app.image.tag="main-9f6f636-20260625-100611"
 ```
