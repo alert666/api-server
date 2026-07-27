@@ -99,7 +99,9 @@ func InitApplication() (*app.Application, func(), error) {
 	}
 	kubernetesEventServicer := v1.NewKubernetesEventServicer(kubernetesEventsConfig)
 	kubernetesEventController := controller.NewKubernetesEventController(kubernetesEventServicer)
-	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController, agentCommandController, internalForwardController, kubernetesEventController)
+	idcMetricser := v1.NewIDCMetrics()
+	idcMetricsController := controller.NewIDCMetrics(idcMetricser)
+	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController, agentCommandController, internalForwardController, kubernetesEventController, idcMetricsController)
 	engine, err := server.NewHttpServer(routerRouter)
 	if err != nil {
 		cleanup2()
