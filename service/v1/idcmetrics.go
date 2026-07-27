@@ -61,21 +61,30 @@ func (idc *idcMetrics) GetIDCMetricser(ctx context.Context, req *types.QeryIDCMe
 	res.Cluster = cluster
 	res.StartTimestamp = req.StartTimestamp
 	res.EndTimestamp = req.EndTimestamp
-	for _, object := range objects {
+
+	for index, object := range objects {
+		if object == nil {
+			return nil, nil
+		}
+
 		var labels map[string]string
 		if err := json.Unmarshal(object.Labels, &labels); err != nil {
 			log.WithRequestID(ctx).Error("序列化 labels 失败", zap.Int64("id", int64(object.ID)), zap.Any("labels", object.Labels), zap.Error(err))
 			continue
 		}
+
 		res.IDCMetrics = append(res.IDCMetrics,
 			types.IDCMetrics{
 				Node:                labels["node"],
 				IP:                  labels["internal_ip"],
-				AlertName:           object.Alertname,
 				AlertStartTimestamp: object.StartsAt.Unix(),
 				AlertEndTimestamp:   object.EndsAt.Unix(),
 			},
 		)
+
+		if index == 0 {
+			res.AlertName = object.Alertname
+		}
 	}
 
 	return res, nil

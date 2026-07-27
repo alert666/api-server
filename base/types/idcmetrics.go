@@ -16,12 +16,12 @@ type QeryIDCMetricsRes struct {
 	StartTimestamp int64        `json:"startTimestamp"` // 查询开始时间
 	EndTimestamp   int64        `json:"endTimestamp"`   // 查询结束时间
 	Cluster        string       `json:"cluster"`        // 集群 id
+	AlertName      string       `json:"alertName"`      // 告警名称
 }
 
 type IDCMetrics struct {
 	Node                string `json:"node"`                // 节点 hostname
 	IP                  string `json:"ip"`                  // 节点 IP
-	AlertName           string `json:"alertName"`           // 告警名称
 	AlertStartTimestamp int64  `json:"alertStartTimestamp"` // 告警开始时间
 	AlertEndTimestamp   int64  `json:"alertEndTimestamp"`   // 告警结束时间
 }
