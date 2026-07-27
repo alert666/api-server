@@ -7,7 +7,7 @@ type QueryStartEndTimestamp struct {
 }
 
 type QeryIDCMetricsReq struct {
-	AlertName string `form:"alertName" binding:"required,oneof=KubeNodeNotReady"` // 要查询指标名称
+	AlertName string `form:"alertName" binding:"required,oneof=KubeNodeNotReady GPUCardLoss"` // 要查询指标名称
 	*QueryStartEndTimestamp
 }
 
@@ -23,7 +23,7 @@ type IDCMetrics struct {
 	Node                string `json:"node"`                // 节点 hostname
 	IP                  string `json:"ip"`                  // 节点 IP
 	AlertStartTimestamp int64  `json:"alertStartTimestamp"` // 告警开始时间
-	AlertEndTimestamp   int64  `json:"alertEndTimestamp"`   // 告警结束时间
+	AlertEndTimestamp   *int64 `json:"alertEndTimestamp"`   // 告警结束时间
 }
 
 func NewQeryIDCMetricsRes() *QeryIDCMetricsRes {

@@ -38,3 +38,8 @@ const (
 	// k8s event
 	K8SEventPulledReason = "Pulled"
 )
+
+var (
+	GPUCardLossName   = "GPUCardLoss"
+	GPUCardLossValues = []string{"GpuXidErrorDetected", "GpuCountInsufficient"}
+)

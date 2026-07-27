@@ -11,6 +11,7 @@ import (
 	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
+	"github.com/alert666/api-server/model"
 	"go.uber.org/zap"
 	"gorm.io/gen/field"
 )
@@ -34,6 +35,69 @@ func (idc *idcMetrics) GetIDCMetricser(ctx context.Context, req *types.QeryIDCMe
 	}
 	st := time.Unix(req.StartTimestamp, 0)
 	et := time.Unix(req.EndTimestamp, 0)
+	alertHistorys := make([]*model.AlertHistory, 0, 30)
+
+	switch req.AlertName {
+	case constant.GPUCardLossName:
+		for _, v := range constant.GPUCardLossValues {
+			_alertHistorys, err := getIDCMetricser(ctx, v, cluster, st, et)
+			if err != nil {
+				return nil, err
+			}
+			alertHistorys = append(alertHistorys, _alertHistorys...)
+		}
+	default:
+		_alertHistorys, err := getIDCMetricser(ctx, req.AlertName, cluster, st, et)
+		if err != nil {
+			return nil, err
+		}
+		alertHistorys = append(alertHistorys, _alertHistorys...)
+	}
+
+	res := types.NewQeryIDCMetricsRes()
+	res.Cluster = cluster
+	res.StartTimestamp = req.StartTimestamp
+	res.EndTimestamp = req.EndTimestamp
+
+	for _, object := range alertHistorys {
+		if object == nil {
+			return nil, nil
+		}
+
+		var labels map[string]string
+		if err := json.Unmarshal(object.Labels, &labels); err != nil {
+			log.WithRequestID(ctx).Error("序列化 labels 失败", zap.Int64("id", int64(object.ID)), zap.Any("labels", object.Labels), zap.Error(err))
+			continue
+		}
+
+		var (
+			alertEndTimestamp *int64
+			node              string
+		)
+		if object.EndsAt != nil {
+			alertEndTimestamp = new(object.EndsAt.Unix())
+		}
+
+		if _, ok := labels["node"]; ok {
+			node = labels["node"]
+		} else {
+			node = labels["Hostname"]
+		}
+
+		res.IDCMetrics = append(res.IDCMetrics,
+			types.IDCMetrics{
+				Node:                node,
+				IP:                  labels["internal_ip"],
+				AlertStartTimestamp: object.StartsAt.Unix(),
+				AlertEndTimestamp:   alertEndTimestamp,
+			},
+		)
+	}
+	res.AlertName = req.AlertName
+	return res, nil
+}
+
+func getIDCMetricser(ctx context.Context, alertName, cluster string, st, et time.Time) ([]*model.AlertHistory, error) {
 
 	objects, err := aHistoryStore.WithContext(ctx).
 		Select(
@@ -46,7 +110,7 @@ func (idc *idcMetrics) GetIDCMetricser(ctx context.Context, req *types.QeryIDCMe
 		).
 		Where(
 			aHistoryStore.Cluster.Eq(cluster),
-			aHistoryStore.Alertname.Eq(req.AlertName),
+			aHistoryStore.Alertname.Eq(alertName),
 			aHistoryStore.StartsAt.Gte(st),
 			field.Or(
 				aHistoryStore.EndsAt.Lte(et),
@@ -56,38 +120,7 @@ func (idc *idcMetrics) GetIDCMetricser(ctx context.Context, req *types.QeryIDCMe
 	if err != nil {
 		return nil, err
 	}
-
-	res := types.NewQeryIDCMetricsRes()
-	res.Cluster = cluster
-	res.StartTimestamp = req.StartTimestamp
-	res.EndTimestamp = req.EndTimestamp
-
-	for index, object := range objects {
-		if object == nil {
-			return nil, nil
-		}
-
-		var labels map[string]string
-		if err := json.Unmarshal(object.Labels, &labels); err != nil {
-			log.WithRequestID(ctx).Error("序列化 labels 失败", zap.Int64("id", int64(object.ID)), zap.Any("labels", object.Labels), zap.Error(err))
-			continue
-		}
-
-		res.IDCMetrics = append(res.IDCMetrics,
-			types.IDCMetrics{
-				Node:                labels["node"],
-				IP:                  labels["internal_ip"],
-				AlertStartTimestamp: object.StartsAt.Unix(),
-				AlertEndTimestamp:   object.EndsAt.Unix(),
-			},
-		)
-
-		if index == 0 {
-			res.AlertName = object.Alertname
-		}
-	}
-
-	return res, nil
+	return objects, nil
 }
 
 func (idc *idcMetrics) QueryImagePullDuration(ctx context.Context, req *types.QueryImagePullDurationReq) (*types.QueryImagePullDurationRes, error) {
