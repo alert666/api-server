@@ -73,22 +73,3 @@ func (e *KubernetesEventReceiveReq) ParseTime() error {
 
 	return nil
 }
-
-type QueryImagePullDurationReq struct {
-	StartTimestamp int64 `form:"startTimestamp" binding:"required,gt=0"`
-	EndTimestamp   int64 `form:"endTimestamp" binding:"required,gt=0"`
-}
-
-type QueryImagePullDurationRes struct {
-	PulledImageEvents []*PulledImageEvent `json:"pulledImageEvents"`
-	StartTimestamp    int64               `form:"startTime"`
-	EndTimestamp      int64               `form:"endTime"`
-	DurationSeconds   uint64              `json:"durationSeconds"`
-	SizeByte          uint64              `json:"sizeByte"`
-}
-
-type PulledImageEvent struct {
-	ImageName       string `json:"imageName"`
-	DurationSeconds uint64 `json:"durationSeconds"`
-	SizeByte        uint64 `json:"sizeByte"`
-}
