@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"regexp"
+	"slices"
 	"time"
 
 	"github.com/alert666/api-server/base/config"
@@ -13,11 +14,13 @@ import (
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 	"go.uber.org/zap"
-	"gorm.io/gen/field"
 )
 
 type IDCMetricser interface {
-	GetIDCMetricser(context.Context, *types.QeryIDCMetricsReq) (*types.QeryIDCMetricsRes, error)
+	// 获取指定时间范围的数据
+	GetIDCMetrics(context.Context, *types.GetIDCMetricsReq) (*types.GetIDCMetricsRes, error)
+	// 根据条件查询指定的 metrics
+	QueryIDCMetrics(context.Context, *types.QueryIDCMetricsReq) (*types.QueryIDCMetricsRes, error)
 	QueryImagePullDuration(context.Context, *types.QueryImagePullDurationReq) (*types.QueryImagePullDurationRes, error)
 }
 
@@ -28,7 +31,7 @@ func NewIDCMetrics() IDCMetricser {
 	return &idcMetrics{}
 }
 
-func (idc *idcMetrics) GetIDCMetricser(ctx context.Context, req *types.QeryIDCMetricsReq) (*types.QeryIDCMetricsRes, error) {
+func (idc *idcMetrics) GetIDCMetrics(ctx context.Context, req *types.GetIDCMetricsReq) (*types.GetIDCMetricsRes, error) {
 	cluster, err := helper.GetTenant(ctx)
 	if err != nil {
 		return nil, err
@@ -54,7 +57,7 @@ func (idc *idcMetrics) GetIDCMetricser(ctx context.Context, req *types.QeryIDCMe
 		alertHistorys = append(alertHistorys, _alertHistorys...)
 	}
 
-	res := types.NewQeryIDCMetricsRes()
+	res := types.NewGetIDCMetricsRes()
 	res.Cluster = cluster
 	res.StartTimestamp = req.StartTimestamp
 	res.EndTimestamp = req.EndTimestamp
@@ -98,7 +101,6 @@ func (idc *idcMetrics) GetIDCMetricser(ctx context.Context, req *types.QeryIDCMe
 }
 
 func getIDCMetricser(ctx context.Context, alertName, cluster string, st, et time.Time) ([]*model.AlertHistory, error) {
-
 	objects, err := aHistoryStore.WithContext(ctx).
 		Select(
 			aHistoryStore.ID,
@@ -112,15 +114,113 @@ func getIDCMetricser(ctx context.Context, alertName, cluster string, st, et time
 			aHistoryStore.Cluster.Eq(cluster),
 			aHistoryStore.Alertname.Eq(alertName),
 			aHistoryStore.StartsAt.Gte(st),
-			field.Or(
-				aHistoryStore.EndsAt.Lte(et),
-				aHistoryStore.EndsAt.IsNull(),
-			),
+			aHistoryStore.StartsAt.Lte(et),
 		).Find()
 	if err != nil {
 		return nil, err
 	}
 	return objects, nil
+}
+
+func (idc *idcMetrics) QueryIDCMetrics(ctx context.Context, req *types.QueryIDCMetricsReq) (*types.QueryIDCMetricsRes, error) {
+	cluster, err := helper.GetTenant(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	res := types.NewQueryIDCMetricsRes()
+	res.Cluster = cluster
+
+	for _, v := range req.QueryIDCMetrics {
+		switch v.AlertName {
+		case constant.GPUCardLossName:
+			for _, alertname := range constant.GPUCardLossValues {
+				v.AlertName = alertname
+				if err = queryIDCmetrics(ctx, cluster, v, res); err != nil {
+					return nil, err
+				}
+			}
+		default:
+			if err = queryIDCmetrics(ctx, cluster, v, res); err != nil {
+				return nil, err
+			}
+		}
+	}
+	return res, nil
+}
+
+func queryIDCmetrics(ctx context.Context, cluster string, req types.QueryIDCMetrics, res *types.QueryIDCMetricsRes) error {
+	st := time.Unix(req.StartTimestamp, 0).Truncate(time.Millisecond)
+	objects, err := aHistoryStore.WithContext(ctx).
+		Select(
+			aHistoryStore.Cluster,
+			aHistoryStore.Alertname,
+			aHistoryStore.StartsAt,
+			aHistoryStore.EndsAt,
+			aHistoryStore.Labels,
+		).
+		Where(
+			aHistoryStore.Cluster.Eq(cluster),
+			aHistoryStore.Alertname.Eq(req.AlertName),
+			aHistoryStore.StartsAt.Gte(st),
+			aHistoryStore.StartsAt.Lt(st.Add(time.Second)),
+		).Find()
+	if err != nil {
+		return err
+	}
+
+	if len(objects) == 0 {
+		return nil
+	}
+
+	for _, object := range objects {
+		var (
+			node, ip          string
+			ok                bool
+			labels            map[string]string
+			alertEndTimestamp *int64
+		)
+
+		if err := json.Unmarshal(object.Labels, &labels); err != nil {
+			return err
+		}
+
+		if node, ok = labels["node"]; !ok {
+			if hostname, ok := labels["Hostname"]; ok {
+				if hostname != req.Node {
+					continue
+				}
+			}
+		} else {
+			if node != req.Node {
+				continue
+			}
+		}
+
+		if ip, ok = labels["internal_ip"]; ok {
+			if ip != req.IP {
+				continue
+			}
+		}
+
+		if object.EndsAt != nil {
+			alertEndTimestamp = new(object.EndsAt.Unix())
+		}
+		if slices.Contains(constant.GPUCardLossValues, object.Alertname) {
+			object.Alertname = constant.GPUCardLossName
+		}
+
+		res.QueryIDCMetricsres = append(res.QueryIDCMetricsres, types.QueryIDCMetricsres{
+			AlertName: object.Alertname,
+			IDCMetrics: &types.IDCMetrics{
+				Node:                node,
+				IP:                  ip,
+				AlertStartTimestamp: object.StartsAt.Unix(),
+				AlertEndTimestamp:   alertEndTimestamp,
+			},
+		})
+	}
+	return nil
 }
 
 func (idc *idcMetrics) QueryImagePullDuration(ctx context.Context, req *types.QueryImagePullDurationReq) (*types.QueryImagePullDurationRes, error) {

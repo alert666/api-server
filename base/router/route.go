@@ -130,6 +130,7 @@ func (r *Router) registerIDCMetricsRouter(apiGroup *gin.RouterGroup) {
 	eventGroup := apiGroup.Group("/idcMetrics")
 	eventGroup.Use(r.middleware.AlertReceiveAuth())
 	eventGroup.GET("", r.idcMetricsController.GetIDCMetricser)
+	eventGroup.POST("", r.idcMetricsController.QueryIDCMetricser)
 	eventGroup.GET("/pulledImageDuration", r.idcMetricsController.QueryImagePullDuration)
 }
 

@@ -9,6 +9,7 @@ import (
 // IDCMetricsController 定制功能
 type IDCMetricsController interface {
 	GetIDCMetricser(ctx *gin.Context)
+	QueryIDCMetricser(ctx *gin.Context)
 	QueryImagePullDuration(ctx *gin.Context)
 }
 
@@ -35,7 +36,25 @@ func NewIDCMetrics(idcMetricser v1.IDCMetricser) IDCMetricsController {
 // @Security BearerAuth
 // @Router /api/v1/idcMetrics [get]
 func (idc *idcMetricsController) GetIDCMetricser(ctx *gin.Context) {
-	bind.ResponseWithData(ctx, idc.idcMetricser.GetIDCMetricser, bind.BindTypeQuery)
+	bind.ResponseWithData(ctx, idc.idcMetricser.GetIDCMetrics, bind.BindTypeQuery)
+}
+
+// QueryIDCMetricser 查询指定条件 IDC 机房的指标数据
+// @Summary 查询 IDC 机房指标数据
+// @Description 根据告警名称、时间范围、节点和IP地址查询IDC机房的指标数据，支持节点NotReady、GPU掉卡等告警类型
+// @Tags IDC Metrics
+// @Accept json
+// @Produce json
+// @Param request body types.QueryIDCMetricsReq true "查询请求参数"
+// @Success 200 {object} types.Response{data=types.QueryIDCMetricsRes} "查询成功"
+// @Failure 400 {object} types.Response "请求参数错误"
+// @Failure 401 {object} types.Response "未授权"
+// @Failure 404 {object} types.Response "未找到数据"
+// @Failure 500 {object} types.Response "服务器内部错误"
+// @Security BearerAuth
+// @Router /api/v1/idc/idcMetrics [post]
+func (idc *idcMetricsController) QueryIDCMetricser(ctx *gin.Context) {
+	bind.ResponseWithData(ctx, idc.idcMetricser.QueryIDCMetrics, bind.BindTypeJson)
 }
 
 // QueryImagePullDuration 查询指定时间内镜像拉取耗时统计
