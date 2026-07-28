@@ -245,11 +245,12 @@ func NewApplication(
 	cacheAlertNameOptioner v1.CacheAlertNameOptioner,
 	cleanStaleCacher v1.CleanStaleCacher,
 	grpcSrv *grpcserver.GRPCServer,
+	cronJobIDCMetricser v1.CronJobIDCMetricser,
 ) *Application {
 	return newApp(
 		WithServer(
 			server.NewServer(e),
-			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert, cacheAlertNameOptioner, cleanStaleCacher),
+			server.NewCronJob(cleanDuplicateFiringer, cleanExpiredSilencer, cleanInhibitAlert, cacheAlertNameOptioner, cleanStaleCacher, cronJobIDCMetricser),
 			grpcSrv,
 		),
 		WithInit(redis, feishu),

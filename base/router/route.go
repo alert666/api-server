@@ -132,6 +132,8 @@ func (r *Router) registerIDCMetricsRouter(apiGroup *gin.RouterGroup) {
 	eventGroup.GET("", r.idcMetricsController.GetIDCMetricser)
 	eventGroup.POST("", r.idcMetricsController.QueryIDCMetricser)
 	eventGroup.GET("/pulledImageDuration", r.idcMetricsController.QueryImagePullDuration)
+	eventGroup.POST("/heartbeat", r.idcMetricsController.IDCHeartbeat)
+	eventGroup.POST("/deleteHeartbeat", r.idcMetricsController.DeleteIDCHeartbeat)
 }
 
 func (r *Router) registerUserRouter(apiGroup *gin.RouterGroup) {

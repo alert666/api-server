@@ -15,7 +15,7 @@ type AlertHistory struct {
 	Fingerprint       string           `gorm:"column:fingerprint;type:varchar(128);not null;uniqueIndex:uk_alert_identity,priority:1;comment:指纹" json:"fingerprint"`
 	StartsAt          time.Time        `gorm:"column:starts_at;type:datetime(3);precision:3;not null;uniqueIndex:uk_alert_identity,priority:2;index:idx_cluster_alertname_start,priority:3;comment:开始时间" json:"startsAt"`
 	Cluster           string           `gorm:"column:cluster;type:varchar(128);not null;default:'default';uniqueIndex:uk_alert_identity,priority:3;index:idx_status_cluster,priority:2;index:idx_cluster_alertname_start,priority:1;comment:租户" json:"cluster"`
-	Status            string           `gorm:"column:status;type:varchar(32);not null;index:idx_status_cluster,priority:1;comment:告警状态" json:"status"`
+	Status            string           `gorm:"column:status;type:varchar(32);not null;index:idx_status_cluster,priority:1;comment:告警状态,firing或resolved" json:"status"`
 	EndsAt            *time.Time       `gorm:"column:ends_at;type:datetime;index:idx_ends_at;comment:告警恢复时间" json:"endsAt"`
 	AlertTemplateID   int              `gorm:"column:alert_template_id;not null;index:idx_template_id;comment:关联模板ID" json:"alertTemplateId"`
 	AlertSendRecordID *int             `gorm:"column:alert_send_record_id;index:idx_send_record_id;comment:关联发送记录ID和分组ID" json:"alertSendRecordID"`
@@ -25,7 +25,7 @@ type AlertHistory struct {
 	Instance          string           `gorm:"column:instance;type:varchar(255)" json:"instance"`
 	Labels            datatypes.JSON   `gorm:"column:labels;type:json" json:"labels"`
 	Annotations       datatypes.JSON   `gorm:"column:annotations;type:json" json:"annotations"`
-	SendCount         int              `gorm:"column:send_count;type:int;size:3" json:"sendCount"`
+	SendCount         int              `gorm:"column:send_count;type:int;default:1" json:"sendCount"`
 	IsSilenced        bool             `gorm:"column:is_silenced;default:false" json:"isSilenced"`
 	AlertTemplate     *AlertTemplate   `gorm:"foreignKey:AlertTemplateID" json:"alertTemplate"`
 	AlertSendRecord   *AlertSendRecord `gorm:"foreignKey:AlertSendRecordID" json:"alertSendRecord"`

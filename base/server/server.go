@@ -99,6 +99,7 @@ type CronJob struct {
 	cleanInhibitAlert      v1.AlertInhibiter
 	cacheAlertNameOptioner v1.CacheAlertNameOptioner
 	cleanStaleCacher       v1.CleanStaleCacher
+	cronJobIDCMetricser    v1.CronJobIDCMetricser
 }
 
 func NewCronJob(
@@ -107,6 +108,7 @@ func NewCronJob(
 	cleanInhibitAlert v1.AlertInhibiter,
 	cacheAlertNameOptioner v1.CacheAlertNameOptioner,
 	cleanStaleCacher v1.CleanStaleCacher,
+	cronJobIDCMetricser v1.CronJobIDCMetricser,
 ) *CronJob {
 	return &CronJob{
 		shutdown:               defaultShutdownTimeout,
@@ -115,6 +117,7 @@ func NewCronJob(
 		cleanInhibitAlert:      cleanInhibitAlert,
 		cacheAlertNameOptioner: cacheAlertNameOptioner,
 		cleanStaleCacher:       cleanStaleCacher,
+		cronJobIDCMetricser:    cronJobIDCMetricser,
 	}
 }
 
@@ -162,6 +165,16 @@ func (receiver *CronJob) Start() error {
 				name: "缓存孤儿清理",
 				spec: "* * * * *",
 				fn:   receiver.cleanStaleCacher.CleanStaleCacheTask,
+			},
+			{
+				name: "IDCHeartbeat",
+				spec: "* * * * *",
+				fn:   receiver.cronJobIDCMetricser.CronJobIDCHeartbeat,
+			},
+			{
+				name: "IDCResolvedHeartbeat",
+				spec: "* * * * *",
+				fn:   receiver.cronJobIDCMetricser.CronJobIDCResolvedHeartbeat,
 			},
 		}
 	}

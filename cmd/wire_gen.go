@@ -99,7 +99,7 @@ func InitApplication() (*app.Application, func(), error) {
 	}
 	kubernetesEventServicer := v1.NewKubernetesEventServicer(kubernetesEventsConfig)
 	kubernetesEventController := controller.NewKubernetesEventController(kubernetesEventServicer)
-	idcMetricser := v1.NewIDCMetrics()
+	idcMetricser := v1.NewIDCMetrics(cacheStore)
 	idcMetricsController := controller.NewIDCMetrics(idcMetricser)
 	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController, agentCommandController, internalForwardController, kubernetesEventController, idcMetricsController)
 	engine, err := server.NewHttpServer(routerRouter)
@@ -127,7 +127,8 @@ func InitApplication() (*app.Application, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter, cacheAlertNameOptioner, cleanStaleCacher, grpcServer)
+	cronJobIDCMetricser := v1.NewIDCHeartbeat(cacheStore)
+	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter, cacheAlertNameOptioner, cleanStaleCacher, grpcServer, cronJobIDCMetricser)
 	return application, func() {
 		cleanup2()
 		cleanup()

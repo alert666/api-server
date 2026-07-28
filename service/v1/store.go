@@ -16,7 +16,8 @@ var (
 	aTemlpateStore = store.AlertTemplate
 	aSendStore     = store.AlertSendRecord
 	aSilenceStore  = store.AlertSilence
-	k8sEvent       = store.KubernetesEvent
+	k8sEventStore  = store.KubernetesEvent
+	idcStore       = store.IDCHeartbeat
 )
 
 func NewStore() {
@@ -31,5 +32,6 @@ func NewStore() {
 	aTemlpateStore = store.AlertTemplate
 	aSendStore = store.AlertSendRecord
 	aSilenceStore = store.AlertSilence
-	k8sEvent = store.KubernetesEvent
+	k8sEventStore = store.KubernetesEvent
+	idcStore = store.IDCHeartbeat
 }

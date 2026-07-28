@@ -11,6 +11,8 @@ type IDCMetricsController interface {
 	GetIDCMetricser(ctx *gin.Context)
 	QueryIDCMetricser(ctx *gin.Context)
 	QueryImagePullDuration(ctx *gin.Context)
+	IDCHeartbeat(ctx *gin.Context)
+	DeleteIDCHeartbeat(ctx *gin.Context)
 }
 
 type idcMetricsController struct {
@@ -70,4 +72,40 @@ func (idc *idcMetricsController) QueryIDCMetricser(ctx *gin.Context) {
 // @Router /api/v1/idcMetrics/getPulledImageDuration [get]
 func (idc *idcMetricsController) QueryImagePullDuration(ctx *gin.Context) {
 	bind.ResponseWithData(ctx, idc.idcMetricser.QueryImagePullDuration, bind.BindTypeQuery)
+}
+
+// IDCHeartbeat 上报 IDC 机房心跳
+// @Summary 上报 IDC 机房心跳
+// @Description 上报 IDC 机房节点的心跳数据，用于监控节点健康状态。如果节点 IP 发生变化，会删除旧 IP 记录并创建新记录；如果 IP 未变，则更新心跳时间戳。
+// @Tags IDC Heartbeat
+// @Accept json
+// @Produce json
+// @Param request body types.IDCHeartbeatReq true "心跳请求参数"
+// @Success 200 {object} types.Response{data=string} "上报成功"
+// @Failure 400 {object} types.Response "请求参数错误"
+// @Failure 500 {object} types.Response "服务器内部错误"
+// @Security BearerAuth
+// @Router /api/v1/idcMetrics/heartbeat [post]
+func (idc *idcMetricsController) IDCHeartbeat(ctx *gin.Context) {
+	bind.ResponseOnlySuccess(ctx, idc.idcMetricser.IDCHeartbeat, bind.BindTypeJson)
+}
+
+// IDCHeartbeat 上报 IDC 机房节点心跳
+// @Summary 上报 IDC 机房心跳
+// @Description 用于 IDC 机房节点定期上报心跳数据，以监控节点健康状态。
+// @Description **处理逻辑：**
+// @Description - 如果节点 IP 发生变化，系统会自动删除旧 IP 记录并创建新记录
+// @Description - 如果节点 IP 未变，则仅更新心跳时间戳
+// @Tags IDC Heartbeat
+// @Accept json
+// @Produce json
+// @Param request body types.DeleteIDCHeartbeatReq true "心跳请求参数，包含节点标识和IP信息"
+// @Success 200 {object} types.Response{} "上报成功，心跳已更新"
+// @Failure 400 {object} types.Response "请求参数错误，请检查请求体格式"
+// @Failure 401 {object} types.Response "未授权，请提供有效的认证令牌"
+// @Failure 500 {object} types.Response "服务器内部错误，请联系管理员"
+// @Security BearerAuth
+// @Router /api/v1/idcMetrics/deleteHeartbeat [post]
+func (idc *idcMetricsController) DeleteIDCHeartbeat(ctx *gin.Context) {
+	bind.ResponseOnlySuccess(ctx, idc.idcMetricser.DeleteIDCHeartbeat, bind.BindTypeJson)
 }

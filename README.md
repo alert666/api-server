@@ -320,28 +320,28 @@ helm push alertmanager-5.0.1.tgz oci://$host/charts
 rm -fr alertmanager-5.0.1.tgz
 
 # 安装 alertmanager
-# helm -n test-ops upgrade -i alertmanager oci://$host/charts/alertmanager --version 5.0.1 \
-# --set service.apiserver-grpc.enabled=false \
-# --set rawResources.alertmanager.manifest.spec.hosts[0]="test-cloud.suanlene.cn" \
-# --set controllers.apiserver.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanager" \
-# --set controllers.apiserver.containers.app.image.tag="main-7f94fee-20260725-080653" \
-# --set controllers.apiserver.containers.app.env.OTEL_EXPORTER_OTLP_ENDPOINT="http://10.10.10.10:3000111" \
-# --set controllers.ui.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanagerui" \
-# --set controllers.ui.containers.app.image.tag="main-9f6f636-20260625-100611"
-
-# helm -n ops upgrade -i alertmanager oci://$host/charts/alertmanager --version 5.0.1 \
-# --set controllers.apiserver.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanager" \
-# --set controllers.apiserver.containers.app.image.tag="main-7f94fee-20260725-080653" \
-# --set controllers.apiserver.containers.app.env.OTEL_EXPORTER_OTLP_ENDPOINT="http://10.10.10.10:3000111" \
-# --set controllers.apiserver.containers.app.env.OTEL_METRICS_EXPORTER="prometheus" \
-# --set controllers.ui.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanagerui" \
-# --set controllers.ui.containers.app.image.tag="main-9f6f636-20260625-100611"
-
+# 示例
 helm -n ops upgrade -i alertmanager oci://$host/charts/alertmanager --version 5.0.1 \
+--set controllers.apiserver.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanager" \
 --set controllers.apiserver.containers.app.image.tag="main-7f94fee-20260725-080653" \
 --set controllers.apiserver.containers.app.env.OTEL_EXPORTER_OTLP_ENDPOINT="http://10.10.10.10:3000111" \
 --set controllers.apiserver.containers.app.env.OTEL_METRICS_EXPORTER="prometheus" \
+--set controllers.ui.containers.app.image.repository="registry.cn-beijing.aliyuncs.com/qqlx/alertmanagerui" \
 --set controllers.ui.containers.app.image.tag="main-9f6f636-20260625-100611"
+
+# test 环境
+helm -n ops-test upgrade -i -f test-values.yaml alertmanager oci://$host/charts/alertmanager \
+--set service.apiserver-grpc.enabled=false \
+--set rawResources.alertmanager.manifest.spec.hosts[0]="cloud-test.suanlene.cn" \
+--set controllers.apiserver.containers.app.image.tag="test-ab88cd0-20260731-070213" \
+--set controllers.apiserver.containers.app.env.OTEL_EXPORTER_OTLP_ENDPOINT="http://10.10.10.10:3000111" \
+--set controllers.ui.containers.app.image.tag="main-d5ab188-20260731-170730"
+
+# prod 环境
+helm -n ops upgrade -i alertmanager oci://$host/charts/alertmanager \
+--set controllers.apiserver.containers.app.image.tag="test-c662b0e-20260811-081421" \
+--set controllers.apiserver.containers.app.env.OTEL_EXPORTER_OTLP_ENDPOINT="http://10.10.10.10:3000111" \
+--set controllers.ui.containers.app.image.tag="main-d5ab188-20260731-170730"
 ```
 
 ### 8.2. kube-event 部署

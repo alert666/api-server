@@ -113,7 +113,7 @@ type alertHistory struct {
 	Fingerprint       field.String // 指纹
 	StartsAt          field.Time   // 开始时间
 	Cluster           field.String // 租户
-	Status            field.String // 告警状态
+	Status            field.String // 告警状态,firing或resolved
 	EndsAt            field.Time   // 告警恢复时间
 	AlertTemplateID   field.Int    // 关联模板ID
 	AlertSendRecordID field.Int    // 关联发送记录ID和分组ID

@@ -7,7 +7,7 @@ type QueryStartEndTimestamp struct {
 }
 
 type GetIDCMetricsReq struct {
-	AlertName string `form:"alertName" binding:"required,oneof=KubeNodeNotReady GPUCardLoss"` // 要查询指标名称
+	AlertName string `form:"alertName" binding:"required,oneof=KubeNodeNotReady GPUCardLoss IDCHeartbeatFailed"` // 要查询指标名称
 	*QueryStartEndTimestamp
 }
 
@@ -20,10 +20,10 @@ type GetIDCMetricsRes struct {
 }
 
 type IDCMetrics struct {
-	Node                string `json:"node"`                // 节点 hostname
-	IP                  string `json:"ip"`                  // 节点 IP
-	AlertStartTimestamp int64  `json:"alertStartTimestamp"` // 告警开始时间
-	AlertEndTimestamp   *int64 `json:"alertEndTimestamp"`   // 告警结束时间
+	Node                string `json:"node,omitempty"`                // 节点 hostname
+	IP                  string `json:"ip,omitempty"`                  // 节点 IP
+	AlertStartTimestamp int64  `json:"alertStartTimestamp,omitempty"` // 告警开始时间
+	AlertEndTimestamp   *int64 `json:"alertEndTimestamp,omitempty"`   // 告警结束时间
 }
 
 func NewGetIDCMetricsRes() *GetIDCMetricsRes {
@@ -37,7 +37,7 @@ type QueryIDCMetricsReq struct {
 }
 
 type QueryIDCMetrics struct {
-	AlertName      string `json:"alertName" binding:"required,oneof=KubeNodeNotReady GPUCardLoss"`
+	AlertName      string `json:"alertName" binding:"required,oneof=KubeNodeNotReady GPUCardLoss IDCHeartbeatFailed"`
 	StartTimestamp int64  `json:"startTimestamp" binding:"required,gt=0"`
 	Node           string `json:"node" binding:"required"`
 	IP             string `json:"ip" binding:"required,ip"`
@@ -75,4 +75,15 @@ type PulledImageEvent struct {
 	ImageName       string `json:"imageName"`
 	DurationSeconds uint64 `json:"durationSeconds"`
 	SizeByte        uint64 `json:"sizeByte"`
+}
+
+type IDCHeartbeatReq struct {
+	Node               string `json:"node"`
+	IP                 string `json:"ip"`
+	HeartbeatTimestamp int64  `json:"heartbeatTimestamp"`
+}
+
+type DeleteIDCHeartbeatReq struct {
+	Node string `json:"node"`
+	IP   string `json:"ip"`
 }

@@ -42,15 +42,15 @@ func (ke *kubernetesEventService) ReceiveEvent(ctx context.Context, req *types.K
 
 	exclude := matchKubernetesEvent(req, ke.kubernetesEventsConfig)
 	if exclude {
-		log.WithRequestID(ctx).Info("命中过滤规则, 忽略事件", zap.Any("event", req))
+		log.WithRequestID(ctx).Debug("命中过滤规则, 忽略事件", zap.Any("event", req))
 		return nil
 	}
 
 	// 1. 检查是否存在该事件
-	count, err := k8sEvent.WithContext(ctx).Where(
-		k8sEvent.Cluster.Eq(cluster),
-		k8sEvent.Namespace.Eq(req.Namespace),
-		k8sEvent.MetadataName.Eq(req.MetadataName),
+	count, err := k8sEventStore.WithContext(ctx).Where(
+		k8sEventStore.Cluster.Eq(cluster),
+		k8sEventStore.Namespace.Eq(req.Namespace),
+		k8sEventStore.MetadataName.Eq(req.MetadataName),
 	).Count()
 	if err != nil {
 		return fmt.Errorf("查询数据库失败: %w", err)
@@ -71,14 +71,14 @@ func (ke *kubernetesEventService) ReceiveEvent(ctx context.Context, req *types.K
 
 	// 2. 存在则更新部分字段（count+1、LastSeen、Message）
 	if count > 0 {
-		_, err = k8sEvent.WithContext(ctx).Where(
-			k8sEvent.Cluster.Eq(cluster),
-			k8sEvent.Namespace.Eq(req.Namespace),
-			k8sEvent.MetadataName.Eq(req.MetadataName),
+		_, err = k8sEventStore.WithContext(ctx).Where(
+			k8sEventStore.Cluster.Eq(cluster),
+			k8sEventStore.Namespace.Eq(req.Namespace),
+			k8sEventStore.MetadataName.Eq(req.MetadataName),
 		).UpdateSimple(
-			k8sEvent.Count_.Add(1),
-			k8sEvent.LastSeen.Value(lastSeen),
-			k8sEvent.Message.Value(req.Message),
+			k8sEventStore.Count_.Add(1),
+			k8sEventStore.LastSeen.Value(lastSeen),
+			k8sEventStore.Message.Value(req.Message),
 		)
 		if err != nil {
 			return fmt.Errorf("更新事件失败: %w", err)
@@ -103,7 +103,7 @@ func (ke *kubernetesEventService) ReceiveEvent(ctx context.Context, req *types.K
 		ApiVersion:         req.ApiVersion,
 	}
 
-	err = k8sEvent.WithContext(ctx).Create(obj)
+	err = k8sEventStore.WithContext(ctx).Create(obj)
 	if err != nil {
 		return fmt.Errorf("创建事件失败: %w", err)
 	}

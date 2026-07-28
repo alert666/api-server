@@ -25,4 +25,5 @@ var ServiceProviderSet = wire.NewSet(
 	v1.NewDataTunnelService,
 	v1.NewKubernetesEventServicer,
 	v1.NewIDCMetrics,
+	v1.NewIDCHeartbeat,
 )

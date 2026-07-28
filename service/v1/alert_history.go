@@ -111,7 +111,8 @@ func (s *alertHistoryService) buildHistoryFilter(tenant string, query store.IAle
 		query = query.Where(aHistoryStore.EndsAt.Lte(e))
 	}
 	if req.AlertName != "" {
-		query = query.Where(aHistoryStore.Alertname.Like(req.AlertName + "%"))
+		// query = query.Where(aHistoryStore.Alertname.Like(req.AlertName + "%"))
+		query = query.Where(aHistoryStore.Alertname.Eq(req.AlertName))
 	}
 	if req.Fingerprint != "" {
 		query = query.Where(aHistoryStore.Fingerprint.Like(req.Fingerprint + "%"))

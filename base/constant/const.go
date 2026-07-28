@@ -1,6 +1,8 @@
 package constant
 
 import (
+	"time"
+
 	apitypes "github.com/alert666/api-server/base/types"
 )
 
@@ -42,4 +44,13 @@ const (
 var (
 	GPUCardLossName   = "GPUCardLoss"
 	GPUCardLossValues = []string{"GpuXidErrorDetected", "GpuCountInsufficient"}
+)
+
+// IDC Metrics
+const (
+	CronJobIDCHeartbeatLockKey         = "idcheartbeat:update"
+	CronJobResolvedIDCHeartbeatLockKey = "idcheartbeat:resolved"
+	IDCHeartbeatAlertName              = "IDCHeartbeatFailed"
+	IDCHeartbeatFiringProportion       = 0.5
+	IDCHeartbeatThreshold              = 5 * time.Minute
 )
