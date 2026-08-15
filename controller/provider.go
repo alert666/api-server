@@ -15,4 +15,5 @@ var ControllerProviderSet = wire.NewSet(
 	NewAgentCommandController,
 	NewInternalForwardController,
 	NewKubernetesEventController,
+	NewIDCMetrics,
 )

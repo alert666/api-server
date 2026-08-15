@@ -1208,13 +1208,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/kubernetesEvent": {
-            "post": {
+        "/api/v1/idcMetrics": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
+                "description": "查询指定时间范围内，idc 机房的指标数据，如节点 notReady gpu 掉卡等",
                 "consumes": [
                     "application/json"
                 ],
@@ -1222,38 +1223,58 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Kubernetes Event"
+                    "IDC Metricser"
                 ],
-                "summary": "接收 Kubernetes Event",
+                "summary": "查询指定时间 idc 机房的指标数据",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "集群名称",
-                        "name": "X-Tenant-Id",
-                        "in": "header",
+                        "type": "integer",
+                        "example": 1721779200,
+                        "description": "开始时间戳",
+                        "name": "startTimestamp",
+                        "in": "query",
                         "required": true
                     },
                     {
-                        "description": "Kubernetes Event",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/types.KubernetesEventReceiveReq"
-                        }
+                        "type": "integer",
+                        "example": 1721865599,
+                        "description": "结束时间戳",
+                        "name": "endTimestamp",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "KubeNodeNotReady",
+                        "description": "告警名称",
+                        "name": "alertName",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "查询成功",
                         "schema": {
-                            "$ref": "#/definitions/types.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/types.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/types.QeryIDCMetricsRes"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
             }
         },
-        "/api/v1/kubernetesEvent/getPulledImageDuration": {
+        "/api/v1/idcMetrics/getPulledImageDuration": {
             "get": {
                 "security": [
                     {
@@ -1306,6 +1327,51 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/kubernetesEvent": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Kubernetes Event"
+                ],
+                "summary": "接收 Kubernetes Event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "集群名称",
+                        "name": "X-Tenant-Id",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Kubernetes Event",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.KubernetesEventReceiveReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -2633,6 +2699,31 @@ const docTemplate = `{
                 }
             }
         },
+        "types.IDCMetrics": {
+            "type": "object",
+            "properties": {
+                "alertEndTimestamp": {
+                    "description": "告警结束时间",
+                    "type": "integer"
+                },
+                "alertName": {
+                    "description": "告警名称",
+                    "type": "string"
+                },
+                "alertStartTimestamp": {
+                    "description": "告警开始时间",
+                    "type": "integer"
+                },
+                "ip": {
+                    "description": "节点 IP",
+                    "type": "string"
+                },
+                "node": {
+                    "description": "节点 hostname",
+                    "type": "string"
+                }
+            }
+        },
         "types.IDRequest": {
             "type": "object",
             "required": [
@@ -2716,13 +2807,36 @@ const docTemplate = `{
                 }
             }
         },
+        "types.QeryIDCMetricsRes": {
+            "type": "object",
+            "properties": {
+                "cluster": {
+                    "description": "集群 id",
+                    "type": "string"
+                },
+                "endTimestamp": {
+                    "description": "查询结束时间",
+                    "type": "integer"
+                },
+                "idcMetrics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.IDCMetrics"
+                    }
+                },
+                "startTimestamp": {
+                    "description": "查询开始时间",
+                    "type": "integer"
+                }
+            }
+        },
         "types.QueryImagePullDurationRes": {
             "type": "object",
             "properties": {
                 "durationSeconds": {
                     "type": "integer"
                 },
-                "endTime": {
+                "endTimestamp": {
                     "type": "integer"
                 },
                 "pulledImageEvents": {
@@ -2734,7 +2848,7 @@ const docTemplate = `{
                 "sizeByte": {
                     "type": "integer"
                 },
-                "startTime": {
+                "startTimestamp": {
                     "type": "integer"
                 }
             }

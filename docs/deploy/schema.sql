@@ -267,3 +267,29 @@ CREATE TABLE `tenants` (
   `label` VARCHAR(128) COMMENT '租户显示标签',
   `description` VARCHAR(255) COMMENT '租户描述'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+create table idc_heartbeats
+(
+    id                  bigint auto_increment comment '自增主键'
+        primary key,
+    created_at          datetime(3)  null,
+    updated_at          datetime(3)  null,
+    deleted_at          datetime(3)  null,
+    cluster             varchar(128) not null comment '集群名称',
+    node                varchar(128) not null comment '节点名称',
+    ip                  varchar(64)  not null comment '节点IP地址',
+    heartbeat_timestamp bigint       not null comment '心跳时间戳(毫秒)'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+create index idx_cluster_node
+    on idc_heartbeats (cluster, node);
+
+create index idx_idc_heartbeats_deleted_at
+    on idc_heartbeats (deleted_at);
+
+create index idx_idc_heartbeats_heartbeat_timestamp
+    on idc_heartbeats (heartbeat_timestamp);
+
+create index idx_idc_heartbeats_ip
+    on idc_heartbeats (ip);
+

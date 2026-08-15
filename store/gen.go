@@ -24,6 +24,7 @@ var (
 	AlertTemplate   *alertTemplate
 	Api             *api
 	CasbinRule      *casbinRule
+	IDCHeartbeat    *iDCHeartbeat
 	KubernetesEvent *kubernetesEvent
 	Oauth2User      *oauth2User
 	Role            *role
@@ -40,6 +41,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	AlertTemplate = &Q.AlertTemplate
 	Api = &Q.Api
 	CasbinRule = &Q.CasbinRule
+	IDCHeartbeat = &Q.IDCHeartbeat
 	KubernetesEvent = &Q.KubernetesEvent
 	Oauth2User = &Q.Oauth2User
 	Role = &Q.Role
@@ -57,6 +59,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		AlertTemplate:   newAlertTemplate(db, opts...),
 		Api:             newApi(db, opts...),
 		CasbinRule:      newCasbinRule(db, opts...),
+		IDCHeartbeat:    newIDCHeartbeat(db, opts...),
 		KubernetesEvent: newKubernetesEvent(db, opts...),
 		Oauth2User:      newOauth2User(db, opts...),
 		Role:            newRole(db, opts...),
@@ -75,6 +78,7 @@ type Query struct {
 	AlertTemplate   alertTemplate
 	Api             api
 	CasbinRule      casbinRule
+	IDCHeartbeat    iDCHeartbeat
 	KubernetesEvent kubernetesEvent
 	Oauth2User      oauth2User
 	Role            role
@@ -94,6 +98,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		AlertTemplate:   q.AlertTemplate.clone(db),
 		Api:             q.Api.clone(db),
 		CasbinRule:      q.CasbinRule.clone(db),
+		IDCHeartbeat:    q.IDCHeartbeat.clone(db),
 		KubernetesEvent: q.KubernetesEvent.clone(db),
 		Oauth2User:      q.Oauth2User.clone(db),
 		Role:            q.Role.clone(db),
@@ -120,6 +125,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		AlertTemplate:   q.AlertTemplate.replaceDB(db),
 		Api:             q.Api.replaceDB(db),
 		CasbinRule:      q.CasbinRule.replaceDB(db),
+		IDCHeartbeat:    q.IDCHeartbeat.replaceDB(db),
 		KubernetesEvent: q.KubernetesEvent.replaceDB(db),
 		Oauth2User:      q.Oauth2User.replaceDB(db),
 		Role:            q.Role.replaceDB(db),
@@ -136,6 +142,7 @@ type queryCtx struct {
 	AlertTemplate   IAlertTemplateDo
 	Api             IApiDo
 	CasbinRule      ICasbinRuleDo
+	IDCHeartbeat    IIDCHeartbeatDo
 	KubernetesEvent IKubernetesEventDo
 	Oauth2User      IOauth2UserDo
 	Role            IRoleDo
@@ -152,6 +159,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		AlertTemplate:   q.AlertTemplate.WithContext(ctx),
 		Api:             q.Api.WithContext(ctx),
 		CasbinRule:      q.CasbinRule.WithContext(ctx),
+		IDCHeartbeat:    q.IDCHeartbeat.WithContext(ctx),
 		KubernetesEvent: q.KubernetesEvent.WithContext(ctx),
 		Oauth2User:      q.Oauth2User.WithContext(ctx),
 		Role:            q.Role.WithContext(ctx),

@@ -17,8 +17,7 @@ mysql:
   debug: false                # 是否打印 SQL 日志
   username: root              # 必填
   password: ""                # 必填
-  host: 127.0.0.1             # 必填
-  port: 3306                  # 必填
+  host: 127.0.0.1:3306        # 必填
   database: alert             # 必填
   maxIdleConns: 10            # 最大空闲连接数（默认 10）
   maxOpenConns: 30            # 最大打开连接数（默认 30）

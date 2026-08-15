@@ -1,6 +1,8 @@
 package constant
 
 import (
+	"time"
+
 	apitypes "github.com/alert666/api-server/base/types"
 )
 
@@ -37,4 +39,18 @@ const (
 	AlertCleanStaleCacheLockKey            = "clean:stale:cache" // 删除数据库已经不存在 key 的锁
 	// k8s event
 	K8SEventPulledReason = "Pulled"
+)
+
+var (
+	GPUCardLossName   = "GPUCardLoss"
+	GPUCardLossValues = []string{"GpuXidErrorDetected", "GpuCountInsufficient"}
+)
+
+// IDC Metrics
+const (
+	CronJobIDCHeartbeatLockKey         = "idcheartbeat:update"
+	CronJobResolvedIDCHeartbeatLockKey = "idcheartbeat:resolved"
+	IDCHeartbeatAlertName              = "IDCHeartbeatFailed"
+	IDCHeartbeatFiringProportion       = 0.5
+	IDCHeartbeatThreshold              = 5 * time.Minute
 )

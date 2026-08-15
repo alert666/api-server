@@ -23,19 +23,20 @@ type RouterInterface interface {
 }
 
 type Router struct {
-	userRouter         controller.UserController
-	roleRouter         controller.RoleController
-	apiRouter          controller.ApiController
-	clusterRouter      controller.ClusterController
-	middleware         middleware.MiddlewareInterface
-	alert              controller.AlertManagerController
-	alertTemplate      controller.AlertTemplateController
-	alertChannel       controller.AlertChannelController
-	alertHistory       controller.AlertHistoryController
-	alertSilence       controller.AlertSilenceController
-	agentCommandRouter controller.AgentCommandController
-	internalForward    *controller.InternalForwardController
-	kubernetesEvent    controller.KubernetesEventController
+	userRouter           controller.UserController
+	roleRouter           controller.RoleController
+	apiRouter            controller.ApiController
+	clusterRouter        controller.ClusterController
+	middleware           middleware.MiddlewareInterface
+	alert                controller.AlertManagerController
+	alertTemplate        controller.AlertTemplateController
+	alertChannel         controller.AlertChannelController
+	alertHistory         controller.AlertHistoryController
+	alertSilence         controller.AlertSilenceController
+	agentCommandRouter   controller.AgentCommandController
+	internalForward      *controller.InternalForwardController
+	kubernetesEvent      controller.KubernetesEventController
+	idcMetricsController controller.IDCMetricsController
 }
 
 func NewRouter(
@@ -52,21 +53,23 @@ func NewRouter(
 	agentCommandRouter controller.AgentCommandController,
 	internalForward *controller.InternalForwardController,
 	kubernetesEvent controller.KubernetesEventController,
+	idcMetricsController controller.IDCMetricsController,
 ) *Router {
 	return &Router{
-		userRouter:         userRouter,
-		roleRouter:         roleRouter,
-		apiRouter:          apiRouter,
-		clusterRouter:      clusterRouter,
-		middleware:         middleware,
-		alert:              alertmanager,
-		alertTemplate:      alertTemplate,
-		alertChannel:       alertChannel,
-		alertHistory:       alertHistory,
-		alertSilence:       alertSilence,
-		agentCommandRouter: agentCommandRouter,
-		internalForward:    internalForward,
-		kubernetesEvent:    kubernetesEvent,
+		userRouter:           userRouter,
+		roleRouter:           roleRouter,
+		apiRouter:            apiRouter,
+		clusterRouter:        clusterRouter,
+		middleware:           middleware,
+		alert:                alertmanager,
+		alertTemplate:        alertTemplate,
+		alertChannel:         alertChannel,
+		alertHistory:         alertHistory,
+		alertSilence:         alertSilence,
+		agentCommandRouter:   agentCommandRouter,
+		internalForward:      internalForward,
+		kubernetesEvent:      kubernetesEvent,
+		idcMetricsController: idcMetricsController,
 	}
 }
 
@@ -115,12 +118,22 @@ func (r *Router) RegisterRouter(engine *gin.Engine) {
 	r.registerAgentCommandRouter(apiGroup)
 	r.registerInternalRouter(engine)
 	r.registerKubernetesEventRouter(apiGroup)
+	r.registerIDCMetricsRouter(apiGroup)
 }
 
 func (r *Router) registerKubernetesEventRouter(apiGroup *gin.RouterGroup) {
 	eventGroup := apiGroup.Group("/kubernetesEvent")
 	eventGroup.POST("", r.middleware.AlertReceiveAuth(), r.kubernetesEvent.ReceiveEvent)
-	eventGroup.GET("/getPulledImageDuration", r.middleware.AlertReceiveAuth(), r.kubernetesEvent.QueryImagePullDuration)
+}
+
+func (r *Router) registerIDCMetricsRouter(apiGroup *gin.RouterGroup) {
+	eventGroup := apiGroup.Group("/idcMetrics")
+	eventGroup.Use(r.middleware.AlertReceiveAuth())
+	eventGroup.GET("", r.idcMetricsController.GetIDCMetricser)
+	eventGroup.POST("", r.idcMetricsController.QueryIDCMetricser)
+	eventGroup.GET("/pulledImageDuration", r.idcMetricsController.QueryImagePullDuration)
+	eventGroup.POST("/heartbeat", r.idcMetricsController.IDCHeartbeat)
+	eventGroup.POST("/deleteHeartbeat", r.idcMetricsController.DeleteIDCHeartbeat)
 }
 
 func (r *Router) registerUserRouter(apiGroup *gin.RouterGroup) {

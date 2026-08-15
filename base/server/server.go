@@ -99,6 +99,7 @@ type CronJob struct {
 	cleanInhibitAlert      v1.AlertInhibiter
 	cacheAlertNameOptioner v1.CacheAlertNameOptioner
 	cleanStaleCacher       v1.CleanStaleCacher
+	cronJobIDCMetricser    v1.CronJobIDCMetricser
 }
 
 func NewCronJob(
@@ -107,6 +108,7 @@ func NewCronJob(
 	cleanInhibitAlert v1.AlertInhibiter,
 	cacheAlertNameOptioner v1.CacheAlertNameOptioner,
 	cleanStaleCacher v1.CleanStaleCacher,
+	cronJobIDCMetricser v1.CronJobIDCMetricser,
 ) *CronJob {
 	return &CronJob{
 		shutdown:               defaultShutdownTimeout,
@@ -115,6 +117,7 @@ func NewCronJob(
 		cleanInhibitAlert:      cleanInhibitAlert,
 		cacheAlertNameOptioner: cacheAlertNameOptioner,
 		cleanStaleCacher:       cleanStaleCacher,
+		cronJobIDCMetricser:    cronJobIDCMetricser,
 	}
 }
 
@@ -130,39 +133,50 @@ func (receiver *CronJob) Start() error {
 		cron.SkipIfStillRunning(cron.DefaultLogger),
 	))
 
-	// jobs := []jobConfig{}
-
-	jobs := []jobConfig{
-		{
-			name: "抑制告警清理",
-			spec: "* * * * *",
-			fn:   receiver.cleanInhibitAlert.CleanInhibitAlert,
-		},
-		{
-			name: "超时告警清理",
-			spec: "*/5 * * * *",
-			fn:   receiver.cleanDuplicateFiringer.CleanRepeatIntervalAlertsTask,
-		},
-		{
-			name: "重复指纹告警清理",
-			spec: "*/10 * * * *",
-			fn:   receiver.cleanDuplicateFiringer.CleanDuplicateFiringAlertsTask,
-		},
-		{
-			name: "重复告警静默清理",
-			spec: "* * * * *",
-			fn:   receiver.cleanExpiredSilencer.CleanExpiredSilencesTask,
-		},
-		{
-			name: "告警名称 Options 缓存",
-			spec: "* * * * *",
-			fn:   receiver.cacheAlertNameOptioner.CacheAlertNameOptions,
-		},
-		{
-			name: "缓存孤儿清理",
-			spec: "* * * * *",
-			fn:   receiver.cleanStaleCacher.CleanStaleCacheTask,
-		},
+	jobs := []jobConfig{}
+	if config.GetCronJobEnable() {
+		jobs = []jobConfig{
+			{
+				name: "抑制告警清理",
+				spec: "* * * * *",
+				fn:   receiver.cleanInhibitAlert.CleanInhibitAlert,
+			},
+			{
+				name: "超时告警清理",
+				spec: "*/5 * * * *",
+				fn:   receiver.cleanDuplicateFiringer.CleanRepeatIntervalAlertsTask,
+			},
+			{
+				name: "重复指纹告警清理",
+				spec: "*/10 * * * *",
+				fn:   receiver.cleanDuplicateFiringer.CleanDuplicateFiringAlertsTask,
+			},
+			{
+				name: "重复告警静默清理",
+				spec: "* * * * *",
+				fn:   receiver.cleanExpiredSilencer.CleanExpiredSilencesTask,
+			},
+			{
+				name: "告警名称 Options 缓存",
+				spec: "* * * * *",
+				fn:   receiver.cacheAlertNameOptioner.CacheAlertNameOptions,
+			},
+			{
+				name: "缓存孤儿清理",
+				spec: "* * * * *",
+				fn:   receiver.cleanStaleCacher.CleanStaleCacheTask,
+			},
+			{
+				name: "IDCHeartbeat",
+				spec: "* * * * *",
+				fn:   receiver.cronJobIDCMetricser.CronJobIDCHeartbeat,
+			},
+			{
+				name: "IDCResolvedHeartbeat",
+				spec: "* * * * *",
+				fn:   receiver.cronJobIDCMetricser.CronJobIDCResolvedHeartbeat,
+			},
+		}
 	}
 
 	for _, job := range jobs {

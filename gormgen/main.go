@@ -26,6 +26,7 @@ func main() {
 		model.AlertSendRecord{},
 		model.AlertSilence{},
 		model.KubernetesEvent{},
+		model.IDCHeartbeat{},
 	)
 	g.UseDB(db)
 	g.ApplyBasic(
@@ -41,6 +42,7 @@ func main() {
 		model.AlertSendRecord{},
 		model.AlertSilence{},
 		model.KubernetesEvent{},
+		model.IDCHeartbeat{},
 	)
 	g.Execute()
 }

@@ -1,15 +1,14 @@
 fullnameOverride: alertmanager
 
-defaultPodOptions:
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/role
-                operator: In
-                values:
-                  - middleware
+x-affinity: &defaultAffinity
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/role
+              operator: In
+              values:
+                - middleware
 
 service:
   apiserver:
@@ -60,7 +59,15 @@ controllers:
     pod:
       labels:
         app: alertmanager-apiserver
-
+        <<: *defaultAffinity
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: alertmanager-apiserver
+                topologyKey: kubernetes.io/hostname
     containers:
       app:
         image:
@@ -68,16 +75,19 @@ controllers:
           tag: main-7f94fee-20260725-080653
         env:
           TZ: "Asia/Shangha"
-          SERVICE_NAME: "alertmanager-apiserver"
+          SERVICE_NAME:
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['app']
           ALERTMANAGER_APISERVER_SERVER_BIND: "0.0.0.0:8080"
           ALERTMANAGER_APISERVER_CONFIG_PATH: "/app/config/config.yaml"
-          OTEL_EXPORTER_OTLP_ENDPOINT: "http://10.10.10.10:30001"
-          OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
-          OTEL_SERVICE_NAME: "alertmanager-apiserver"
           OTEL_SERVICE_NAME:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.labels['app']
+          OTEL_EXPORTER_OTLP_ENDPOINT: "http://10.10.10.10:30001"
+          OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+          OTEL_METRICS_EXPORTER: "prometheus"
           OTEL_EXPORTER_PROMETHEUS_PORT: "9464"
           OTEL_EXPORTER_PROMETHEUS_HOST: "0.0.0.0"
         ports:
@@ -125,6 +135,15 @@ controllers:
     pod:
       labels:
         app: alertmanager-ui
+        <<: *defaultAffinity
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: alertmanager-ui
+                topologyKey: kubernetes.io/hostname
     containers:
       app:
         image:
@@ -161,12 +180,14 @@ configMaps:
             keyFile:  /path/to/server.key   # 服务端私钥
             caFile:   /path/to/ca.crt       # 可选，配置后启用 mTLS（双向认证）
 
+        cronJob:
+          enable: true
+
         mysql:
           debug: false                # 是否打印 SQL 日志
           username: root              # 必填
           password: ""                # 必填
-          host: 127.0.0.1             # 必填
-          port: 3306                  # 必填
+          host: 127.0.0.1:3306        # 必填
           database: alert             # 必填
           maxIdleConns: 10            # 最大空闲连接数（默认 10）
           maxOpenConns: 30            # 最大打开连接数（默认 30）

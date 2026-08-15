@@ -60,6 +60,10 @@ func GetServerBind() string {
 	return bind
 }
 
+func GetCronJobEnable() bool {
+	return viper.GetBool("cronJob.enable")
+}
+
 // GetGRPCBind 获取 gRPC 监听地址
 func GetGRPCBind() string {
 	bind := viper.GetString("grpc.bind")
