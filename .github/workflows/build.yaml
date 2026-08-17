@@ -3,13 +3,9 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      # - main
       - test
     tags:
       - "v*"
-  # pull_request:
-  #   branches:
-  #     - main
 
 jobs:
   build:
@@ -58,6 +54,8 @@ jobs:
             OTEL=true
             GO_VERSION=1.26.5
           push: true
+          provenance: false
+          sbom: false
           tags: |
             ${{ vars.DOCKER_HUB }}/qqlx/alertmanager:${{ steps.vars.outputs.IMAGE_TAG }}
             ghcr.io/${{ github.repository }}:${{ steps.vars.outputs.IMAGE_TAG }}
