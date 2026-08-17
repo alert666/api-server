@@ -113,7 +113,7 @@ func VerificationAlertConfig(channelName string, channelType model.ChannelType, 
 }
 
 func GetAlertMapKey(fingerprint string, startAt time.Time) string {
-	return fmt.Sprintf("%s-%d", fingerprint, startAt.UnixNano())
+	return fmt.Sprintf("%s-%d", fingerprint, startAt.UnixMilli())
 }
 
 // labelVarRe 匹配 $labels.xxx 模板变量
