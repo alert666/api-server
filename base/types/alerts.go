@@ -108,6 +108,12 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 	}
 }
 
+// TODO 修改远程获取逻辑
+type RemoteReceiveReq struct {
+	AlertReceiveReq *AlertReceiveReq     `json:"alertReceiveReq"`
+	AlertTemplate   *model.AlertTemplate `json:"AlertTemplate"`
+}
+
 // 辅助函数：将业务 Alert 转换为 DB Model
 func ConvertToModel(tenantKey string, a *Alert, templateID int) (*model.AlertHistory, error) {
 	labelByte, err := json.Marshal(a.Labels)
