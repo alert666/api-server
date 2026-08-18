@@ -42,7 +42,7 @@ func ValidateTemplateRecipient(receiveIdType string, receiveIds []string) error 
 	}
 	for _, receiveId := range receiveIds {
 		switch receiveIdType {
-		case "open_id", "user_id", "email", "chat_id", string(model.Remote):
+		case "open_id", "user_id", "email", "chat_id", string(model.ReceiveIdTypeRemote):
 			if receiveId == "" {
 				return fmt.Errorf("接收者类型为 %s 时, receiveId 不能为空", receiveIdType)
 			}
@@ -436,9 +436,12 @@ func OverrideAt(receive, template string) (receiveID, result string) {
 	return rs[0], template
 }
 
-func GetRemoteReceive(ctx context.Context, body *types.AlertReceiveReq, tenantValue string, alertTemplate *model.AlertTemplate) error {
+func GetRemoteReceive(ctx context.Context, body *types.RemoteReceiveReq) error {
 	client := resty.New()
-	remoteReceives := make([]types.RemoteReceives, 0, len(alertTemplate.ReceiveId))
+	if body == nil {
+		return fmt.Errorf("body 不能为空")
+	}
+	alertTemplate := body.AlertTemplate
 
 	for _, rid := range alertTemplate.ReceiveId {
 		// rid = url;;token;;receiveType
@@ -457,10 +460,7 @@ func GetRemoteReceive(ctx context.Context, body *types.AlertReceiveReq, tenantVa
 		if token != "" {
 			req.SetHeader("Authorization", token)
 		}
-
-		if body != nil {
-			req.SetBody(body)
-		}
+		req.SetBody(body)
 
 		resp, err := req.Post(url)
 		if err != nil {
@@ -483,27 +483,13 @@ func GetRemoteReceive(ctx context.Context, body *types.AlertReceiveReq, tenantVa
 			return fmt.Errorf("序列化 remote Data 失败, %w", err)
 		}
 
-		var rc []types.RemoteReceives
-		if err := json.Unmarshal(dataBytes, &rc); err != nil {
-			return fmt.Errorf("解析 RemoteReceives 失败, %w", err)
+		var alertRes *types.RemoteReceiveReq
+		if err := json.Unmarshal(dataBytes, &alertRes); err != nil {
+			return fmt.Errorf("解析 RemoteReceiveReq 失败, %w", err)
 		}
-		remoteReceives = append(remoteReceives, rc...)
-	}
 
-	receiveIds := make([]string, 0, 10)
-	for _, v := range remoteReceives {
-		if InArray(v.Clusters, tenantValue) {
-			receiveIds = append(receiveIds, v.Receives...)
-		}
-	}
-
-	alertTemplate.ReceiveId = alertTemplate.ReceiveId[:0]
-	receiveIdSet := make(map[string]struct{}, len(receiveIds))
-	for _, v := range receiveIds {
-		if _, ok := receiveIdSet[v]; !ok {
-			receiveIdSet[v] = struct{}{}
-			alertTemplate.ReceiveId = append(alertTemplate.ReceiveId, v)
-		}
+		body.AlertReceiveReq = alertRes.AlertReceiveReq
+		body.AlertTemplate = alertRes.AlertTemplate
 	}
 	return nil
 }

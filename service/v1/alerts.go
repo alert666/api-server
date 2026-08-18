@@ -81,10 +81,18 @@ func (receiver *alertsService) SendAlert(ctx context.Context, req *types.AlertRe
 	}
 
 	// 从远程获取配置
-	if alertTemplate.ReceiveIdType == string(model.Remote) {
-		if err := helper.GetRemoteReceive(ctx, req, tenantValue, alertTemplate); err != nil {
+	if alertTemplate.ReceiveIdType == string(model.ReceiveIdTypeRemote) {
+		remoteReq := &types.RemoteReceiveReq{
+			Cluster:         tenantValue,
+			EnCluster:       req.CommonLabels["enCluster"],
+			AlertReceiveReq: req,
+			AlertTemplate:   alertTemplate,
+		}
+		if err := helper.GetRemoteReceive(ctx, remoteReq); err != nil {
 			return err
 		}
+		req = remoteReq.AlertReceiveReq
+		alertTemplate = remoteReq.AlertTemplate
 	}
 
 	alertTemplate = receiver.appendReceiver(ctx, tenantValue, req.ExtraSync, alertTemplate)

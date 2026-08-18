@@ -61,6 +61,7 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 			"cluster":    "local",
 			"severity":   "critical",
 			"team":       "infrastructure",
+			"encluster":  "fjsq",
 		},
 		CommonAnnotations: map[string]string{},
 		TruncatedAlerts:   0,
@@ -79,6 +80,7 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 					"severity":   "critical",
 					"device":     "/dev/sda2",
 					"mountpoint": "/",
+					"encluster":  "fjsq",
 				},
 				Annotations: map[string]string{
 					"summary":     "节点磁盘使用率过高 (10.0.0.10:9100)",
@@ -98,6 +100,7 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 					"severity":   "critical",
 					"device":     "/dev/sda2",
 					"mountpoint": "/",
+					"encluster":  "fjsq",
 				},
 				Annotations: map[string]string{
 					"summary":     "节点磁盘使用率过高 (10.0.0.11:9100)",
@@ -110,6 +113,8 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 
 // TODO 修改远程获取逻辑
 type RemoteReceiveReq struct {
+	Cluster         string               `json:"cluster"`
+	EnCluster       string               `json:"enCluster"`
 	AlertReceiveReq *AlertReceiveReq     `json:"alertReceiveReq"`
 	AlertTemplate   *model.AlertTemplate `json:"AlertTemplate"`
 }
