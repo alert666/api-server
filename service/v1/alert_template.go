@@ -165,7 +165,7 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 
 	if req.Template != "" {
 		if err := validateTemplate(ctx, req.ReceiveIdType, false, obj.Template); err != nil {
-			return fmt.Errorf("测试聚合模板失败, %s", err)
+			return fmt.Errorf("测试非聚合模板失败, %s", err)
 		}
 	}
 
