@@ -331,6 +331,17 @@ func GetAlertTenantKey() string {
 	return "cluster"
 }
 
+type AlertEvaluateTemplateName map[string][]string
+
+// GetAlertEvaluate 获取自己评估的告警配置
+func GetAlertEvaluateTemplateName() (AlertEvaluateTemplateName, error) {
+	var evaluateTemplateID AlertEvaluateTemplateName
+	if err := viper.UnmarshalKey("alert.evaluateTemplateID", &evaluateTemplateID); err != nil {
+		return nil, fmt.Errorf("alert.evaluateTemplateID 反序列化失败: %v", err)
+	}
+	return evaluateTemplateID, nil
+}
+
 type ExtraSyncConf map[string]map[string][]string
 
 func (e ExtraSyncConf) GetConfig(name string) (map[string][]string, error) {

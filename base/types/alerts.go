@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -218,4 +219,67 @@ type RemoteReceives struct {
 	Msg      string   `json:"msg"`
 	Clusters []string `json:"clusters"`
 	Receives []string `json:"receives"`
+}
+
+func TransformationAlertHistoryToAlertReq(cluster string, alertHistorys []*model.AlertHistory) (*AlertReceiveReq, error) {
+	if len(alertHistorys) <= 0 {
+		return nil, errors.New("alertHistorys 为空")
+	}
+
+	var (
+		req = &AlertReceiveReq{
+			Alerts:       make([]*Alert, 0, len(alertHistorys)),
+			CommonLabels: make(map[string]string),
+			GroupLabels:  make(map[string]string),
+		}
+		labels      map[string]string
+		annotations map[string]string
+		err         error
+	)
+
+	for _, alertHistory := range alertHistorys {
+		if labels, err = convertDirect(alertHistory.Labels); err != nil {
+			return nil, fmt.Errorf("alertHistory labels 转换 alertReq 失败, %v", err)
+		}
+
+		if annotations, err = convertDirect(alertHistory.Annotations); err != nil {
+			return nil, fmt.Errorf("alertHistory annotations 转换 alertReq 失败, %v", err)
+		}
+
+		req.Alerts = append(req.Alerts, &Alert{
+			Status:      alertHistory.Status,
+			Labels:      labels,
+			Annotations: annotations,
+			StartsAt:    alertHistory.StartsAt,
+			EndsAt:      alertHistory.EndsAt,
+			Fingerprint: alertHistory.Fingerprint,
+			IsSilenced:  alertHistory.IsSilenced,
+			SilenceID:   getInt(alertHistory.AlertSilenceID),
+		})
+	}
+
+	req.CommonLabels["cluster"] = cluster
+	req.GroupLabels["cluster"] = cluster
+	return req, nil
+}
+
+func convertDirect(jsonBytes datatypes.JSON) (map[string]string, error) {
+	var m map[string]string
+
+	// 空值检查，避免不必要的解析
+	if len(jsonBytes) == 0 {
+		return make(map[string]string), nil
+	}
+
+	if err := json.Unmarshal(jsonBytes, &m); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal JSON to map: %w", err)
+	}
+	return m, nil
+}
+
+func getInt(i *int) int {
+	if i != nil {
+		return *i
+	}
+	return 0
 }

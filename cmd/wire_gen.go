@@ -127,7 +127,7 @@ func InitApplication() (*app.Application, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	cronJobIDCMetricser := v1.NewIDCHeartbeat(cacheStore)
+	cronJobIDCMetricser := v1.NewIDCHeartbeat(cacheStore, alertsServicer)
 	application := app.NewApplication(engine, cacheStore, feishuer, cleanDuplicateFiringer, cleanExpiredSilencer, alertInhibiter, cacheAlertNameOptioner, cleanStaleCacher, grpcServer, cronJobIDCMetricser)
 	return application, func() {
 		cleanup2()

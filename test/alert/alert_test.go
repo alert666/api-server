@@ -813,3 +813,42 @@ func TestGetRemoteReceive(t *testing.T) {
 	fmt.Println(string(by))
 	fmt.Println("========== 🔥🔥🔥 DEBUG END 🔥🔥🔥 ==========")
 }
+
+func TestIDCCRon(t *testing.T) {
+	if err := config.LoadConfig("../../config.yaml"); err != nil {
+		t.Fatal(err)
+	}
+
+	log.NewLogger()
+
+	_, c, err := data.NewDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c()
+
+	client, err := data.NewRDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	cacheStore, cleanup, err := store.NewCacheStore(client)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer cleanup()
+	feishuer := feishu.NewFeiShu()
+
+	feishuer.Init("feishu", "xxx", "xxx")
+
+	emailer := email.NewEmailSender()
+	alertsServicer, err := v1.NewAlertsServicer(cacheStore, feishuer, emailer)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	v1.NewStore()
+	idc := v1.NewIDCHeartbeat(cacheStore, alertsServicer)
+	// idc.CronJobIDCHeartbeat()
+	idc.CronJobIDCResolvedHeartbeat()
+}

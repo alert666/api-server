@@ -84,6 +84,5 @@ type IDCHeartbeatReq struct {
 }
 
 type DeleteIDCHeartbeatReq struct {
-	Node string `json:"node"`
-	IP   string `json:"ip"`
+	IP string `json:"ip"`
 }
