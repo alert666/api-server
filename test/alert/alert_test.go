@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math/rand"
 	"net/url"
@@ -836,9 +837,38 @@ func TestIDCCRon(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer cleanup()
-	feishuer := feishu.NewFeiShu()
 
-	feishuer.Init("feishu", "xxx", "xxx")
+	v1.NewStore()
+	feishuer := feishu.NewFeiShu()
+	tn, err := config.GetAlertEvaluateTemplateName()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, ts := range tn {
+		for _, tt := range ts {
+			_template, err := store.AlertTemplate.
+				WithContext(context.Background()).
+				Preload(store.AlertTemplate.AlertChannel).
+				Where(store.AlertTemplate.Name.Eq(tt)).
+				First()
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			ac := _template.AlertChannel
+
+			var alertConfig *model.FeishuAppConfig
+			if err := json.Unmarshal(ac.Config, &alertConfig); err != nil {
+				t.Fatal(err)
+			}
+
+			if alertConfig == nil {
+				t.Fatal(errors.New("alertConfig is nil"))
+			}
+			feishuer.Init(ac.Name, alertConfig.AppID, alertConfig.AppSecret)
+		}
+	}
 
 	emailer := email.NewEmailSender()
 	alertsServicer, err := v1.NewAlertsServicer(cacheStore, feishuer, emailer)
@@ -847,8 +877,7 @@ func TestIDCCRon(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	v1.NewStore()
 	idc := v1.NewIDCHeartbeat(cacheStore, alertsServicer)
-	// idc.CronJobIDCHeartbeat()
+	idc.CronJobIDCHeartbeat()
 	idc.CronJobIDCResolvedHeartbeat()
 }

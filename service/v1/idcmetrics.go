@@ -535,16 +535,7 @@ func cronJobIDCResolvedHeartbeat(ctx context.Context, t *types.TenantOption, ale
 		sendAlert(ctx, alertImpl, t, alertHistoryObj)
 	}
 
-	// 如果当前没有心跳的节点数小于阈值, 那么告警记录需要修改为恢复
-	_, err = aHistoryStore.WithContext(ctx).Where(aHistoryStore.ID.Eq(alertHistoryObj.ID)).UpdateColumnSimple(
-		aHistoryStore.Status.Value(constant.AlertStatusResolved),
-		aHistoryStore.EndsAt.Value(now),
-	)
-	if err != nil {
-		zap.L().Error("[定时任务] cronJobIDCResolvedHeartbeat 更新状态失败", zap.Any("alertHistory", alertHistoryObj), zap.Error(err))
-		return
-	}
-
+	// // 如果当前没有心跳的节点数小于阈值, 那么告警记录需要修改为恢复
 	// _, err = aHistoryStore.WithContext(ctx).Where(aHistoryStore.ID.Eq(alertHistoryObj.ID)).UpdateColumnSimple(
 	// 	aHistoryStore.Status.Value(constant.AlertStatusResolved),
 	// 	aHistoryStore.EndsAt.Value(now),
@@ -553,7 +544,6 @@ func cronJobIDCResolvedHeartbeat(ctx context.Context, t *types.TenantOption, ale
 	// 	zap.L().Error("[定时任务] cronJobIDCResolvedHeartbeat 更新状态失败", zap.Any("alertHistory", alertHistoryObj), zap.Error(err))
 	// 	return
 	// }
-
 }
 
 // IDCHeartbeat idc 机房心跳
