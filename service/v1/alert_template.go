@@ -36,6 +36,10 @@ func NewAlertTemplateServicer(cache store.CacheStorer) AlertTemplateServicer {
 }
 
 func (receiver *alertTemplateService) CreateAlerTemplate(ctx context.Context, req *types.AlertTemplateCreateRequest) error {
+	if req.ReceiveIdType == string(model.ReceiveIdTypeRemote) && len(req.ReceiveId) != 1 {
+		return fmt.Errorf("%v 类型的模版 ReceiveId 个数不允许大于 1", model.ReceiveIdTypeRemote)
+	}
+
 	storeObj, err := aTemlpateStore.WithContext(ctx).Where(aTemlpateStore.Name.Eq(req.Name)).First()
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return err
@@ -161,7 +165,7 @@ func (receiver *alertTemplateService) UpdateTemplate(ctx context.Context, req *t
 
 	if req.Template != "" {
 		if err := validateTemplate(ctx, req.ReceiveIdType, false, obj.Template); err != nil {
-			return fmt.Errorf("测试聚合模板失败, %s", err)
+			return fmt.Errorf("测试非聚合模板失败, %s", err)
 		}
 	}
 

@@ -27,7 +27,7 @@ service:
         targetPort: metrics
         protocol: HTTP
   apiserver-grpc:
-    enabled: true
+    enabled: false
     controller: apiserver
     labels:
       app: alertmanager-apiserver
@@ -59,6 +59,8 @@ controllers:
     pod:
       labels:
         app: alertmanager-apiserver
+        cls: "true"
+      affinity:
         <<: *defaultAffinity
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -135,6 +137,8 @@ controllers:
     pod:
       labels:
         app: alertmanager-ui
+        cls: "true"
+      affinity:
         <<: *defaultAffinity
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -174,14 +178,11 @@ configMaps:
           encoder: console            # 日志格式：console（文本）/ json（默认 console）
 
         grpc:
-          bind: 0.0.0.0:9090          # gRPC 监听地址（默认 0.0.0.0:9090）
+          bind: 0.0.0.0:50051          # gRPC 监听地址（默认 0.0.0.0:9090）
           tls:                        # 可选，配置后启用 TLS
             certFile: /path/to/server.crt   # 服务端证书
             keyFile:  /path/to/server.key   # 服务端私钥
             caFile:   /path/to/ca.crt       # 可选，配置后启用 mTLS（双向认证）
-
-        cronJob:
-          enable: true
 
         mysql:
           debug: false                # 是否打印 SQL 日志
@@ -291,17 +292,24 @@ configMaps:
 
         internal:
           token: internal-shared-secret   # 内部 API 认证 token（用于跨副本命令转发）
-          advertiseAddr: ""               # 可选，手动指定本实例广播地址（默认自动探测）
-
 secrets:
   grpc-tls:
     forceRename: alertmanager-apiserver-grpc-tls
     labels:
       app: alertmanager-apiserver
     stringData:
-      ca.crt: ca.crt
-      server.crt: server.crt
-      server.key: server.key
+      ca.crt: |-
+        -----BEGIN CERTIFICATE-----
+        xxxxx
+        -----END CERTIFICATE-----
+      server.crt: |-
+        -----BEGIN CERTIFICATE-----
+        xxxxx
+        -----END CERTIFICATE-----
+      server.key: |-
+        -----BEGIN PRIVATE KEY-----
+        xxxxx
+        -----END PRIVATE KEY-----
 
 persistence:
   config:
@@ -337,7 +345,7 @@ rawResources:
           - istio-system/ops-https
           - istio-system/ops-http
         hosts:
-          - cloud.suanlene.cn
+          - you.dmoain.com
         http:
         - name: api-routes
           match:

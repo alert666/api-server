@@ -9,8 +9,8 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/alert666/api-server/base/constant"
-	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/helper"
+	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
 	"github.com/alert666/api-server/store"
@@ -65,14 +65,14 @@ func (receiver *alertChannelService) CreateAlerChannel(ctx context.Context, req 
 			return err
 		}
 		if err := receiver.cache.SetObject(ctx, store.AlertChannelType, obj.ID, obj, store.NeverExpires); err != nil {
-		log.WithRequestID(ctx).Error("cache AlertChannel failed", zap.Int("id", obj.ID), zap.Error(err))
+			log.WithRequestID(ctx).Error("cache AlertChannel failed", zap.Int("id", obj.ID), zap.Error(err))
 		}
 		if obj.Type == model.ChannelTypeFeishuApp {
 			config, err := obj.GetFeishuAppConfig()
 			if err == nil {
 				publish := fmt.Sprintf("%s:%s:%s", obj.Name, config.AppID, config.AppSecret)
 				if err := receiver.cache.Publish(ctx, constant.AlertChannelTopicUpdate, publish); err != nil {
-			log.WithRequestID(ctx).Error("publish channel create event failed", zap.Error(err))
+					log.WithRequestID(ctx).Error("publish channel create event failed", zap.Error(err))
 				}
 			}
 		}

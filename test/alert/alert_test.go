@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math/rand"
 	"net/url"
@@ -16,6 +17,7 @@ import (
 
 	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/data"
+	"github.com/alert666/api-server/base/helper"
 	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/types"
 	"github.com/alert666/api-server/model"
@@ -760,4 +762,122 @@ func TestIntAddress(t *testing.T) {
 	fmt.Println(b)
 
 	fmt.Println(config.GetOutboundIP())
+}
+
+const template = `template_id: "AAqtHMkdgJ5i6"
+template_version_name: "1.0.1"
+template_variable:
+  alertName: {{ index .Labels "alertname" | printf "%q" }}
+  alertDescribe: {{ getDescript . | printf "%q" }}
+  alertCluster: {{ getClusterLabel (index .Labels "cluster") }}
+  alertLevel: {{ index .Labels "severity" | printf "%q" }}
+  alertStartTime: {{ timeFormat .StartsAt | printf "%q" }}
+  alertEndTime: {{ getEndTime .EndsAt "告警未恢复" | printf "%q" }}
+  alertUser: "<at id=ljh202606></at>"
+  grafanaLink: {{ newViewLink (getGrafanaExploreLink "https://kp-grafana.prod.karmada.suanleme.local" .GeneratorURL "thanos" ) }}
+  alertmanagerAddr: {{ newAlertManagerLink "https://cloud.suanlene.cn/workspace/alert/history?page=1&pageSize=15&status=firing" (index .Labels "cluster") }}`
+
+func TestRese(t *testing.T) {
+	rid, result := helper.OverrideAt("oc_119e4c05afe7189a9c82e52489ede217;;<at email=huyf@suanleme.cn></at>", template)
+	fmt.Println("\n========== 🔥🔥🔥 DEBUG TRACE 🔥🔥🔥 ==========")
+	fmt.Printf("[DBG] %s:%d %s = %#v\n", "regexp_test.go", 24, "rid", rid)
+	fmt.Printf("[DBG] %s:%d %s = %#v\n", "regexp_test.go", 24, "result", result)
+	fmt.Println("========== 🔥🔥🔥 DEBUG END 🔥🔥🔥 ==========")
+}
+
+func TestGetRemoteReceive(t *testing.T) {
+	log.NewLogger()
+
+	te := &model.AlertTemplate{
+		ReceiveIdType: string(model.ReceiveIdTypeRemote),
+		ReceiveId:     []string{"http://127.0.0.1:9090/api/v1/tenant/tenantPodRegion;;4045d6c1da2ab78e2fc21e6956bb79f4a5678b75d09d2eddaa8f838399043969;;chat_id"},
+		// ReceiveId:     []string{"https://gongjiyun-business-data.suanlene.cn/api/v1/tenant/node-pod-region;;4045d6c1da2ab78e2fc21e6956bb79f4a5678b75d09d2eddaa8f838399043969;;chat_id"},
+	}
+
+	req := types.NewTestAlertReceiveReq()
+
+	getReq := &types.RemoteReceiveReq{
+		Cluster:         "tke-gateway",
+		AlertReceiveReq: req,
+		AlertTemplate:   te,
+	}
+
+	if err := helper.GetRemoteReceive(context.Background(), getReq); err != nil {
+		t.Fatal(err)
+	}
+
+	by, err := json.Marshal(&getReq)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println("\n========== 🔥🔥🔥 DEBUG TRACE 🔥🔥🔥 ==========")
+	fmt.Println(string(by))
+	fmt.Println("========== 🔥🔥🔥 DEBUG END 🔥🔥🔥 ==========")
+}
+
+func TestIDCCRon(t *testing.T) {
+	if err := config.LoadConfig("../../config.yaml"); err != nil {
+		t.Fatal(err)
+	}
+
+	log.NewLogger()
+
+	_, c, err := data.NewDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c()
+
+	client, err := data.NewRDB()
+	if err != nil {
+		t.Fatal(err)
+	}
+	cacheStore, cleanup, err := store.NewCacheStore(client)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer cleanup()
+
+	v1.NewStore()
+	feishuer := feishu.NewFeiShu()
+	tn, err := config.GetAlertEvaluateTemplateName()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, ts := range tn {
+		for _, tt := range ts {
+			_template, err := store.AlertTemplate.
+				WithContext(context.Background()).
+				Preload(store.AlertTemplate.AlertChannel).
+				Where(store.AlertTemplate.Name.Eq(tt)).
+				First()
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			ac := _template.AlertChannel
+
+			var alertConfig *model.FeishuAppConfig
+			if err := json.Unmarshal(ac.Config, &alertConfig); err != nil {
+				t.Fatal(err)
+			}
+
+			if alertConfig == nil {
+				t.Fatal(errors.New("alertConfig is nil"))
+			}
+			feishuer.Init(ac.Name, alertConfig.AppID, alertConfig.AppSecret)
+		}
+	}
+
+	emailer := email.NewEmailSender()
+	alertsServicer, err := v1.NewAlertsServicer(cacheStore, feishuer, emailer)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	idc := v1.NewIDCHeartbeat(cacheStore, alertsServicer)
+	idc.CronJobIDCHeartbeat()
+	idc.CronJobIDCResolvedHeartbeat()
 }

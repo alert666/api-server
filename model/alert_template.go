@@ -9,7 +9,7 @@ import (
 type ReceiveIdType string
 
 const (
-	Remote ReceiveIdType = "remote"
+	ReceiveIdTypeRemote ReceiveIdType = "remote"
 )
 
 // AlertTemplate 告警模板表

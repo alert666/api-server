@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"runtime/debug"
 	"slices"
+	"strings"
 	"sync"
 	"time"
 
@@ -37,6 +38,7 @@ type IDCMetricser interface {
 
 type idcMetrics struct {
 	cacheImpl store.CacheStorer
+	alertImpl AlertsServicer
 }
 
 func NewIDCMetrics(cacheImpl store.CacheStorer) IDCMetricser {
@@ -433,9 +435,10 @@ type CronJobIDCMetricser interface {
 	CronJobIDCResolvedHeartbeat()
 }
 
-func NewIDCHeartbeat(cacheImpl store.CacheStorer) CronJobIDCMetricser {
+func NewIDCHeartbeat(cacheImpl store.CacheStorer, alertImpl AlertsServicer) CronJobIDCMetricser {
 	return &idcMetrics{
 		cacheImpl: cacheImpl,
+		alertImpl: alertImpl,
 	}
 }
 
@@ -482,14 +485,14 @@ func (idc *idcMetrics) CronJobIDCResolvedHeartbeat() {
 		wg.Add(1)
 		go func(tenant *types.TenantOption) {
 			defer wg.Done()
-			cronJobIDCResolvedHeartbeat(ctx, tenant)
+			cronJobIDCResolvedHeartbeat(ctx, tenant, idc.alertImpl)
 		}(tenant)
 	}
 
 	wg.Wait()
 }
 
-func cronJobIDCResolvedHeartbeat(ctx context.Context, t *types.TenantOption) {
+func cronJobIDCResolvedHeartbeat(ctx context.Context, t *types.TenantOption, alertImpl AlertsServicer) {
 	alertHistoryObj, err := aHistoryStore.WithContext(ctx).Where(
 		aHistoryStore.Cluster.Eq(t.Value),
 		aHistoryStore.Alertname.Eq(constant.IDCHeartbeatAlertName),
@@ -526,13 +529,21 @@ func cronJobIDCResolvedHeartbeat(ctx context.Context, t *types.TenantOption) {
 		return
 	}
 
-	// 如果当前没有心跳的节点数小于阈值, 那么告警记录需要修改为恢复
-	if _, err = aHistoryStore.WithContext(ctx).Where(aHistoryStore.ID.Eq(alertHistoryObj.ID)).UpdateColumnSimple(
-		aHistoryStore.Status.Value(constant.AlertStatusResolved),
-		aHistoryStore.EndsAt.Value(now),
-	); err != nil {
-		zap.L().Error("[定时任务] cronJobIDCResolvedHeartbeat 更新状态失败", zap.Any("alertHistory", alertHistoryObj), zap.Error(err))
+	alertHistoryObj.Status = constant.AlertStatusResolved
+	alertHistoryObj.EndsAt = new(now)
+	if alertHistoryObj.Status == constant.AlertStatusResolved {
+		sendAlert(ctx, alertImpl, t, alertHistoryObj)
 	}
+
+	// // 如果当前没有心跳的节点数小于阈值, 那么告警记录需要修改为恢复
+	// _, err = aHistoryStore.WithContext(ctx).Where(aHistoryStore.ID.Eq(alertHistoryObj.ID)).UpdateColumnSimple(
+	// 	aHistoryStore.Status.Value(constant.AlertStatusResolved),
+	// 	aHistoryStore.EndsAt.Value(now),
+	// )
+	// if err != nil {
+	// 	zap.L().Error("[定时任务] cronJobIDCResolvedHeartbeat 更新状态失败", zap.Any("alertHistory", alertHistoryObj), zap.Error(err))
+	// 	return
+	// }
 }
 
 // IDCHeartbeat idc 机房心跳
@@ -553,7 +564,7 @@ func (idc *idcMetrics) CronJobIDCHeartbeat() {
 		)
 	}()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 58*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1000000*time.Second)
 	defer cancel()
 
 	ok, err := idc.cacheImpl.SetNX(ctx, store.LockType, constant.CronJobIDCHeartbeatLockKey, time.Now().Unix(), 58*time.Second)
@@ -582,7 +593,7 @@ func (idc *idcMetrics) CronJobIDCHeartbeat() {
 
 		go func(t *types.TenantOption) {
 			defer wg.Done()
-			processIDCHeartbeat(ctx, t)
+			processIDCHeartbeat(ctx, idc.alertImpl, t)
 		}(tenant)
 	}
 
@@ -590,16 +601,17 @@ func (idc *idcMetrics) CronJobIDCHeartbeat() {
 	wg.Wait()
 }
 
-func processIDCHeartbeat(ctx context.Context, tenant *types.TenantOption) {
+func processIDCHeartbeat(ctx context.Context, alertImpl AlertsServicer, tenant *types.TenantOption) {
 	objects, err := idcStore.WithContext(ctx).Where(idcStore.Cluster.Eq(tenant.Value)).Find()
 	if err != nil {
-		zap.L().Debug("[定时任务] CronJobIDCHeartbeat 查询 IDCHeartbeat 失败")
+		zap.L().Error("[定时任务] CronJobIDCHeartbeat 查询 IDCHeartbeat 失败", zap.String("cluster", tenant.Value), zap.Error(err))
 		return
 	}
 
 	var (
 		now             = time.Now()
 		firingNodeCount float64
+		aHObj           *model.AlertHistory
 	)
 
 	for _, object := range objects {
@@ -617,16 +629,26 @@ func processIDCHeartbeat(ctx context.Context, tenant *types.TenantOption) {
 		return
 	}
 
+	// 发送告警记录
+	defer func() {
+		if aHObj.SendCount == 1 {
+			sendAlert(ctx, alertImpl, tenant, aHObj)
+		}
+	}()
+
 	// 如果当前没有心跳的节点数大于阈值，那么需要创建告警记录
 	// 查询当前节点是否有firing的告警
-	aHObj, err := aHistoryStore.WithContext(ctx).Where(
+	aHObj, err = aHistoryStore.WithContext(ctx).Where(
 		aHistoryStore.Cluster.Eq(tenant.Value),
 		aHistoryStore.Alertname.Eq(constant.IDCHeartbeatAlertName),
 		aHistoryStore.Status.Eq(constant.AlertStatusFiring),
 	).First()
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			zap.L().Error("[定时任务] cronJobIDCResolvedHeartbeat 获取正在 firing 的告警失败", zap.String("cluster", tenant.Value), zap.Error(err))
+			zap.L().Error("[定时任务] CronJobIDCHeartbeat 获取正在 firing 的告警失败",
+				zap.String("cluster", tenant.Value),
+				zap.Error(err),
+			)
 			return
 		}
 
@@ -634,24 +656,50 @@ func processIDCHeartbeat(ctx context.Context, tenant *types.TenantOption) {
 		annotations["description"] = fmt.Sprintf("集群%s网络从内部探测外部不可用", tenant.Label)
 		annotationsByte, err := json.Marshal(&annotations)
 		if err != nil {
-			zap.L().Error("[定时任务] cronJobIDCResolvedHeartbeat 创建告警 annotations 失败", zap.String("cluster", tenant.Value), zap.Any("annotations", annotations), zap.Error(err))
+			zap.L().Error("[定时任务] CronJobIDCHeartbeat 创建告警 annotations 失败",
+				zap.String("cluster", tenant.Value),
+				zap.Any("annotations", annotations),
+				zap.Error(err),
+			)
+			return
+		}
+
+		labels := make(map[string]string, 1)
+		labels["alertname"] = constant.IDCHeartbeatAlertName
+		labels["severity"] = "P0"
+		labels["cluster"] = tenant.Value
+
+		labelsByte, err := json.Marshal(&labels)
+		if err != nil {
+			zap.L().Error("[定时任务] CronJobIDCHeartbeat 创建告警 labels 失败",
+				zap.String("cluster", tenant.Value),
+				zap.Any("labels", labels),
+				zap.Error(err),
+			)
 			return
 		}
 
 		ahModel := &model.AlertHistory{
-			Cluster:     tenant.Value,
-			Fingerprint: uuid.NewString(),
-			StartsAt:    now,
-			Alertname:   constant.IDCHeartbeatAlertName,
-			Status:      constant.AlertStatusFiring,
-			Severity:    "P0",
-			Annotations: annotationsByte,
-			SendCount:   1,
+			Cluster:         tenant.Value,
+			Fingerprint:     uuid.NewString(),
+			StartsAt:        now,
+			Alertname:       constant.IDCHeartbeatAlertName,
+			Status:          constant.AlertStatusFiring,
+			Severity:        "P0",
+			Labels:          labelsByte,
+			Annotations:     annotationsByte,
+			SendCount:       1,
+			AlertTemplateID: 18,
 		}
 
 		if err := aHistoryStore.WithContext(ctx).Create(ahModel); err != nil {
-			zap.L().Error("[定时任务] cronJobIDCResolvedHeartbeat 创建告警失败", zap.Any("alertHistory", ahModel), zap.Error(err))
+			zap.L().Error("[定时任务] CronJobIDCHeartbeat 创建告警失败",
+				zap.Any("alertHistory", ahModel),
+				zap.Error(err),
+			)
 		}
+
+		aHObj = ahModel
 		return
 	}
 
@@ -660,7 +708,7 @@ func processIDCHeartbeat(ctx context.Context, tenant *types.TenantOption) {
 		aHistoryStore.SendCount.Value(sendcount),
 	)
 	if err != nil {
-		zap.L().Error("[定时任务] cronJobIDCResolvedHeartbeat 更新正在 firing 的告警失败",
+		zap.L().Error("[定时任务] CronJobIDCHeartbeat 更新正在 firing 的告警失败",
 			zap.String("cluster", tenant.Value),
 			zap.Any("alertHistory", aHObj),
 			zap.Error(err),
@@ -680,7 +728,6 @@ func (idc *idcMetrics) DeleteIDCHeartbeat(ctx context.Context, req *types.Delete
 
 	_, err = idcStore.WithContext(ctx).Where(
 		idcStore.Cluster.Eq(cluster),
-		idcStore.Node.Eq(req.Node),
 		idcStore.IP.Eq(req.IP),
 	).Delete()
 	if err != nil {
@@ -688,4 +735,80 @@ func (idc *idcMetrics) DeleteIDCHeartbeat(ctx context.Context, req *types.Delete
 	}
 
 	return nil
+}
+
+func sendAlert(ctx context.Context, alertImpl AlertsServicer, tenant *types.TenantOption, aHObj *model.AlertHistory) {
+	templateNames, err := config.GetAlertEvaluateTemplateName()
+	if err != nil {
+		zap.L().Error("[定时任务] CronJobIDCHeartbeat, 获取告警模板名称失败",
+			zap.String("tenant", tenant.Value),
+			zap.String("alertName", constant.IDCHeartbeatAlertName),
+			zap.Error(err),
+		)
+		return
+	}
+
+	// 获取对应的 templateName
+	idcHeartbeatAlertName := strings.ToLower(constant.IDCHeartbeatAlertName)
+	tn, ok := templateNames[idcHeartbeatAlertName]
+	if !ok {
+		zap.L().Error("[定时任务] CronJobIDCHeartbeat, 未找到对应的告警模板",
+			zap.String("tenant", tenant.Value),
+			zap.String("alertName", constant.IDCHeartbeatAlertName),
+		)
+		return
+	}
+
+	for _, templateName := range tn {
+		annotations := aHObj.Annotations
+		annotationsMap := make(map[string]string)
+		if templateName == "zhongbao" {
+			annotationsMap["description"] = `【集群性能通知】【网络影响】尊敬的客户，您好！<br>故障描述：平台监控到<font color='red'>**$labels.cluster**</font>网络出现间歇性抖动，可能影响您的业务访问体验，该影响平台持续关注中，若您有任何问题，请随时联系我们。`
+
+			annotationsBytes, err := json.Marshal(&annotationsMap)
+			if err != nil {
+				zap.L().Error("[定时任务] CronJobIDCHeartbeat, 发送告警失败, 序列化 annotations 失败",
+					zap.String("tenant", tenant.Value),
+					zap.String("alertName", constant.IDCHeartbeatAlertName),
+					zap.Any("data", aHObj),
+					zap.Error(err),
+				)
+				continue
+			}
+			aHObj.Annotations = annotationsBytes
+		}
+
+		req, err := types.TransformationAlertHistoryToAlertReq(tenant.Value, []*model.AlertHistory{aHObj})
+		if err != nil {
+			zap.L().Error("[定时任务] CronJobIDCHeartbeat, 发送告警失败, 转换 AlertHistory 到 AlertReq 失败",
+				zap.String("tenant", tenant.Value),
+				zap.String("alertName", constant.IDCHeartbeatAlertName),
+				zap.Any("data", req),
+				zap.Error(err),
+			)
+			continue
+		}
+
+		err = json.Unmarshal(aHObj.Annotations, &annotationsMap)
+		if err != nil {
+			zap.L().Error("[定时任务] CronJobIDCHeartbeat, 发送告警失败, 解析 annotations 失败",
+				zap.String("tenant", tenant.Value),
+				zap.String("alertName", constant.IDCHeartbeatAlertName),
+				zap.Any("data", req),
+				zap.Error(err),
+			)
+			continue
+		}
+
+		req.TemplateName = templateName
+		if err := alertImpl.SendAlert(ctx, req); err != nil {
+			zap.L().Error("[定时任务] CronJobIDCHeartbeat, 发送告警失败",
+				zap.String("tenant", tenant.Value),
+				zap.String("alertName", constant.IDCHeartbeatAlertName),
+				zap.Any("data", req),
+				zap.Error(err),
+			)
+		}
+		aHObj.Annotations = annotations
+	}
 }

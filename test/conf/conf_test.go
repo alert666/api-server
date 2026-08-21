@@ -28,3 +28,11 @@ func TestGetKubernetesEvents(t *testing.T) {
 	}
 	fmt.Printf("ccc: %#v\n", ccc)
 }
+
+func TestGetAlertEvaluate(t *testing.T) {
+	ae, err := config.GetAlertEvaluateTemplateName()
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("ae: %#v\n", ae)
+}
