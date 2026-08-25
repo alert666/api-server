@@ -488,6 +488,22 @@ func GetRemoteReceive(ctx context.Context, body *types.RemoteReceiveReq) error {
 			return fmt.Errorf("解析 RemoteReceiveReq 失败, %w", err)
 		}
 
+		for index := range alertRes.AlertReceiveReq.Alerts {
+			alert := alertRes.AlertReceiveReq.Alerts[index]
+			if alert.Labels["alertname"] == "juicefs-blockcache-hit-rate" {
+				regions, ok := alert.Labels["regions"]
+				if !ok {
+					continue
+				}
+				regionSlice := strings.Split(regions, ",")
+				translated := make([]string, 0, len(regionSlice))
+				for _, re := range regionSlice {
+					translated = append(translated, store.GetTenantLabel(re))
+				}
+				alert.Labels["regions"] = strings.Join(translated, ",")
+			}
+		}
+
 		body.AlertReceiveReq = alertRes.AlertReceiveReq
 		body.AlertTemplate = alertRes.AlertTemplate
 	}

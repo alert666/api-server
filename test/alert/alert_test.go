@@ -785,20 +785,25 @@ func TestRese(t *testing.T) {
 	fmt.Println("========== 🔥🔥🔥 DEBUG END 🔥🔥🔥 ==========")
 }
 
+var body = `{"templateName":"zhongbao-juicefs","extraSync":"","receiver":"zhongbao-juicefs","status":"firing","alerts":[{"status":"firing","labels":{"alertname":"juicefs-blockcache-hit-rate","cluster":"tke-gateway","name":"aliyun-4583-20250911093943","severity":"P1","tenant_id":"4583","tenant_name":"liblib"},"annotations":{"description":"【集群性能通知】【网络影响】尊敬的客户，您好！\n          故障描述：平台监控到您任务所在集群: <font color='red'>**$labels.regions**</font>，JFS 缓存出现短暂异常，文件系统 <font color='red'>**$labels.storage_name**</font> ，可能影响任务读取性能，如果已经对您任务产生影响，请随时联系我们处理。"},"startsAt":"2026-08-25T02:17:51.50061326Z","endsAt":"0001-01-01T00:00:00Z","generatorURL":"http://manual-test","fingerprint":"18bbd4b390791472","isSilenced":false,"silenceID":0},{"status":"firing","labels":{"alertname":"juicefs-blockcache-hit-rate","cluster":"tke-gateway","name":"aliyun-4583-20250911093943","prometheus":"monitoring/k8s","severity":"P1","team":"zhongbao","tenant_id":"4583","tenant_name":"liblib"},"annotations":{"description":"【集群性能通知】【存储影响】尊敬的客户，您好！\n故障描述：平台监控到您任务所在集群: <font color='red'>**$labels.regions**</font>，JFS 缓存出现短暂异常，文件系统 <font color='red'>**$labels.storage_name**</font> ，可能影响任务读取性能，如果已经对您任务产生影响，请随时联系我们处理。","summary":"liblib 大客户 JuiceFS 文件系统卷 [aliyun-4583-20250911093943] 缓存命中率低于 99%"},"startsAt":"2026-08-25T02:04:04.48Z","endsAt":"0001-01-01T00:00:00Z","generatorURL":"http://prometheus-k8s-0:9090/graph?g0.expr=sum+by+%28cluster%2C+name%2C+tenant_id%2C+tenant_name%29+%28rate%28juicefs_blockcache_hitBytes%7Bcache_group_role%3D%22provider%22%2Cname%21~%22%5Eshare-.%2A%22%7D%5B5m%5D%29%29+%2F+%28sum+by+%28cluster%2C+name%2C+tenant_id%2C+tenant_name%29+%28rate%28juicefs_blockcache_hitBytes%7Bcache_group_role%3D%22provider%22%2Cname%21~%22%5Eshare-.%2A%22%7D%5B5m%5D%29%29+%2B+%28sum+by+%28cluster%2C+name%2C+tenant_id%2C+tenant_name%29+%28rate%28juicefs_blockcache_missBytes%7Bcache_group_role%3D%22provider%22%2Cname%21~%22%5Eshare-.%2A%22%7D%5B5m%5D%29%29%29%29+%2A+100+%3C+99&g0.tab=1","fingerprint":"edbc95a05c28d336","isSilenced":false,"silenceID":0}],"groupLabels":{"cluster":"tke-gateway","name":"aliyun-4583-20250911093943","tenant_id":"4583","tenant_name":"liblib"},"commonLabels":{"alertname":"juicefs-blockcache-hit-rate","cluster":"tke-gateway","name":"aliyun-4583-20250911093943","severity":"P1","tenant_id":"4583","tenant_name":"liblib"},"commonAnnotations":{},"externalURL":"http://alertmanager-main-0:9093","version":"4","groupKey":"{}/{alertname=~\"juicefs-meta-reconnects|juicefs-blockcache-hit-rate\"}:{cluster=\"tke-gateway\", name=\"aliyun-4583-20250911093943\", tenant_id=\"4583\", tenant_name=\"liblib\"}","truncatedAlerts":0}`
+
 func TestGetRemoteReceive(t *testing.T) {
 	log.NewLogger()
 
 	te := &model.AlertTemplate{
 		ReceiveIdType: string(model.ReceiveIdTypeRemote),
-		ReceiveId:     []string{"http://127.0.0.1:9090/api/v1/tenant/tenantPodRegion;;4045d6c1da2ab78e2fc21e6956bb79f4a5678b75d09d2eddaa8f838399043969;;chat_id"},
+		// ReceiveId:     []string{"http://127.0.0.1:9090/api/v1/tenant/tenantPodRegion;;4045d6c1da2ab78e2fc21e6956bb79f4a5678b75d09d2eddaa8f838399043969;;chat_id"},
+		ReceiveId: []string{"http://127.0.0.1:9090/api/v1/juicefs/alert;;4045d6c1da2ab78e2fc21e6956bb79f4a5678b75d09d2eddaa8f838399043969;;chat_id"},
 		// ReceiveId:     []string{"https://gongjiyun-business-data.suanlene.cn/api/v1/tenant/node-pod-region;;4045d6c1da2ab78e2fc21e6956bb79f4a5678b75d09d2eddaa8f838399043969;;chat_id"},
 	}
 
-	req := types.NewTestAlertReceiveReq()
-
+	var alertreq types.AlertReceiveReq
+	if err := json.Unmarshal([]byte(body), &alertreq); err != nil {
+		t.Fatal(err)
+	}
 	getReq := &types.RemoteReceiveReq{
 		Cluster:         "tke-gateway",
-		AlertReceiveReq: req,
+		AlertReceiveReq: &alertreq,
 		AlertTemplate:   te,
 	}
 
