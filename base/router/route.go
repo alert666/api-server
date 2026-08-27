@@ -33,7 +33,7 @@ type Router struct {
 	alertChannel         controller.AlertChannelController
 	alertHistory         controller.AlertHistoryController
 	alertSilence         controller.AlertSilenceController
-	agentCommandRouter   controller.AgentCommandController
+	dataTunnelRouter     controller.DataTunnelController
 	internalForward      *controller.InternalForwardController
 	kubernetesEvent      controller.KubernetesEventController
 	idcMetricsController controller.IDCMetricsController
@@ -50,7 +50,7 @@ func NewRouter(
 	alertChannel controller.AlertChannelController,
 	alertHistory controller.AlertHistoryController,
 	alertSilence controller.AlertSilenceController,
-	agentCommandRouter controller.AgentCommandController,
+	dataTunnelRouter controller.DataTunnelController,
 	internalForward *controller.InternalForwardController,
 	kubernetesEvent controller.KubernetesEventController,
 	idcMetricsController controller.IDCMetricsController,
@@ -66,7 +66,7 @@ func NewRouter(
 		alertChannel:         alertChannel,
 		alertHistory:         alertHistory,
 		alertSilence:         alertSilence,
-		agentCommandRouter:   agentCommandRouter,
+		dataTunnelRouter:     dataTunnelRouter,
 		internalForward:      internalForward,
 		kubernetesEvent:      kubernetesEvent,
 		idcMetricsController: idcMetricsController,
@@ -264,8 +264,8 @@ func (r *Router) registerOAuthRouter(apiGroup *gin.RouterGroup) {
 func (r *Router) registerAgentCommandRouter(apiGroup *gin.RouterGroup) {
 	baseGroup := apiGroup.Group("/agents")
 	{
-		baseGroup.Use(r.middleware.Auth(), r.middleware.AuthZ())
-		baseGroup.POST("/commands/wait", r.agentCommandRouter.SendCommandAndWait)
+		baseGroup.POST("/commands/wait", r.middleware.Auth(), r.middleware.AuthZ(), r.dataTunnelRouter.SendCommandAndWait)
+		baseGroup.GET("/commands/prometheusProbe", r.middleware.AlertReceiveAuth(), r.dataTunnelRouter.PrometheusProbe)
 	}
 }
 

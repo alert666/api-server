@@ -255,7 +255,7 @@ func (receiver *FeiShu) renderAndSend(ctx context.Context, larkCli *lark.Client,
 	)
 
 	// 1. 渲染模板
-	content, err := RenderingAlertContent().Build(ctx, data, tpl)
+	content, err := renderingAlertContent().Build(ctx, data, tpl)
 	if err != nil {
 		return err
 	}
@@ -335,7 +335,7 @@ type FeishuCardDataContent struct {
 	TemplateVariable    map[string]any `json:"template_variable" yaml:"template_variable"`
 }
 
-func RenderingAlertContent() *FeishuCardDataContent {
+func renderingAlertContent() *FeishuCardDataContent {
 	return &FeishuCardDataContent{}
 }
 

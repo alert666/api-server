@@ -79,10 +79,10 @@ func (h *TunnelHandler) DataTunnel(stream pb.TunnelService_DataTunnelServer) err
 			}
 
 			if result := msg.GetCommandResult(); result != nil {
-				if err := h.dataTunnelSvc.HandleCommandResult(ctx, agentID, msg.GetTaskId(), result); err != nil {
+				if err := h.dataTunnelSvc.HandleCommandResult(ctx, agentID, msg.GetTaskID(), result); err != nil {
 					zap.L().Error("handle command result failed",
 						zap.String("agent_id", agentID),
-						zap.String("request_id", msg.GetTaskId()),
+						zap.String("request_id", msg.GetTaskID()),
 						zap.Int32("cmd", int32(result.GetCommandType())),
 						zap.Error(err),
 					)
@@ -110,7 +110,7 @@ func (h *TunnelHandler) DataTunnel(stream pb.TunnelService_DataTunnelServer) err
 				return nil
 			}
 			msg := &pb.TunnelMessage{
-				TaskId:  ac.RequestID,
+				TaskID:  ac.RequestID,
 				Payload: &pb.TunnelMessage_Command{Command: ac.Command},
 			}
 			if err := stream.Send(msg); err != nil {

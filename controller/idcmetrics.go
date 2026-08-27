@@ -34,7 +34,7 @@ func NewIDCMetrics(idcMetricser v1.IDCMetricser) IDCMetricsController {
 // @Param startTimestamp query integer true "开始时间戳" Example(1721779200)
 // @Param endTimestamp query integer true "结束时间戳" Example(1721865599)
 // @Param alertName query string true "告警名称" Example(KubeNodeNotReady)
-// @Success 200 {object} types.Response{data=types.QeryIDCMetricsRes} "查询成功"
+// @Success 200 {object} types.Response{data=types.GetIDCMetricsRes} "查询成功"
 // @Security BearerAuth
 // @Router /api/v1/idcMetrics [get]
 func (idc *idcMetricsController) GetIDCMetricser(ctx *gin.Context) {

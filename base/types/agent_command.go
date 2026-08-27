@@ -1,9 +1,13 @@
 package types
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	v1 "github.com/alert666/alertmanager-proto/gen/go/data_tunnel/v1"
+)
 
 type SendCommandAndWaitReq struct {
-	Type        int32             `json:"type" binding:"required"`
+	Type        v1.CommandType    `json:"type" binding:"required"`
 	Description string            `json:"description" binding:"required"`
 	Params      map[string]string `json:"params"`
 }
@@ -11,7 +15,7 @@ type SendCommandAndWaitReq struct {
 // InternalForwardReq is the HTTP body sent to a peer server for cross-replica command forwarding.
 type InternalForwardReq struct {
 	ClusterID   string            `json:"clusterId"`
-	Type        int32             `json:"type"`
+	Type        v1.CommandType    `json:"type"`
 	Description string            `json:"description"`
 	Params      map[string]string `json:"params"`
 	WaitResult  bool              `json:"waitResult"`

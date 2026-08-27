@@ -12,7 +12,7 @@ var ControllerProviderSet = wire.NewSet(
 	NewAlertChannelController,
 	NewAlertHistoryController,
 	NewAlertSilenceController,
-	NewAgentCommandController,
+	NewDataTunnelController,
 	NewInternalForwardController,
 	NewKubernetesEventController,
 	NewIDCMetrics,

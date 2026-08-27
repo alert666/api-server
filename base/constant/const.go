@@ -39,6 +39,9 @@ const (
 	AlertCleanStaleCacheLockKey            = "clean:stale:cache" // 删除数据库已经不存在 key 的锁
 	// k8s event
 	K8SEventPulledReason = "Pulled"
+
+	// 默认飞书客户端
+	DefaultFeiShuApp = "default"
 )
 
 var (

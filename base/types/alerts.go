@@ -112,7 +112,6 @@ func NewTestAlertReceiveReq() *AlertReceiveReq {
 	}
 }
 
-// TODO 修改远程获取逻辑
 type RemoteReceiveReq struct {
 	Cluster         string               `json:"cluster"`
 	EnCluster       string               `json:"enCluster"`

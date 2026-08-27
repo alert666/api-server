@@ -291,14 +291,44 @@ definitions:
     required:
     - id
     type: object
+  types.DeleteIDCHeartbeatReq:
+    properties:
+      ip:
+        type: string
+    type: object
+  types.GetIDCMetricsRes:
+    properties:
+      alertName:
+        description: 告警名称
+        type: string
+      cluster:
+        description: 集群 id
+        type: string
+      endTimestamp:
+        description: 查询结束时间
+        type: integer
+      idcMetrics:
+        items:
+          $ref: '#/definitions/types.IDCMetrics'
+        type: array
+      startTimestamp:
+        description: 查询开始时间
+        type: integer
+    type: object
+  types.IDCHeartbeatReq:
+    properties:
+      heartbeatTimestamp:
+        type: integer
+      ip:
+        type: string
+      node:
+        type: string
+    type: object
   types.IDCMetrics:
     properties:
       alertEndTimestamp:
         description: 告警结束时间
         type: integer
-      alertName:
-        description: 告警名称
-        type: string
       alertStartTimestamp:
         description: 告警开始时间
         type: integer
@@ -363,21 +393,58 @@ definitions:
       sizeByte:
         type: integer
     type: object
-  types.QeryIDCMetricsRes:
+  types.QueryIDCMetrics:
+    properties:
+      alertName:
+        enum:
+        - KubeNodeNotReady
+        - GPUCardLoss
+        - IDCHeartbeatFailed
+        type: string
+      ip:
+        type: string
+      node:
+        type: string
+      startTimestamp:
+        type: integer
+    required:
+    - alertName
+    - ip
+    - node
+    - startTimestamp
+    type: object
+  types.QueryIDCMetricsReq:
+    properties:
+      queryIDCMetrics:
+        items:
+          $ref: '#/definitions/types.QueryIDCMetrics'
+        type: array
+    type: object
+  types.QueryIDCMetricsRes:
     properties:
       cluster:
-        description: 集群 id
         type: string
-      endTimestamp:
-        description: 查询结束时间
-        type: integer
-      idcMetrics:
+      queryIDCMetrics:
         items:
-          $ref: '#/definitions/types.IDCMetrics'
+          $ref: '#/definitions/types.QueryIDCMetricsres'
         type: array
-      startTimestamp:
-        description: 查询开始时间
+    type: object
+  types.QueryIDCMetricsres:
+    properties:
+      alertEndTimestamp:
+        description: 告警结束时间
         type: integer
+      alertName:
+        type: string
+      alertStartTimestamp:
+        description: 告警开始时间
+        type: integer
+      ip:
+        description: 节点 IP
+        type: string
+      node:
+        description: 节点 hostname
+        type: string
     type: object
   types.QueryImagePullDurationRes:
     properties:
@@ -438,18 +505,6 @@ definitions:
     - id
     type: object
   types.SendCommandAndWaitReq:
-    properties:
-      description:
-        type: string
-      params:
-        additionalProperties:
-          type: string
-        type: object
-      type:
-        type: integer
-    required:
-    - description
-    - type
     type: object
   types.TenantCreateRequest:
     properties:
@@ -568,6 +623,21 @@ info:
   title: api-server — 告警管理 API
   version: "1.0"
 paths:
+  /api/v1/agents/commands/prometheusProbe:
+    get:
+      consumes:
+      - application/json
+      description: 通过 gRPC 数据隧道向指定 Agent 发送命令，阻塞等待执行结果后返回。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 命令执行成功
+          schema:
+            $ref: '#/definitions/types.Response'
+      summary: 向 Agent 下发命令，探测机房 Prometheus 健康状态
+      tags:
+      - Agent 命令
   /api/v1/agents/commands/wait:
     post:
       consumes:
@@ -1358,6 +1428,51 @@ paths:
       summary: 获取所有api
       tags:
       - API管理
+  /api/v1/idc/idcMetrics:
+    post:
+      consumes:
+      - application/json
+      description: 根据告警名称、时间范围、节点和IP地址查询IDC机房的指标数据，支持节点NotReady、GPU掉卡等告警类型
+      parameters:
+      - description: 查询请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.QueryIDCMetricsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/types.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/types.QueryIDCMetricsRes'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/types.Response'
+        "401":
+          description: 未授权
+          schema:
+            $ref: '#/definitions/types.Response'
+        "404":
+          description: 未找到数据
+          schema:
+            $ref: '#/definitions/types.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/types.Response'
+      security:
+      - BearerAuth: []
+      summary: 查询 IDC 机房指标数据
+      tags:
+      - IDC Metrics
   /api/v1/idcMetrics:
     get:
       consumes:
@@ -1392,13 +1507,53 @@ paths:
             - $ref: '#/definitions/types.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/types.QeryIDCMetricsRes'
+                  $ref: '#/definitions/types.GetIDCMetricsRes'
               type: object
       security:
       - BearerAuth: []
       summary: 查询指定时间 idc 机房的指标数据
       tags:
       - IDC Metricser
+  /api/v1/idcMetrics/deleteHeartbeat:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        用于 IDC 机房节点定期上报心跳数据，以监控节点健康状态。
+        **处理逻辑：**
+        - 如果节点 IP 发生变化，系统会自动删除旧 IP 记录并创建新记录
+        - 如果节点 IP 未变，则仅更新心跳时间戳
+      parameters:
+      - description: 心跳请求参数，包含节点标识和IP信息
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.DeleteIDCHeartbeatReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 上报成功，心跳已更新
+          schema:
+            $ref: '#/definitions/types.Response'
+        "400":
+          description: 请求参数错误，请检查请求体格式
+          schema:
+            $ref: '#/definitions/types.Response'
+        "401":
+          description: 未授权，请提供有效的认证令牌
+          schema:
+            $ref: '#/definitions/types.Response'
+        "500":
+          description: 服务器内部错误，请联系管理员
+          schema:
+            $ref: '#/definitions/types.Response'
+      security:
+      - BearerAuth: []
+      summary: 上报 IDC 机房心跳
+      tags:
+      - IDC Heartbeat
   /api/v1/idcMetrics/getPulledImageDuration:
     get:
       consumes:
@@ -1434,6 +1589,44 @@ paths:
       summary: 查询镜像拉取耗时统计
       tags:
       - Kubernetes Event
+  /api/v1/idcMetrics/heartbeat:
+    post:
+      consumes:
+      - application/json
+      description: 上报 IDC 机房节点的心跳数据，用于监控节点健康状态。如果节点 IP 发生变化，会删除旧 IP 记录并创建新记录；如果 IP
+        未变，则更新心跳时间戳。
+      parameters:
+      - description: 心跳请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.IDCHeartbeatReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 上报成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/types.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/types.Response'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/types.Response'
+      security:
+      - BearerAuth: []
+      summary: 上报 IDC 机房心跳
+      tags:
+      - IDC Heartbeat
   /api/v1/kubernetesEvent:
     post:
       consumes:
