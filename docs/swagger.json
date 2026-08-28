@@ -8,6 +8,29 @@
     },
     "host": "127.0.0.1:8080",
     "paths": {
+        "/api/v1/agents/commands/prometheusProbe": {
+            "get": {
+                "description": "通过 gRPC 数据隧道向指定 Agent 发送命令，阻塞等待执行结果后返回。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Agent 命令"
+                ],
+                "summary": "向 Agent 下发命令，探测机房 Prometheus 健康状态",
+                "responses": {
+                    "200": {
+                        "description": "命令执行成功",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/agents/commands/wait": {
             "post": {
                 "description": "通过 gRPC 数据隧道向指定 Agent 发送命令，阻塞等待执行结果后返回。",
@@ -1201,6 +1224,81 @@
                 }
             }
         },
+        "/api/v1/idc/idcMetrics": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "根据告警名称、时间范围、节点和IP地址查询IDC机房的指标数据，支持节点NotReady、GPU掉卡等告警类型",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IDC Metrics"
+                ],
+                "summary": "查询 IDC 机房指标数据",
+                "parameters": [
+                    {
+                        "description": "查询请求参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.QueryIDCMetricsReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/types.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/types.QueryIDCMetricsRes"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "未授权",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "未找到数据",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/idcMetrics": {
             "get": {
                 "security": [
@@ -1257,11 +1355,68 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/types.QeryIDCMetricsRes"
+                                            "$ref": "#/definitions/types.GetIDCMetricsRes"
                                         }
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/idcMetrics/deleteHeartbeat": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "用于 IDC 机房节点定期上报心跳数据，以监控节点健康状态。\n**处理逻辑：**\n- 如果节点 IP 发生变化，系统会自动删除旧 IP 记录并创建新记录\n- 如果节点 IP 未变，则仅更新心跳时间戳",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IDC Heartbeat"
+                ],
+                "summary": "上报 IDC 机房心跳",
+                "parameters": [
+                    {
+                        "description": "心跳请求参数，包含节点标识和IP信息",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.DeleteIDCHeartbeatReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "上报成功，心跳已更新",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误，请检查请求体格式",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "未授权，请提供有效的认证令牌",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误，请联系管理员",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -1320,6 +1475,69 @@
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/idcMetrics/heartbeat": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "上报 IDC 机房节点的心跳数据，用于监控节点健康状态。如果节点 IP 发生变化，会删除旧 IP 记录并创建新记录；如果 IP 未变，则更新心跳时间戳。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IDC Heartbeat"
+                ],
+                "summary": "上报 IDC 机房心跳",
+                "parameters": [
+                    {
+                        "description": "心跳请求参数",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.IDCHeartbeatReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "上报成功",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/types.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "请求参数错误",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "服务器内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/types.Response"
                         }
                     }
                 }
@@ -2692,16 +2910,61 @@
                 }
             }
         },
+        "types.DeleteIDCHeartbeatReq": {
+            "type": "object",
+            "properties": {
+                "ip": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.GetIDCMetricsRes": {
+            "type": "object",
+            "properties": {
+                "alertName": {
+                    "description": "告警名称",
+                    "type": "string"
+                },
+                "cluster": {
+                    "description": "集群 id",
+                    "type": "string"
+                },
+                "endTimestamp": {
+                    "description": "查询结束时间",
+                    "type": "integer"
+                },
+                "idcMetrics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.IDCMetrics"
+                    }
+                },
+                "startTimestamp": {
+                    "description": "查询开始时间",
+                    "type": "integer"
+                }
+            }
+        },
+        "types.IDCHeartbeatReq": {
+            "type": "object",
+            "properties": {
+                "heartbeatTimestamp": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "node": {
+                    "type": "string"
+                }
+            }
+        },
         "types.IDCMetrics": {
             "type": "object",
             "properties": {
                 "alertEndTimestamp": {
                     "description": "告警结束时间",
                     "type": "integer"
-                },
-                "alertName": {
-                    "description": "告警名称",
-                    "type": "string"
                 },
                 "alertStartTimestamp": {
                     "description": "告警开始时间",
@@ -2800,26 +3063,80 @@
                 }
             }
         },
-        "types.QeryIDCMetricsRes": {
+        "types.QueryIDCMetrics": {
+            "type": "object",
+            "required": [
+                "alertName",
+                "ip",
+                "node",
+                "startTimestamp"
+            ],
+            "properties": {
+                "alertName": {
+                    "type": "string",
+                    "enum": [
+                        "KubeNodeNotReady",
+                        "GPUCardLoss",
+                        "IDCHeartbeatFailed"
+                    ]
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "node": {
+                    "type": "string"
+                },
+                "startTimestamp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "types.QueryIDCMetricsReq": {
+            "type": "object",
+            "properties": {
+                "queryIDCMetrics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.QueryIDCMetrics"
+                    }
+                }
+            }
+        },
+        "types.QueryIDCMetricsRes": {
             "type": "object",
             "properties": {
                 "cluster": {
-                    "description": "集群 id",
                     "type": "string"
                 },
-                "endTimestamp": {
-                    "description": "查询结束时间",
-                    "type": "integer"
-                },
-                "idcMetrics": {
+                "queryIDCMetrics": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/types.IDCMetrics"
+                        "$ref": "#/definitions/types.QueryIDCMetricsres"
                     }
-                },
-                "startTimestamp": {
-                    "description": "查询开始时间",
+                }
+            }
+        },
+        "types.QueryIDCMetricsres": {
+            "type": "object",
+            "properties": {
+                "alertEndTimestamp": {
+                    "description": "告警结束时间",
                     "type": "integer"
+                },
+                "alertName": {
+                    "type": "string"
+                },
+                "alertStartTimestamp": {
+                    "description": "告警开始时间",
+                    "type": "integer"
+                },
+                "ip": {
+                    "description": "节点 IP",
+                    "type": "string"
+                },
+                "node": {
+                    "description": "节点 hostname",
+                    "type": "string"
                 }
             }
         },
@@ -2913,25 +3230,7 @@
             }
         },
         "types.SendCommandAndWaitReq": {
-            "type": "object",
-            "required": [
-                "description",
-                "type"
-            ],
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "params": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
-                },
-                "type": {
-                    "type": "integer"
-                }
-            }
+            "type": "object"
         },
         "types.TenantCreateRequest": {
             "type": "object",

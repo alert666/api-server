@@ -1,6 +1,4 @@
-﻿# api-server — 告警管理 API 服务
-
-[![Go Version](https://img.shields.io/github/go-mod/go-version/alert666/api-server)](https://go.dev)
+﻿[![Go Version](https://img.shields.io/github/go-mod/go-version/alert666/api-server)](https://go.dev)
 [![Build](https://img.shields.io/github/actions/workflow/status/alert666/api-server/docker-publish.yml?branch=main)](https://github.com/alert666/api-server/actions)
 [![License](https://img.shields.io/github/license/alert666/api-server)](https://github.com/alert666/api-server/blob/main/LICENSE)
 
@@ -8,40 +6,37 @@
 
 在线预览：[qqlx.net](https://qqlx.net/)（只读账号：`readonly@qqlx.net` / `12345678`）
 
-- [api-server — 告警管理 API 服务](#api-server--告警管理-api-服务)
-  - [1. 简介](#1-简介)
-  - [2. 功能](#2-功能)
-    - [2.1. 平台能力](#21-平台能力)
-  - [3. 技术栈](#3-技术栈)
-  - [4. 项目结构](#4-项目结构)
-  - [5. 快速开始](#5-快速开始)
-    - [5.1. 克隆与配置](#51-克隆与配置)
-    - [5.2. 运行](#52-运行)
-    - [5.3. 使用 `init` 命令](#53-使用-init-命令)
-  - [6. 配置说明](#6-配置说明)
-    - [6.1. Alertmanager 对接示例](#61-alertmanager-对接示例)
-  - [7. API 文档](#7-api-文档)
-    - [7.1. 主要 API 分组](#71-主要-api-分组)
-  - [8. 部署](#8-部署)
-    - [8.1. alertmanager](#81-alertmanager)
-      - [8.1.1. Docker Compose（推荐）](#811-docker-compose推荐)
-      - [8.1.2. Docker 镜像](#812-docker-镜像)
-      - [8.1.3. helm-charts](#813-helm-charts)
-    - [8.2. kube-event 部署](#82-kube-event-部署)
-  - [9. 可观测性](#9-可观测性)
-    - [9.1. 构建时自动插桩](#91-构建时自动插桩)
-    - [9.2. 运行时配置](#92-运行时配置)
-    - [9.3. 请求链路](#93-请求链路)
-  - [10. 告警抑制说明](#10-告警抑制说明)
-  - [11. Agent 数据通道](#11-agent-数据通道)
-  - [12. 开发指南](#12-开发指南)
-    - [12.1. 分层架构](#121-分层架构)
-    - [12.2. GORM gen](#122-gorm-gen)
-    - [12.3. 运行测试](#123-运行测试)
-    - [12.4. 提交规范](#124-提交规范)
-  - [13. 相关项目](#13-相关项目)
-  - [14. License](#14-license)
-
+- [1. 简介](#1-简介)
+- [2. 功能](#2-功能)
+  - [2.1. 平台能力](#21-平台能力)
+- [3. 技术栈](#3-技术栈)
+- [4. 项目结构](#4-项目结构)
+- [5. 快速开始](#5-快速开始)
+  - [5.1. 克隆与配置](#51-克隆与配置)
+  - [5.2. 运行](#52-运行)
+  - [5.3. 使用 `init` 命令](#53-使用-init-命令)
+- [6. 配置说明](#6-配置说明)
+  - [6.1. Alertmanager 对接示例](#61-alertmanager-对接示例)
+- [7. API 文档](#7-api-文档)
+  - [7.1. 主要 API 分组](#71-主要-api-分组)
+- [8. 部署](#8-部署)
+  - [8.1. alertmanager](#81-alertmanager)
+    - [8.1.1. Docker Compose（推荐）](#811-docker-compose推荐)
+    - [8.1.2. Docker 镜像](#812-docker-镜像)
+    - [8.1.3. helm-charts](#813-helm-charts)
+  - [8.2. kube-event 部署](#82-kube-event-部署)
+- [9. 可观测性](#9-可观测性)
+  - [9.1. 构建时自动插桩](#91-构建时自动插桩)
+  - [9.2. 运行时配置](#92-运行时配置)
+  - [9.3. 请求链路](#93-请求链路)
+- [10. 告警抑制说明](#10-告警抑制说明)
+- [11. Agent 数据通道](#11-agent-数据通道)
+- [12. 开发指南](#12-开发指南)
+  - [12.1. 分层架构](#121-分层架构)
+  - [12.2. GORM gen](#122-gorm-gen)
+  - [12.3. 运行测试](#123-运行测试)
+- [13. 相关项目](#13-相关项目)
+- [14. License](#14-license)
 
 ## 1. 简介
 
@@ -54,6 +49,7 @@ api-server 覆盖告警管理全生命周期：
 5. **通知** — 多渠道推送（飞书应用消息/群机器人、邮件），支持 @ 提醒与富文本卡片
 6. **Agent 通道** — 通过 gRPC Data Tunnel 向 Agent 下发命令并获取执行结果
 7. **内部转发** — 多副本间通过内部 API 转发 Agent 命令，支持横向扩展
+8. **健康探测** - 租户中 Prometheus 实例健康探测
 
 ## 2. 功能
 
@@ -114,10 +110,9 @@ api-server 覆盖告警管理全生命周期：
 - Docker / Docker Compose
 - CI/CD：GitHub Actions → 阿里云 ACR + GitHub Container Registry
 
-
 ## 4. 项目结构
 
-```
+```bash
 .
 ├── cmd/            # 应用入口 + Wire 依赖注入
 ├── base/           # 框架层
@@ -275,7 +270,7 @@ http://localhost:8080/swagger/index.html
 | Token 刷新 | `POST /api/v1/user/refresh`         | Bearer Token   | 刷新 Access Token         |
 | 角色管理   | `/api/v1/role`                      | JWT + RBAC     | 角色 CRUD                 |
 | API 权限   | `/api/v1/api`                       | JWT + RBAC     | 接口权限定义              |
-| Agent 命令 | `/api/v1/agents/commands/wait`      | JWT + RBAC     | 下发命令并等待结果        |
+| Agent 命令 | `/api/v1//commands/wait`            | JWT + RBAC     | 下发命令并等待结果        |
 | OAuth2     | `/api/v1/oauth2`                    | Session        | 飞书/Keycloak 登录        |
 | 健康检查   | `GET /api/v1/healthz`               | 无             | 服务健康状态              |
 | 内部转发   | `POST /internal/v1/forward-command` | Internal Token | 跨副本命令转发            |
@@ -470,17 +465,6 @@ go test ./...
 go test ./test/alert/
 go test ./test/store/
 go test ./test/cache/
-```
-
-### 12.4. 提交规范
-
-遵循 Conventional Commits，使用中文描述：
-
-```bash
-feat: 添加告警模板复制功能
-fix: 修复静默恢复告警逻辑
-refactor: 完成告警模块重构
-update: 更新 Dockerfile 基础镜像
 ```
 
 ## 13. 相关项目

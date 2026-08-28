@@ -88,9 +88,9 @@ func InitApplication() (*app.Application, func(), error) {
 	alertHistoryController := controller.NewAlertHistoryController(alertHistoryServicer)
 	alertSilenceServicer := v1.NewAlertSilenceServicer(cacheStore, generateToken)
 	alertSilenceController := controller.NewAlertSilenceController(alertSilenceServicer)
-	dataTunnelServicer := v1.NewDataTunnelService(cacheStore)
-	agentCommandController := controller.NewAgentCommandController(dataTunnelServicer)
-	internalForwardController := controller.NewInternalForwardController(dataTunnelServicer)
+	dataTunnelService := v1.NewDataTunnelService(cacheStore)
+	dataTunnelController := controller.NewDataTunnelController(dataTunnelService, dataTunnelService)
+	internalForwardController := controller.NewInternalForwardController(dataTunnelService)
 	kubernetesEventsConfig, err := config.GetKubernetesEvents()
 	if err != nil {
 		cleanup2()
@@ -101,7 +101,7 @@ func InitApplication() (*app.Application, func(), error) {
 	kubernetesEventController := controller.NewKubernetesEventController(kubernetesEventServicer)
 	idcMetricser := v1.NewIDCMetrics(cacheStore)
 	idcMetricsController := controller.NewIDCMetrics(idcMetricser)
-	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController, agentCommandController, internalForwardController, kubernetesEventController, idcMetricsController)
+	routerRouter := router.NewRouter(userController, roleController, apiController, clusterController, alertManagerController, middlewareMiddleware, alertTemplateController, alertChannelController, alertHistoryController, alertSilenceController, dataTunnelController, internalForwardController, kubernetesEventController, idcMetricsController)
 	engine, err := server.NewHttpServer(routerRouter)
 	if err != nil {
 		cleanup2()
@@ -120,7 +120,7 @@ func InitApplication() (*app.Application, func(), error) {
 	cacheAlertNameOptioner := v1.NewCacheAlertNameOptioner(cacheStore)
 	cleanStaleCacher := v1.NewCleanStaleCacher(cacheStore)
 	string2 := NewGRPCBindAddress()
-	tunnelHandler := handler.NewTunnelHandler(dataTunnelServicer)
+	tunnelHandler := handler.NewTunnelHandler(dataTunnelService)
 	grpcServer, err := server2.NewGRPCServer(string2, tunnelHandler)
 	if err != nil {
 		cleanup2()

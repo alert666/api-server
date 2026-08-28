@@ -3,6 +3,7 @@ package v1
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	pb "github.com/alert666/alertmanager-proto/gen/go/data_tunnel/v1"
+	v1 "github.com/alert666/alertmanager-proto/gen/go/data_tunnel/v1"
 	"github.com/alert666/api-server/base/config"
 	"github.com/alert666/api-server/base/constant"
 	"github.com/alert666/api-server/base/helper"
@@ -48,38 +50,39 @@ type DataTunnelServicer interface {
 	ExecuteCommandLocally(ctx context.Context, req *types.InternalForwardReq) (*pb.CommandResult, error)
 }
 
+type Prometheuser interface {
+	PrometheusProbe(ctx context.Context) (*pb.CommandResult, error)
+}
+
 // DataTunnelService implements DataTunnelServicer.
 type DataTunnelService struct {
-	mu        sync.RWMutex
-	clusters  map[string][]*ClusterAgent
-	clusterRR map[string]uint64
-	pendingMu sync.Mutex
-	pending   map[string]chan *pb.CommandResult
-
-	cacheStore  store.CacheStorer
+	mu          sync.RWMutex
+	clusters    map[string][]*ClusterAgent
+	clusterRR   map[string]uint64
+	pendingMu   sync.Mutex
+	pending     map[string]chan *pb.CommandResult
+	cacheImpl   store.CacheStorer
 	serverID    string
 	restyClient *resty.Client
 }
 
 // NewDataTunnelService creates a DataTunnelService.
-func NewDataTunnelService(cacheStore store.CacheStorer) DataTunnelServicer {
+// func NewDataTunnelService(cacheStore store.CacheStorer) DataTunnelServicer {
+func NewDataTunnelService(cacheStore store.CacheStorer) *DataTunnelService {
 	serverID := generateServerID()
 	s := &DataTunnelService{
 		clusters:    make(map[string][]*ClusterAgent),
 		clusterRR:   make(map[string]uint64),
 		pending:     make(map[string]chan *pb.CommandResult),
-		cacheStore:  cacheStore,
+		cacheImpl:   cacheStore,
 		serverID:    serverID,
 		restyClient: resty.New().SetTimeout(defaultCommandTimeout),
 	}
-
 	zap.L().Info("DataTunnelService created",
 		zap.String("serverID", serverID),
 		zap.String("advertiseAddr", config.GetInternalAdvertiseAddr()),
 	)
-
 	go s.refreshServerAddr()
-
 	return s
 }
 
@@ -104,7 +107,7 @@ func (s *DataTunnelService) refreshServerAddr() {
 
 		// Refresh server address TTL.
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-		if err := s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, config.GetInternalAdvertiseAddr(), serverAddrTTL); err != nil {
+		if err := s.cacheImpl.SetObject(ctx, store.AgentServerType, s.serverID, config.GetInternalAdvertiseAddr(), serverAddrTTL); err != nil {
 			zap.L().Warn("refreshServerAddr failed",
 				zap.String("cacheType", string(store.AgentServerType)),
 				zap.String("serverID", s.serverID),
@@ -115,7 +118,7 @@ func (s *DataTunnelService) refreshServerAddr() {
 		// Refresh cluster set TTL for every active cluster.
 		for _, cid := range activeClusters {
 			ctx2, cancel2 := context.WithTimeout(context.Background(), 2*time.Second)
-			if err := s.cacheStore.SetSet(ctx2, store.AgentClusterType, cid, []any{s.serverID}, &serverAddrTTL); err != nil {
+			if err := s.cacheImpl.SetSet(ctx2, store.AgentClusterType, cid, []any{s.serverID}, &serverAddrTTL); err != nil {
 				zap.L().Warn("refreshServerAddr failed",
 					zap.String("cacheType", string(store.AgentClusterType)),
 					zap.String("serverID", s.serverID),
@@ -154,9 +157,9 @@ func (s *DataTunnelService) RegisterAgent(ctx context.Context, init *pb.Init) (c
 	})
 	s.mu.Unlock()
 
-	_ = s.cacheStore.DelKey(ctx, store.AgentClusterType, clusterID)
-	_ = s.cacheStore.SetSet(ctx, store.AgentClusterType, clusterID, []any{s.serverID}, &serverAddrTTL)
-	_ = s.cacheStore.SetObject(ctx, store.AgentServerType, s.serverID, config.GetInternalAdvertiseAddr(), serverAddrTTL)
+	_ = s.cacheImpl.DelKey(ctx, store.AgentClusterType, clusterID)
+	_ = s.cacheImpl.SetSet(ctx, store.AgentClusterType, clusterID, []any{s.serverID}, &serverAddrTTL)
+	_ = s.cacheImpl.SetObject(ctx, store.AgentServerType, s.serverID, config.GetInternalAdvertiseAddr(), serverAddrTTL)
 
 	zap.L().Info("agent registered",
 		zap.String("agentID", agentID),
@@ -184,7 +187,7 @@ func (s *DataTunnelService) UnregisterAgent(_ context.Context, agentID string, c
 			if remaining == 0 {
 				delete(s.clusters, clusterID)
 				delete(s.clusterRR, clusterID)
-				_ = s.cacheStore.RemSet(context.Background(), store.AgentClusterType, clusterID, s.serverID)
+				_ = s.cacheImpl.RemSet(context.Background(), store.AgentClusterType, clusterID, s.serverID)
 			}
 			return nil
 		}
@@ -236,6 +239,7 @@ func injectTenant(ctx context.Context, params map[string]string) map[string]stri
 	return params
 }
 
+// ExecuteCommandLocally 如果本地有子集群 grpc 连接,那么本地下发命令，否者返回错误
 func (s *DataTunnelService) ExecuteCommandLocally(ctx context.Context, req *types.InternalForwardReq) (*pb.CommandResult, error) {
 	var (
 		clusterID  = req.ClusterID
@@ -298,7 +302,7 @@ func (s *DataTunnelService) ExecuteCommandLocally(ctx context.Context, req *type
 }
 
 func (s *DataTunnelService) findPeerServer(ctx context.Context, clusterID string) (string, error) {
-	serverIDs, err := s.cacheStore.GetSet(ctx, store.AgentClusterType, clusterID)
+	serverIDs, err := s.cacheImpl.GetSet(ctx, store.AgentClusterType, clusterID)
 	if err != nil {
 		return "", fmt.Errorf("failed to query peer servers: %w", err)
 	}
@@ -317,7 +321,7 @@ func (s *DataTunnelService) findPeerServer(ctx context.Context, clusterID string
 	peerID := peers[idx]
 
 	var addr string
-	found, err := s.cacheStore.GetObject(ctx, store.AgentServerType, peerID, &addr)
+	found, err := s.cacheImpl.GetObject(ctx, store.AgentServerType, peerID, &addr)
 	if err != nil {
 		return "", fmt.Errorf("failed to get peer %s address: %w", peerID, err)
 	}
@@ -327,6 +331,7 @@ func (s *DataTunnelService) findPeerServer(ctx context.Context, clusterID string
 	return addr, nil
 }
 
+// forwardToPeer 将执行的命令转发给其他拥有子集群 grpc 连接的实例
 func (s *DataTunnelService) forwardToPeer(ctx context.Context, req *types.InternalForwardReq) (*pb.CommandResult, error) {
 
 	var (
@@ -346,7 +351,7 @@ func (s *DataTunnelService) forwardToPeer(ctx context.Context, req *types.Intern
 
 	reqBody := types.InternalForwardReq{
 		ClusterID:   clusterID,
-		Type:        int32(cmd.GetType()),
+		Type:        cmd.GetType(),
 		Description: cmd.GetDescription(),
 		Params:      cmd.GetParams(),
 		WaitResult:  waitResult,
@@ -416,5 +421,56 @@ func (s *DataTunnelService) SendCommandAndWait(ctx context.Context, req *types.S
 		)
 		return s.forwardToPeer(ctx, executeCommandLocallyReq)
 	}
+	return result, nil
+}
+
+func (s *DataTunnelService) PrometheusProbe(ctx context.Context) (*pb.CommandResult, error) {
+	tenant, err := helper.GetTenant(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	executeCommandLocallyReq := &types.InternalForwardReq{
+		ClusterID:   tenant,
+		Type:        v1.CommandType_COMMAND_TYPE_PROMETHEUS_PROBE,
+		Description: "Prometheus 健康探测",
+		WaitResult:  true,
+	}
+
+	log.WithRequestID(ctx).Info(
+		"PrometheusProbe SendCommandAndWait",
+		zap.String("clusterID", tenant),
+		zap.Any("executeCommandLocallyReq", executeCommandLocallyReq),
+	)
+
+	result, err := s.ExecuteCommandLocally(ctx, executeCommandLocallyReq)
+	if err != nil {
+		log.WithRequestID(ctx).Debug(
+			"agent not local, forwarding to peer",
+			zap.String("clusterID", tenant),
+		)
+
+		res, err := s.forwardToPeer(ctx, executeCommandLocallyReq)
+		if err != nil {
+			log.WithRequestID(ctx).Error("PrometheusProbe 转发到对端失败", zap.Error(err))
+			return nil, err
+		}
+		result = res
+	}
+
+	if result.Error != "" || string(result.Data) != "ok" {
+		log.WithRequestID(ctx).Error(
+			"PrometheusProbe 执行失败",
+			zap.String("clusterID", tenant),
+			zap.Any("result", result),
+		)
+		return nil, errors.New("PrometheusProbe 执行失败")
+	}
+
+	zap.L().Debug(
+		"PrometheusProbe 执行成功",
+		zap.String("clusterID", tenant),
+		zap.Any("result", result),
+	)
 	return result, nil
 }

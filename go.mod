@@ -3,7 +3,7 @@ module github.com/alert666/api-server
 go 1.26.5
 
 require (
-	github.com/alert666/alertmanager-proto v0.0.5
+	github.com/alert666/alertmanager-proto v0.0.6
 	github.com/casbin/casbin/v2 v2.109.0
 	github.com/casbin/gorm-adapter/v3 v3.33.0
 	github.com/gin-contrib/cors v1.7.6

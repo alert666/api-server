@@ -26,8 +26,8 @@ github.com/AzureAD/microsoft-authentication-library-for-go v1.4.2 h1:oygO0locgZJ
 github.com/AzureAD/microsoft-authentication-library-for-go v1.4.2/go.mod h1:wP83P5OoQ5p6ip3ScPr0BAq0BvuPAvacpEuSzyouqAI=
 github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc=
 github.com/KyleBanks/depth v1.2.1/go.mod h1:jzSb9d0L43HxTQfT+oSA1EEp2q+ne2uh6XgeJcm8brE=
-github.com/alert666/alertmanager-proto v0.0.5 h1:k2jkcg61G8wDq4yv5rA+Jv4MJPwYpiVQ3Qe8mgemolo=
-github.com/alert666/alertmanager-proto v0.0.5/go.mod h1:gwL6djFnRCeaQrv/cNq3nC0oxRcy4rQvi++a4D7rNmo=
+github.com/alert666/alertmanager-proto v0.0.6 h1:SedyXOesUcQjHUrpg0ODo8mp4rwq2zzlnwGVrJkycc8=
+github.com/alert666/alertmanager-proto v0.0.6/go.mod h1:vFz1tpH9Di+e1J6EQetcnAkoODBm0IWTm5OF2J8RZfY=
 github.com/bmatcuk/doublestar/v4 v4.6.1/go.mod h1:xBQ8jztBU6kakFMg+8WGxn0c6z1fTSPVIjEY1Wr7jzc=
 github.com/bmatcuk/doublestar/v4 v4.9.1 h1:X8jg9rRZmJd4yRy7ZeNDRnM+T3ZfHv15JiBJ/avrEXE=
 github.com/bmatcuk/doublestar/v4 v4.9.1/go.mod h1:xBQ8jztBU6kakFMg+8WGxn0c6z1fTSPVIjEY1Wr7jzc=
