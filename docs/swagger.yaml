@@ -623,11 +623,15 @@ info:
   title: api-server — 告警管理 API
   version: "1.0"
 paths:
-  /api/v1/agents/commands/prometheusProbe:
+  /api/v1/agents/commands/clusterProbe:
     get:
       consumes:
       - application/json
-      description: 通过 gRPC 数据隧道向指定 Agent 发送命令，阻塞等待执行结果后返回。
+      description: 通过 gRPC 数据隧道向指定 Agent 发送集群探测命令，阻塞等待执行结果后返回。
+      parameters:
+      - in: query
+        name: probeEndpoint
+        type: string
       produces:
       - application/json
       responses:
@@ -635,7 +639,7 @@ paths:
           description: 命令执行成功
           schema:
             $ref: '#/definitions/types.Response'
-      summary: 向 Agent 下发命令，探测机房 Prometheus 健康状态
+      summary: 探测集群指定端点健康状态
       tags:
       - Agent 命令
   /api/v1/agents/commands/wait:

@@ -27,3 +27,7 @@ type InternalForwardResp struct {
 	Error   string          `json:"error,omitempty"`
 	Result  json.RawMessage `json:"result,omitempty"`
 }
+
+type ClusterProbeReq struct {
+	ProbeEndpoint string `form:"probeEndpoint"`
+}

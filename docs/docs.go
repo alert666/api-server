@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/agents/commands/prometheusProbe": {
+        "/api/v1/agents/commands/clusterProbe": {
             "get": {
-                "description": "通过 gRPC 数据隧道向指定 Agent 发送命令，阻塞等待执行结果后返回。",
+                "description": "通过 gRPC 数据隧道向指定 Agent 发送集群探测命令，阻塞等待执行结果后返回。",
                 "consumes": [
                     "application/json"
                 ],
@@ -27,7 +27,14 @@ const docTemplate = `{
                 "tags": [
                     "Agent 命令"
                 ],
-                "summary": "向 Agent 下发命令，探测机房 Prometheus 健康状态",
+                "summary": "探测集群指定端点健康状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "probeEndpoint",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "命令执行成功",
