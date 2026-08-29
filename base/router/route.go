@@ -265,7 +265,7 @@ func (r *Router) registerAgentCommandRouter(apiGroup *gin.RouterGroup) {
 	baseGroup := apiGroup.Group("/agents")
 	{
 		baseGroup.POST("/commands/wait", r.middleware.Auth(), r.middleware.AuthZ(), r.dataTunnelRouter.SendCommandAndWait)
-		baseGroup.GET("/commands/prometheusProbe", r.middleware.AlertReceiveAuth(), r.dataTunnelRouter.PrometheusProbe)
+		baseGroup.GET("/commands/clusterProbe", r.middleware.AlertReceiveAuth(), r.dataTunnelRouter.ClusterProbe)
 	}
 }
 

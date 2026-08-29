@@ -8,7 +8,7 @@ import (
 
 var ServiceProviderSet = wire.NewSet(
 	wire.Bind(new(v1.DataTunnelServicer), new(*v1.DataTunnelService)),
-	wire.Bind(new(v1.Prometheuser), new(*v1.DataTunnelService)),
+	wire.Bind(new(v1.ClusterProber), new(*v1.DataTunnelService)),
 	config.GetKubernetesEvents,
 	v1.NewUserService,
 	v1.NewRoleService,

@@ -31,6 +31,7 @@
   - [9.3. 请求链路](#93-请求链路)
 - [10. 告警抑制说明](#10-告警抑制说明)
 - [11. Agent 数据通道](#11-agent-数据通道)
+  - [11.1. Agent 所在集群黑盒探测](#111-agent-所在集群黑盒探测)
 - [12. 开发指南](#12-开发指南)
   - [12.1. 分层架构](#121-分层架构)
   - [12.2. GORM gen](#122-gorm-gen)
@@ -435,6 +436,26 @@ bash scripts/gen-certs.sh
 ```
 
 gRPC 使用 TLS 双向认证，证书文件路径在 `config.yaml` 的 `grpc.tls` 中配置。
+
+### 11.1. Agent 所在集群黑盒探测
+
+```go
+type ClusterProber interface {
+	ClusterProbe(ctx context.Context, req *types.ClusterProbeReq) (*pb.CommandResult, error)
+}
+```
+
+示例:
+
+```bash
+curl --location --request GET 'https://api-server/api/v1/agents/commands/clusterProbe?probeEndpoint=http://prometheus-k8s.monitoring.svc.cluster.local:9090' \
+--header 'X-Tenant-Id: cn-shanghai-6' \
+--header 'User-Agent: Apifox/1.0.0 (https://apifox.com)' \
+--header 'Authorization: Bearer $TOKEN' \
+--header 'Accept: */*' \
+--header 'Host: cloud.suanlene.cn' \
+--header 'Connection: keep-alive'
+```
 
 ## 12. 开发指南
 

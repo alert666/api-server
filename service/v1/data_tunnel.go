@@ -50,8 +50,8 @@ type DataTunnelServicer interface {
 	ExecuteCommandLocally(ctx context.Context, req *types.InternalForwardReq) (*pb.CommandResult, error)
 }
 
-type Prometheuser interface {
-	PrometheusProbe(ctx context.Context) (*pb.CommandResult, error)
+type ClusterProber interface {
+	ClusterProbe(ctx context.Context, req *types.ClusterProbeReq) (*pb.CommandResult, error)
 }
 
 // DataTunnelService implements DataTunnelServicer.
@@ -424,21 +424,25 @@ func (s *DataTunnelService) SendCommandAndWait(ctx context.Context, req *types.S
 	return result, nil
 }
 
-func (s *DataTunnelService) PrometheusProbe(ctx context.Context) (*pb.CommandResult, error) {
+func (s *DataTunnelService) ClusterProbe(ctx context.Context, req *types.ClusterProbeReq) (*pb.CommandResult, error) {
 	tenant, err := helper.GetTenant(ctx)
 	if err != nil {
 		return nil, err
 	}
 
+	params := make(map[string]string, 5)
+	params["probeEndpoint"] = req.ProbeEndpoint
+
 	executeCommandLocallyReq := &types.InternalForwardReq{
 		ClusterID:   tenant,
-		Type:        v1.CommandType_COMMAND_TYPE_PROMETHEUS_PROBE,
-		Description: "Prometheus 健康探测",
+		Type:        v1.CommandType_COMMAND_TYPE_PROBE,
 		WaitResult:  true,
+		Params:      params,
+		Description: "健康探测",
 	}
 
 	log.WithRequestID(ctx).Info(
-		"PrometheusProbe SendCommandAndWait",
+		"ClusterProbe SendCommandAndWait",
 		zap.String("clusterID", tenant),
 		zap.Any("executeCommandLocallyReq", executeCommandLocallyReq),
 	)
@@ -452,7 +456,7 @@ func (s *DataTunnelService) PrometheusProbe(ctx context.Context) (*pb.CommandRes
 
 		res, err := s.forwardToPeer(ctx, executeCommandLocallyReq)
 		if err != nil {
-			log.WithRequestID(ctx).Error("PrometheusProbe 转发到对端失败", zap.Error(err))
+			log.WithRequestID(ctx).Error("ClusterProbe 转发到对端失败", zap.Error(err))
 			return nil, err
 		}
 		result = res
@@ -460,15 +464,15 @@ func (s *DataTunnelService) PrometheusProbe(ctx context.Context) (*pb.CommandRes
 
 	if result.Error != "" || string(result.Data) != "ok" {
 		log.WithRequestID(ctx).Error(
-			"PrometheusProbe 执行失败",
+			"ClusterProbe 执行失败",
 			zap.String("clusterID", tenant),
 			zap.Any("result", result),
 		)
-		return nil, errors.New("PrometheusProbe 执行失败")
+		return nil, errors.New("ClusterProbe 执行失败")
 	}
 
 	zap.L().Debug(
-		"PrometheusProbe 执行成功",
+		"ClusterProbe 执行成功",
 		zap.String("clusterID", tenant),
 		zap.Any("result", result),
 	)
