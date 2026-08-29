@@ -302,6 +302,8 @@ docker compose up -d
 #### 8.1.3. helm-charts
 
 ```bash
+host="you.harbor.com"
+
 # 登录 harbor
 helm registry login $host -u $user -p $password
 
@@ -309,10 +311,10 @@ helm registry login $host -u $user -p $password
 helm package helm/alertmanager/
 
 # push chart
-helm push alertmanager-5.0.1.tgz oci://$host/charts
+helm push alertmanager-5.0.3.tgz oci://$host/charts
 
 # 删除本地 chart
-rm -fr alertmanager-5.0.1.tgz
+rm -fr alertmanager-5.0.3.tgz
 
 # 安装 alertmanager
 # 示例
