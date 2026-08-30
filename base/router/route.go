@@ -73,27 +73,33 @@ func NewRouter(
 	}
 }
 
+// RegisterRouter 注册路由和中间件
 func (r *Router) RegisterRouter(engine *gin.Engine) {
-	engine.Use(
-		cors.New(cors.Config{
-			AllowAllOrigins:  true,
-			AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-			ExposeHeaders:    []string{"Content-Length"},
-			AllowCredentials: true,
-			MaxAge:           12 * time.Hour,
+	corsConfig := cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+
+	zipConfig := &ginzap.Config{
+		SkipPaths: []string{"/api/v1/healthz"},
+		Context: ginzap.Fn(func(c *gin.Context) []zapcore.Field {
+			fields := []zapcore.Field{}
+			if requestID := requestid.Get(c); requestID != "" {
+				fields = append(fields, zap.String("request-id", requestID))
+			}
+			return fields
 		}),
+	}
+
+	engine.Use(
+		cors.New(corsConfig),
 		requestid.New(),
 		ginzap.RecoveryWithZap(zap.L(), true),
-		ginzap.GinzapWithConfig(zap.L(), &ginzap.Config{
-			Context: ginzap.Fn(func(c *gin.Context) []zapcore.Field {
-				fields := []zapcore.Field{}
-				if requestID := requestid.Get(c); requestID != "" {
-					fields = append(fields, zap.String("request-id", requestID))
-				}
-				return fields
-			}),
-		}),
+		ginzap.GinzapWithConfig(zap.L(), zipConfig),
 		r.middleware.TenantMiddleware(),
 	)
 

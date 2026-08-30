@@ -65,7 +65,7 @@ func NewHttpServer(r router.RouterInterface) (*gin.Engine, error) {
 	engine := gin.New()
 	bind.NewValidator()
 
-	// 注册路由
+	// 注册路由和中间件
 	r.RegisterRouter(engine)
 	var apiData apitypes.ServerApiData
 	apiData.ApiInfo = make(map[string][]apitypes.ApiInfo)
