@@ -683,6 +683,7 @@ func processIDCHeartbeat(ctx context.Context, alertImpl AlertsServicer, tenant *
 			Cluster:         tenant.Value,
 			Fingerprint:     uuid.NewString(),
 			StartsAt:        now,
+			EndsAt:          &time.Time{},
 			Alertname:       constant.IDCHeartbeatAlertName,
 			Status:          constant.AlertStatusFiring,
 			Severity:        "P0",
