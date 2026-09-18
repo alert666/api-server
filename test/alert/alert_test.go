@@ -26,7 +26,6 @@ import (
 	"github.com/alert666/api-server/pkg/feishu"
 	v1 "github.com/alert666/api-server/service/v1"
 	"github.com/alert666/api-server/store"
-	"go.uber.org/zap"
 )
 
 // AlertmanagerPayload 对应你提供的 JSON 结构
@@ -635,50 +634,108 @@ func TestIsSilenced(t *testing.T) {
 	}
 	log.NewLogger()
 	data.NewDB()
-	var activeSilences []*model.AlertSilence
-	now := time.Now()
-	err = store.AlertSilence.WithContext(context.TODO()).
-		UnderlyingDB().
-		Where("cluster = ?", "xinjiang").
-		Where(store.AlertSilence.Status.Eq(model.SilenceEnabled)).
-		Where(store.AlertSilence.EndsAt.Gte(now)).
-		Where(store.AlertSilence.StartsAt.Lte(now)).
-		Find(&activeSilences).Error
-	if err != nil {
-		zap.L().Error("查询静默规则失败", zap.Error(err))
-	}
-
-	layout := "2006-01-02 15:04:05.000"
-
-	startTime, err := time.Parse(layout, "2026-05-12 17:59:38.889")
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(t)
-
-	alerts := make([]*types.Alert, 0)
-	alerts = append(alerts, &types.Alert{
-		Status:      "firing",
-		StartsAt:    startTime,
-		EndsAt:      nil,
-		Fingerprint: "ab0c89768a745dcc",
-	})
-	// req := &types.AlertReceiveReq{
-	// 	ChannelName: "idc",
-	// 	Status:      "firing",
-	// 	Alerts:
+	// var activeSilences []*model.AlertSilence
+	// now := time.Now()
+	// err = store.AlertSilence.WithContext(context.TODO()).
+	// 	UnderlyingDB().
+	// 	Where("cluster = ?", "xinjiang").
+	// 	Where(store.AlertSilence.Status.Eq(model.SilenceEnabled)).
+	// 	Where(store.AlertSilence.EndsAt.Gte(now)).
+	// 	Where(store.AlertSilence.StartsAt.Lte(now)).
+	// 	Find(&activeSilences).Error
+	// if err != nil {
+	// 	zap.L().Error("查询静默规则失败", zap.Error(err))
 	// }
 
-	for _, v := range alerts {
-		silience, id := alertsServicer.IsSilenced(context.Background(), v, activeSilences)
+	// layout := "2006-01-02 15:04:05.000"
 
-		fmt.Println("☀️------------------------------------☀️")
-		fmt.Println("silience", silience)
-		fmt.Println("id", id)
-		fmt.Println("🌙------------------------------------🌙")
+	// startTime, err := time.Parse(layout, "2026-05-12 17:59:38.889")
+	// if err != nil {
+	// 	panic(err)
+	// }
+
+	// fmt.Println(t)
+
+	// alerts := make([]*types.Alert, 0)
+	// alerts = append(alerts, &types.Alert{
+	// 	Status:      "firing",
+	// 	StartsAt:    startTime,
+	// 	EndsAt:      nil,
+	// 	Fingerprint: "ab0c89768a745dcc",
+	// })
+	// // req := &types.AlertReceiveReq{
+	// // 	ChannelName: "idc",
+	// // 	Status:      "firing",
+	// // 	Alerts:
+	// // }
+
+	silenceTxt := `{
+    "id": 93,
+    "created_at": "2026-09-18 15:17:46.983",
+    "updated_at": "2026-09-18 15:17:46.983",
+    "deleted_at": null,
+    "cluster": "cn-tianjin-1",
+    "type": 2,
+    "fingerprint": "",
+    "status": 1,
+    "ends_at": "2026-09-30 19:17:12.000",
+    "starts_at": "2026-09-18 15:17:12.000",
+    "matchers": [{"name": "pod", "type": "=~", "value": "^juicefs-cg-worker-s3*"}, {"name": "cluster", "type": "=", "value": "cn-tianjin-1"}],
+    "created_by": "李家豪",
+    "comment": "bug已反馈排查，暂时静默"
+  }`
+
+	alertTxt := `  {
+    "id": 28659,
+    "cluster": "cn-tianjin-1",
+    "created_at": "2026-09-18 10:03:01",
+    "updated_at": "2026-09-18 16:05:01.373",
+    "fingerprint": "dfecfe06dccb79db",
+    "starts_at": "2026-09-18 10:02:29.918",
+    "ends_at": null,
+    "status": "firing",
+    "alertname": "KubePodCrashLooping",
+    "severity": "P2",
+    "instance": "",
+    "labels": {"pod": "juicefs-cg-worker-s3-20381-52552-cachegroup-tj1q-p1-worker-02", "node": "tj1q-p1-worker-02", "cluster": "cn-tianjin-1", "severity": "P2", "workload": "s3-20381-52552-cachegroup", "alertname": "KubePodCrashLooping", "namespace": "oargzzokwbitbjmy3kbcs8eyc2caq4ed-20381", "prometheus": "monitoring/k8s", "alert_scope": "pod"},
+    "annotations": {"summary": "容器启动/等待状态异常: Pod juicefs-cg-worker-s3-20381-52552-cachegroup-tj1q-p1-worker-02 (节点: tj1q-p1-worker-02)", "description": "命名空间 oargzzokwbitbjmy3kbcs8eyc2caq4ed-20381 中的 Pod/juicefs-cg-worker-s3-20381-52552-cachegroup-tj1q-p1-worker-02 (运行节点: tj1q-p1-worker-02) 处于 CrashLoopBackOff 状态, 请及时排查容器启动失败的原因。"},
+    "alert_send_record_id": 21154,
+    "send_count": 7,
+    "is_silenced": 0,
+    "alert_silence_id": null,
+    "alert_template_id": 1
+  }`
+
+	var alert *model.AlertHistory
+	if err := json.Unmarshal([]byte(alertTxt), &alert); err != nil {
+		t.Fatal(err)
 	}
 
+	var silence *model.AlertSilence
+	if err := json.Unmarshal([]byte(silenceTxt), &silence); err != nil {
+		t.Fatal(err)
+	}
+	activeSilences := make([]*model.AlertSilence, 0)
+	activeSilences = append(activeSilences, silence)
+
+	var labels map[string]string
+	if err := json.Unmarshal(alert.Labels, &labels); err != nil {
+		t.Fatal(err)
+	}
+
+	v := types.Alert{
+		Status:      alert.Status,
+		StartsAt:    alert.StartsAt,
+		EndsAt:      &time.Time{},
+		Fingerprint: alert.Fingerprint,
+		Labels:      labels,
+	}
+
+	silience, id := alertsServicer.IsSilenced(context.Background(), &v, activeSilences)
+	fmt.Println("☀️------------------------------------☀️")
+	fmt.Println("silience", silience)
+	fmt.Println("id", id)
+	fmt.Println("🌙------------------------------------🌙")
 }
 
 func TestGetData(t *testing.T) {

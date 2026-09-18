@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"runtime/debug"
+	"strings"
 	"time"
 
 	"github.com/alert666/api-server/base/constant"
-	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/base/helper"
+	"github.com/alert666/api-server/base/log"
 	"github.com/alert666/api-server/pkg/jwt"
 
 	"github.com/alert666/api-server/base/types"
@@ -48,6 +49,12 @@ func (recevicer *alertSilenceService) CreateSilence(ctx context.Context, req *ty
 	mc, err := recevicer.jwtImpl.GetUser(ctx)
 	if err != nil {
 		return err
+	}
+
+	for i := range req.Matchers {
+		vales := strings.TrimLeft(req.Matchers[i].Value, " ")
+		req.Matchers[i].Value = vales
+		req.Matchers[i].Name = strings.TrimSpace(req.Matchers[i].Name)
 	}
 
 	obj, err := req.TOMolelAlertSilence()

@@ -884,7 +884,7 @@ func (receiver *alertsService) matchLabels(ctx context.Context, alert *types.Ale
 				return false
 			}
 		case "=~":
-			matched, err := regexp.MatchString("^("+m.Value+")$", alertVal)
+			matched, err := regexp.MatchString(m.Value, alertVal)
 			if err != nil {
 				log.WithRequestID(ctx).Error("静默 =~ 正则匹配失败", zap.Error(err))
 				return false
@@ -893,7 +893,7 @@ func (receiver *alertsService) matchLabels(ctx context.Context, alert *types.Ale
 				return false
 			}
 		case "!~":
-			matched, err := regexp.MatchString("^("+m.Value+")$", alertVal)
+			matched, err := regexp.MatchString(m.Value, alertVal)
 			if err != nil {
 				log.WithRequestID(ctx).Error("静默 !~ 正则匹配失败", zap.Error(err))
 				return false
